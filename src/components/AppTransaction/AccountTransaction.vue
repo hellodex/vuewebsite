@@ -406,7 +406,7 @@
               </div>
             </div>
             <span :class="item.status == 200 ? 'up-color' : 'down-color'">{{
-              STATUS_TYPE[item.status] || '错误，请联系客服'
+              item.orderStatusUI
             }}</span>
           </div>
           <div class="display-flex align-items-center justify-content-sp margin-bottom-12">

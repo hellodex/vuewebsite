@@ -91,7 +91,7 @@
                   :topProfitInfo="topProfitInfo"
                   @buyingSellingTopSelect="handelBuyingSellingTopSelect"
                 />
-                <MyCoinTab v-else-if="activeName == 'six'" :myCoinTabInfo="myCoinTabInfo" />
+                <!-- <MyCoinTab v-else-if="activeName == 'six'" :myCoinTabInfo="myCoinTabInfo" /> -->
                 <MyHold
                   v-else-if="activeName == 'seven'"
                   :list="initLimitedOrders.positions"
@@ -376,9 +376,9 @@ async function initTokenData() {
   flowGroupInfo.value = useFlowGroup()
   listPeriodInfo.value = useListPeriod('1H')
   // topNetInfo.value = useTopNet(0)
-  if (walletType.value !== 'Email') {
-    myCoinTabInfo.value = useMyCoinTab()
-  }
+  // if (walletType.value !== 'Email') {
+  //   myCoinTabInfo.value = useMyCoinTab()
+  // }
 
   document.title = `${baseInfo.value?.tokenInfo?.baseSymbol} | $${numberFormat(priceIncrease.value.price)} | ${priceIncrease.value.increase}% | 利润80%分给所有人的去中心化交易所`
 }
@@ -512,9 +512,9 @@ const setPolling = async () => {
   skeleton.value = false
   timer.value = setInterval(() => {
     rightSideBarInfo.value = useRightSideBar()
-    if (walletType.value !== 'Email') {
-      myCoinTabInfo.value = useMyCoinTab()
-    }
+    // if (walletType.value !== 'Email') {
+    //   myCoinTabInfo.value = useMyCoinTab()
+    // }
     localStorage.getItem('accountInfo') && getData()
   }, 5000)
 }

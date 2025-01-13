@@ -109,7 +109,7 @@
           <el-table-column label="状态" min-width="150" align="center">
             <template #default="scope">
               <span :class="scope.row.status == 200 ? 'up-color' : 'down-color'">{{
-                STATUS_TYPE[scope.row.status] || '错误，请联系客服'
+                scope.row.orderStatusUI
               }}</span>
             </template>
           </el-table-column>
