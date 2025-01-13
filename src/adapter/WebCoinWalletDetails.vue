@@ -702,9 +702,9 @@ onUnmounted(() => {
   .coinWallet-tabs-item {
     float: left;
     margin-bottom: 12px;
-    border: 1px solid var(--color-border);
-    border-radius: 8px;
-    padding: 4px;
+    border: 1px solid rgba(38, 40, 44, 0.3);
+    border-radius: 4px;
+    padding: 2px;
     span {
       display: block;
       padding: 4px 12px;
@@ -712,18 +712,18 @@ onUnmounted(() => {
       font-style: normal;
       font-weight: normal;
       text-align: center;
-      color: var(--dex-color-4);
+      color: #848e9c;
       background-color: transparent;
-      border-radius: 8px;
-      margin-right: 16px;
+      border-radius: 4px;
+      font-family: 'PingFangSC-Medium';
       cursor: pointer;
     }
     span:last-child {
       margin-right: 0;
     }
     .active {
-      color: var(--font-color-default);
-      background-color: var(--tab-bg-color);
+      color: #f5f5f5;
+      background-color: rgba(58, 60, 64, 0.4);
     }
   }
   .coinWallet-tabs-content {
