@@ -1,0 +1,34 @@
+:root:not(.theme-dark) {
+  --tv-color-platform-background: #212121; /*设置所有元素的页面的主要颜色*/
+  --tv-color-pane-background: #212121; /*工具栏背景色*/
+  --tv-color-pane-background-secondary: #212121; /*工具栏的其他背景色（例如，右侧有打开的工具栏时）*/
+  --tv-color-toolbar-button-background-hover: #111111; /*工具栏按钮的悬停效果颜色*/
+  --tv-color-toolbar-button-background-secondary-hover: #24ae8f; /*工具栏按钮的其他悬停颜色（例如，右侧有打开的工具栏时）*/
+  --tv-color-toolbar-button-background-expanded: #111111; /*右侧工具栏上活动按钮的悬停效果颜色*/
+  --tv-color-toolbar-button-text: #c8c7d8; /*工具栏按钮的文本和图标颜色*/
+  --tv-color-toolbar-button-text-hover: #ffffff; /*将鼠标悬停在工具栏按钮上时，文本和图标的颜色*/
+  --tv-color-toolbar-button-text-active: #24ae8f; /*活动工具栏按钮的文本和图标颜色*/
+  --tv-color-toolbar-button-text-active-hover: #24ae8f; /* 将鼠标悬停在它们上方时，工具栏按钮的文本和图标颜色*/
+  /*切换工具栏按钮的文本颜色（例如，“磁铁模式”，“锁定所有图形”）*/
+  --tv-color-item-active-text: rgb(6, 6, 255);
+  --tv-color-toolbar-toggle-button-background-active: #37a6ef; /*切换工具栏按钮的文本颜色（例如，“磁铁模式”，“锁定所有图形”）*/
+  --tv-color-toolbar-toggle-button-background-active-hover: #37a6ef; /*将切换工具栏按钮悬停在其上时填充颜色（例如，“磁铁模式”，“锁定所有图形”）*/
+  --tv-color-toolbar-divider-background: #3a3c4f;
+}
+
+.theme-dark:root {
+  --tv-color-platform-background: #212121;
+  --tv-color-pane-background: #212121;
+  --tv-color-pane-background-secondary: #212121;
+  --tv-color-toolbar-button-background-hover: #111111;
+  --tv-color-toolbar-button-background-secondary-hover: #24ae8f;
+  --tv-color-toolbar-button-background-expanded: #111111;
+  --tv-color-toolbar-button-text: #c8c7d8;
+  --tv-color-toolbar-button-text-hover: #ffffff;
+  --tv-color-toolbar-button-text-active: #24ae8f;
+  --tv-color-toolbar-button-text-active-hover: #24ae8f;
+  --tv-color-item-active-text: rgb(6, 255, 6);
+  --tv-color-toolbar-toggle-button-background-active: #37a6ef;
+  --tv-color-toolbar-toggle-button-background-active-hover: #37a6ef;
+  --tv-color-toolbar-divider-background: #3a3c4f;
+}

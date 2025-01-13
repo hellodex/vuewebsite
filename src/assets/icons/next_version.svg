@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="a" data-name="图层 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 179.93 21.23">
+  <text transform="translate(39.25 16.9) scale(1.06 1)" style="fill: #2c2c2c; font-family: &apos;HarmonyOS_Sans_SC_Medium&apos;, &apos;HarmonyOS Sans SC Medium&apos;; font-size: 16px;"><tspan x="0" y="0">下个版本推出</tspan></text>
+  <g>
+    <polyline points="156.81 17.85 149.57 10.62 156.81 3.38" style="fill: none; stroke: #2c2c2c; stroke-miterlimit: 10;"/>
+    <g style="opacity: .8;">
+      <polyline points="162.5 17.85 155.26 10.62 162.5 3.38" style="fill: none; stroke: #2c2c2c; stroke-miterlimit: 10;"/>
+    </g>
+    <g style="opacity: .6;">
+      <polyline points="168.19 17.85 160.95 10.62 168.19 3.38" style="fill: none; stroke: #2c2c2c; stroke-miterlimit: 10;"/>
+    </g>
+    <g style="opacity: .4;">
+      <polyline points="173.88 17.85 166.64 10.62 173.88 3.38" style="fill: none; stroke: #2c2c2c; stroke-miterlimit: 10;"/>
+    </g>
+    <g style="opacity: .2;">
+      <polyline points="179.58 17.85 172.34 10.62 179.58 3.38" style="fill: none; stroke: #2c2c2c; stroke-miterlimit: 10;"/>
+    </g>
+  </g>
+  <g>
+    <polyline points="23.12 17.85 30.36 10.62 23.12 3.38" style="fill: none; stroke: #2c2c2c; stroke-miterlimit: 10;"/>
+    <g style="opacity: .8;">
+      <polyline points="17.43 17.85 24.67 10.62 17.43 3.38" style="fill: none; stroke: #2c2c2c; stroke-miterlimit: 10;"/>
+    </g>
+    <g style="opacity: .6;">
+      <polyline points="11.74 17.85 18.98 10.62 11.74 3.38" style="fill: none; stroke: #2c2c2c; stroke-miterlimit: 10;"/>
+    </g>
+    <g style="opacity: .4;">
+      <polyline points="6.05 17.85 13.28 10.62 6.05 3.38" style="fill: none; stroke: #2c2c2c; stroke-miterlimit: 10;"/>
+    </g>
+    <g style="opacity: .2;">
+      <polyline points=".35 17.85 7.59 10.62 .35 3.38" style="fill: none; stroke: #2c2c2c; stroke-miterlimit: 10;"/>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>HelloDex: 利润80%分给所有人的去中心化交易所</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no"
+    />
+    <meta http-equiv="keywords" content="利润80%分给所有人的去中心化交易所" />
+    <meta name="Keywords" content="利润80%分给所有人的去中心化交易所" />
+    <meta http-equiv="description" content="利润80%分给所有人的去中心化交易所" />
+    <meta name="description" content="利润80%分给所有人的去中心化交易所" />
+
+    <meta property="og:url" content="https://hellodex.io/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://hellodex.io/logo.png" />
+    <meta property="og:image:width" content="680" />
+    <meta property="og:image:height" content="340" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:local" content="en" />
+    <meta property="og:site_name" content="hellodex" />
+    <meta property="og:title" content="利润80%分给所有人的去中心化交易所" />
+    <meta property="og:description" content="利润80%分给所有人的去中心化交易所" />
+    <meta property="og:title" name="og:title" content="利润80%分给所有人的去中心化交易所" />
+
+    <meta name="twitter:image" content="https://hellodex.io/logo.png" />
+    <meta
+      property="twitter:title"
+      name="twitter:title"
+      content="利润80%分给所有人的去中心化交易所"
+    />
+    <meta name="twitter:url" content="https://hellodex.io/" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@HelloDex_io" />
+
+    <meta property="image" content="https://hellodex.io/logo.png" />
+    <meta property="description" content="利润80%分给所有人的去中心化交易所" />
+
+    <link rel="icon" href="/favicon.ico" />
+    <script src="/charting_library/charting_library.standalone.js" type="text/javascript"></script>
+    <script src="/datafeeds/udf/js/bundle.js" type="text/javascript"></script>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+    <script>
+      // https://t.me/HelloDexBot/hellodex?startapp=trade_pairAddress_0x46cf1cf8c69595804ba91dfdd8d6b960c9b0a7c4_chainCode_BSC
+
+      // https://t.me/HelloDexBot/hellodex?startapp=Refer_invitationCode_zAq03TI2
+
+      const urlParams = new URLSearchParams(window.location.search)
+      const startParam = urlParams.get('tgWebAppStartParam')
+
+      if (startParam && startParam.indexOf('trade_pairAddress') !== -1) {
+        const arr = startParam.split('_')
+        window.location.href = `${window.location.origin}/trade/${arr[2]}?chainCode=${arr[arr.length - 1]}`
+      }
+
+      if (startParam && startParam.indexOf('Refer_invitationCode') !== -1) {
+        const arr = startParam.split('_')
+        window.location.href = `${window.location.origin}/Refer?invitationCode=${arr[arr.length - 1]}`
+      }
+    </script>
+  </body>
+</html>

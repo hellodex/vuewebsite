@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="a" data-name="图层 1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 382.46 280.73">
+  <defs>
+    <linearGradient id="b" data-name="未命名的渐变 333" x1="191.23" y1="105.28" x2="191.23" y2="256.42" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#e8e9ed"/>
+      <stop offset=".06" stop-color="#e2e4e7" stop-opacity=".86"/>
+      <stop offset=".16" stop-color="#dadbdf" stop-opacity=".64"/>
+      <stop offset=".27" stop-color="#d3d4d7" stop-opacity=".44"/>
+      <stop offset=".38" stop-color="#cdcfd1" stop-opacity=".28"/>
+      <stop offset=".48" stop-color="#c8cacd" stop-opacity=".16"/>
+      <stop offset=".59" stop-color="#c5c7c9" stop-opacity=".07"/>
+      <stop offset=".69" stop-color="#c3c5c7" stop-opacity=".02"/>
+      <stop offset=".79" stop-color="#c3c5c7" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="c" data-name="未命名的渐变 336" cx="266.45" cy="9.22" fx="266.45" fy="9.22" r="24.77" gradientTransform="translate(48.72 9.52) scale(.93)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f5f5f6" stop-opacity=".15"/>
+      <stop offset="1" stop-color="#dadadb"/>
+    </radialGradient>
+    <radialGradient id="d" data-name="未命名的渐变 138" cx="102.86" cy="91.73" fx="102.86" fy="91.73" r="12.53" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f5f5f6" stop-opacity=".15"/>
+      <stop offset="1" stop-color="#e2e2e3"/>
+    </radialGradient>
+  </defs>
+  <path d="m0,280.73C0,175.11,85.62,89.5,191.23,89.5s191.23,85.62,191.23,191.23" style="fill: url(#b); opacity: .5;"/>
+  <g>
+    <path d="m57.28,169.41v4.91c0,.94-.73,1.72-1.62,1.72h0c-.89,0-1.62-.77-1.62-1.72v-2.5" style="fill: #fff; stroke: #2c2c2c; stroke-miterlimit: 10; stroke-width: .5px;"/>
+    <polygon points="54.03 134.24 41.67 163.81 54.03 171.81 54.03 134.24" style="fill: #fff; stroke: #2c2c2c; stroke-linejoin: round; stroke-width: .5px;"/>
+    <polygon points="54.03 134.24 54.03 171.81 66.03 162.94 54.03 134.24" style="fill: #fff; stroke: #2c2c2c; stroke-linejoin: round; stroke-width: .5px;"/>
+  </g>
+  <g>
+    <path d="m87.62,126.86v3.46c0,.67-.52,1.21-1.15,1.21h0c-.63,0-1.15-.54-1.15-1.21v-1.77" style="fill: #fff; stroke: #2c2c2c; stroke-miterlimit: 10; stroke-width: .5px;"/>
+    <polygon points="85.32 102.05 76.61 122.91 85.32 128.55 85.32 102.05" style="fill: #fff; stroke: #2c2c2c; stroke-linejoin: round; stroke-width: .5px;"/>
+    <polygon points="85.32 102.05 85.32 128.55 93.79 122.3 85.32 102.05" style="fill: #fff; stroke: #2c2c2c; stroke-linejoin: round; stroke-width: .5px;"/>
+  </g>
+  <circle cx="304.14" cy="17.5" r="17.5" style="fill: url(#c);"/>
+  <circle cx="106.79" cy="91.4" r="9.5" style="fill: url(#d); opacity: .8;"/>
+  <g>
+    <polygon points="185.36 80.5 135.36 70.96 150.16 65.89 160.36 62.4 210.36 71.93 196.59 76.65 185.36 80.5" style="fill: #fff; stroke: #2c2c2c; stroke-linejoin: round; stroke-width: .75px;"/>
+    <polygon points="185.36 72.6 135.36 63.07 135.36 13.07 185.36 22.6 185.36 72.6" style="fill: #fff; stroke: #2c2c2c; stroke-linejoin: round; stroke-width: .75px;"/>
+    <polygon points="185.36 22.6 135.36 13.07 160.36 4.5 210.36 14.04 185.36 22.6" style="fill: #fff; stroke: #2c2c2c; stroke-linejoin: round; stroke-width: .75px;"/>
+    <polygon points="210.36 64.04 185.36 72.6 185.36 22.6 210.36 14.04 210.36 64.04" style="fill: #fff; stroke: #2c2c2c; stroke-linejoin: round; stroke-width: .75px;"/>
+    <polygon points="185.36 130.5 135.36 120.96 135.36 70.96 185.36 80.5 185.36 130.5" style="fill: #fff; stroke: #2c2c2c; stroke-linejoin: round; stroke-width: .75px;"/>
+    <polygon points="210.36 121.93 185.36 130.5 185.36 80.5 210.36 71.93 210.36 121.93" style="fill: #fff; stroke: #2c2c2c; stroke-linejoin: round; stroke-width: .75px;"/>
+    <polygon points="243.53 93.49 193.53 83.96 218.53 75.39 268.53 84.93 243.53 93.49" style="fill: #fff; stroke: #2c2c2c; stroke-linejoin: round; stroke-width: .75px;"/>
+    <polygon points="243.53 85.6 193.53 76.07 193.53 26.07 243.53 35.6 243.53 85.6" style="fill: #fff; stroke: #2c2c2c; stroke-linejoin: round; stroke-width: .75px;"/>
+    <polygon points="243.53 35.6 193.53 26.07 218.53 17.5 268.53 27.03 243.53 35.6" style="fill: #fff; stroke: #2c2c2c; stroke-linejoin: round; stroke-width: .75px;"/>
+    <polygon points="268.53 77.03 243.53 85.6 243.53 35.6 268.53 27.03 268.53 77.03" style="fill: #fff; stroke: #2c2c2c; stroke-linejoin: round; stroke-width: .75px;"/>
+    <polygon points="243.53 143.49 193.53 133.96 193.53 83.96 243.53 93.49 243.53 143.49" style="fill: #fff; stroke: #2c2c2c; stroke-linejoin: round; stroke-width: .75px;"/>
+    <polygon points="268.53 134.93 243.53 143.49 243.53 93.49 268.53 84.93 268.53 134.93" style="fill: #fff; stroke: #2c2c2c; stroke-linejoin: round; stroke-width: .75px;"/>
+  </g>
+  <g>
+    <path d="m340.13,162.34v3.46c0,.67-.52,1.21-1.15,1.21h0c-.63,0-1.15-.54-1.15-1.21v-1.77" style="fill: #fff; stroke: #2c2c2c; stroke-miterlimit: 10; stroke-width: .5px;"/>
+    <polygon points="337.83 137.53 329.12 158.39 337.83 164.03 337.83 137.53" style="fill: #fff; stroke: #2c2c2c; stroke-linejoin: round; stroke-width: .5px;"/>
+    <polygon points="337.83 137.53 337.83 164.03 346.3 157.78 337.83 137.53" style="fill: #fff; stroke: #2c2c2c; stroke-linejoin: round; stroke-width: .5px;"/>
+  </g>
+</svg>
