@@ -635,10 +635,11 @@ defineExpose({
   .trading-operate {
     margin-bottom: 7px;
     p {
-      color: var(--dex-color-4);
-      font-size: 13px;
+      color: #5c6068;
+      font-size: 12px;
       font-weight: normal;
       margin-bottom: 8px;
+      font-family: 'PingFangSC-Medium';
     }
   }
   .trading-buy {
@@ -648,13 +649,14 @@ defineExpose({
       justify-content: center;
       width: 50px;
       height: 25px;
-      border-radius: 4px;
       background: transparent;
-      border: 1px solid var(--hover-bg-color);
-      font-size: 13px;
-      color: var(--dex-color-4);
+      border-radius: 4px;
+      border: 1px solid #26282c;
+      font-size: 12px;
+      color: #5c6068;
       cursor: pointer;
       transition: all 0.2s;
+      font-family: 'PingFangSC-Medium';
     }
     span:hover,
     .active {
@@ -664,6 +666,15 @@ defineExpose({
   }
   .input-box {
     width: 100px;
+
+    :deep(.el-input__wrapper) {
+      box-shadow: 0 0 0 1px #26282c !important;
+      .el-input__suffix,
+      .el-input__inner {
+        color: #5c6068 !important;
+        font-family: 'PingFangSC-Medium';
+      }
+    }
     :deep(.el-input__wrapper:hover),
     :deep(.el-input__wrapper:focus) {
       box-shadow: 0 0 0 1px rgba(23, 178, 106, 1) !important;
@@ -682,10 +693,11 @@ defineExpose({
       width: 60px;
       height: 25px;
       border-radius: 4px;
-      border: 1px solid var(--hover-bg-color);
-      background: transparent;
-      font-size: 13px;
-      color: var(--dex-color-4);
+      border: 1px solid #26282c;
+      font-size: 12px;
+      color: #5c6068;
+      font-size: 12px;
+      font-family: 'PingFangSC-Medium';
       cursor: pointer;
       transition: all 0.2s;
     }
@@ -740,15 +752,16 @@ defineExpose({
     }
   }
   .btn {
-    border-radius: 6px;
-    height: 42px;
-    line-height: 42px;
+    border-radius: 4px;
+    height: 36px;
+    line-height: 36px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 14px;
     cursor: pointer;
-    margin: 16px 0;
+    margin: 14px 0;
+    font-family: 'PingFangSC-Heavy';
   }
   .tip-btn {
     background: rgba(245, 39, 39, 0.3);
@@ -761,12 +774,12 @@ defineExpose({
   }
   .buy-submit-btn {
     background: var(--up-color);
-    color: var(--font-color-default);
+    color: #101114;
   }
 
   .sell-submit-btn {
     background: var(--down-color);
-    color: var(--font-color-default);
+    color: #101114;
   }
 }
 </style>

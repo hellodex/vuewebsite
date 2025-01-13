@@ -75,8 +75,7 @@
           <div class="setting-item display-flex flex-direction-col">
             <div class="display-flex align-items-center">
               <span>gas费</span>
-            </div>
-            <div class="display-flex align-items-center justify-content-sp">
+              <span style="padding: 0 4px"></span>
               <span class="setting-span">{{ sellInfo.chainCode }}</span>
             </div>
             <div class="gas-box display-flex align-items-center justify-content-sp">
@@ -248,6 +247,8 @@ defineExpose({
   }
   .setting-txt {
     margin-right: 5px;
+    color: #fff;
+    font-family: 'PingFangSC-Medium';
   }
   :deep(.el-collapse),
   :deep(.el-collapse-item__header),
@@ -258,11 +259,6 @@ defineExpose({
     margin-right: 0;
   }
 
-  .advanced-setting-main {
-    padding: 12px;
-    border-radius: 8px;
-    background-color: var(--bg-color);
-  }
   :deep(.el-switch .el-switch__core .el-switch__action) {
     background-color: #1f232d;
   }
@@ -272,20 +268,21 @@ defineExpose({
   }
   .setting-item {
     margin-bottom: 6px;
+    color: #fff;
+    font-family: 'PingFangSC-Medium';
   }
   .setting-span {
-    color: #424141;
-    font-size: 10px;
+    color: #5c6068;
+    font-size: 12px;
   }
   .slippage-box {
-    padding: 5px 6px;
-    background-color: var(--card-bg-color);
-    border-radius: 8px;
-    height: 36px;
+    border-radius: 6px;
+    border: 1px solid var(-----2, rgba(38, 40, 44, 0.3));
+    height: 26px;
     margin-top: 6px;
     span {
       display: flex;
-      width: 48px;
+      flex: 1;
       height: 26px;
       align-items: center;
       justify-content: center;
@@ -297,6 +294,9 @@ defineExpose({
     .active {
       background: var(--hover-bg-color);
     }
+    :deep(.el-input__wrapper) {
+      box-shadow: none !important;
+    }
   }
 
   .gas-box {
@@ -305,14 +305,14 @@ defineExpose({
       width: 95px;
       height: 60px;
       padding: 7px;
-      border-radius: 8px;
-      background: var(--card-bg-color);
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
       justify-content: center;
       cursor: pointer;
+      border-radius: 6px;
+      border: 1px solid rgba(38, 40, 44, 0.3);
       span:first-child {
         font-size: 12px;
         color: var(--font-color-default);
@@ -323,7 +323,7 @@ defineExpose({
       }
     }
     .active {
-      background: var(--hover-bg-color);
+      background: rgba(58, 60, 64, 0.4);
     }
   }
   .icon-ele {

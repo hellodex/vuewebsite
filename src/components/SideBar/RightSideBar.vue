@@ -23,67 +23,33 @@
             <svg-icon name="website-pump" class="website-pump menu-icon"></svg-icon>
           </div>
           <div class="menu-item">
-            <svg-icon name="x" class="x-icon menu-icon"></svg-icon>
+            <svg-icon name="tg-app" class="menu-icon"></svg-icon>
           </div>
           <div class="menu-item">
-            <svg-icon name="tg-app" class="menu-icon"></svg-icon>
+            <svg-icon name="x" class="x-icon menu-icon"></svg-icon>
           </div>
           <a href="https://t.me/HelloDex_cn" target="_blank" class="menu-item">
             <svg-icon name="crown" class="menu-icon"></svg-icon>
             <svg-icon name="update-icon" class="update-icon"></svg-icon>
           </a>
         </div>
-        <a href="https://t.me/HelloDex_cn" target="_blank" class="pond-main publicize-main">
-          <div class="display-flex align-items-center">
-            <svg-icon name="publicize-coin" class="publicize-coin"></svg-icon>
-            <span>就在HelloDex</span>
+        <a
+          href="https://t.me/HelloDex_cn"
+          target="_blank"
+          class="pond-main publicize-main align-items-center justify-content-sp"
+        >
+          <div class="display-flex flex-direction-col">
+            <div class="display-flex align-items-center">
+              <svg-icon name="publicize-coin" class="publicize-coin"></svg-icon>
+              <span>就在HelloDex</span>
+            </div>
+            <div class="display-flex align-items-center arrow-down-info">
+              <span>申请更新信息</span>
+              <svg-icon name="chevron-right" class="arrow-down"></svg-icon>
+            </div>
           </div>
-          <div class="display-flex align-items-center arrow-down-info">
-            <span>申请更新信息</span>
-            <svg-icon name="arrow-down" class="arrow-down"></svg-icon>
-          </div>
+          <img src="@/assets/img/rocket-logo.png" alt="" class="rocket-logo" />
         </a>
-        <!-- <div class="vote-box">
-          <p class="display-flex align-items-center justify-content-sp">
-            <span>池信息</span>
-            <el-image :src="props.baseInfo.tokenInfo?.quoteLogo" alt="" class="chainCode">
-              <template #error>
-                <svg-icon name="logo1" class="chainCode"></svg-icon>
-              </template>
-            </el-image>
-          </p>
-          <div class="coin-pond-info">
-            <div class="pond-info-item display-flex align-items-center justify-content-sp">
-              <span>总流动性</span>
-              <strong>$58.96K(123.1 SOL)</strong>
-            </div>
-            <div class="pond-info-item display-flex align-items-center justify-content-sp">
-              <span>市值</span>
-              <strong>$58.96K</strong>
-            </div>
-            <div class="pond-info-item display-flex align-items-center justify-content-sp">
-              <span>持有者</span>
-              <strong>58.96</strong>
-            </div>
-            <div class="pond-info-item display-flex align-items-center justify-content-sp">
-              <span>总供应量</span>
-              <strong>58.96K</strong>
-            </div>
-            <div class="pond-info-item display-flex align-items-center justify-content-sp">
-              <span>币对</span>
-              <strong>58.96K</strong>
-            </div>
-            <div class="pond-info-item display-flex align-items-center justify-content-sp">
-              <span>代币创建者</span>
-              <strong>58.96K</strong>
-            </div>
-            <div class="pond-info-item display-flex align-items-center justify-content-sp">
-              <span>池子创建时间</span>
-              <strong>58.96K</strong>
-            </div>
-          </div>
-        </div> -->
-
         <div class="transaction-box">
           <template v-if="walletType == 'Email'">
             <div class="display-flex align-items-center justify-content-sp coin-info-main">
@@ -102,11 +68,13 @@
                       <svg-icon name="logo1" class="chainCode"></svg-icon>
                     </template>
                   </el-image>
-                  <span>{{ childrenRef && numberFormat(balanceFormat(childrenRef.buyInfo)) }}</span>
+                  <span class="price-txt">{{
+                    childrenRef && numberFormat(balanceFormat(childrenRef.buyInfo))
+                  }}</span>
                 </div>
               </div>
               <a target="_blank" href="https://t.me/HelloDex_cn" class="icon-add">
-                <el-icon :size="18"><Plus /></el-icon>
+                <el-icon :size="20"><Plus /></el-icon>
               </a>
             </div>
             <div class="display-flex align-items-center justify-content-sp coin-hold">
