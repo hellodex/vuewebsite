@@ -370,13 +370,29 @@ const handelConfirm = async () => {
   const num = 10 ** Number(props.limitInfo.decimals)
   const spendAmount = new BigNumber(amount.value).times(num).integerValue(BigNumber.ROUND_DOWN)
   console.log(spendAmount)
+
+  let limitOrderType = 1
+  let uiType = 0
+
+  if (tabIndex.value == 2) {
+    limitOrderType = parseFloat(priceValue.value) > parseFloat(props.limitInfo.price) ? 3 : 4
+  } else if (tabIndex.value == 1) {
+    limitOrderType =
+      quantityUnitFormat(marketValue.value) > parseFloat(props.limitInfo.nowMarketCap) ? 7 : 8
+  }
+
+  if (tabIndex.value == 2) {
+    uiType = 1
+  } else if (tabIndex.value == 1) {
+    uiType = 2
+  }
+
   const params = {
     walletId: customWalletInfo.value.walletInfo?.walletId, // 用户钱包Id
     walletKey: customWalletInfo.value.walletInfo?.walletKey,
     chainCode: props.limitInfo.chainCode, // 链
     orderType: 1, // 交易类型,1:卖出,0买入
-    limitOrderType:
-      quantityUnitFormat(marketValue.value) > parseFloat(props.limitInfo.nowMarketCap) ? 7 : 8, // 1, 高点买入 2, “低点买入” 3 “高点卖出” 4, “低点卖出” ,5:高于市值买 ,6:低于市值买,7:高于市值卖 8:低于市值卖
+    limitOrderType, // 1, 高点买入 2, “低点买入” 3 “高点卖出” 4, “低点卖出” ,5:高于市值买 ,6:低于市值买,7:高于市值卖 8:低于市值卖
     tradeType: 'L', // 交易类型,M:市价单,C:一键清仓,F:一键交易,L:限价单,
     fromTokenAddress: resetAddress(props.limitInfo.tokenAddress), // 买入地址
     toTokenAddress: resetAddress(
@@ -396,7 +412,7 @@ const handelConfirm = async () => {
     targetPoolMarketCap: 0, // 池子目标市值
     slippage, // 滑点
     expireTime: 86400 * 30 * 365, // 超时时间 秒级时间戳
-    uiType: 2,
+    uiType,
     profitFlag: 0
   }
   console.log(params)
