@@ -766,7 +766,7 @@ const handelLimitSell = async () => {
     targetPoolMarketCap: parseFloat(targetPoolMarketCap.value) || 0, // 池子目标市值
     slippage: slippage.value.toString(), // 滑点
     expireTime: 86400 * 30 * 365, // 超时时间 秒级时间戳
-    uiType,
+    uiType, // 价格 1，市值 2
     profitFlag: 0
   }
   console.log(params)
