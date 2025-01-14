@@ -191,11 +191,7 @@
             </div>
           </div>
           <div class="pond-info">
-            <div class="display-flex align-items-center justify-content-sp pond-info-title">
-              <span>总市值</span>
-              <span>${{ numberFormat(props.pairInfo?.circulationVol || 0) }}</span>
-            </div>
-            <div class="display-flex align-items-center justify-content-sp">
+            <div class="pond-info-item display-flex align-items-center justify-content-sp">
               <div class="flex-1 display-flex flex-direction-col align-items-fs">
                 <span>持币人</span>
                 <strong>{{
@@ -219,10 +215,7 @@
                 <strong>${{ numberFormat(props.pairInfo.tradeTvl) }}</strong>
               </div>
             </div>
-            <div
-              class="display-flex align-items-center justify-content-sp"
-              style="margin-top: 10px"
-            >
+            <div class="pond-info-item display-flex align-items-center justify-content-sp">
               <div class="flex-1 display-flex flex-direction-col align-items-fs">
                 <span>开盘价格</span>
                 <strong>{{ numberFormat(props.pairInfo?.start1d || 0) }}</strong>
@@ -240,10 +233,7 @@
                 <strong>{{ numberFormat(props.pairInfo?.low1d || 0) }}</strong>
               </div>
             </div>
-            <div
-              class="display-flex align-items-center justify-content-sp"
-              style="margin-top: 10px"
-            >
+            <div class="pond-info-item display-flex align-items-center justify-content-sp">
               <div class="flex-1 display-flex flex-direction-col align-items-center">
                 <span>交易量</span>
                 <strong>{{ numberFormat(props.pairInfo?.tradeAmount) }}</strong>
@@ -261,10 +251,14 @@
                 <strong>{{ props.pairInfo?.circulationRate || 0 }}%</strong>
               </div>
             </div>
+            <div class="display-flex align-items-center justify-content-sp pond-info-title">
+              <span>总市值</span>
+              <span>${{ numberFormat(props.pairInfo?.circulationVol || 0) }}</span>
+            </div>
           </div>
         </div>
 
-        <div class="vote-box">
+        <!-- <div class="vote-box">
           <p>{{ i18n.t('kChart.Vote') }}</p>
           <div class="display-flex justify-content-sp">
             <div class="display-flex flex-direction-col">
@@ -284,7 +278,7 @@
               <span class="contrast-text">50%</span>
             </div>
           </div>
-        </div>
+        </div> -->
       </el-skeleton>
     </aside>
   </el-scrollbar>
