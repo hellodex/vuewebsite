@@ -300,10 +300,10 @@ const coinWalletTabs = computed(() => {
   } else {
     return [
       ...commonTab,
-      {
-        code: 'six',
-        name: i18n.t('kChart.MyProfit')
-      },
+      // {
+      //   code: 'six',
+      //   name: i18n.t('kChart.MyProfit')
+      // },
       {
         code: 'eleven',
         name: '安全检测'
@@ -702,8 +702,8 @@ onUnmounted(() => {
   .coinWallet-tabs-item {
     float: left;
     margin-bottom: 12px;
-    border: 1px solid rgba(38, 40, 44, 0.3);
-    border-radius: 4px;
+    // border: 1px solid rgba(38, 40, 44, 0.3);
+    // border-radius: 4px;
     padding: 2px;
     span {
       display: block;
