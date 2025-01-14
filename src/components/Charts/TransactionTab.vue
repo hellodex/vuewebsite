@@ -1,7 +1,7 @@
 <template>
   <div class="transaction-tab-content">
     <el-table :data="subscribeSwap" max-height="890px">
-      <el-table-column min-width="140">
+      <el-table-column>
         <template #header>
           <div class="display-flex align-items-center">
             <span>{{ i18n.t('kChart.Time') }}</span>
@@ -14,7 +14,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="flag" min-width="80">
+      <el-table-column prop="flag">
         <template #header>
           <div class="display-flex align-items-center">
             <span>{{ i18n.t('kChart.Type1') }}</span>
@@ -28,7 +28,7 @@
           >
         </template>
       </el-table-column>
-      <el-table-column prop="price" min-width="100">
+      <el-table-column prop="price">
         <template #header>
           <div class="display-flex align-items-center">
             <span>{{ i18n.t('home.price') }}($)</span>
@@ -41,7 +41,7 @@
           >
         </template>
       </el-table-column>
-      <el-table-column prop="amount" min-width="150">
+      <el-table-column prop="amount">
         <template #header>
           <div class="display-flex align-items-center">
             <span>{{ i18n.t('kChart.Amount') }}({{ baseInfo.tokenInfo?.baseSymbol }})</span>
@@ -54,7 +54,7 @@
           }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="orderAmount" min-width="100">
+      <el-table-column prop="orderAmount">
         <template #header>
           <div class="display-flex align-items-center">
             <span>{{ i18n.t('kChart.Volume') }}($)</span>
@@ -67,7 +67,7 @@
           >
         </template>
       </el-table-column>
-      <el-table-column prop="to" min-width="200">
+      <el-table-column prop="to">
         <template #header>
           <div class="display-flex align-items-center">
             <span>钱包</span>
@@ -86,15 +86,15 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="tx">
+      <el-table-column prop="tx" align="center">
         <template #header>
-          <div class="display-flex align-items-center">
+          <div class="display-flex align-items-center justify-content-fd">
             <span>Tx</span>
           </div>
         </template>
 
         <template #default="scope">
-          <div class="display-flex align-items-center">
+          <div class="display-flex align-items-center justify-content-fd">
             <svg-icon name="share-04" class="img"></svg-icon>
             <svg-icon name="filter-funnel-01" class="img"></svg-icon>
             <a :href="CHAIN_URL[chainInfo.chainCode] + scope.row.tx" target="_blank">

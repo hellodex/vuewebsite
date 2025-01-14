@@ -11,7 +11,7 @@
       </template>
       <template #default>
         <el-table :data="list" style="width: 100%" max-height="890px" @row-click="handelTableRow">
-          <el-table-column label="币种" min-width="155">
+          <el-table-column label="币种">
             <template #default="scope">
               <div class="display-flex align-items-center coin-box">
                 <span class="logo">
@@ -23,70 +23,85 @@
                   <img :src="chainLogoObj[scope.row.chainCode]" alt="" class="chainCode" />
                 </span>
                 <p class="display-flex align-items-center">
-                  <span class="base-symbol">{{ scope.row.symbol || '-' }}</span>
+                  <span class="base-symbol font-family-Heavy">{{ scope.row.symbol || '-' }}</span>
                 </p>
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="当前价格" min-width="130">
+          <el-table-column label="当前价格">
             <template #default="scope">
-              <PercentageChange :value="scope.row.chg1d" />
-              <br />
-              <span :class="scope.row?.chg1d?.[0] === '-' ? 'down-color' : 'up-color'"
+              <span
+                :class="
+                  scope.row?.chg1d?.[0] === '-'
+                    ? 'font-family-Heavy down-color'
+                    : 'font-family-Heavy up-color'
+                "
                 >${{ numberFormat(scope.row.price) }}
               </span>
+              <br />
+              <PercentageNotbg :value="scope.row.chg1d" />
             </template>
           </el-table-column>
-          <el-table-column label="平均买入价格" min-width="120">
+          <el-table-column label="平均买入价格">
             <template #default="scope">
-              <span class="text-color">${{ numberFormat(scope.row.averagePrice) || '-' }}</span>
+              <span class="text-color font-family-Heavy"
+                >${{ numberFormat(scope.row.averagePrice) || '-' }}</span
+              >
             </template>
           </el-table-column>
-          <el-table-column label="当前持仓" min-width="130">
+          <el-table-column label="当前持仓">
             <template #default="scope">
-              <span class="text-color"
-                >{{ numberFormat(scope.row.amount) || '-' }}<br />≈${{
-                  numberFormat(scope.row.volume)
-                }}
+              <span class="text-color font-family-Heavy"
+                >{{ numberFormat(scope.row.amount) || '-' }}<br />
               </span>
+              <span class="">≈${{ numberFormat(scope.row.volume) }} </span>
             </template>
           </el-table-column>
-          <el-table-column label="总买入" min-width="95">
+          <el-table-column label="总买入">
             <template #default="scope">
-              <span class="text-color"
-                >{{ numberFormat(scope.row.totalBuyAmount) || '-' }}<br />≈${{
-                  numberFormat(scope.row.totalBuyVolume)
+              <span class="up-color font-family-Heavy"
+                >{{ numberFormat(scope.row.totalBuyAmount) || '-' }}
+              </span>
+              <br />
+              <span>≈${{ numberFormat(scope.row.totalBuyVolume) }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="总卖出">
+            <template #default="scope">
+              <span class="down-color font-family-Heavy"
+                >{{ numberFormat(scope.row.totalSellAmount) || '-' }}
+              </span>
+              <br />
+              <span>≈${{ numberFormat(scope.row.totalSellVolume) }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="累计收益">
+            <template #default="scope">
+              <span
+                :class="
+                  scope.row?.totalEarn?.[0] === '-'
+                    ? 'font-family-Heavy down-color'
+                    : 'font-family-Heavy up-color'
+                "
+                >{{
+                  (scope.row?.totalEarn?.[0] === '-' ? '-$' : '+$') +
+                  numberFormat(scope.row?.totalEarn.replace(/-/g, ''))
                 }}</span
               >
             </template>
           </el-table-column>
-          <el-table-column label="总卖出" min-width="95">
+          <el-table-column label="收益率">
             <template #default="scope">
-              <span class="down-color"
-                >{{ numberFormat(scope.row.totalSellAmount) || '-' }}<br />≈${{
-                  numberFormat(scope.row.totalSellVolume)
-                }}</span
-              >
+              <PercentageNotbg :value="scope.row?.totalEarnRate || 0" class="font-family-Heavy" />
             </template>
           </el-table-column>
-          <el-table-column label="累计收益" min-width="95">
-            <template #default="scope">
-              <span :class="scope.row?.totalEarn?.[0] === '-' ? 'down-color' : 'up-color'">{{
-                (scope.row?.totalEarn?.[0] === '-' ? '-$' : '+$') +
-                numberFormat(scope.row?.totalEarn.replace(/-/g, ''))
-              }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column label="收益率" min-width="95">
-            <template #default="scope">
-              <PercentageNotbg :value="scope.row?.totalEarnRate || 0" />
-            </template>
-          </el-table-column>
-          <el-table-column label="操作" align="right" width="260">
+          <el-table-column label="操作" align="right">
             <template #default="scope">
               <span class="hold-btn" @click.stop="handelSellLimit(scope.row)">止盈</span>
               <span class="hold-btn" @click.stop="handelStopLimit(scope.row)">止损</span>
-              <span class="hold-btn" @click.stop="handelCustomTradeSwap(scope.row)">一键清仓</span>
+              <span class="hold-btn btn-trade" @click.stop="handelCustomTradeSwap(scope.row)"
+                >一键清仓</span
+              >
             </template>
           </el-table-column>
           <template #empty>
@@ -128,7 +143,6 @@ import {
 import { useChainConfigsStore } from '@/stores/chainConfigs'
 import { useSubscribeKChartInfo } from '@/stores/subscribeKChartInfo'
 import PercentageNotbg from '@/components/Percentage/PercentageNotbg.vue'
-import PercentageChange from '@/components/Percentage/PercentageChange.vue'
 import { useI18n } from 'vue-i18n'
 
 import StopLimitDialog from '../Dialogs/StopLimitDialog.vue'
@@ -265,41 +279,45 @@ const handelTableRow = (row: any) => {
     cursor: pointer;
   }
   .hold-btn {
-    height: 28px;
-    padding: 4px 15px;
-    background: #1e1e1e;
-    line-height: 28px;
+    display: inline-block;
+    line-height: 1.2;
+    padding: 4px 12px;
     border-radius: 16px;
+    border: 1px solid #222;
     font-size: 12px;
     cursor: pointer;
     white-space: nowrap;
     margin-left: 8px;
     transition: all 0.2s;
+    color: #848e9c;
+    font-family: 'PingFangSC-Medium';
+    margin-bottom: 8px;
   }
-  .hold-btn:hover {
-    background-color: #333;
+  .btn-trade {
+    background: rgba(234, 57, 67, 0.1);
+    color: var(--down-color);
   }
   .coin-box {
     .logo {
-      width: 32px;
-      height: 32px;
+      width: 24px;
+      height: 24px;
       position: relative;
-      margin-right: 10px;
+      margin-right: 4px;
     }
     .coin-icon {
-      width: 32px;
-      height: 32px;
+      width: 24px;
+      height: 24px;
       border-radius: 50%;
     }
     .chainCode {
-      width: 14px;
-      height: 14px;
+      width: 12px;
+      height: 12px;
       position: absolute;
       right: -1px;
       bottom: 0px;
     }
     .base-symbol {
-      color: var(--font-color-default);
+      color: #f5f5f5;
     }
   }
 }
