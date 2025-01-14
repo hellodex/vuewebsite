@@ -1,27 +1,9 @@
-# blockchainWeb
+HelloDex网页版
 
-This template should help get you started developing with Vue 3 in Vite.
+如有大佬发现有任何问题或建议请联系我，
 
-## Project Setup
+诚恳邀请各位大佬一起建设和变革
 
-```sh
-pnpm install
-```
+2022年写下第一行代码，止盈止损，挂单抄底，链上狙击枪，冲币神器
 
-### Compile and Hot-Reload for Development
-
-```sh
-pnpm dev
-```
-
-### Type-Check, Compile and Minify for Production
-
-```sh
-pnpm build
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-pnpm lint
-```
+开创和主导Web3利益变革，为了用户自由，耗时1年从0开发，教育平台用户带来的流量所产的钱要80%分给用户
