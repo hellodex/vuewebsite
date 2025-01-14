@@ -14,6 +14,14 @@ a,
   color: var(--down-color) !important;
 }
 
+.font-family-Heavy {
+  font-family: 'PingFangSC-Heavy';
+}
+
+.font-family-Medium {
+  font-family: 'PingFangSC-Medium';
+}
+
 .type-up-btn {
   padding: 2px 6px;
   border-radius: 4px;
@@ -82,9 +90,7 @@ a,
 
 .el-table {
   font-size: 14px !important;
-
   font-style: normal;
-  color: #828282 !important;
 }
 
 .el-table thead th {
@@ -139,7 +145,7 @@ a,
 .el-table,
 .el-table tr,
 .el-table th.el-table__cell {
-  background-color: var(--card-bg-color) !important;
+  background-color: #17181b !important;
 }
 
 .el-table .el-table__cell {
@@ -147,16 +153,18 @@ a,
 }
 .el-table td.el-table__cell,
 .el-table th.el-table__cell.is-leaf {
-  border-bottom: 1px solid var(--color-border) !important;
+  border-bottom: 1px solid rgba(38, 40, 44, 0.3) !important;
 }
 .el-table--enable-row-hover .el-table__body tr:hover > td.el-table__cell {
-  background-color: var(--hover-bg-color) !important;
+  background-color: var(--card-bg-color) !important;
 }
 .el-table__inner-wrapper:before {
   background-color: transparent !important;
 }
 .el-table .cell {
   overflow: inherit !important;
+  color: #848e9c !important;
+  font-size: 12px !important;
 }
 
 .table-network-popper {
@@ -245,7 +253,7 @@ a,
 }
 
 .text-color {
-  color: var(--font-color-default);
+  color: #f5f5f5;
 }
 
 @keyframes fall {
