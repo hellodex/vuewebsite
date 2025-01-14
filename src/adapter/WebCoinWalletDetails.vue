@@ -688,8 +688,8 @@ onUnmounted(() => {
     height: calc(100vh - 206px);
   }
   .coinWallet-tabs-box {
-    background-color: rgba(23, 24, 27, 0.3);
-    border-radius: 12px;
+    // background-color: rgba(23, 24, 27, 0.3);
+    // border-radius: 12px;
     padding: 12px;
   }
   .coinWallet-tabs-head:after {

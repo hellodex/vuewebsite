@@ -145,7 +145,7 @@ a,
 .el-table,
 .el-table tr,
 .el-table th.el-table__cell {
-  background-color: #17181b !important;
+  background-color: rgba(23, 24, 27, 0.3) !important;
 }
 
 .el-table .el-table__cell {
