@@ -31,6 +31,7 @@ export default class CustomDataFeed {
     const useSubscribeKChart = useSubscribeKChartInfo()
     useSubscribeKChart.subscribeSwap = []
     if (socket) {
+      socket.off()
       socket.disconnect()
     }
     setTimeout(() =>
@@ -181,7 +182,7 @@ export default class CustomDataFeed {
     })
 
     socket = io(
-      `http://109.123.230.51:8600?pair=${chainInfo?.pairAddress}&chainCode=${chainInfo?.chainCode}`
+      `https://wss.apihellodex.lol?pair=${chainInfo?.pairAddress}&chainCode=${chainInfo?.chainCode}`
     )
     socket.on('kchart', (message: any) => {
       console.log('server-message', JSON.parse(message))
