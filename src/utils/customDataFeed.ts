@@ -1,10 +1,12 @@
 import { useChainInfoStore } from '@/stores/chainInfo'
 import { useTokenInfoStore } from '@/stores/tokenInfo'
 import { useSubscribeKChartInfo } from '@/stores/subscribeKChartInfo'
+import { APIpairInfo } from '@/api/coinWalletDetails'
 import { formatDecimals } from '@/utils'
+import { io } from 'socket.io-client'
 
 // 自定义数据源对象
-import { APIkCharts, APIsubscribeKChartAndSwap } from '@/api'
+import { APIkCharts } from '@/api'
 
 function timeFormat(time: any) {
   if (time == '1D' || time == '1W') {
@@ -17,6 +19,8 @@ function timeFormat(time: any) {
     return time + 'm'
   }
 }
+
+let socket: any = null
 export default class CustomDataFeed {
   _startTime = 0
   timestamp = 0
@@ -26,6 +30,10 @@ export default class CustomDataFeed {
     // 数据源准备就绪时的操作，例如认证、连接等
     const useSubscribeKChart = useSubscribeKChartInfo()
     useSubscribeKChart.subscribeSwap = []
+    if (socket) {
+      socket.off()
+      socket.disconnect()
+    }
     setTimeout(() =>
       callback({
         exchanges: [], // 可用的交易所列表
@@ -103,7 +111,9 @@ export default class CustomDataFeed {
     if (this._intervalId) {
       clearInterval(this._intervalId)
     }
+    const useSubscribeKChart = useSubscribeKChartInfo()
     const useChainInfo = useChainInfoStore()
+    const tokenInfo = useTokenInfoStore().tokenInfo
     const chainInfo = useChainInfo.chainInfo
     useChainInfo.createChainInfo({
       chainCode: chainInfo?.chainCode,
@@ -115,12 +125,27 @@ export default class CustomDataFeed {
       return
     }
     // periodParams = {from: 1716366543, to: 1716384543, countBack: 300, firstDataRequest: true}
+
     const res: any = await APIkCharts({
-      chainCode: chainInfo?.chainCode,
-      pairAddress: chainInfo?.pairAddress,
-      timeType: timeFormat(resolution)
+      kchart: {
+        chainCode: chainInfo?.chainCode,
+        pairAddress: chainInfo?.pairAddress,
+        timeType: timeFormat(resolution)
+      },
+      tokenFlowQuery: {
+        pairAddress: chainInfo?.pairAddress,
+        chain: chainInfo?.chain,
+        chainCode: chainInfo?.chainCode,
+        baseAddress: tokenInfo?.baseAddress,
+        queryTimeBegin: 0
+      }
     })
-    const info = res?.reverse() || []
+
+    res?.swap?.reverse().forEach((item: any) => {
+      useSubscribeKChart.createSubscribeSwapInfo(item)
+    })
+
+    const info = res?.kChart?.reverse() || []
 
     const bars = []
     for (let i = 0; i < info.length; i++) {
@@ -148,59 +173,42 @@ export default class CustomDataFeed {
     onResetCacheNeededCallback: Function
   ) {
     const useSubscribeKChart = useSubscribeKChartInfo()
-    const fetchData = async () => {
-      const chainInfo = useChainInfoStore().chainInfo
-      const tokenInfo = useTokenInfoStore().tokenInfo
-      try {
-        const res: any = await APIsubscribeKChartAndSwap({
-          kchart: {
-            chainCode: chainInfo?.chainCode,
-            pairAddress: chainInfo?.pairAddress,
-            timeType: chainInfo?.timeType,
-            startTime: this._startTime
-          },
-          tokenFlowQuery: {
-            pairAddress: chainInfo?.pairAddress,
-            chain: chainInfo?.chain,
-            chainCode: chainInfo?.chainCode,
-            baseAddress: tokenInfo?.baseAddress,
-            queryTimeBegin: String(this.timestamp)
-          }
-        })
+    const chainInfo = useChainInfoStore().chainInfo
+    const tokenInfo = useTokenInfoStore().tokenInfo
+    const res: any = await APIpairInfo({
+      pairAddress: chainInfo?.pairAddress,
+      baseAddress: tokenInfo?.baseAddress,
+      chainCode: chainInfo?.chainCode
+    })
 
-        if (res?.swap?.length != 0) {
-          this.timestamp = new Date().getTime()
-        }
-        res?.swap?.reverse().forEach((item: any) => {
-          useSubscribeKChart.createSubscribeSwapInfo(item)
-        })
-
-        const subscribeBarsInfo: any = res?.kChart[0] || {}
-
-        useSubscribeKChart.createSubscribeKChartInfo(subscribeBarsInfo)
-
-        const timestamp = subscribeBarsInfo.timestamp * 1000
-        const bar = {
-          time: timestamp,
-          close: parseFloat(subscribeBarsInfo.C),
-          open: parseFloat(subscribeBarsInfo.O),
-          high: parseFloat(subscribeBarsInfo.H),
-          low: parseFloat(subscribeBarsInfo.L),
-          volume: parseFloat(subscribeBarsInfo.volume)
-        }
-        this._startTime = subscribeBarsInfo.timestamp
-
-        onRealtimeCallback(bar)
-      } catch (error) {
-        console.error('Error fetching data:', error)
+    socket = io(
+      `https://wss.apihellodex.lol?pair=${chainInfo?.pairAddress}&chainCode=${chainInfo?.chainCode}`
+    )
+    socket.on('kchart', (message: any) => {
+      console.log('server-message', JSON.parse(message))
+      const data = JSON.parse(message)
+      useSubscribeKChart.createSubscribeKChartInfo({
+        C: data.price,
+        H: data.price,
+        L: data.price,
+        O: data.price,
+        chg: (
+          ((parseFloat(data.price) - parseFloat(res.start1d)) / parseFloat(res.start1d)) *
+          100
+        ).toString(),
+        timestamp: data.txTime
+      })
+      useSubscribeKChart.createSubscribeSwapInfo(data)
+      const bar = {
+        time: data.txTime * 1000,
+        close: parseFloat(data.price),
+        open: parseFloat(data.price),
+        high: parseFloat(data.price),
+        low: parseFloat(data.price),
+        volume: parseFloat(data.orderAmount)
       }
-    }
-    fetchData()
-    // 定时器，每5秒获取一次数据
-    const intervalId = setInterval(fetchData, 5000)
-
-    // 保存定时器ID，用于取消订阅时清除
-    this._intervalId = intervalId
+      onRealtimeCallback(bar)
+    })
   }
 
   // 取消订阅实时数据
