@@ -604,7 +604,7 @@ onUnmounted(() => {
       align-items: center;
       padding: 4px 12px;
       border-radius: 16px;
-      background: rgba(20, 199, 132, 0.1);
+      background: rgba(46, 189, 133, 0.1);
       .txt {
         color: var(--up-color);
         font-size: 12px;
@@ -618,7 +618,7 @@ onUnmounted(() => {
         align-items: center;
         padding: 4px 12px;
         border-radius: 16px;
-        background: rgba(20, 199, 132, 0.1);
+        background: rgba(46, 189, 133, 0.1);
         height: auto;
         .txt {
           color: var(--up-color);

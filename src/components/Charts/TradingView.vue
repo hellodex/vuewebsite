@@ -72,8 +72,8 @@ function initOnReady() {
       }
     },
     studies_overrides: {
-      'volume.volume.color.0': '#ea3943', // 修改成交量柱状图下跌的颜色（红色）
-      'volume.volume.color.1': '#14c784' // 修改成交量柱状图上涨的颜色（绿色）
+      'volume.volume.color.0': '#F6465D', // 修改成交量柱状图下跌的颜色（红色）
+      'volume.volume.color.1': '#2EBD85' // 修改成交量柱状图上涨的颜色（绿色）
     },
     overrides: {
       volumePaneSize: 'small', // tiny 、small、medium、large "paneProperties.topMargin": "10",
@@ -83,12 +83,12 @@ function initOnReady() {
       'scalesProperties.lineColor': '#262529',
       'scalesProperties.textColor': '#fff',
       'paneProperties.separatorColor': '#242839',
-      'mainSeriesProperties.candleStyle.upColor': '#14c784', //买入颜色
-      'mainSeriesProperties.candleStyle.borderUpColor': '#14c784', //买入边框颜色
-      'mainSeriesProperties.candleStyle.wickUpColor': '#14c784', //买入线条颜色
-      'mainSeriesProperties.candleStyle.downColor': '#ea3943', //卖出颜色
-      'mainSeriesProperties.candleStyle.borderDownColor': '#ea3943', //卖出边框颜色
-      'mainSeriesProperties.candleStyle.wickDownColor': '#ea3943' //卖出线条颜色
+      'mainSeriesProperties.candleStyle.upColor': '#2EBD85', //买入颜色
+      'mainSeriesProperties.candleStyle.borderUpColor': '#2EBD85', //买入边框颜色
+      'mainSeriesProperties.candleStyle.wickUpColor': '#2EBD85', //买入线条颜色
+      'mainSeriesProperties.candleStyle.downColor': '#F6465D', //卖出颜色
+      'mainSeriesProperties.candleStyle.borderDownColor': '#F6465D', //卖出边框颜色
+      'mainSeriesProperties.candleStyle.wickDownColor': '#F6465D' //卖出线条颜色
     },
     favorites: {
       intervals: ['1', '5', '15', '30', '1h', '4h', '1D', '1W']

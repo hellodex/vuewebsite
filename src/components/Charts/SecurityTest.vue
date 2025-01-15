@@ -8,17 +8,17 @@
             type="dashboard"
             :percentage="isMainToken ? 20 : 75"
             :stroke-width="15"
-            :color="isMainToken ? '#14C784' : '#f90'"
+            :color="isMainToken ? '#2EBD85' : '#f90'"
             :width="200"
             stroke-linecap="round"
           >
             <template #default="{ percentage }">
               <div class="display-flex flex-direction-col">
-                <span class="percentage-value" :style="{ color: isMainToken ? '#14C784' : '#f90' }"
+                <span class="percentage-value" :style="{ color: isMainToken ? '#2EBD85' : '#f90' }"
                   >{{ percentage }}%</span
                 >
                 <span class="percentage-label">风险评估</span>
-                <p class="tips-text" :style="{ color: isMainToken ? '#14C784' : '#f90' }">
+                <p class="tips-text" :style="{ color: isMainToken ? '#2EBD85' : '#f90' }">
                   {{ isMainToken ? '可信任代币' : '可能存在风险' }}
                 </p>
               </div>

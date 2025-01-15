@@ -304,7 +304,7 @@ const resetForm = (formEl: FormInstance | undefined) => {
         color: var(--bg-color);
       }
       i {
-        color: #14c784;
+        color: #2ebd85;
         font-style: normal;
       }
       strong {

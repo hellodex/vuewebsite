@@ -25,7 +25,7 @@ const getMarketTren = () => {
   font-size: 12px;
   color: var(--up-color);
   border-radius: 4px;
-  background: rgba(20, 199, 132, 0.16);
+  background: rgba(46, 189, 133, 0.16);
   white-space: nowrap;
   font-weight: normal;
 }
@@ -34,7 +34,7 @@ const getMarketTren = () => {
   font-size: 12px;
   color: var(--down-color);
   border-radius: 4px;
-  background: rgba(234, 57, 67, 0.16);
+  background: rgba(246, 70, 93, 0.16);
   white-space: nowrap;
   font-weight: normal;
 }

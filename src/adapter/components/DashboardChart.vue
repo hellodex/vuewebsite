@@ -91,7 +91,7 @@ const initEcharts = () => {
                     },
                     {
                       offset: 0,
-                      color: '#14C784' // 100% 处的颜色
+                      color: '#2EBD85' // 100% 处的颜色
                     }
                   ],
                   false

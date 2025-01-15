@@ -164,6 +164,7 @@ a,
 .el-table .cell {
   overflow: inherit !important;
   color: #848e9c !important;
+  line-height: 1.2 !important;
 }
 
 .table-network-popper {
@@ -252,7 +253,7 @@ a,
 }
 
 .text-color {
-  color: #f5f5f5;
+  color: #9aa0aa;
 }
 
 @keyframes fall {
@@ -260,16 +261,16 @@ a,
     background-color: transparent;
   }
   20% {
-    background: linear-gradient(to right, #171717, rgba(234, 57, 67, 0.12), #171717);
+    background: linear-gradient(to right, #171717, rgba(246, 70, 93, 0.12), #171717);
   }
   40% {
-    background: linear-gradient(to right, #171717, rgba(234, 57, 67, 0.12), #171717);
+    background: linear-gradient(to right, #171717, rgba(246, 70, 93, 0.12), #171717);
   }
   60% {
-    background: linear-gradient(to right, #171717, rgba(234, 57, 67, 0.12), #171717);
+    background: linear-gradient(to right, #171717, rgba(246, 70, 93, 0.12), #171717);
   }
   80% {
-    background: linear-gradient(to right, #171717, rgba(234, 57, 67, 0.12), #171717);
+    background: linear-gradient(to right, #171717, rgba(246, 70, 93, 0.12), #171717);
   }
   100% {
     background-color: transparent;

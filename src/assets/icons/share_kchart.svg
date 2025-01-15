@@ -75,10 +75,10 @@
 <stop offset="1" stop-color="#E1FF9D"/>
 </linearGradient>
 <linearGradient id="paint8_linear_2148_954" x1="149.863" y1="40.2246" x2="149.863" y2="137.268" gradientUnits="userSpaceOnUse">
-<stop stop-color="#14C784" stop-opacity="0"/>
-<stop offset="0.363667" stop-color="#14C784" stop-opacity="0.05"/>
-<stop offset="0.640295" stop-color="#14C784" stop-opacity="0.15"/>
-<stop offset="1" stop-color="#14C784" stop-opacity="0.15"/>
+<stop stop-color="#2EBD85" stop-opacity="0"/>
+<stop offset="0.363667" stop-color="#2EBD85" stop-opacity="0.05"/>
+<stop offset="0.640295" stop-color="#2EBD85" stop-opacity="0.15"/>
+<stop offset="1" stop-color="#2EBD85" stop-opacity="0.15"/>
 </linearGradient>
 <linearGradient id="paint9_linear_2148_954" x1="149.994" y1="40.2246" x2="149.994" y2="137.268" gradientUnits="userSpaceOnUse">
 <stop stop-color="white" stop-opacity="0"/>

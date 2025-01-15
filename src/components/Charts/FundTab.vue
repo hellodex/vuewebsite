@@ -260,7 +260,7 @@ const initEcharts = () => {
   fundChart.value = (Echarts as any).init(fundechartContainer.value)
   const option = {
     // 自定义echarts图标相关配置
-    color: ['#34A853', '#EA3943'],
+    color: ['#34A853', '#F6465D'],
     grid: {
       left: '2%', // 距离左侧的距离
       right: '2%', // 距离右侧的距离
@@ -404,14 +404,14 @@ onUnmounted(() => {
       }
       .contrast——outflow {
         text-align: right;
-        color: #ea3943;
+        color: #f6465d;
         min-width: 5%;
         strong {
           display: block;
           width: 100%;
           height: 8px;
           border-radius: 0px 4px 4px 0px;
-          background: #ea3943;
+          background: #f6465d;
           font-weight: normal;
         }
       }

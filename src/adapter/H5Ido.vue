@@ -19,7 +19,7 @@
           <svg-icon
             name="log-in-01"
             class="log-in"
-            style="color: rgba(234, 57, 67, 0.5)"
+            style="color: rgba(246, 70, 93, 0.5)"
           ></svg-icon>
         </div>
         <div

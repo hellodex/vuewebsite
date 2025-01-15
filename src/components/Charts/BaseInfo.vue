@@ -124,7 +124,7 @@
           <template v-if="baseInfo?.chainInfo?.chainCode != 'SOLANA'">
             <div class="display-flex flex-direction-col pond-start">
               <div class="display-flex align-items-center margin-element">
-                <el-icon :size="18" color="#14C784" v-if="coinGoPlusInfo?.is_open_source == 1"
+                <el-icon :size="18" color="#2EBD85" v-if="coinGoPlusInfo?.is_open_source == 1"
                   ><CircleCheck
                 /></el-icon>
                 <el-icon :size="18" color="#EE475E" v-else><CircleClose /></el-icon>
@@ -132,18 +132,18 @@
               </div>
               <div class="display-flex align-items-center">
                 <el-icon :size="18" color="#EE475E" v-if="isContract"><CircleClose /></el-icon>
-                <el-icon :size="18" color="#14C784" v-else><CircleCheck /></el-icon>
+                <el-icon :size="18" color="#2EBD85" v-else><CircleCheck /></el-icon>
                 <span>{{ isContract ? '合约未放弃' : '合约放弃' }}</span>
               </div>
             </div>
             <div class="display-flex flex-direction-col pond-start">
               <div class="display-flex align-items-center margin-element">
-                <el-icon :size="18" color="#14C784" v-if="isLocked"><CircleCheck /></el-icon>
+                <el-icon :size="18" color="#2EBD85" v-if="isLocked"><CircleCheck /></el-icon>
                 <el-icon :size="18" color="#EE475E" v-else><CircleClose /></el-icon>
                 <span>{{ isLocked ? '流动性锁定' : '流动性未锁定' }}</span>
               </div>
               <div class="display-flex align-items-center">
-                <el-icon :size="18" color="#14C784" v-if="coinGoPlusInfo?.is_honeypot == 0"
+                <el-icon :size="18" color="#2EBD85" v-if="coinGoPlusInfo?.is_honeypot == 0"
                   ><CircleCheck
                 /></el-icon>
                 <el-icon :size="18" color="#EE475E" v-else><CircleClose /></el-icon>
@@ -154,14 +154,14 @@
           <template v-if="baseInfo?.chainInfo?.chainCode == 'SOLANA'">
             <div class="display-flex flex-direction-col pond-start">
               <div class="display-flex align-items-center margin-element">
-                <el-icon :size="18" color="#14C784" v-if="coinGoPlusInfo?.freezable?.status == 0"
+                <el-icon :size="18" color="#2EBD85" v-if="coinGoPlusInfo?.freezable?.status == 0"
                   ><CircleCheck
                 /></el-icon>
                 <el-icon :size="18" color="#EE475E" v-else><CircleClose /></el-icon>
                 <span>{{ coinGoPlusInfo?.freezable?.status == 0 ? '不可冻币' : '可冻币' }}</span>
               </div>
               <div class="display-flex align-items-center">
-                <el-icon :size="18" color="#14C784" v-if="coinGoPlusInfo?.mintable?.status == 0"
+                <el-icon :size="18" color="#2EBD85" v-if="coinGoPlusInfo?.mintable?.status == 0"
                   ><CircleCheck
                 /></el-icon>
                 <el-icon :size="18" color="#EE475E" v-else><CircleClose /></el-icon>
@@ -172,7 +172,7 @@
               <div class="display-flex align-items-center margin-element">
                 <el-icon
                   :size="18"
-                  color="#14C784"
+                  color="#2EBD85"
                   v-if="coinGoPlusInfo?.transfer_hook?.length == 0"
                   ><CircleCheck
                 /></el-icon>
@@ -182,7 +182,7 @@
                 }}</span>
               </div>
               <div class="display-flex align-items-center">
-                <el-icon :size="18" color="#14C784"><CircleCheck /></el-icon>
+                <el-icon :size="18" color="#2EBD85"><CircleCheck /></el-icon>
                 <span
                   >前10持币：{{
                     parseFloat(holdingCoinsTabInfo?.topHolders?.topProPortion || 0).toFixed(2)
@@ -327,31 +327,31 @@ const handelIcon = () => {
   .coin-text {
     font-size: 20px;
     margin-right: 12px;
-    color: var(--font-color-default);
+    color: #f5f5f5;
     .coin-sub-txt {
-      color: var(--dex-color-4);
+      color: #959a9f;
     }
   }
   .icon-chat {
     width: 18px;
     height: 18px;
     margin-right: 6px;
-    color: var(--dex-color-4);
+    color: #959a9f;
   }
   // .address-text {
   //   margin-left: 16px;
   // }
   .info-txt {
     font-size: 14px;
-    color: var(--dex-color-4);
+    color: #959a9f;
     margin-right: 6px;
     white-space: nowrap;
     .text-on-container-secondary {
-      color: var(--dex-color-4);
+      color: #959a9f;
     }
     .copy {
-      width: 15px;
-      height: 15px;
+      width: 14px;
+      height: 14px;
       margin-left: 4px;
       cursor: pointer;
     }
@@ -362,7 +362,7 @@ const handelIcon = () => {
     flex-direction: column;
     align-items: flex-end;
     span:first-child {
-      color: var(--font-color-default);
+      color: #f5f5f5;
       font-size: 16px;
       line-height: 1.2;
       margin-bottom: 6px;
@@ -381,11 +381,11 @@ const handelIcon = () => {
     }
     span:first-child {
       color: var(--up-color);
-      background: rgba(20, 199, 132, 0.16);
+      background: rgba(46, 189, 133, 0.16);
     }
     span:last-child {
       color: var(--down-color);
-      background: rgba(234, 57, 67, 0.16);
+      background: rgba(246, 70, 93, 0.16);
     }
   }
   .pond-start {
@@ -401,7 +401,7 @@ const handelIcon = () => {
     border-radius: 8px;
     font-size: 12px;
     margin-left: 16px;
-    color: var(--font-color-default);
+    color: #f5f5f5;
     background-color: #0aa76f;
     cursor: pointer;
     white-space: nowrap;
@@ -410,7 +410,7 @@ const handelIcon = () => {
     color: var(--bg-color);
     padding: 10px;
     border-radius: 8px;
-    background-color: var(--font-color-default);
+    background-color: #f5f5f5;
     font-size: 12px;
     margin-left: 16px;
     cursor: pointer;
@@ -422,7 +422,7 @@ const handelIcon = () => {
     margin-right: 4px;
   }
   .snipe-text {
-    color: var(--font-color-default);
+    color: #f5f5f5;
     margin-right: 20px;
     cursor: pointer;
 

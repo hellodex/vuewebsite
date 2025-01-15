@@ -35,7 +35,7 @@
           <svg-icon
             name="log-in-01"
             class="log-in"
-            style="color: rgba(234, 57, 67, 0.4)"
+            style="color: rgba(246, 70, 93, 0.4)"
           ></svg-icon>
         </div>
         <div class="num-main display-flex align-items-fs justify-content-sp" v-if="tabIndex == 1">
@@ -500,7 +500,7 @@ onMounted(() => {
     .log-in {
       width: 0.4267rem;
       height: 0.4267rem;
-      color: rgba(234, 57, 67, 1) !important;
+      color: rgba(246, 70, 93, 1) !important;
     }
   }
 
@@ -761,12 +761,12 @@ onMounted(() => {
           font-weight: normal;
         }
         .down {
-          color: #ea3943;
-          border: 1px solid #ea3943;
+          color: #f6465d;
+          border: 1px solid #f6465d;
         }
         .up {
-          color: #14c784;
-          border: 1px solid #14c784;
+          color: #2ebd85;
+          border: 1px solid #2ebd85;
         }
         span {
           color: #3f3f3f;
