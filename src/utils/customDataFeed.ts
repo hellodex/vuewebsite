@@ -184,9 +184,10 @@ export default class CustomDataFeed {
     socket = io(
       `https://wss.apihellodex.lol?pair=${chainInfo?.pairAddress}&chainCode=${chainInfo?.chainCode}`
     )
-    socket.on('kchart', (message: any) => {
-      console.log('server-message', JSON.parse(message))
+    socket.on('kchart', async (message: any) => {
       const data = JSON.parse(message)
+      console.log('server-message', JSON.parse(message).tx, JSON.parse(message))
+
       useSubscribeKChart.createSubscribeKChartInfo({
         C: data.price,
         H: data.price,
@@ -207,7 +208,7 @@ export default class CustomDataFeed {
         low: parseFloat(data.price),
         volume: parseFloat(data.orderAmount)
       }
-      onRealtimeCallback(bar)
+      await onRealtimeCallback(bar)
     })
   }
 
