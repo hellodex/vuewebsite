@@ -95,7 +95,7 @@
               <PercentageNotbg :value="scope.row?.totalEarnRate || 0" class="font-family-Heavy" />
             </template>
           </el-table-column>
-          <el-table-column label="操作" align="right">
+          <el-table-column label="操作" width="235" align="right">
             <template #default="scope">
               <span class="hold-btn" @click.stop="handelSellLimit(scope.row)">止盈</span>
               <span class="hold-btn" @click.stop="handelStopLimit(scope.row)">止损</span>
@@ -294,7 +294,7 @@ const handelTableRow = (row: any) => {
     margin-bottom: 8px;
   }
   .btn-trade {
-    background: rgba(234, 57, 67, 0.1);
+    background: rgba(246, 70, 93, 0.1);
     color: var(--down-color);
   }
   .coin-box {

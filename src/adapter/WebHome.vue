@@ -209,11 +209,11 @@ const nounScreenList = ref<any>([])
 const nounScreenIcon: any = {
   1: {
     name: 'fire',
-    color: '#EA3943'
+    color: '#F6465D'
   },
   8: {
     name: 'activity',
-    color: '#EA3943'
+    color: '#F6465D'
   },
   9: {
     name: 'stars',
@@ -225,7 +225,7 @@ const nounScreenIcon: any = {
   },
   3: {
     name: 'line-chart-down-02',
-    color: '#EA3943'
+    color: '#F6465D'
   }
 }
 
@@ -390,17 +390,17 @@ watch(
       item.seriesOptions =
         item.priceByPairAddress.chg1d[0] === '-'
           ? {
-              topColor: '#EA3943',
-              bottomColor: 'rgba(234, 57, 67, 0.28)',
-              lineColor: '#EA3943',
+              topColor: '#F6465D',
+              bottomColor: 'rgba(246, 70, 93, 0.28)',
+              lineColor: '#F6465D',
               lineWidth: 2,
               lastValueVisible: false,
               priceLineVisible: false
             }
           : {
-              topColor: '#14C784',
-              bottomColor: 'rgba(20, 199, 132, 0.28)',
-              lineColor: '#14C784',
+              topColor: '#2EBD85',
+              bottomColor: 'rgba(46, 189, 133, 0.28)',
+              lineColor: '#2EBD85',
               lineWidth: 2,
               lastValueVisible: false,
               priceLineVisible: false

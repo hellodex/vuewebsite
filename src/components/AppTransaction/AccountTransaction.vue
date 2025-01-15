@@ -489,7 +489,7 @@
                 <span class="logo-title">HelloDex</span>
               </div>
               <p class="display-flex align-items-center">
-                任何平台都要把<i style="color: #14c784; font-style: normal">利润80%</i>分给用户
+                任何平台都要把<i style="color: #2ebd85; font-style: normal">利润80%</i>分给用户
               </p>
               <span class="tips-txt">开创和主导Web3变革</span>
             </div>
@@ -929,17 +929,17 @@ const handelShare = async (params: any) => {
     seriesOptions:
       params.totalEarn[0] === '-'
         ? {
-            topColor: '#EA3943',
-            bottomColor: 'rgba(234, 57, 67, 0.1)',
-            lineColor: '#EA3943',
+            topColor: '#F6465D',
+            bottomColor: 'rgba(246, 70, 93, 0.1)',
+            lineColor: '#F6465D',
             lineWidth: 2,
             lastValueVisible: false,
             priceLineVisible: false
           }
         : {
-            topColor: '#14C784',
-            bottomColor: 'rgba(20, 199, 132, 0.1)',
-            lineColor: '#14C784',
+            topColor: '#2EBD85',
+            bottomColor: 'rgba(46, 189, 133, 0.1)',
+            lineColor: '#2EBD85',
             lineWidth: 2,
             lastValueVisible: false,
             priceLineVisible: false

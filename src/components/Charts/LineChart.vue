@@ -24,7 +24,7 @@ const initEcharts = () => {
   chartObj.value = (Echarts as any).init(lineEchartContainer.value)
   const option = {
     // 自定义echarts图标相关配置
-    color: ['#34A853', '#EA3943'],
+    color: ['#34A853', '#F6465D'],
     grid: {
       left: '2%', // 距离左侧的距离
       right: '2%', // 距离右侧的距离

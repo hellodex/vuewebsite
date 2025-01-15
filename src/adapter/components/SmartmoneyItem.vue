@@ -31,19 +31,19 @@
       </div>
       <div class="coin-status margin-bottom display-flex align-items-center justify-content-center">
         <div class="display-flex align-items-center">
-          <el-icon :size="12" color="#14C784"><CircleCheck /></el-icon>
+          <el-icon :size="12" color="#2EBD85"><CircleCheck /></el-icon>
           <span>不可冻结</span>
         </div>
         <div class="display-flex align-items-center">
-          <el-icon :size="12" color="#EA3943"><CircleClose /></el-icon>
+          <el-icon :size="12" color="#F6465D"><CircleClose /></el-icon>
           <span>黑名单丢弃</span>
         </div>
         <div class="display-flex align-items-center">
-          <el-icon :size="12" color="#14C784"><CircleCheck /></el-icon>
+          <el-icon :size="12" color="#2EBD85"><CircleCheck /></el-icon>
           <span>烧池子</span>
         </div>
         <div class="display-flex align-items-center">
-          <el-icon :size="12" color="#14C784"><CircleCheck /></el-icon>
+          <el-icon :size="12" color="#2EBD85"><CircleCheck /></el-icon>
           <span style="margin-right: 0">Top10持仓:63.31%</span>
         </div>
       </div>

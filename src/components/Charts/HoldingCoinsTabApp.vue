@@ -128,7 +128,7 @@ const initEcharts = () => {
         `
       }
     },
-    color: ['#14C784', '#EFEFEF'],
+    color: ['#2EBD85', '#EFEFEF'],
     legend: {
       itemWidth: 8,
       itemHeight: 8,
