@@ -26,7 +26,7 @@ export function APIgetChart(data: object) {
  */
 export function APIkCharts(data: object) {
   return http({
-    url: WEB_URL + '/api/webv2/kChart/kChartsAndSwap',
+    url: WEB_URL + '/api/webv2/kChart/kCharts',
     method: 'POST',
     data
   })
