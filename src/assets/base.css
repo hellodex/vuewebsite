@@ -77,7 +77,7 @@ html.dark {
   --dex-color-dark-3: #212121;
   --dex-color-dark-4: #1b1b1b;
   --dex-color-dark-5: #303030;
-  --dex-color-light-0: #ffffff;
+  --dex-color-light-0: #f5f5f5;
   --dex-color-6: #202020;
 }
 
@@ -175,15 +175,15 @@ html.dark {
   --dex-color-4: #828282;
   --dex-color-5: #434343;
 
-  --up-color: #14c784;
-  --down-color: #ea3943;
+  --up-color: #2ebd85;
+  --down-color: #f6465d;
 
   --vt-font-color-active: #202020;
 
   --el-color-primary-light-3: #2f4053 !important;
   --el-color-primary-light-5: #60748b !important;
-  --el-color-success: #14c784 !important;
-  --el-color-success-light-3: #14c784 !important;
+  --el-color-success: #2ebd85 !important;
+  --el-color-success-light-3: #2ebd85 !important;
   --el-border-color-lighter: #f2f2f2 !important;
 }
 

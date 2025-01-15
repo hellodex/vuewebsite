@@ -562,7 +562,7 @@ onUnmounted(() => {
       span {
         line-height: 36px;
         color: #848e9c;
-        font-size: 12px;
+        font-size: 14px;
         font-style: normal;
         font-weight: normal;
         font-family: 'PingFangSC-Medium';
@@ -583,7 +583,7 @@ onUnmounted(() => {
       padding: 10px 12px 12px;
     }
     .table-items-head {
-      font-size: 12px;
+      font-size: 13px;
       font-style: normal;
       font-weight: normal;
       color: #848e9c;
@@ -629,7 +629,7 @@ onUnmounted(() => {
         text-align: left;
         .symbol {
           span {
-            font-size: 12px;
+            font-size: 13px;
             color: #9aa0aa;
           }
           span:first-child {
@@ -638,7 +638,7 @@ onUnmounted(() => {
           }
         }
         .number {
-          font-size: 12px;
+          font-size: 13px;
           font-family: 'PingFangSC-Medium';
           color: #9aa0aa;
         }
@@ -647,7 +647,7 @@ onUnmounted(() => {
         text-align: right;
         span {
           font-family: 'PingFangSC-Medium';
-          font-size: 12px;
+          font-size: 13px;
         }
         span:first-child {
           color: #f5f5f5;

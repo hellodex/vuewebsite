@@ -22,7 +22,7 @@
         <div
           class="slide-content display-flex align-items-center flex-direction-col justify-content-center"
         >
-          <svg-icon name="credit-card-download" class="icon" style="color: #14c784"></svg-icon>
+          <svg-icon name="credit-card-download" class="icon" style="color: #2ebd85"></svg-icon>
           <span>{{ i18n.t('tool.TokenBatchCollection') }}</span>
         </div>
       </swiper-slide>
@@ -62,7 +62,7 @@
         <div
           class="slide-content display-flex align-items-center flex-direction-col justify-content-center"
         >
-          <svg-icon name="credit-card-download" class="icon" style="color: #14c784"></svg-icon>
+          <svg-icon name="credit-card-download" class="icon" style="color: #2ebd85"></svg-icon>
           <span>{{ i18n.t('tool.TokenBatchCollection') }}</span>
         </div>
       </swiper-slide>

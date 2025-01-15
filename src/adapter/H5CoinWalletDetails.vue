@@ -199,7 +199,7 @@
             <div class="display-flex align-items-center">
               <el-icon
                 :size="14"
-                color="#14C784"
+                color="#2EBD85"
                 v-if="pondTabInfo?.coinGoPlusInfo?.is_open_source == 1"
                 ><CircleCheck
               /></el-icon>
@@ -210,18 +210,18 @@
             </div>
             <div class="display-flex align-items-center">
               <el-icon :size="14" color="#EE475E" v-if="isContract"><CircleClose /></el-icon>
-              <el-icon :size="14" color="#14C784" v-else><CircleCheck /></el-icon>
+              <el-icon :size="14" color="#2EBD85" v-else><CircleCheck /></el-icon>
               <span>{{ isContract ? '合约未放弃' : '合约放弃' }}</span>
             </div>
             <div class="display-flex align-items-center">
-              <el-icon :size="14" color="#14C784" v-if="isLocked"><CircleCheck /></el-icon>
+              <el-icon :size="14" color="#2EBD85" v-if="isLocked"><CircleCheck /></el-icon>
               <el-icon :size="14" color="#EE475E" v-else><CircleClose /></el-icon>
               <span>{{ isLocked ? '流动性锁定' : '流动性未锁定' }}</span>
             </div>
             <div class="display-flex align-items-center">
               <el-icon
                 :size="14"
-                color="#14C784"
+                color="#2EBD85"
                 v-if="pondTabInfo?.coinGoPlusInfo?.is_honeypot == 0"
                 ><CircleCheck
               /></el-icon>
@@ -233,7 +233,7 @@
             <div class="display-flex align-items-center">
               <el-icon
                 :size="14"
-                color="#14C784"
+                color="#2EBD85"
                 v-if="pondTabInfo?.coinGoPlusInfo?.freezable?.status == 0"
                 ><CircleCheck
               /></el-icon>
@@ -245,7 +245,7 @@
             <div class="display-flex align-items-center">
               <el-icon
                 :size="14"
-                color="#14C784"
+                color="#2EBD85"
                 v-if="pondTabInfo?.coinGoPlusInfo?.mintable?.status == 0"
                 ><CircleCheck
               /></el-icon>
@@ -259,7 +259,7 @@
             <div class="display-flex align-items-center">
               <el-icon
                 :size="14"
-                color="#14C784"
+                color="#2EBD85"
                 v-if="pondTabInfo?.coinGoPlusInfo?.transfer_hook?.length == 0"
                 ><CircleCheck
               /></el-icon>
@@ -732,7 +732,7 @@ onUnmounted(() => {})
     padding: 0.2rem 0.32rem;
     .test-main {
       padding: 0.1067rem 0.2667rem;
-      background-color: rgb(20, 199, 132, 0.2);
+      background-color: rgb(46, 189, 133, 0.2);
       border-radius: 4px;
       font-size: 11px;
       span {
@@ -787,7 +787,7 @@ onUnmounted(() => {})
       }
       .percentage-up {
         color: var(--up-color);
-        background: rgba(20, 199, 132, 0.2);
+        background: rgba(46, 189, 133, 0.2);
       }
       .percentage-down {
         color: var(--down-color);

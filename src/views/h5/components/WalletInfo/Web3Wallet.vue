@@ -90,7 +90,7 @@
             >
           </div>
           <p class="warning" v-if="isConnected">
-            <van-checkbox v-model="checked" checked-color="#EA3943">
+            <van-checkbox v-model="checked" checked-color="#F6465D">
               <strong>{{ i18n.t('h5.HideSmallAssets') }}</strong>
               <van-icon name="warning-o" />
             </van-checkbox>
@@ -335,7 +335,7 @@ onUnmounted(() => {
       width: 0.2667rem;
       height: 0.2667rem;
       border-radius: 50%;
-      background-color: #14c784;
+      background-color: #2ebd85;
       margin-right: 0.24rem;
     }
     span {

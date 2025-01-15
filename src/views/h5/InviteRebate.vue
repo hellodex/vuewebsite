@@ -123,7 +123,7 @@
               <span class="logo-title">HelloDex</span>
             </div>
             <p class="display-flex align-items-center">
-              任何平台都要把<i style="color: #14c784; font-style: normal">利润80%</i>分给用户
+              任何平台都要把<i style="color: #2ebd85; font-style: normal">利润80%</i>分给用户
             </p>
             <span class="tips-txt">开创和主导Web3变革</span>
           </div>

@@ -32,7 +32,7 @@
               <svg-icon
                 name="log-in-01"
                 class="log-in"
-                style="color: rgba(234, 57, 67, 0.4)"
+                style="color: rgba(246, 70, 93, 0.4)"
               ></svg-icon>
             </div>
           </div>
@@ -180,7 +180,7 @@ onMounted(() => {
       font-style: normal;
     }
     i {
-      color: #14c784;
+      color: #2ebd85;
       font-style: normal;
     }
     .invite-icon {

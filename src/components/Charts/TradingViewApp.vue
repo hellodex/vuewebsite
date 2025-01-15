@@ -135,13 +135,13 @@ const chartOptions = ref({
 })
 
 const seriesOptions = ref({
-  upColor: '#14C784',
+  upColor: '#2EBD85',
   downColor: '#EF485C',
   wickVisible: true,
   borderVisible: false,
-  borderUpColor: '#14C784',
+  borderUpColor: '#2EBD85',
   borderDownColor: '#EF485C',
-  wickUpColor: '#14C784',
+  wickUpColor: '#2EBD85',
   wickDownColor: '#EF485C',
   priceFormat: {
     type: 'custom',
@@ -178,7 +178,7 @@ const getBars = async () => {
       value: parseFloat(item.volume),
       color:
         parseFloat(item.C) >= parseFloat(item.O)
-          ? 'rgba(20, 199, 132, 0.50)'
+          ? 'rgba(46, 189, 133, 0.50)'
           : 'rgba(201, 62, 95, 0.50)'
     }
   })
@@ -209,7 +209,7 @@ const subscribeBars = async () => {
     volume: parseFloat(res.chart.volume),
     color:
       parseFloat(res.chart.C) >= parseFloat(res.chart.O)
-        ? 'rgba(20, 199, 132, 0.50)'
+        ? 'rgba(46, 189, 133, 0.50)'
         : 'rgba(201, 62, 95, 0.50)'
   })
 }

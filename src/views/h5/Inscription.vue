@@ -837,11 +837,11 @@ onUnmounted(() => {
         border-radius: 0.1067rem;
       }
       .red {
-        background-color: rgba(234, 57, 67, 0.16);
+        background-color: rgba(246, 70, 93, 0.16);
         color: var(--down-color);
       }
       .green {
-        background-color: rgba(20, 199, 132, 0.16);
+        background-color: rgba(46, 189, 133, 0.16);
         color: var(--up-color);
       }
     }

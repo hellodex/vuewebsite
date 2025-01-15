@@ -185,35 +185,35 @@
           </h6>
           <p class="display-flex align-items-center justify-content-sp">
             <span class="display-flex align-items-center">
-              <i style="background-color: rgba(20, 199, 132, 1)"></i>
+              <i style="background-color: rgba(46, 189, 133, 1)"></i>
               &gt;500%
             </span>
-            <strong style="color: rgba(20, 199, 132, 1)">2 (50%)</strong>
+            <strong style="color: rgba(46, 189, 133, 1)">2 (50%)</strong>
           </p>
           <p class="display-flex align-items-center justify-content-sp">
             <span class="display-flex align-items-center">
-              <i style="background-color: rgba(20, 199, 132, 0.7)"></i>
+              <i style="background-color: rgba(46, 189, 133, 0.7)"></i>
               200% ~ 500%
             </span>
             <strong>0</strong>
           </p>
           <p class="display-flex align-items-center justify-content-sp">
             <span class="display-flex align-items-center">
-              <i style="background-color: rgba(20, 199, 132, 0.5)"></i>
+              <i style="background-color: rgba(46, 189, 133, 0.5)"></i>
               0% ~ 200%
             </span>
-            <strong style="color: rgba(20, 199, 132, 0.5)">2 (50%)</strong>
+            <strong style="color: rgba(46, 189, 133, 0.5)">2 (50%)</strong>
           </p>
           <p class="display-flex align-items-center justify-content-sp">
             <span class="display-flex align-items-center">
-              <i style="background-color: rgba(234, 57, 67, 0.5)"></i>
+              <i style="background-color: rgba(246, 70, 93, 0.5)"></i>
               0% ~ -50%
             </span>
             <strong>0</strong>
           </p>
           <p class="display-flex align-items-center justify-content-sp">
             <span class="display-flex align-items-center">
-              <i style="background-color: rgba(234, 57, 67, 1)"></i>
+              <i style="background-color: rgba(246, 70, 93, 1)"></i>
               &lt;-50%
             </span>
             <strong>0</strong>
@@ -550,21 +550,21 @@ const tableData = [
           height: 8px;
         }
         span:nth-child(1) {
-          background-color: rgba(20, 199, 132, 1);
+          background-color: rgba(46, 189, 133, 1);
           border-top-left-radius: 16px;
           border-bottom-left-radius: 16px;
         }
         span:nth-child(2) {
-          background-color: rgba(20, 199, 132, 0.7);
+          background-color: rgba(46, 189, 133, 0.7);
         }
         span:nth-child(3) {
-          background-color: rgba(20, 199, 132, 0.5);
+          background-color: rgba(46, 189, 133, 0.5);
         }
         span:nth-child(4) {
-          background-color: rgba(234, 57, 67, 0.5);
+          background-color: rgba(246, 70, 93, 0.5);
         }
         span:nth-child(5) {
-          background-color: rgba(234, 57, 67, 1);
+          background-color: rgba(246, 70, 93, 1);
           border-top-right-radius: 16px;
           border-bottom-right-radius: 16px;
         }
