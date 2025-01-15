@@ -1,20 +1,18 @@
 import { reactive } from 'vue'
 import { io } from 'socket.io-client'
+import { useChainInfoStore } from '@/stores/chainInfo'
 
 interface stateT {
   connected: boolean
-  fooEvents: any
-  barEvents: any
 }
 
 export const state = reactive<stateT>({
-  connected: false,
-  fooEvents: [],
-  barEvents: []
+  connected: false
 })
 
 // "undefined" means the URL will be computed from the `window.location` object
-const URL = process.env.NODE_ENV === 'production' ? undefined : 'http://localhost:3000'
+const URL =
+  'http://109.123.230.51:8600?pair=8QPqDLwDqjHvSAzHXcCG5GQZWS6YD91Y2M9bQUTCJ5Ph&chainCode=SOLANA'
 
 export const socket: any = io(URL)
 
@@ -26,10 +24,6 @@ socket.on('disconnect', () => {
   state.connected = false
 })
 
-socket.on('foo', (...args: any) => {
-  state.fooEvents.push(args)
-})
-
-socket.on('bar', (...args: any) => {
-  state.barEvents.push(args)
+socket.on('kchart', (...args: any) => {
+  console.log('server-message', JSON.parse(args))
 })
