@@ -23,7 +23,7 @@
                   <img :src="chainLogoObj[scope.row.chainCode]" alt="" class="chainCode" />
                 </span>
                 <p class="display-flex align-items-center">
-                  <span class="base-symbol font-family-Heavy">{{ scope.row.symbol || '-' }}</span>
+                  <span class="base-symbol font-family-Medium">{{ scope.row.symbol || '-' }}</span>
                 </p>
               </div>
             </template>
@@ -33,8 +33,8 @@
               <span
                 :class="
                   scope.row?.chg1d?.[0] === '-'
-                    ? 'font-family-Heavy down-color'
-                    : 'font-family-Heavy up-color'
+                    ? 'font-family-Medium down-color'
+                    : 'font-family-Medium up-color'
                 "
                 >${{ numberFormat(scope.row.price) }}
               </span>
@@ -44,14 +44,14 @@
           </el-table-column>
           <el-table-column label="平均买入价格">
             <template #default="scope">
-              <span class="text-color font-family-Heavy"
+              <span class="text-color font-family-Medium"
                 >${{ numberFormat(scope.row.averagePrice) || '-' }}</span
               >
             </template>
           </el-table-column>
           <el-table-column label="当前持仓">
             <template #default="scope">
-              <span class="text-color font-family-Heavy"
+              <span class="text-color font-family-Medium"
                 >{{ numberFormat(scope.row.amount) || '-' }}<br />
               </span>
               <span class="">≈${{ numberFormat(scope.row.volume) }} </span>
@@ -59,7 +59,7 @@
           </el-table-column>
           <el-table-column label="总买入">
             <template #default="scope">
-              <span class="up-color font-family-Heavy"
+              <span class="up-color font-family-Medium"
                 >{{ numberFormat(scope.row.totalBuyAmount) || '-' }}
               </span>
               <br />
@@ -68,7 +68,7 @@
           </el-table-column>
           <el-table-column label="总卖出">
             <template #default="scope">
-              <span class="down-color font-family-Heavy"
+              <span class="down-color font-family-Medium"
                 >{{ numberFormat(scope.row.totalSellAmount) || '-' }}
               </span>
               <br />
@@ -80,8 +80,8 @@
               <span
                 :class="
                   scope.row?.totalEarn?.[0] === '-'
-                    ? 'font-family-Heavy down-color'
-                    : 'font-family-Heavy up-color'
+                    ? 'font-family-Medium down-color'
+                    : 'font-family-Medium up-color'
                 "
                 >{{
                   (scope.row?.totalEarn?.[0] === '-' ? '-$' : '+$') +
@@ -92,7 +92,7 @@
           </el-table-column>
           <el-table-column label="收益率">
             <template #default="scope">
-              <PercentageNotbg :value="scope.row?.totalEarnRate || 0" class="font-family-Heavy" />
+              <PercentageNotbg :value="scope.row?.totalEarnRate || 0" class="font-family-Medium" />
             </template>
           </el-table-column>
           <el-table-column label="操作" width="235" align="right">
@@ -315,9 +315,9 @@ const handelTableRow = (row: any) => {
       right: -1px;
       bottom: 0px;
     }
-    .base-symbol {
-      color: #f5f5f5;
-    }
+    // .base-symbol {
+    //   color: #f5f5f5;
+    // }
   }
 }
 </style>

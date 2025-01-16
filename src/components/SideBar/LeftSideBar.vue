@@ -700,7 +700,7 @@ onUnmounted(() => {
           font-size: 13px;
         }
         span:first-child {
-          color: #f5f5f5;
+          color: #9aa0aa;
         }
         .red {
           color: var(--down-color);
