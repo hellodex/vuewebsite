@@ -290,7 +290,6 @@ const handelTableRow = (row: any) => {
     margin-left: 8px;
     transition: all 0.2s;
     color: #848e9c;
-    font-family: 'PingFangSC-Medium';
     margin-bottom: 8px;
   }
   .btn-trade {

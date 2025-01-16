@@ -150,7 +150,7 @@ const handelSearch = () => {
 
   .transaction-head {
     padding: 0.32rem 0.4267rem;
-    background-color: var(--font-color-default);
+    background-color: #fff;
   }
   .transaction-tab {
     span {

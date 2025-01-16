@@ -755,7 +755,7 @@ onUnmounted(() => {
   }
   .wallet-list {
     .wallet-tab-items {
-      background-color: var(--font-color-default);
+      background-color: #fff;
       span {
         font-size: 0.4267rem;
         color: #9c9c9c;
@@ -771,7 +771,7 @@ onUnmounted(() => {
     }
     .warning {
       padding: 0.4267rem 0 0.32rem;
-      background-color: var(--font-color-default);
+      background-color: #fff;
       strong {
         color: #9c9c9c;
         margin-right: 0.2133rem;

@@ -40,7 +40,7 @@
               >
             </div> -->
           <div class="quick-buy-box display-flex align-items-center">
-            <DoubleCost />
+            <DoubleCost style="margin-right: 20px" />
             <svg-icon :name="isConnected ? 'icon-buy-cur' : 'icon-buy'" class="icon-svg"></svg-icon>
             <span style="margin: 0 8px 0 4px">买入数量</span>
             <el-input

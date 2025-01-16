@@ -125,7 +125,7 @@
               >{{ item.label }}</span
             >
           </div>
-          <span class="refresh-text" v-if="holdTabIndex == 1">点击刷新仓位</span>
+          <!-- <span class="refresh-text" v-if="holdTabIndex == 1">点击刷新仓位</span> -->
         </div>
       </van-sticky>
       <template v-if="holdTabIndex == 1">
@@ -1133,7 +1133,7 @@ onUnmounted(() => {
   .hold-content {
     margin-top: 0.16rem;
     .hold-tab-items {
-      background-color: var(--font-color-default);
+      background-color: #fff;
       position: relative;
     }
     .hold-tab {

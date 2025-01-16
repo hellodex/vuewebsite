@@ -326,9 +326,35 @@
                     <div>
                       <p class="display-flex align-items-center symbol">
                         <span>{{ item.baseToken?.symbol || '-' }}</span>
-                        <span>/{{ item.quoteToken?.symbol || '-' }}</span>
+                        <img src="@/assets/img/pump-logo.webp" class="pump-logo" alt="" />
+                        <svg-icon
+                          name="twitter-pump"
+                          class="icon-url"
+                          @click.stop="handelRouter(item.twitter)"
+                          v-if="item.twitter"
+                        ></svg-icon>
+
+                        <svg-icon
+                          name="website-pump"
+                          class="icon-url"
+                          @click.stop="handelRouter(item.website)"
+                          v-if="item.website"
+                        ></svg-icon>
+
+                        <svg-icon
+                          name="telegram-pump"
+                          class="icon-url"
+                          @click.stop="handelRouter(item.telegram)"
+                          v-if="item.telegram"
+                        ></svg-icon>
                       </p>
-                      <span class="number">{{ numberFormat(item.totalCount) }}</span>
+                      <div class="display-flex align-items-center">
+                        <span class="number">{{ numberFormat(item.totalCount) }}</span>
+                        <svg-icon name="icon-percent" class="icon-percent"></svg-icon>
+                        <span class="up-color percent-txt"
+                          >{{ ((item.percent || 0) * 100).toFixed(2) }}%</span
+                        >
+                      </div>
                     </div>
                   </div>
                   <div class="display-flex flex-direction-col table-item-last">
@@ -481,6 +507,11 @@ const handelJump = (param: any) => {
   router.push(`/k/${param.pairAddress}?chainCode=${param.chainCode}&timeType=15m`)
 }
 
+const handelRouter = (url: string) => {
+  console.log(url)
+  window.open(url)
+}
+
 onMounted(async () => {
   skeletonLoading.value = true
   favoriteSkeleton.value = true
@@ -496,8 +527,10 @@ onUnmounted(() => {
 
 <style scoped lang="scss">
 .left-layout {
-  width: 264px;
-  min-width: 264px;
+  width: 276px;
+  min-width: 276px;
+  padding-left: 12px;
+  overflow: hidden;
   .coin-list {
     background: rgba(23, 24, 27, 0.3);
     border-radius: 12px;
@@ -615,7 +648,7 @@ onUnmounted(() => {
         border-radius: 50%;
       }
       .logo {
-        margin-right: 8px;
+        margin-right: 6px;
       }
       .chainCode {
         width: 14px;
@@ -636,11 +669,28 @@ onUnmounted(() => {
             font-family: 'PingFangSC-Heavy';
             color: #f5f5f5;
           }
+          .pump-logo,
+          .icon-url {
+            width: 12px;
+            height: 12px;
+            margin-left: 1px;
+            color: #9aa0aa;
+          }
         }
         .number {
           font-size: 13px;
           font-family: 'PingFangSC-Medium';
           color: #9aa0aa;
+        }
+        .icon-percent {
+          width: 12px;
+          height: 12px;
+          margin-right: 2px;
+          margin-left: 4px;
+          color: var(--up-color);
+        }
+        .percent-txt {
+          font-size: 10px;
         }
       }
       .table-item-last {

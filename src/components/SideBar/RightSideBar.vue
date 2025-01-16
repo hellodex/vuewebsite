@@ -1,5 +1,5 @@
 <template>
-  <el-scrollbar height="calc(100vh - 136px)">
+  <el-scrollbar height="calc(100vh - 206px)">
     <aside class="right-layout">
       <el-skeleton style="width: 100%" :loading="props.loadRightSideBar" animated :rows="28">
         <div class="menu-box display-flex align-items-center justify-content-sp">
@@ -36,9 +36,9 @@
         <a
           href="https://t.me/HelloDex_cn"
           target="_blank"
-          class="pond-main publicize-main align-items-center justify-content-sp"
+          class="publicize-main align-items-center justify-content-sp"
         >
-          <div class="display-flex flex-direction-col">
+          <!-- <div class="display-flex flex-direction-col">
             <div class="display-flex align-items-center">
               <svg-icon name="publicize-coin" class="publicize-coin"></svg-icon>
               <span>就在HelloDex</span>
@@ -47,7 +47,7 @@
               <span>申请更新信息</span>
               <svg-icon name="chevron-right" class="arrow-down"></svg-icon>
             </div>
-          </div>
+          </div> -->
           <img src="@/assets/img/rocket-logo.png" alt="" class="rocket-logo" />
         </a>
         <div class="transaction-box">
