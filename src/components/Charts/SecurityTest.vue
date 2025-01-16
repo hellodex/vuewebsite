@@ -1,45 +1,104 @@
 <template>
-  <div class="securityTest-tabs-content display-flex align-items-fs">
-    <div class="display-flex flex-direction-col securityTest-left-box">
-      <span class="securityTest-txt">风险评估</span>
-      <div class="securityTest-score">
-        <div class="display-flex justify-content-center progress-box">
-          <el-progress
-            type="dashboard"
-            :percentage="isMainToken ? 20 : 75"
-            :stroke-width="15"
-            :color="isMainToken ? '#2EBD85' : '#f90'"
-            :width="200"
-            stroke-linecap="round"
-          >
-            <template #default="{ percentage }">
-              <div class="display-flex flex-direction-col">
-                <span class="percentage-value" :style="{ color: isMainToken ? '#2EBD85' : '#f90' }"
-                  >{{ percentage }}%</span
-                >
-                <span class="percentage-label">风险评估</span>
-                <p class="tips-text" :style="{ color: isMainToken ? '#2EBD85' : '#f90' }">
-                  {{ isMainToken ? '可信任代币' : '可能存在风险' }}
-                </p>
-              </div>
-            </template>
-          </el-progress>
+  <div class="securityTest-tabs-content">
+    <div class="display-flex align-items-center">
+      <span class="logo">
+        <el-image :src="baseInfo?.tokenInfo?.logo" alt="" class="baseInfo-img">
+          <template #error>
+            <svg-icon name="logo1" class="baseInfo-img"></svg-icon>
+          </template>
+        </el-image>
+        <svg-icon :name="'coin' + baseInfo?.chainInfo?.chainCode" class="chainCode"></svg-icon>
+      </span>
+      <div class="display-flex flex-direction-col">
+        <div class="display-flex align-items-center">
+          <div class="display-flex align-items-center coin-text font-family-Heavy">
+            <span>{{
+              MAIN_COIN[baseInfo?.tokenInfo?.baseSymbol] || baseInfo?.tokenInfo?.baseSymbol || '-'
+            }}</span>
+            <span class="coin-sub-txt">/{{ baseInfo?.tokenInfo?.quoteSymbol || '-' }}</span>
+          </div>
+          <div class="display-flex align-items-center">
+            <svg-icon name="icon-pc" class="icon-pc" @click="handelIcon"></svg-icon>
+            <svg-icon name="twitter-pump" class="icon-chat" @click="handelIcon"></svg-icon>
+            <svg-icon name="telegram-pump" class="icon-chat" @click="handelIcon"></svg-icon>
+            <a
+              :href="`https://x.com/search?q=${baseInfo?.tokenInfo?.baseAddress}`"
+              target="_blank"
+              class="icon-chat"
+            >
+              <el-icon size="16"><Search /></el-icon>
+            </a>
+          </div>
+          <div class="increase-text display-flex align-items-center font-family-Heavy">
+            <span :class="priceIncrease.increase[0] === '-' ? 'down-color' : 'up-color'"
+              >${{ numberFormat(priceIncrease.price || 0) }}</span
+            >
+            <PercentageChange :value="priceIncrease.increase" />
+          </div>
         </div>
-
-        <div class="display-flex flex-direction-col securityTest-info">
-          <span
-            >创建者：{{ shortifyAddress(coinGoPlusInfo?.creator_address)
-            }}{{ isblackHole(coinGoPlusInfo?.creator_address) ? '(黑洞地址)' : '' }}</span
+        <div class="display-flex align-items-center address-text">
+          <div
+            class="info-txt font-family-Medium display-flex align-items-center justify-content-sp"
           >
-          <span v-if="coinGoPlusInfo?.chainCode !== 'SOLANA'"
-            >持有者：{{ shortifyAddress(coinGoPlusInfo?.owner_address)
-            }}{{ isblackHole(coinGoPlusInfo?.owner_address) ? '(黑洞地址)' : '' }}</span
-          >
-          <span>总量：{{ numberFormat(coinGoPlusInfo?.total_supply || 0) }} </span>
+            <span>{{ i18n.t('kChart.Address') }}：</span>
+            <div class="display-flex align-items-center">
+              <span class="text-on-container-secondary">{{
+                shortifyAddress(baseInfo?.tokenInfo?.baseAddress)
+              }}</span>
+              <svg-icon
+                name="copy"
+                class="copy"
+                v-copy="baseInfo?.tokenInfo?.baseAddress"
+              ></svg-icon>
+            </div>
+          </div>
+          <div class="info-txt display-flex align-items-center justify-content-sp">
+            <span>{{ i18n.t('kChart.liquidityPool') }}：</span>
+            <div class="display-flex align-items-center">
+              <span class="text-on-container-secondary">{{
+                shortifyAddress(baseInfo?.chainInfo?.pairAddress)
+              }}</span>
+              <svg-icon
+                name="copy"
+                class="copy"
+                v-copy="baseInfo?.chainInfo?.pairAddress"
+              ></svg-icon>
+            </div>
+          </div>
+          <div class="pond-buy display-flex align-items-center">
+            <span class="font-family-Medium">税：</span>
+            <span class="font-family-Heavy"
+              >{{ parseFloat(baseInfo?.coinGoPlusInfo?.buy_tax || 0).toFixed(1) }}%</span
+            >
+            <span class="font-family-Heavy"
+              >{{ parseFloat(baseInfo?.coinGoPlusInfo?.sell_tax || 0).toFixed(1) }}%
+            </span>
+          </div>
         </div>
       </div>
+    </div>
+    <div class="tips-txt">
+      安全检测结果基于链上数据分析，仅供参考。这并不意味着数据是 100%
+      正确的。请始终进行自己的研究并承担相应的风险。
+    </div>
+    <div class="display-flex flex-direction-col securityTest-box">
       <div class="securityTest-risk">
-        <div class="securityTest-txt">风险检查</div>
+        <div class="securityTest-txt font-family-Heavy">交易安全报告</div>
+        <div class="tips-btn display-flex align-items-center justify-content-center">
+          <div class="display-flex align-items-center">
+            <span>买税</span>
+            <strong class="up-color"
+              >{{ parseFloat(baseInfo?.coinGoPlusInfo?.buy_tax || 0).toFixed(1) }}%</strong
+            >
+          </div>
+          <span class="line"></span>
+          <div class="display-flex align-items-center">
+            <span>卖税</span>
+            <strong class="down-color"
+              >{{ parseFloat(baseInfo?.coinGoPlusInfo?.sell_tax || 0).toFixed(1) }}%</strong
+            >
+          </div>
+        </div>
         <div class="securityTest-risk-items">
           <div
             v-for="(item, index) in riskList"
@@ -59,19 +118,8 @@
     </div>
     <div class="securityTest-right-box">
       <div class="securityTest-risk-info">
-        <div class="securityTest-txt">持币分析</div>
-        <div class="hold-tab">
-          <span
-            :class="item.value === holdIndex ? 'active' : ''"
-            v-for="item in holdTab"
-            :key="item.value"
-            @click="handelHoldTab(item)"
-            >{{ item.label }}({{
-              item.value == 0
-                ? numberFormat(coinGoPlusInfo?.holders?.length || 0)
-                : numberFormat(coinGoPlusInfo?.lp_holders?.length || 0)
-            }})</span
-          >
+        <div class="securityTest-txt font-family-Heavy">
+          持币人（{{ numberFormat(baseInfo?.coinGoPlusInfo?.holders?.length || 0) }}）
         </div>
         <div class="holders-progress display-flex align-items-center justify-content-sp">
           <span>Top10 占比</span>
@@ -79,106 +127,94 @@
             <span class="txt">{{ (parseFloat(holdersPercentage) * 100).toFixed(2) }}%</span>
             <el-progress
               :percentage="parseFloat(holdersPercentage) * 100"
-              color="#9c9c9c"
+              color="#569CEE"
               class="progress"
-              :stroke-width="12"
+              :stroke-width="6"
             ></el-progress>
           </div>
         </div>
         <div class="holders-list">
-          <template v-if="holdIndex == 0">
-            <div class="holders-title-txt">Top10 持币明细</div>
-            <div
-              v-for="(item, index) in coinGoPlusInfo?.holders || []"
-              :key="index"
-              class="holders-list-item display-flex align-items-center justify-content-sp"
-            >
-              <span>{{ index + 1 }}.{{ shortifyAddress(item.address || item.account) }}</span>
-              <span
-                >{{ numberFormat(item.balance) }}（{{
-                  (parseFloat(item.percent) * 100).toFixed(2)
-                }}%）</span
-              >
-            </div>
-          </template>
-          <template v-if="holdIndex == 1">
-            <div class="holders-title-txt">Top10LP 持币明细</div>
-            <div class="holders-list-item display-flex align-items-center justify-content-sp">
-              <span>#</span>
-              <span>渠道</span>
-              <span>结束时间</span>
-              <span>占比</span>
-            </div>
-            <div
-              v-for="(item, index) in coinGoPlusInfo?.lp_holders || []"
-              :key="index"
-              class="holders-list-item display-flex align-items-center justify-content-sp"
-            >
-              <span>{{ index + 1 }}</span>
-              <span class="display-flex align-items-center">
-                <svg-icon name="lock" class="lock" v-if="item.is_locked"></svg-icon>
-                {{ shortifyAddress(item.address || item.account) }}
-                {{ isblackHole(item.address || item.account) ? '(黑洞地址)' : '' }}
-              </span>
-              <span>-</span>
-              <span
-                >{{ numberFormat(item.balance) }}（{{
-                  (parseFloat(item.percent) * 100).toFixed(2)
-                }}%）</span
-              >
-            </div>
-          </template>
-        </div>
-        <div class="community-trust-txt">
-          <span
-            >备注：合约检测只是单方面检测，某些新貔貅可能未能检测到需要结合更多维度来分析，比如K线走势，持仓变化，资金流向等等。</span
+          <div
+            v-for="(item, index) in baseInfo?.coinGoPlusInfo?.holders || []"
+            :key="index"
+            class="holders-list-item display-flex align-items-center justify-content-sp"
           >
-          <span class="txt"
-            >如对检测结果有疑惑，欢迎<a href="http://" target="_blank" rel="noopener noreferrer"
-              >点击反馈</a
-            ></span
-          >
+            <span>{{ index + 1 }}.{{ shortifyAddress(item.address || item.account) }}</span>
+            <span
+              >{{ numberFormat(item.balance) }}（{{
+                (parseFloat(item.percent) * 100).toFixed(2)
+              }}%）</span
+            >
+          </div>
         </div>
-        <div
-          class="display-flex flex-direction-col align-items-center justify-content-center community-trust-support"
-        >
-          <span>合约检测技术支持：</span>
-          <svg-icon name="image-support" class="icon"></svg-icon>
-          <span>gopluslabs.io</span>
+        <div class="securityTest-txt font-family-Heavy">
+          LP（{{ numberFormat(baseInfo?.coinGoPlusInfo?.lp_holders?.length || 0) }}）
+        </div>
+        <div class="holders-progress display-flex align-items-center justify-content-sp">
+          <span>LP锁仓占比</span>
+          <div class="progress-main">
+            <span class="txt"
+              >{{ baseInfo?.coinGoPlusInfo?.lp_holders?.length > 0 ? 100 : 0 }}%</span
+            >
+            <el-progress
+              :percentage="baseInfo?.coinGoPlusInfo?.lp_holders?.length > 0 ? 100 : 0"
+              color="#569CEE"
+              class="progress"
+              :stroke-width="6"
+            ></el-progress>
+          </div>
+        </div>
+        <div class="holders-list">
+          <div
+            v-for="(item, index) in baseInfo?.coinGoPlusInfo?.lp_holders || []"
+            :key="index"
+            class="holders-list-item display-flex align-items-center justify-content-sp"
+          >
+            <span class="display-flex align-items-center">
+              {{ index + 1 }}.
+              <svg-icon name="lock" class="lock" v-if="item.is_locked"></svg-icon>
+              {{ shortifyAddress(item.address || item.account) }}
+              {{ isblackHole(item.address || item.account) ? '(黑洞地址)' : '' }}
+            </span>
+            <span
+              >{{ numberFormat(item.balance) }}（{{
+                (parseFloat(item.percent) * 100).toFixed(2)
+              }}%）</span
+            >
+          </div>
         </div>
       </div>
     </div>
+  </div>
+  <div
+    class="display-flex align-items-center justify-content-center community-trust-support font-family-Heavy"
+  >
+    <svg-icon name="image-support" class="icon"></svg-icon>
+    <span>GoPlus</span>
   </div>
 </template>
 <script lang="ts" setup>
 import { ref, onMounted, computed } from 'vue'
 import { numberFormat, shortifyAddress } from '@/utils'
 import { MAIN_COIN } from '@/types'
+import { useI18n } from 'vue-i18n'
+import { useSubscribeKChartInfo } from '@/stores/subscribeKChartInfo'
+import { ElMessage } from 'element-plus'
+import PercentageChange from '@/components/Percentage/PercentageChange.vue'
 
-const holdTab = [
-  {
-    label: '持币人',
-    value: 0
-  },
-  {
-    label: 'LP',
-    value: 1
+const i18n = useI18n()
+
+const useSubscribeKChart = useSubscribeKChartInfo()
+
+const priceIncrease = computed(() => {
+  return {
+    price: useSubscribeKChart.subscribeKChartInfo?.C || props.baseInfo.priceInfo?.price || 0,
+    increase: useSubscribeKChart.subscribeKChartInfo?.chg || props.baseInfo.priceInfo?.chg || 0
   }
-]
-const holdIndex = ref(0)
-
-const handelHoldTab = (item: any) => {
-  holdIndex.value = item.value
-}
+})
 
 const props = defineProps({
-  coinGoPlusInfo: {
-    type: Object,
-    default: () => {
-      return {}
-    }
-  },
-  tokenInfo: {
+  baseInfo: {
     type: Object,
     default: () => {
       return {}
@@ -187,11 +223,11 @@ const props = defineProps({
 })
 
 const isMainToken = computed(() => {
-  return MAIN_COIN[props.tokenInfo?.baseSymbol]
+  return MAIN_COIN[props.baseInfo?.tokenInfo?.baseSymbol]
 })
 
 const riskList = computed(() => {
-  const obj = props.coinGoPlusInfo
+  const obj = props.baseInfo?.coinGoPlusInfo
   return obj?.chainCode == 'SOLANA'
     ? [
         {
@@ -353,7 +389,7 @@ const riskList = computed(() => {
 })
 
 const holdersPercentage = computed(() => {
-  const obj = props.coinGoPlusInfo
+  const obj = props.baseInfo?.coinGoPlusInfo
   let percentage = 0
 
   obj?.holders?.forEach((item: any) => {
@@ -370,20 +406,130 @@ const isblackHole = (address: string) => {
   ].includes(address?.toLocaleLowerCase())
 }
 
+const handelIcon = () => {
+  ElMessage.warning('代币未收录信息，请联系项目方在平台收录信息')
+}
+
 onMounted(() => {})
 </script>
 <style lang="scss" scoped>
 .securityTest-tabs-content {
   font-style: normal;
-  .securityTest-txt {
-    color: #fff;
-    font-size: 14px;
+  height: calc(100vh - 150px);
+  .logo {
+    width: 40px;
+    height: 40px;
+    margin-right: 8px;
+    position: relative;
+    .chainCode {
+      width: 18px;
+      height: 18px;
+      position: absolute;
+      right: -2px;
+      bottom: -2px;
+    }
   }
-  .copy {
+  .baseInfo-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+  }
+  .coin-text {
+    font-size: 16px;
+    margin-right: 4px;
+    color: #f5f5f5;
+    .coin-sub-txt {
+      color: #959a9f;
+    }
+  }
+  .icon-chat {
     width: 16px;
     height: 16px;
-    display: block;
+    margin-right: 6px;
+    color: #959a9f;
   }
+  .icon-pc {
+    width: 24px;
+    height: 24px;
+    margin-right: 2px;
+  }
+  .info-txt {
+    font-size: 12px;
+    color: #959a9f;
+    margin-right: 6px;
+    white-space: nowrap;
+    .text-on-container-secondary {
+      color: #959a9f;
+    }
+    .copy {
+      width: 12px;
+      height: 12px;
+      margin-left: 4px;
+      cursor: pointer;
+    }
+  }
+  .increase-text {
+    margin-left: 10px;
+    span:first-child {
+      font-size: 16px;
+      line-height: 1.2;
+      margin-right: 6px;
+    }
+  }
+  .pond-buy {
+    margin-left: 8px;
+    span {
+      display: block;
+      font-size: 12px;
+      line-height: 1.2;
+    }
+    span:nth-child(1) {
+      color: #959a9f;
+    }
+    span:nth-child(2) {
+      color: var(--up-color);
+    }
+    span:last-child {
+      color: var(--down-color);
+      margin-left: 4px;
+    }
+  }
+
+  .tips-txt {
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #ffc422;
+    background: rgba(255, 196, 34, 0.1);
+    color: #f5f5f5;
+    font-size: 12px;
+    margin-top: 15px;
+  }
+
+  .tips-btn {
+    height: 38px;
+    padding: 6px 11px;
+    border-radius: 12px;
+    border: 1px solid #26282c;
+    font-size: 12px;
+    margin-top: 10px;
+    .line {
+      width: 25px;
+      height: 1px;
+      transform: rotate(90deg);
+      background: #26282c;
+      margin: 0 50px;
+    }
+    strong {
+      margin-left: 10px;
+      font-family: 'PingFangSC-Medium';
+    }
+  }
+
+  .securityTest-txt {
+    color: #f5f5f5;
+    font-size: 14px;
+  }
+
   .securityTest-score {
     margin-top: 16px;
     .percentage-value {
@@ -397,10 +543,8 @@ onMounted(() => {})
       font-size: 14px;
     }
   }
-  .securityTest-left-box {
-    width: 35%;
-    min-width: 300px;
-    margin-right: 24px;
+  .securityTest-box {
+    width: 100%;
     .securityTest-info {
       line-height: 2;
       color: #828282;
@@ -408,15 +552,14 @@ onMounted(() => {})
       font-size: 13px;
     }
     .securityTest-risk {
-      margin-top: 24px;
+      margin-top: 15px;
     }
     .securityTest-risk-items {
       display: flex;
       flex-direction: column;
       font-size: 13px;
-      margin-top: 16px;
       .securityTest-risk-item {
-        margin: 4px 0;
+        margin-top: 10px;
       }
       .icon {
         width: 20px;
@@ -436,60 +579,43 @@ onMounted(() => {})
     }
   }
   .securityTest-right-box {
-    width: calc(65% - 24px);
-    .hold-tab {
-      width: 50%;
-      margin: 24px auto;
-      padding: 4px;
-      border-radius: 4px;
-      background-color: var(--hover-bg-color);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      span {
-        background-color: transparent;
-        line-height: 30px;
-        flex: 1;
-        text-align: center;
-        border-radius: 4px;
-        color: var(--dex-color-4);
-        cursor: pointer;
-      }
-      .active {
-        background-color: var(--bg-color);
-      }
-    }
-
+    width: 100%;
+    margin: 15px 0;
     .holders-progress {
-      font-size: 14px;
-      margin: 12px 0;
+      font-size: 12px;
+      margin: 10px 0;
+      color: #aaa;
       :deep(.el-progress__text) {
         display: none;
+      }
+      :deep(.el-progress-bar__outer) {
+        background-color: #26282c;
       }
       .progress-main {
         position: relative;
         .txt {
           margin-right: 8px;
+          font-size: 12px;
+          color: #f5f5f5;
         }
         .progress {
           width: 100px;
           display: inline-block;
+          position: relative;
+          top: -2px;
         }
       }
     }
     .holders-list {
-      min-height: 460px;
-      padding: 12px;
-      border-radius: 4px;
-      background-color: var(--hover-bg-color);
+      min-height: 60px;
       .holders-title-txt {
         font-size: 14px;
       }
       .holders-list-item {
-        margin: 12px 0;
+        margin: 8px 0;
         line-height: 1.8;
-        font-size: 13px;
-        color: var(--dex-color-4);
+        font-size: 12px;
+        color: #aaa;
         .lock {
           width: 13px;
           height: 13px;
@@ -507,34 +633,21 @@ onMounted(() => {})
         }
         span:last-child {
           text-align: right;
+          color: #f5f5f5;
         }
       }
     }
-    .community-trust-txt {
-      font-size: 12px;
-      color: var(--dex-color-4);
-      margin-top: 24px;
-      a {
-        color: var(--dex-color-4);
-        text-decoration: underline;
-      }
-      .txt {
-        display: block;
-        text-align: center;
-        margin-top: 12px;
-      }
-    }
-    .community-trust-support {
-      margin-top: 24px;
-      font-size: 12px;
-      color: var(--dex-color-4);
-      .icon {
-        width: 40px;
-        height: 30px;
-        display: block;
-        margin: 12px 0;
-      }
-    }
+  }
+}
+.community-trust-support {
+  padding-top: 25px;
+  font-size: 14px;
+  color: #fff;
+  .icon {
+    width: 24px;
+    height: 20px;
+    display: block;
+    margin-right: 4px;
   }
 }
 </style>

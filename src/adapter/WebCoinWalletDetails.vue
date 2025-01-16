@@ -1,17 +1,17 @@
 <template>
   <div class="coinWalletDetails">
+    <BaseInfo
+      :baseInfo="baseInfo"
+      :pairInfo="rightSideBarInfo.pairInfo"
+      :holdingCoinsTabInfo="holdingCoinsTabInfo"
+      :earliest100TraderData="earliest100TraderData"
+    />
     <div class="coinWalletDetails-content display-flex align-items-fs">
       <!-- 币信息 -->
       <section
         class="coinWalletDetails-section"
-        :style="{ width: `calc(100vw - 350px - ${switchLeftState ? '264px' : '0px'})` }"
+        :style="{ width: `calc(100vw - 374px - ${switchLeftState ? '264px' : '0px'})` }"
       >
-        <BaseInfo
-          :baseInfo="baseInfo"
-          :coinGoPlusInfo="rightSideBarInfo.coinGoPlusInfo"
-          :holdingCoinsTabInfo="holdingCoinsTabInfo"
-          :earliest100TraderData="earliest100TraderData"
-        />
         <!-- K线 -->
         <el-scrollbar>
           <div class="coinWalletDetails-section-main">
@@ -44,9 +44,9 @@
                     >{{ item.name }}</span
                   >
                 </div>
-                <div class="refresh-box">
+                <!-- <div class="refresh-box">
                   <RefreshHold v-if="activeName == 'seven'" />
-                </div>
+                </div> -->
                 <div
                   class="data-items display-flex align-items-center"
                   v-if="activeName == 'fourth'"
@@ -111,11 +111,6 @@
                   v-else-if="activeName == 'ten'"
                   :list="initLimitedOrders.historyOrders"
                   :skeleton="skeleton"
-                />
-                <SecurityTest
-                  v-else-if="activeName == 'eleven'"
-                  :coinGoPlusInfo="rightSideBarInfo?.coinGoPlusInfo"
-                  :tokenInfo="baseInfo?.tokenInfo"
                 />
               </div>
             </div>
@@ -198,7 +193,6 @@ import TransactionHistory from '@/components/Charts/TransactionHistory.vue'
 import MyHold from '@/components/Charts/MyHold.vue'
 import CurrentCommission from '@/components/Charts/CurrentCommission.vue'
 import CommissionHistory from '@/components/Charts/CommissionHistory.vue'
-import SecurityTest from '@/components/Charts/SecurityTest.vue'
 
 import RightSideBar from '@/components/SideBar/RightSideBar.vue'
 import RefreshHold from '@/components/RefreshHold.vue'
@@ -291,23 +285,15 @@ const coinWalletTabs = computed(() => {
       {
         code: 'ten',
         name: '委托历史'
-      },
-      {
-        code: 'eleven',
-        name: '安全检测'
       }
     ]
   } else {
     return [
-      ...commonTab,
+      ...commonTab
       // {
       //   code: 'six',
       //   name: i18n.t('kChart.MyProfit')
-      // },
-      {
-        code: 'eleven',
-        name: '安全检测'
-      }
+      // }
     ]
   }
 })
@@ -715,7 +701,6 @@ onUnmounted(() => {
       color: #848e9c;
       background-color: transparent;
       border-radius: 4px;
-      font-family: 'PingFangSC-Medium';
       cursor: pointer;
     }
     span:last-child {

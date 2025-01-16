@@ -13,15 +13,13 @@
         <el-table :data="list" style="width: 100%" max-height="890px">
           <el-table-column label="时间">
             <template #default="scope">
-              <span class="text-color font-family-Medium">{{
-                formatDate(scope.row.timestamp)
-              }}</span>
+              <span class="text-color">{{ formatDate(scope.row.timestamp) }}</span>
             </template>
           </el-table-column>
           <el-table-column label="订单号">
             <template #default="scope">
               <div class="display-flex align-items-center">
-                <span class="text-color font-family-Medium">{{
+                <span class="text-color">{{
                   scope.row.orderNo.substring(scope.row.orderNo.length - 6)
                 }}</span>
                 <svg-icon name="copy" class="copy" v-copy="scope.row.orderNo"></svg-icon>
@@ -204,11 +202,9 @@ const handelCancel = (row: any) => {
     margin-left: 8px;
     transition: all 0.2s;
     color: #848e9c;
-    font-family: 'PingFangSC-Medium';
   }
   .type-color {
     color: #ffc422;
-    font-family: 'PingFangSC-Medium';
   }
 }
 </style>

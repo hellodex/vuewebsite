@@ -147,7 +147,7 @@
             @click="handelEntrustTab(item)"
             >{{ item.label }}</span
           >
-          <RefreshHold v-if="entrustTabIdex == 1" />
+          <!-- <RefreshHold v-if="entrustTabIdex == 1" /> -->
         </div>
         <template v-if="entrustTabIdex == 1">
           <MyHold :list="initLimitedOrders.positions" :skeleton="skeleton" />

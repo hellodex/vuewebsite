@@ -774,12 +774,12 @@ defineExpose({
   }
   .buy-submit-btn {
     background: var(--up-color);
-    color: #101114;
+    color: #f5f5f5;
   }
 
   .sell-submit-btn {
     background: var(--down-color);
-    color: #101114;
+    color: #f5f5f5;
   }
 }
 </style>
