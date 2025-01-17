@@ -143,6 +143,11 @@ onMounted(() => {
     subscribeSwap.value = [...(useSubscribeKChart.subscribeSwap || [])]
   }, 1000)
 })
+
+onUnmounted(() => {
+  clearInterval(timer.value)
+  timer.value = null
+})
 </script>
 <style lang="scss" scoped>
 .transaction-tab-content {
