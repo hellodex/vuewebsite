@@ -34,21 +34,15 @@
             <span>平台收入：</span>
             <span>${{ numberFormat(feeVolume) }}</span>
           </a>
-          <!-- <RouterLink :to="item.to" v-for="item in navList" :key="item.name">
-            <span class="link">{{ item.name }}</span>
-          </RouterLink> -->
           <a href="https://hellodex.gitbook.io/hellodex" target="_blank" class="link">
             <span class="link">白皮书</span>
           </a>
-          <!-- <a href="https://lnk.bio/HelloDex" target="_blank" class="link">
-            <span class="link">{{ i18n.t('tabbar.Community') }}</span>
-          </a> -->
-          <a href="https://hellodex.gitbook.io/hellodex" target="_blank" class="link">
+          <!-- <a href="https://hellodex.gitbook.io/hellodex" target="_blank" class="link">
             <span class="link">Web3变革</span>
-          </a>
-          <!-- <a href="https://t.me/HelloDex_cn" target="_blank" class="link">
-            <span class="link">{{ i18n.t('tabbar.dataAPIService') }}</span>
           </a> -->
+          <RouterLink :to="item.to" v-for="item in navList" :key="item.name">
+            <span class="link">{{ item.name }}</span>
+          </RouterLink>
         </div>
       </div>
       <div class="seach-block" ref="SearchBlockRef">
@@ -187,8 +181,8 @@ const getTokenList = async () => {
 // 菜单
 const navList = computed(() => {
   return [
-    // { name: i18n.t('tabbar.home'), to: '/' },
-    // { name: i18n.t('tabbar.smart'), to: '/Smartmoney' }
+    { name: '冲狗基金', to: '/ChongDogVentures' }
+    // { name: i18n.t('tabbar.smart'), to: '/Smartmoney' },
     // { name: i18n.t('tabbar.tools'), to: '/Tools' },
     // { name: '质押', to: '/Staking' }
   ]

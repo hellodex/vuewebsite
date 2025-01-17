@@ -22,15 +22,13 @@
         <el-table :data="list" style="width: 100%" max-height="890px">
           <el-table-column label="时间">
             <template #default="scope">
-              <span class="text-color font-family-Medium">{{
-                formatDate(scope.row.timestamp) || '-'
-              }}</span>
+              <span class="text-color">{{ formatDate(scope.row.timestamp) || '-' }}</span>
             </template>
           </el-table-column>
           <el-table-column label="订单号">
             <template #default="scope">
               <div class="display-flex align-items-center">
-                <span class="text-color font-family-Medium">{{
+                <span class="text-color">{{
                   scope.row.orderNo.substring(scope.row.orderNo.length - 6)
                 }}</span>
                 <svg-icon name="copy" class="copy" v-copy="scope.row.orderNo"></svg-icon>
@@ -49,7 +47,7 @@
                   <img :src="chainLogoObj[scope.row.chainCode]" alt="" class="chainCode" />
                 </span>
                 <p class="display-flex align-items-center">
-                  <span class="base-symbol font-family-Heavy">{{
+                  <span class="base-symbol font-family-Medium">{{
                     scope.row.baseSymbol || '-'
                   }}</span>
                 </p>
@@ -58,7 +56,7 @@
           </el-table-column>
           <el-table-column label="类型">
             <template #default="scope">
-              <span class="text-color font-family-Heavy">{{
+              <span class="text-color font-family-Medium">{{
                 TRANSFER_TYPE[scope.row.tradeType] || '交易'
               }}</span>
             </template>
@@ -68,8 +66,8 @@
               <span
                 :class="
                   scope.row.direction == 1
-                    ? 'down-color font-family-Heavy'
-                    : 'up-color font-family-Heavy'
+                    ? 'down-color font-family-Medium'
+                    : 'up-color font-family-Medium'
                 "
                 >{{ scope.row.direction == 1 ? '卖出' : '买入' }}</span
               >
@@ -77,21 +75,21 @@
           </el-table-column>
           <el-table-column label="成交价格">
             <template #default="scope">
-              <span class="text-color font-family-Heavy"
+              <span class="text-color font-family-Medium"
                 >${{ numberFormat(scope.row.price) || '-' }}</span
               >
             </template>
           </el-table-column>
           <el-table-column label="成交数量">
             <template #default="scope">
-              <span class="text-color font-family-Heavy">{{
+              <span class="text-color font-family-Medium">{{
                 numberFormat(scope.row.amount) || '-'
               }}</span>
             </template>
           </el-table-column>
           <el-table-column label="成交金额">
             <template #default="scope">
-              <span class="text-color font-family-Heavy"
+              <span class="text-color font-family-Medium"
                 >${{ numberFormat(scope.row.volume) || '-' }}</span
               >
             </template>
@@ -114,14 +112,9 @@
           </el-table-column>
           <el-table-column label="状态" align="center">
             <template #default="scope">
-              <span
-                :class="
-                  scope.row.status == 200
-                    ? 'up-color  font-family-Medium'
-                    : 'down-color  font-family-Medium'
-                "
-                >{{ scope.row.orderStatusUI }}</span
-              >
+              <span :class="scope.row.status == 200 ? 'up-color' : 'down-color'">{{
+                scope.row.orderStatusUI
+              }}</span>
             </template>
           </el-table-column>
           <template #empty>
@@ -237,9 +230,9 @@ const handelHistoricalTransactionTab = (item: any) => {
       right: -1px;
       bottom: 0px;
     }
-    .base-symbol {
-      color: #f5f5f5;
-    }
+    // .base-symbol {
+    //   color: #f5f5f5;
+    // }
   }
 }
 </style>

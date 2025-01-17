@@ -13,15 +13,13 @@
         <el-table :data="list" style="width: 100%" max-height="890px">
           <el-table-column label="时间">
             <template #default="scope">
-              <span class="text-color font-family-Medium">{{
-                formatDate(scope.row.timestamp) || '-'
-              }}</span>
+              <span class="text-color">{{ formatDate(scope.row.timestamp) || '-' }}</span>
             </template>
           </el-table-column>
           <el-table-column label="订单号">
             <template #default="scope">
               <div class="display-flex align-items-center">
-                <span class="text-color font-family-Medium">{{
+                <span class="text-color">{{
                   scope.row.orderNo.substring(scope.row.orderNo.length - 6)
                 }}</span>
                 <svg-icon name="copy" class="copy" v-copy="scope.row.orderNo"></svg-icon>
@@ -40,7 +38,7 @@
                   <img :src="chainLogoObj[scope.row.chainCode]" alt="" class="chainCode" />
                 </span>
                 <p class="display-flex align-items-center">
-                  <span class="base-symbol font-family-Heavy">{{
+                  <span class="base-symbol font-family-Medium">{{
                     scope.row.baseSymbol || '-'
                   }}</span>
                 </p>
@@ -51,24 +49,24 @@
             <template #default="scope">
               <div class="display-flex flex-direction-col">
                 <template v-if="scope.row.fromOrderNo">
-                  <span class="down-color font-family-Heavy">卖出</span>
+                  <span class="down-color font-family-Medium">卖出</span>
                   <span>涨幅{{ parseFloat(scope.row.profitFlag) * 100 }}%出本</span>
                 </template>
                 <template v-else>
                   <template v-if="scope.row.limitType == 1 || scope.row.limitType == 5">
-                    <span class="up-color font-family-Heavy">买入</span>
+                    <span class="up-color font-family-Medium">买入</span>
                     <span>高于价格后买入</span>
                   </template>
                   <template v-else-if="scope.row.limitType == 2 || scope.row.limitType == 6">
-                    <span class="up-color font-family-Heavy">买入</span>
+                    <span class="up-color font-family-Medium">买入</span>
                     <span>抄底</span>
                   </template>
                   <template v-else-if="scope.row.limitType == 3 || scope.row.limitType == 7">
-                    <span class="down-color font-family-Heavy">卖出</span>
+                    <span class="down-color font-family-Medium">卖出</span>
                     <span>止盈</span>
                   </template>
                   <template v-else-if="scope.row.limitType == 4 || scope.row.limitType == 8">
-                    <span class="down-color font-family-Heavy">卖出</span>
+                    <span class="down-color font-family-Medium">卖出</span>
                     <span>止损</span>
                   </template>
                 </template>
@@ -77,10 +75,10 @@
           </el-table-column>
           <el-table-column label="委托类型">
             <template #default="scope">
-              <span class="text-color font-family-Heavy" v-if="scope.row.limitType > 4"
+              <span class="text-color font-family-Medium" v-if="scope.row.limitType > 4"
                 >${{ numberFormat(scope.row.marketCap) || '-' }}</span
               >
-              <span class="text-color font-family-Heavy" v-else
+              <span class="text-color font-family-Medium" v-else
                 >${{ numberFormat(scope.row.price) || '-' }}</span
               >
               <br />
@@ -90,14 +88,14 @@
           </el-table-column>
           <el-table-column label="委托数量">
             <template #default="scope">
-              <span class="text-color font-family-Heavy">{{
+              <span class="text-color font-family-Medium">{{
                 numberFormat(scope.row.amount) || '-'
               }}</span>
             </template>
           </el-table-column>
           <el-table-column label="委托金额">
             <template #default="scope">
-              <span class="text-color font-family-Heavy"
+              <span class="text-color font-family-Medium"
                 >${{ numberFormat(scope.row.volume) || '-' }}</span
               >
             </template>
@@ -120,14 +118,9 @@
           </el-table-column>
           <el-table-column label="状态" align="center">
             <template #default="scope">
-              <span
-                :class="
-                  scope.row.status == 200
-                    ? 'up-color  font-family-Medium'
-                    : 'down-color  font-family-Medium'
-                "
-                >{{ scope.row.orderStatusUI }}</span
-              >
+              <span :class="scope.row.status == 200 ? 'up-color ' : 'down-color'">{{
+                scope.row.orderStatusUI
+              }}</span>
             </template>
           </el-table-column>
           <template #empty>
@@ -192,9 +185,9 @@ const { chainLogoObj } = globalStore
       right: -1px;
       bottom: 0px;
     }
-    .base-symbol {
-      color: #f5f5f5;
-    }
+    // .base-symbol {
+    //   color: #f5f5f5;
+    // }
   }
 }
 </style>

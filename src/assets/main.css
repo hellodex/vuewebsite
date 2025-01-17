@@ -88,18 +88,6 @@ a,
   cursor: pointer;
 }
 
-.el-table {
-  font-size: 14px !important;
-  font-style: normal;
-}
-
-.el-table thead th {
-  font-weight: normal !important;
-}
-
-.el-table__header-wrapper {
-  font-style: normal !important;
-}
 .el-dialog {
   border-radius: 8px !important;
   -webkit-border-radius: 8px !important;
@@ -142,6 +130,19 @@ a,
   -webkit-animation: rise 0.8s linear;
 }
 
+.el-table {
+  font-size: 13px !important;
+  font-style: normal;
+}
+
+.el-table thead th {
+  font-weight: normal !important;
+}
+
+.el-table__header-wrapper {
+  font-style: normal !important;
+}
+
 .el-table,
 .el-table tr,
 .el-table th.el-table__cell {
@@ -164,7 +165,7 @@ a,
 .el-table .cell {
   overflow: inherit !important;
   color: #848e9c !important;
-  line-height: 1.2 !important;
+  line-height: 1.5 !important;
 }
 
 .table-network-popper {

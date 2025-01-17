@@ -222,11 +222,9 @@ if (address.value) {
   }
   .address-txt {
     font-size: 14px;
-    font-family: 'PingFangSC-Medium';
   }
   .price-txt {
     font-size: 14px;
-    font-family: 'PingFangSC-Heavy';
   }
 }
 </style>

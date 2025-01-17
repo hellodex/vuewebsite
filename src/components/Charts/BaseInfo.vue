@@ -40,7 +40,7 @@
           </span>
           <div class="display-flex flex-direction-col">
             <div class="display-flex align-items-center">
-              <div class="display-flex align-items-center coin-text">
+              <div class="display-flex align-items-center coin-text font-family-Heavy">
                 <span>{{
                   MAIN_COIN[baseInfo?.tokenInfo?.baseSymbol] ||
                   baseInfo?.tokenInfo?.baseSymbol ||
@@ -49,22 +49,28 @@
                 <span class="coin-sub-txt">/{{ baseInfo?.tokenInfo?.quoteSymbol || '-' }}</span>
               </div>
               <div class="display-flex align-items-center">
-                <svg-icon name="icon-x" class="icon-chat" @click="handelIcon"></svg-icon>
-                <svg-icon name="icon-discord" class="icon-chat" @click="handelIcon"></svg-icon>
-                <svg-icon name="icon-telegram" class="icon-chat" @click="handelIcon"></svg-icon>
-                <svg-icon name="icon-qq" class="icon-chat" @click="handelIcon"></svg-icon>
-                <svg-icon name="icon-weibo" class="icon-chat" @click="handelIcon"></svg-icon>
+                <svg-icon name="icon-pc" class="icon-pc"></svg-icon>
+                <svg-icon name="twitter-pump" class="icon-chat" @click="handelIcon"></svg-icon>
+                <svg-icon name="telegram-pump" class="icon-chat" @click="handelIcon"></svg-icon>
                 <a
                   :href="`https://x.com/search?q=${baseInfo?.tokenInfo?.baseAddress}`"
                   target="_blank"
                   class="icon-chat"
                 >
-                  <el-icon size="18"><Search /></el-icon>
+                  <el-icon size="16"><Search /></el-icon>
                 </a>
+              </div>
+              <div class="increase-text display-flex align-items-center font-family-Heavy">
+                <span :class="priceIncrease.increase[0] === '-' ? 'down-color' : 'up-color'"
+                  >${{ numberFormat(priceIncrease.price || 0) }}</span
+                >
+                <PercentageChange :value="priceIncrease.increase" />
               </div>
             </div>
             <div class="display-flex align-items-center address-text">
-              <div class="info-txt display-flex align-items-center justify-content-sp">
+              <div
+                class="info-txt font-family-Medium display-flex align-items-center justify-content-sp"
+              >
                 <span>{{ i18n.t('kChart.Address') }}：</span>
                 <div class="display-flex align-items-center">
                   <span class="text-on-container-secondary">{{
@@ -90,13 +96,28 @@
                   ></svg-icon>
                 </div>
               </div>
+              <div class="pond-buy display-flex align-items-center">
+                <span class="font-family-Medium">税：</span>
+                <span class="font-family-Heavy"
+                  >{{ parseFloat(baseInfo?.coinGoPlusInfo?.buy_tax || 0).toFixed(1) }}%</span
+                >
+                <span class="font-family-Heavy"
+                  >{{ parseFloat(baseInfo?.coinGoPlusInfo?.sell_tax || 0).toFixed(1) }}%
+                </span>
+              </div>
             </div>
           </div>
         </div>
         <div class="display-flex align-items-center">
-          <div class="increase-text">
-            <span>${{ numberFormat(priceIncrease.price || 0) }}</span>
-            <PercentageChange :value="priceIncrease.increase" />
+          <div class="display-flex flex-direction-col align-items-fd snipe-text">
+            <span class="margin-element">市值</span>
+            <span class="font-family-Heavy snipe-num"
+              >${{ numberFormat(props.pairInfo?.circulationVol || 0) }}</span
+            >
+          </div>
+          <div class="display-flex flex-direction-col align-items-fd snipe-text">
+            <span class="margin-element">池子</span>
+            <span class="font-family-Heavy snipe-num">${{ numberFormat(props.pairInfo.tvl) }}</span>
           </div>
           <div
             class="display-flex flex-direction-col snipe-text"
@@ -108,89 +129,79 @@
             </div>
             <div class="display-flex align-items-center">
               <svg-icon name="snipe-icon" class="snipe-icon"></svg-icon>
-              <span
+              <span class="font-family-Heavy snipe-num"
                 >{{
                   earliest100TraderData?.traders?.filter((item: any) => item.sniper)?.length || 0
                 }}/{{ earliest100TraderData?.traders?.length || 0 }}</span
               >
             </div>
           </div>
-          <div class="pond-buy display-flex flex-direction-col">
-            <span class="margin-element"
-              >买税 {{ parseFloat(coinGoPlusInfo?.buy_tax || 0).toFixed(1) }}%</span
-            >
-            <span>卖税 {{ parseFloat(coinGoPlusInfo?.sell_tax || 0).toFixed(1) }}% </span>
+          <div class="display-flex flex-direction-col align-items-center snipe-text">
+            <span class="margin-element">持有者</span>
+            <strong class="font-family-Heavy snipe-num">{{
+              numberFormat(props.holdingCoinsTabInfo?.topHolders?.holds || 0)
+            }}</strong>
           </div>
           <template v-if="baseInfo?.chainInfo?.chainCode != 'SOLANA'">
-            <div class="display-flex flex-direction-col pond-start">
-              <div class="display-flex align-items-center margin-element">
-                <el-icon :size="18" color="#2EBD85" v-if="coinGoPlusInfo?.is_open_source == 1"
-                  ><CircleCheck
-                /></el-icon>
-                <el-icon :size="18" color="#EE475E" v-else><CircleClose /></el-icon>
-                <span>{{ coinGoPlusInfo?.is_open_source == 1 ? '合约开源' : '合约未开源' }}</span>
+            <div class="display-flex align-items-center pond-start">
+              <div class="display-flex flex-direction-col">
+                <span>合约开源</span>
+                <span>{{ baseInfo?.coinGoPlusInfo?.is_open_source == 1 ? '是' : '否' }}</span>
               </div>
-              <div class="display-flex align-items-center">
-                <el-icon :size="18" color="#EE475E" v-if="isContract"><CircleClose /></el-icon>
-                <el-icon :size="18" color="#2EBD85" v-else><CircleCheck /></el-icon>
-                <span>{{ isContract ? '合约未放弃' : '合约放弃' }}</span>
+              <div class="display-flex flex-direction-col">
+                <span>合约未放弃</span>
+                <span>{{ isContract ? '是' : '否' }}</span>
               </div>
-            </div>
-            <div class="display-flex flex-direction-col pond-start">
-              <div class="display-flex align-items-center margin-element">
-                <el-icon :size="18" color="#2EBD85" v-if="isLocked"><CircleCheck /></el-icon>
-                <el-icon :size="18" color="#EE475E" v-else><CircleClose /></el-icon>
-                <span>{{ isLocked ? '流动性锁定' : '流动性未锁定' }}</span>
+              <div class="display-flex flex-direction-col">
+                <span>流动性锁定</span>
+                <span>{{ isLocked ? '是' : '否' }}</span>
               </div>
-              <div class="display-flex align-items-center">
-                <el-icon :size="18" color="#2EBD85" v-if="coinGoPlusInfo?.is_honeypot == 0"
-                  ><CircleCheck
-                /></el-icon>
-                <el-icon :size="18" color="#EE475E" v-else><CircleClose /></el-icon>
-                <span>{{ coinGoPlusInfo?.is_honeypot == 0 ? '非蜜罐' : '蜜罐' }}</span>
+              <div class="display-flex flex-direction-col">
+                <span>非蜜罐</span>
+                <span>{{ baseInfo?.coinGoPlusInfo?.is_honeypot == 0 ? '是' : '否' }}</span>
               </div>
             </div>
           </template>
           <template v-if="baseInfo?.chainInfo?.chainCode == 'SOLANA'">
-            <div class="display-flex flex-direction-col pond-start">
-              <div class="display-flex align-items-center margin-element">
-                <el-icon :size="18" color="#2EBD85" v-if="coinGoPlusInfo?.freezable?.status == 0"
-                  ><CircleCheck
-                /></el-icon>
-                <el-icon :size="18" color="#EE475E" v-else><CircleClose /></el-icon>
-                <span>{{ coinGoPlusInfo?.freezable?.status == 0 ? '不可冻币' : '可冻币' }}</span>
+            <div class="display-flex align-items-center pond-start">
+              <div class="display-flex flex-direction-col">
+                <span>不可冻币</span>
+                <span>{{ baseInfo?.coinGoPlusInfo?.freezable?.status == 0 ? '是' : '否' }}</span>
               </div>
-              <div class="display-flex align-items-center">
-                <el-icon :size="18" color="#2EBD85" v-if="coinGoPlusInfo?.mintable?.status == 0"
-                  ><CircleCheck
-                /></el-icon>
-                <el-icon :size="18" color="#EE475E" v-else><CircleClose /></el-icon>
-                <span> {{ coinGoPlusInfo?.freezable?.status == 0 ? '不可增发' : '可增发' }}</span>
+              <div class="display-flex flex-direction-col">
+                <span>不可增发</span>
+                <span>{{ baseInfo?.coinGoPlusInfo?.freezable?.status == 0 ? '是' : '否' }}</span>
               </div>
-            </div>
-            <div class="display-flex flex-direction-col pond-start">
-              <div class="display-flex align-items-center margin-element">
-                <el-icon
-                  :size="18"
-                  color="#2EBD85"
-                  v-if="coinGoPlusInfo?.transfer_hook?.length == 0"
-                  ><CircleCheck
-                /></el-icon>
-                <el-icon :size="18" color="#EE475E" v-else><CircleClose /></el-icon>
+
+              <div class="display-flex flex-direction-col">
+                <span>无外部合约</span>
                 <span>{{
-                  coinGoPlusInfo?.transfer_hook?.length == 0 ? '无外部合约' : '有外部合约'
+                  baseInfo?.coinGoPlusInfo?.transfer_hook?.length == 0 ? '是' : '否'
                 }}</span>
               </div>
-              <div class="display-flex align-items-center">
-                <el-icon :size="18" color="#2EBD85"><CircleCheck /></el-icon>
-                <span
-                  >前10持币：{{
+              <div class="display-flex flex-direction-col">
+                <span>Top 10</span>
+                <span style="color: var(--down-color)"
+                  >{{
                     parseFloat(holdingCoinsTabInfo?.topHolders?.topProPortion || 0).toFixed(2)
                   }}%</span
                 >
               </div>
             </div>
           </template>
+          <div
+            class="display-flex flex-direction-col snipe-text"
+            @click="securityTestDrawer = true"
+          >
+            <div class="display-flex align-items-center margin-element">
+              <span>检测</span>
+              <svg-icon name="chevron-right" class="chevron-right"></svg-icon>
+            </div>
+            <div class="display-flex align-items-center">
+              <svg-icon name="shield-tick1" class="shield-tick1"></svg-icon>
+              <span class="font-family-Heavy up-color">安全</span>
+            </div>
+          </div>
           <!-- <div class="display-flex align-items-center pond-audit">
             <svg-icon name="icon-audit" class="icon-base"></svg-icon>
             <span>审计</span>
@@ -220,6 +231,23 @@
     @close="handleClose"
     v-if="sniperDialogVisible"
   />
+
+  <el-drawer
+    v-model="securityTestDrawer"
+    direction="rtl"
+    :show-close="false"
+    :destroy-on-close="true"
+    class="securityTest-drawer"
+  >
+    <template #header="{ close, titleId, titleClass }">
+      <h4 :id="titleId" :class="titleClass">
+        <svg-icon name="shield-tick1" class="shield-tick1"></svg-icon>
+        <span>安全监测</span>
+      </h4>
+      <svg-icon name="arrow-circle-right" class="arrow-circle-right" @click="close"></svg-icon>
+    </template>
+    <SecurityTest :baseInfo="baseInfo" :holdingCoinsTabInfo="holdingCoinsTabInfo" />
+  </el-drawer>
 </template>
 <script setup lang="ts">
 import { ref, computed } from 'vue'
@@ -229,6 +257,8 @@ import PercentageChange from '@/components/Percentage/PercentageChange.vue'
 import ShareDialog from '@/components/Dialogs/ShareDialog.vue'
 import SniperDialog from '@/components/Dialogs/SniperDialog.vue'
 import Favorite from '@/components/Favorite.vue'
+import SecurityTest from '@/components/Charts/SecurityTest.vue'
+
 import { useI18n } from 'vue-i18n'
 import { ElMessage } from 'element-plus'
 import { MAIN_COIN } from '@/types'
@@ -237,6 +267,7 @@ const i18n = useI18n()
 
 const shareDialogVisible = ref<boolean>(false) // 弹框显示隐藏状态
 const sniperDialogVisible = ref<boolean>(false)
+const securityTestDrawer = ref<boolean>(false)
 
 const props = defineProps({
   baseInfo: {
@@ -245,7 +276,7 @@ const props = defineProps({
       return {}
     }
   },
-  coinGoPlusInfo: {
+  pairInfo: {
     type: Object,
     default: () => {
       return {}
@@ -276,13 +307,13 @@ const priceIncrease = computed(() => {
 
 // 流动性锁定
 const isLocked = computed(() => {
-  return props.coinGoPlusInfo?.lp_holders?.some((item: any) => item.is_locked == 1)
+  return props.baseInfo?.coinGoPlusInfo?.lp_holders?.some((item: any) => item.is_locked == 1)
 })
 
 // 合约
 
 const isContract = computed(() => {
-  return props.coinGoPlusInfo?.lp_holders?.some((item: any) => item.is_contract == 1)
+  return props.baseInfo?.coinGoPlusInfo?.lp_holders?.some((item: any) => item.is_contract == 1)
 })
 
 const handleClose = (val: boolean) => {
@@ -294,9 +325,8 @@ const handelIcon = () => {
   ElMessage.warning('代币未收录信息，请联系项目方在平台收录信息')
 }
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
 .base-info {
-  margin-right: 12px;
   padding: 10px 12px;
   border-radius: 12px;
   font-size: 12px;
@@ -325,24 +355,29 @@ const handelIcon = () => {
     border-radius: 50%;
   }
   .coin-text {
-    font-size: 20px;
-    margin-right: 12px;
+    font-size: 16px;
+    margin-right: 4px;
     color: #f5f5f5;
     .coin-sub-txt {
       color: #959a9f;
     }
   }
   .icon-chat {
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
     margin-right: 6px;
     color: #959a9f;
+  }
+  .icon-pc {
+    width: 24px;
+    height: 24px;
+    margin-right: 2px;
   }
   // .address-text {
   //   margin-left: 16px;
   // }
   .info-txt {
-    font-size: 14px;
+    font-size: 12px;
     color: #959a9f;
     margin-right: 6px;
     white-space: nowrap;
@@ -350,50 +385,53 @@ const handelIcon = () => {
       color: #959a9f;
     }
     .copy {
-      width: 14px;
-      height: 14px;
+      width: 12px;
+      height: 12px;
       margin-left: 4px;
       cursor: pointer;
     }
   }
   .increase-text {
-    margin-right: 26px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
+    margin-left: 10px;
     span:first-child {
-      color: #f5f5f5;
       font-size: 16px;
       line-height: 1.2;
-      margin-bottom: 6px;
+      margin-right: 6px;
     }
   }
   .margin-element {
-    margin-bottom: 6px;
+    margin-bottom: 4px;
   }
   .pond-buy {
-    margin-right: 20px;
-    white-space: nowrap;
+    margin-left: 8px;
     span {
-      padding: 2px 4px;
-      font-size: 10px;
-      border-radius: 4px;
+      display: block;
+      font-size: 12px;
+      line-height: 1.2;
     }
-    span:first-child {
+    span:nth-child(1) {
+      color: #959a9f;
+    }
+    span:nth-child(2) {
       color: var(--up-color);
-      background: rgba(46, 189, 133, 0.16);
     }
     span:last-child {
       color: var(--down-color);
-      background: rgba(246, 70, 93, 0.16);
+      margin-left: 4px;
     }
   }
   .pond-start {
-    margin-right: 8px;
+    margin-left: 19px;
     white-space: nowrap;
     span {
       font-size: 12px;
-      margin-left: 6px;
+      margin-left: 10px;
+      color: #9aa0aa;
+    }
+    span:last-child {
+      margin-top: 4px;
+      color: var(--up-color);
+      font-family: 'PingFangSC-Heavy';
     }
   }
   .pond-audit {
@@ -422,22 +460,59 @@ const handelIcon = () => {
     margin-right: 4px;
   }
   .snipe-text {
-    color: #f5f5f5;
-    margin-right: 20px;
+    color: #959a9f;
+    margin-left: 25px;
     cursor: pointer;
-
     .snipe-icon {
       width: 12px;
       height: 12px;
-    }
-    .chevron-right {
-      width: 15px;
-      height: 15px;
-      margin-left: 4px;
-    }
-    .snipe-icon {
       margin-right: 6px;
     }
+    .chevron-right {
+      width: 14px;
+      height: 14px;
+      margin-left: 2px;
+    }
+    .snipe-num {
+      color: #f5f5f5;
+    }
+    .shield-tick1 {
+      width: 14px;
+      height: 14px;
+      margin-right: 4px;
+    }
+  }
+}
+.securityTest-drawer {
+  width: 480px !important;
+  background-color: #17181b;
+  box-shadow: -2px 0px 4px 0px rgba(0, 0, 0, 0.25);
+  border-radius: 8px 0px 0px 8px;
+  .el-drawer__header {
+    margin-bottom: 10px;
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+  .el-drawer__body {
+    padding: 25px 12px;
+  }
+  h4 {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    color: #f5f5f5;
+    font-family: 'PingFangSC-Heavy';
+    font-weight: normal;
+  }
+  .shield-tick1 {
+    width: 18px;
+    height: 18px;
+    margin-right: 4px;
+  }
+  .arrow-circle-right {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
   }
 }
 </style>

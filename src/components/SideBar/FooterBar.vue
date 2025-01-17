@@ -34,6 +34,11 @@ const i18n = useI18n()
 const othersLink = ref<{ icon: string; to: string; txt: string }[]>([
   // 以后多个tg, 中文社区， 英文社区等， 可能需要确定一个或者先跳转去channel， 再去进入各种群
   {
+    icon: 'github-grey',
+    to: 'https://github.com/hellodex',
+    txt: '代码已开源'
+  },
+  {
     icon: 'bot',
     to: 'https://t.me/HelloDex_cn',
     txt: '报单机器人'

@@ -69,7 +69,7 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="24H交易额/池子大小" align="right" width="150px">
+          <el-table-column label="24H交易额/池子大小" align="right" width="160px">
             <template #default="scope">
               <div class="display-flex flex-direction-col">
                 <span class="sub-txt">${{ numberFormat(scope.row.volume) }}</span>
@@ -78,7 +78,7 @@
             </template>
           </el-table-column>
 
-          <el-table-column label="持币人/交易数" align="right" width="150px">
+          <el-table-column label="持币人/交易数" align="right" width="160px">
             <template #default="scope">
               <div class="display-flex flex-direction-col">
                 <span class="sub-txt">{{ numberFormat(scope.row.holders) }}</span>
@@ -197,16 +197,16 @@ onMounted(() => {
   }
 
   .search-history {
-    font-size: 12px;
+    font-size: 14px;
     margin-bottom: 4px;
     .search-history-title {
       color: #9aa0aa;
       font-family: 'PingFangSC-Medium';
-      font-size: 12px;
+      font-size: 14px;
     }
     .coin-icon {
-      width: 16px;
-      height: 16px;
+      width: 20px;
+      height: 20px;
       border-radius: 50%;
     }
 
@@ -270,12 +270,12 @@ onMounted(() => {
   .txt {
     color: #9aa0aa;
     font-family: 'PingFangSC-Medium';
-    font-size: 12px;
+    font-size: 14px;
     line-height: 1.5;
   }
 
   .sub-txt {
-    font-size: 12px;
+    font-size: 14px;
     color: #eaecef;
     line-height: 1.5;
     font-family: 'PingFangSC-Heavy';
@@ -284,14 +284,14 @@ onMounted(() => {
     }
   }
   .el-table__header {
-    font-size: 12px;
+    font-size: 14px;
     color: #9aa0aa;
   }
   .el-table,
   .el-table tr,
   .el-table th.el-table__cell {
     background-color: #121316 !important;
-    font-size: 12px !important;
+    font-size: 14px !important;
   }
   .empty-data {
     .el-empty__image {

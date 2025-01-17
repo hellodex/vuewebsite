@@ -154,8 +154,7 @@ const handelCollapse = (val: any) => {
   cursor: pointer;
   height: 34px;
   background: rgba(58, 60, 64, 0.4);
-  font-family: 'PingFangSC-Medium';
-  font-size: 12px;
+  font-size: 14px;
   color: #f5f5f5;
   .icon-svg {
     width: 20px;

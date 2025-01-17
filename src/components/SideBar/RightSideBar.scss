@@ -5,27 +5,9 @@
   width: 350px;
   min-width: 350px;
   .publicize-main {
-    padding: 10px 20px;
-    font-size: 14px !important;
-    font-family: 'PingFangSC-Medium';
-    display: flex !important;
-    .publicize-coin {
-      width: 59px;
-      height: 19.5px;
-      margin-right: 4px;
-    }
-    .arrow-down-info {
-      font-size: 12px;
-      color: #a5a5a5;
-      margin-top: 8px;
-      font-family: 'PingFangSC-Regular';
-    }
-    .arrow-down {
-      width: 16px;
-      height: 16px;
-    }
+    width: 100%;
     .rocket-logo {
-      width: 104px;
+      width: 100%;
     }
   }
   .menu-box {

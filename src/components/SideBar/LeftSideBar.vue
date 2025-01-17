@@ -326,9 +326,36 @@
                     <div>
                       <p class="display-flex align-items-center symbol">
                         <span>{{ item.baseToken?.symbol || '-' }}</span>
-                        <span>/{{ item.quoteToken?.symbol || '-' }}</span>
+                        <img src="@/assets/img/pump-logo.webp" class="pump-logo" alt="" />
+                        <svg-icon
+                          name="twitter-pump"
+                          class="icon-url"
+                          @click.stop="handelRouter(item.twitter)"
+                          v-if="item.twitter"
+                        ></svg-icon>
+
+                        <svg-icon
+                          name="website-pump"
+                          class="icon-url"
+                          @click.stop="handelRouter(item.website)"
+                          v-if="item.website"
+                        ></svg-icon>
+
+                        <svg-icon
+                          name="telegram-pump"
+                          class="icon-url"
+                          @click.stop="handelRouter(item.telegram)"
+                          v-if="item.telegram"
+                        ></svg-icon>
                       </p>
-                      <span class="number">{{ numberFormat(item.totalCount) }}</span>
+                      <div class="display-flex align-items-center">
+                        <span class="number">{{ numberFormat(item.totalCount) }}</span>
+                        <span class="clock-timer-txt">{{ timeago(item.createTime * 1000) }}</span>
+                        <svg-icon name="icon-percent" class="icon-percent"></svg-icon>
+                        <span class="up-color percent-txt"
+                          >{{ ((item.percent || 0) * 100).toFixed(2) }}%</span
+                        >
+                      </div>
                     </div>
                   </div>
                   <div class="display-flex flex-direction-col table-item-last">
@@ -356,7 +383,7 @@ import WalletConnect from '@/components/Wallet/WalletConnect.vue'
 import { useGlobalStore } from '@/stores/global'
 import { initLimitedOrderPage } from '@/api/coinWalletDetails'
 
-import { numberFormat } from '@/utils'
+import { numberFormat, timeago } from '@/utils'
 
 const i18n = useI18n()
 const router = useRouter()
@@ -366,7 +393,6 @@ const timer = ref<any>(null) // 定时器
 const skeletonLoading = ref<boolean>(true)
 const favoriteSkeleton = ref<boolean>(true)
 
-const tabIndex = ref<number>(1)
 const tabHoldIndex = ref<number>(1)
 const pumpTabIndex = ref<number>(1)
 
@@ -382,13 +408,6 @@ const favoriteStatus = ref<boolean>(false)
 const holdStatus = ref<boolean>(false)
 
 const pumpList = ref<any>([])
-
-const tabList = [
-  {
-    id: 1,
-    name: 'Pump'
-  }
-]
 
 const pumpTabList = [
   {
@@ -430,10 +449,6 @@ const tabHoldList = computed(() => {
   }
 })
 
-const handelTab = (item: { id: number }) => {
-  tabIndex.value = item.id
-}
-
 const handelPumpTab = (item: any) => {
   pumpTabIndex.value = item.value
   clearInterval(timer.value)
@@ -450,7 +465,7 @@ const setPolling = async () => {
   timer.value = setInterval(() => {
     getPumpRanking()
     localStorage.getItem('accountInfo') && getListHold()
-  }, 5000)
+  }, 1000)
 }
 
 const getListHold = async () => {
@@ -481,6 +496,11 @@ const handelJump = (param: any) => {
   router.push(`/k/${param.pairAddress}?chainCode=${param.chainCode}&timeType=15m`)
 }
 
+const handelRouter = (url: string) => {
+  console.log(url)
+  window.open(url)
+}
+
 onMounted(async () => {
   skeletonLoading.value = true
   favoriteSkeleton.value = true
@@ -496,8 +516,10 @@ onUnmounted(() => {
 
 <style scoped lang="scss">
 .left-layout {
-  width: 264px;
-  min-width: 264px;
+  width: 276px;
+  min-width: 276px;
+  padding-left: 12px;
+  overflow: hidden;
   .coin-list {
     background: rgba(23, 24, 27, 0.3);
     border-radius: 12px;
@@ -615,7 +637,7 @@ onUnmounted(() => {
         border-radius: 50%;
       }
       .logo {
-        margin-right: 8px;
+        margin-right: 6px;
       }
       .chainCode {
         width: 14px;
@@ -636,11 +658,32 @@ onUnmounted(() => {
             font-family: 'PingFangSC-Heavy';
             color: #f5f5f5;
           }
+          .pump-logo,
+          .icon-url {
+            width: 10px;
+            height: 10px;
+            margin-left: 1px;
+            color: #9aa0aa;
+          }
         }
         .number {
-          font-size: 13px;
+          font-size: 12px;
           font-family: 'PingFangSC-Medium';
           color: #9aa0aa;
+        }
+        .clock-timer-txt {
+          font-size: 10px;
+          color: var(--up-color);
+          margin: 0 4px;
+        }
+        .icon-percent {
+          width: 12px;
+          height: 12px;
+          margin-right: 2px;
+          color: var(--up-color);
+        }
+        .percent-txt {
+          font-size: 10px;
         }
       }
       .table-item-last {
@@ -650,7 +693,7 @@ onUnmounted(() => {
           font-size: 13px;
         }
         span:first-child {
-          color: #f5f5f5;
+          color: #9aa0aa;
         }
         .red {
           color: var(--down-color);

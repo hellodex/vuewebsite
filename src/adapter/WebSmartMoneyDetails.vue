@@ -299,11 +299,17 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { numberFormat, shortifyAddress } from '@/utils'
+import { APIwalletNew, APIuniqueToken, APIwalletHoldings } from '@/api'
+import { useGlobalStore } from '@/stores/global'
 
 const route = useRoute()
+const globalStore = useGlobalStore()
+
+const address = computed(() => globalStore.walletInfo.address)
+const isConnected = computed(() => globalStore.walletInfo.isConnected)
 
 const timeTabIndex = ref<number>(7)
 const timeTabList = [

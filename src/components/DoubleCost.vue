@@ -1,5 +1,5 @@
 <template>
-  <div class="checked-box display-flex align-items-center">
+  <div class="checked-box display-flex align-items-center justify-content-sp">
     <div class="display-flex align-items-center">
       <span>自定义涨幅</span>
       <div style="width: 55px; margin: 0 8px">
@@ -15,15 +15,17 @@
           </template>
         </el-input>
       </div>
-      <span style="color: #f5f5f5">出本</span>
     </div>
-    <el-checkbox
-      v-model="increaseSwitch"
-      @change="handelSwitch"
-      :true-value="1"
-      :false-value="0"
-      style="margin-left: 8px"
-    ></el-checkbox>
+    <div class="display-flex align-items-center">
+      <span style="color: #f5f5f5">出本</span>
+      <el-checkbox
+        v-model="increaseSwitch"
+        @change="handelSwitch"
+        :true-value="1"
+        :false-value="0"
+        style="margin-left: 8px"
+      ></el-checkbox>
+    </div>
   </div>
 </template>
 <script setup lang="ts">
@@ -55,7 +57,6 @@ const handelSwitch = (val: any) => {
 
 <style scoped lang="scss">
 .checked-box {
-  margin-right: 20px;
   white-space: nowrap;
   :deep(.el-checkbox__input.is-checked + .el-checkbox__label) {
     color: var(--font-color-default);
