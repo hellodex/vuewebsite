@@ -350,6 +350,7 @@
                       </p>
                       <div class="display-flex align-items-center">
                         <span class="number">{{ numberFormat(item.totalCount) }}</span>
+                        <span class="clock-timer-txt">{{ timeago(item.createTime * 1000) }}</span>
                         <svg-icon name="icon-percent" class="icon-percent"></svg-icon>
                         <span class="up-color percent-txt"
                           >{{ ((item.percent || 0) * 100).toFixed(2) }}%</span
@@ -382,7 +383,7 @@ import WalletConnect from '@/components/Wallet/WalletConnect.vue'
 import { useGlobalStore } from '@/stores/global'
 import { initLimitedOrderPage } from '@/api/coinWalletDetails'
 
-import { numberFormat } from '@/utils'
+import { numberFormat, timeago } from '@/utils'
 
 const i18n = useI18n()
 const router = useRouter()
@@ -392,7 +393,6 @@ const timer = ref<any>(null) // 定时器
 const skeletonLoading = ref<boolean>(true)
 const favoriteSkeleton = ref<boolean>(true)
 
-const tabIndex = ref<number>(1)
 const tabHoldIndex = ref<number>(1)
 const pumpTabIndex = ref<number>(1)
 
@@ -408,13 +408,6 @@ const favoriteStatus = ref<boolean>(false)
 const holdStatus = ref<boolean>(false)
 
 const pumpList = ref<any>([])
-
-const tabList = [
-  {
-    id: 1,
-    name: 'Pump'
-  }
-]
 
 const pumpTabList = [
   {
@@ -456,10 +449,6 @@ const tabHoldList = computed(() => {
   }
 })
 
-const handelTab = (item: { id: number }) => {
-  tabIndex.value = item.id
-}
-
 const handelPumpTab = (item: any) => {
   pumpTabIndex.value = item.value
   clearInterval(timer.value)
@@ -476,7 +465,7 @@ const setPolling = async () => {
   timer.value = setInterval(() => {
     getPumpRanking()
     localStorage.getItem('accountInfo') && getListHold()
-  }, 5000)
+  }, 1000)
 }
 
 const getListHold = async () => {
@@ -671,22 +660,26 @@ onUnmounted(() => {
           }
           .pump-logo,
           .icon-url {
-            width: 12px;
-            height: 12px;
+            width: 10px;
+            height: 10px;
             margin-left: 1px;
             color: #9aa0aa;
           }
         }
         .number {
-          font-size: 13px;
+          font-size: 12px;
           font-family: 'PingFangSC-Medium';
           color: #9aa0aa;
+        }
+        .clock-timer-txt {
+          font-size: 10px;
+          color: var(--up-color);
+          margin: 0 4px;
         }
         .icon-percent {
           width: 12px;
           height: 12px;
           margin-right: 2px;
-          margin-left: 4px;
           color: var(--up-color);
         }
         .percent-txt {
