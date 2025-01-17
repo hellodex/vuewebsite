@@ -136,7 +136,7 @@ defineProps({
 
 const useSubscribeKChart = useSubscribeKChartInfo()
 
-const subscribeSwap = ref<any>([])
+const subscribeSwap = ref<any>(useSubscribeKChart.subscribeSwap || [])
 
 onMounted(() => {
   timer.value = setInterval(() => {
