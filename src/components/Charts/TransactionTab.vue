@@ -95,6 +95,7 @@
 
         <template #default="scope">
           <div class="display-flex align-items-center justify-content-fd">
+            {{ shortifyAddress(scope.row.tx) }} &nbsp;
             <svg-icon name="share-04" class="img"></svg-icon>
             <svg-icon name="filter-funnel-01" class="img"></svg-icon>
             <a :href="CHAIN_URL[chainInfo.chainCode] + scope.row.tx" target="_blank">
@@ -134,7 +135,7 @@ defineProps({
 const useSubscribeKChart = useSubscribeKChartInfo()
 
 const subscribeSwap = computed(() => {
-  return useSubscribeKChart.subscribeSwap || []
+  return useSubscribeKChart.subscribeSwap?.filter((item: any, index: number) => index < 100) || []
 })
 </script>
 <style lang="scss" scoped>
