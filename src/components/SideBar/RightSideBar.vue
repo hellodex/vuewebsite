@@ -48,7 +48,7 @@
               <svg-icon name="chevron-right" class="arrow-down"></svg-icon>
             </div>
           </div> -->
-          <img src="@/assets/img/rocket-logo.png" alt="" class="rocket-logo" />
+          <img src="@/assets/img/rocket-logo.svg" alt="" class="rocket-logo" />
         </a>
         <div class="transaction-box">
           <template v-if="walletType == 'Email'">

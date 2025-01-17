@@ -119,14 +119,18 @@
     <div class="securityTest-right-box">
       <div class="securityTest-risk-info">
         <div class="securityTest-txt font-family-Heavy">
-          持币人（{{ numberFormat(baseInfo?.coinGoPlusInfo?.holders?.length || 0) }}）
+          持币人（{{ numberFormat(holdingCoinsTabInfo?.topHolders?.holds || 0) }}）
         </div>
         <div class="holders-progress display-flex align-items-center justify-content-sp">
-          <span>Top10 占比</span>
+          <span>{{ holdingCoinsTabInfo?.name }}占比</span>
           <div class="progress-main">
-            <span class="txt">{{ (parseFloat(holdersPercentage) * 100).toFixed(2) }}%</span>
+            <span class="txt"
+              >{{
+                parseFloat(holdingCoinsTabInfo?.topHolders?.topProPortion || 0).toFixed(2)
+              }}%</span
+            >
             <el-progress
-              :percentage="parseFloat(holdersPercentage) * 100"
+              :percentage="parseFloat(holdingCoinsTabInfo?.topHolders?.topProPortion || 0)"
               color="#569CEE"
               class="progress"
               :stroke-width="6"
@@ -135,16 +139,12 @@
         </div>
         <div class="holders-list">
           <div
-            v-for="(item, index) in baseInfo?.coinGoPlusInfo?.holders || []"
+            v-for="(item, index) in holdingCoinsTabInfo?.topHolders?.vos || []"
             :key="index"
             class="holders-list-item display-flex align-items-center justify-content-sp"
           >
-            <span>{{ index + 1 }}.{{ shortifyAddress(item.address || item.account) }}</span>
-            <span
-              >{{ numberFormat(item.balance) }}（{{
-                (parseFloat(item.percent) * 100).toFixed(2)
-              }}%）</span
-            >
+            <span>{{ index + 1 }}.{{ shortifyAddress(item.walletAddress) }}</span>
+            <span>{{ numberFormat(item.amount) }}（{{ parseFloat(item.per).toFixed(2) }}%）</span>
           </div>
         </div>
         <div class="securityTest-txt font-family-Heavy">
@@ -215,6 +215,12 @@ const priceIncrease = computed(() => {
 
 const props = defineProps({
   baseInfo: {
+    type: Object,
+    default: () => {
+      return {}
+    }
+  },
+  holdingCoinsTabInfo: {
     type: Object,
     default: () => {
       return {}

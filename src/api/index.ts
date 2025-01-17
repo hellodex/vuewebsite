@@ -667,3 +667,43 @@ export function APIlistTransferHistory(data: object) {
     }
   })
 }
+
+/**
+ * 钱包汇总
+ * @param data
+ * @returns
+ */
+export function APIwalletNew(data: any) {
+  return http({
+    url: `${WEB_URL}/wallet/eoprrt/V1/walletNew/${data.wallet}`,
+    method: 'GET'
+  })
+}
+
+/**
+ * 最近 token 盈利情况
+ * @param data
+ * @returns
+ */
+export function APIuniqueToken(data: any) {
+  return http({
+    url: `${WEB_URL}/wallet/report/V1/uniqueToken/${data.wallet}`,
+    method: 'GET'
+  })
+}
+
+/**
+ * toekn 汇总
+ * /api/webv2/walletAnalysis/walletAnalysisSummary
+ * /api/webv2/walletAnalysis/walletAnalysisToken
+ * /api/webv2/walletAnalysis/walletAnalysisHoldings
+ * @param data
+ * @returns
+ */
+
+export function APIwalletHoldings(data: any) {
+  return http({
+    url: `${WEB_URL}/wallet/report/V1/walletHoldings/${data.wallet}`,
+    method: 'GET'
+  })
+}
