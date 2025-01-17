@@ -2,7 +2,7 @@ import { useChainInfoStore } from '@/stores/chainInfo'
 import { useTokenInfoStore } from '@/stores/tokenInfo'
 import { useSubscribeKChartInfo } from '@/stores/subscribeKChartInfo'
 import { APIpairInfo } from '@/api/coinWalletDetails'
-import { formatDecimals } from '@/utils'
+import { formatDecimals, formatDate } from '@/utils'
 import { io } from 'socket.io-client'
 
 // 自定义数据源对象
@@ -186,8 +186,7 @@ export default class CustomDataFeed {
     )
     socket.on('kchart', async (message: any) => {
       const data = JSON.parse(message)
-      console.log('server-message', JSON.parse(message).tx, JSON.parse(message))
-
+      console.info(`socket-message: ${data.txTime} <========> ${formatDate(data.txTime * 1000)}`)
       useSubscribeKChart.createSubscribeKChartInfo({
         C: data.price,
         H: data.price,
