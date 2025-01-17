@@ -246,7 +246,7 @@
       </h4>
       <svg-icon name="arrow-circle-right" class="arrow-circle-right" @click="close"></svg-icon>
     </template>
-    <SecurityTest :baseInfo="baseInfo" />
+    <SecurityTest :baseInfo="baseInfo" :holdingCoinsTabInfo="holdingCoinsTabInfo" />
   </el-drawer>
 </template>
 <script setup lang="ts">
