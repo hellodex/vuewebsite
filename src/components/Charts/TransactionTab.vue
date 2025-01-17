@@ -111,7 +111,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onUnmounted, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useChainInfoStore } from '@/stores/chainInfo'
 import { useSubscribeKChartInfo } from '@/stores/subscribeKChartInfo'
@@ -123,6 +123,8 @@ const i18n = useI18n()
 
 const useChainInfo = useChainInfoStore()
 const { chainInfo } = storeToRefs(useChainInfo)
+
+const timer = ref<any>(null)
 defineProps({
   baseInfo: {
     type: Object,
@@ -134,8 +136,17 @@ defineProps({
 
 const useSubscribeKChart = useSubscribeKChartInfo()
 
-const subscribeSwap = computed(() => {
-  return useSubscribeKChart.subscribeSwap?.filter((item: any, index: number) => index < 100) || []
+const subscribeSwap = ref<any>(useSubscribeKChart.subscribeSwap || [])
+
+onMounted(() => {
+  timer.value = setInterval(() => {
+    subscribeSwap.value = [...(useSubscribeKChart.subscribeSwap || [])]
+  }, 1000)
+})
+
+onUnmounted(() => {
+  clearInterval(timer.value)
+  timer.value = null
 })
 </script>
 <style lang="scss" scoped>

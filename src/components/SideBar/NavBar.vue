@@ -37,12 +37,12 @@
           <a href="https://hellodex.gitbook.io/hellodex" target="_blank" class="link">
             <span class="link">白皮书</span>
           </a>
-          <!-- <a href="https://hellodex.gitbook.io/hellodex" target="_blank" class="link">
+          <a href="https://hellodex.gitbook.io/hellodex" target="_blank" class="link">
             <span class="link">Web3变革</span>
-          </a> -->
-          <RouterLink :to="item.to" v-for="item in navList" :key="item.name">
+          </a>
+          <!-- <RouterLink :to="item.to" v-for="item in navList" :key="item.name">
             <span class="link">{{ item.name }}</span>
-          </RouterLink>
+          </RouterLink> -->
         </div>
       </div>
       <div class="seach-block" ref="SearchBlockRef">

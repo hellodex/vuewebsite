@@ -16,6 +16,9 @@ export const useSubscribeKChartInfo = defineStore('subscribeKChartInfo', () => {
 
   function createSubscribeSwapInfo(val: any): void {
     subscribeSwap.value.unshift(val)
+    if (subscribeSwap.value.length > 100) {
+      subscribeSwap.value.pop()
+    }
   }
 
   return { subscribeKChartInfo, subscribeSwap, createSubscribeKChartInfo, createSubscribeSwapInfo }
