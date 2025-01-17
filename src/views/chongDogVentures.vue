@@ -26,7 +26,7 @@
               <span>平台币IDO参与>1000U以上，可累计需要同一个钱包地址</span>
             </div>
           </div>
-          <div class="participate-btn">
+          <div class="participate-btn" @click="router.push('/Ido')">
             <span>去参与</span>
             <svg-icon name="arrow-up" class="arrow-up"></svg-icon>
           </div>
@@ -39,10 +39,10 @@
               <span>推特抽奖或其他活动中奖者</span>
             </div>
           </div>
-          <div class="participate-btn">
+          <a href="https://x.com/HelloDex_io" target="_blank" class="participate-btn">
             <span>关注Twitter</span>
             <svg-icon name="arrow-up" class="arrow-up"></svg-icon>
-          </div>
+          </a>
         </div>
         <div class="chong-dog-txt-item display-flex align-items-center justify-content-sp">
           <div class="display-flex align-items-center">
@@ -52,10 +52,10 @@
               <span>TG社区抽奖</span>
             </div>
           </div>
-          <div class="participate-btn">
+          <a href="https://t.me/HelloDex_cn" target="_blank" class="participate-btn">
             <span>进入社区群组</span>
             <svg-icon name="arrow-up" class="arrow-up"></svg-icon>
-          </div>
+          </a>
         </div>
         <div class="chong-dog-txt-item display-flex align-items-center justify-content-sp">
           <div class="display-flex align-items-center">
@@ -65,10 +65,10 @@
               <span>每日交易排名前三</span>
             </div>
           </div>
-          <div class="participate-btn">
-            <span>去交易</span>
+          <a href="https://t.me/HelloDex_cn" target="_blank" class="participate-btn">
+            <span>即将开始</span>
             <svg-icon name="arrow-up" class="arrow-up"></svg-icon>
-          </div>
+          </a>
         </div>
       </div>
     </div>
@@ -83,7 +83,10 @@
     </div>
   </section>
 </template>
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { useRouter } from 'vue-router'
+const router = useRouter()
+</script>
 
 <style lang="scss" scoped>
 .chong-dog-ventures {
