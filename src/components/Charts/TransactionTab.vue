@@ -10,7 +10,7 @@
         </template>
         <template #default="scope">
           <div class="display-flex align-items-center text-color">
-            {{ timeago(scope.row.txTime * 1000) }}
+            {{ timeago((scope.row.txTime || 0) * 1000) }}
           </div>
         </template>
       </el-table-column>

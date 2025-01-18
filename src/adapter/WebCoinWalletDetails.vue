@@ -10,7 +10,7 @@
       <!-- 币信息 -->
       <section
         class="coinWalletDetails-section"
-        :style="{ width: `calc(100vw - 374px - ${switchLeftState ? '264px' : '0px'})` }"
+        :style="{ width: `calc(100vw - 350px - ${switchLeftState ? '300px' : '0px'})` }"
       >
         <!-- K线 -->
         <el-scrollbar>
@@ -670,7 +670,7 @@ onUnmounted(() => {
     width: 9px;
     height: 27px;
     position: absolute;
-    top: 0;
+    top: -15px;
     display: flex;
     justify-content: center;
     align-items: center;
