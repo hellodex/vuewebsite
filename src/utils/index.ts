@@ -87,7 +87,7 @@ export function timeago(time: any): string | undefined {
   const diffValue = now - time
   // 小于 0 直接返回
   if (diffValue < 0) {
-    return
+    return 0 + (globalStore.language == 'zh' ? '秒前' : `second ago`)
   }
   const yearC: any = diffValue / year
   const monthC: any = diffValue / month

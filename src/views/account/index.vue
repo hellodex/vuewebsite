@@ -73,6 +73,7 @@ const router = useRouter()
         width: 20px;
         height: 21px;
         margin-right: 12px;
+        color: var(--dex-color-4);
       }
     }
   }
