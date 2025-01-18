@@ -1,5 +1,6 @@
 <template>
-  <div class="transaction-tab-content">
+  <div class="transaction-tab-content" @mouseover="handleMouseOver" @mouseleave="handleMouseLeave">
+    <span class="transaction-tab-pause-txt" v-if="pauseType == 1">⏸ 已暂停</span>
     <el-table :data="subscribeSwap" max-height="890px">
       <el-table-column>
         <template #header>
@@ -95,7 +96,7 @@
 
         <template #default="scope">
           <div class="display-flex align-items-center justify-content-fd">
-            {{ shortifyAddress(scope.row.tx) }} &nbsp;
+            <span>{{ shortifyAddress(scope.row.tx) }} &nbsp;</span>
             <svg-icon name="share-04" class="img"></svg-icon>
             <svg-icon name="filter-funnel-01" class="img"></svg-icon>
             <a :href="CHAIN_URL[chainInfo.chainCode] + scope.row.tx" target="_blank">
@@ -137,12 +138,31 @@ defineProps({
 const useSubscribeKChart = useSubscribeKChartInfo()
 
 const subscribeSwap = ref<any>(useSubscribeKChart.subscribeSwap || [])
+const pauseType = ref<number>(0)
 
 onMounted(() => {
   timer.value = setInterval(() => {
     subscribeSwap.value = [...(useSubscribeKChart.subscribeSwap || [])]
   }, 1000)
 })
+
+const handleMouseOver = () => {
+  pauseType.value = 1
+  clearInterval(timer.value)
+  timer.value = null
+  timer.value = setInterval(() => {
+    subscribeSwap.value = [...(subscribeSwap.value || [])]
+  }, 1000)
+}
+
+const handleMouseLeave = () => {
+  pauseType.value = 0
+  clearInterval(timer.value)
+  timer.value = null
+  timer.value = setInterval(() => {
+    subscribeSwap.value = [...(useSubscribeKChart.subscribeSwap || [])]
+  }, 1000)
+}
 
 onUnmounted(() => {
   clearInterval(timer.value)
@@ -167,5 +187,17 @@ onUnmounted(() => {
     color: #2e90fa;
     margin: 0 4px;
   }
+}
+.transaction-tab-pause-txt {
+  padding: 1px 5px;
+  margin-left: 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  color: #ffec42;
+  background-color: #595000;
+  font-family: 'PingFangSC-Medium';
+  position: absolute;
+  top: 19px;
+  right: 12px;
 }
 </style>

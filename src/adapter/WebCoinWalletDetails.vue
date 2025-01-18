@@ -677,6 +677,7 @@ onUnmounted(() => {
     // background-color: rgba(23, 24, 27, 0.3);
     // border-radius: 12px;
     padding: 12px;
+    position: relative;
   }
   .coinWallet-tabs-head:after {
     content: '';
