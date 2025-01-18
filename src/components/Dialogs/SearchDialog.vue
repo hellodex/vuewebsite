@@ -172,7 +172,9 @@ const handelClose = () => {
 
 onMounted(() => {
   const searchHistory: any = localStorage.getItem('searchHistory')
-  searchHistory ? (historyList.value = JSON.parse(searchHistory)) : (historyList.value = [])
+  searchHistory
+    ? (historyList.value = JSON.parse(searchHistory).reverse())
+    : (historyList.value = [])
 })
 </script>
 <style lang="scss">
