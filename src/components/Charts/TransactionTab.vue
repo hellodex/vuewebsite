@@ -1,6 +1,5 @@
 <template>
   <div class="transaction-tab-content" @mouseover="handleMouseOver" @mouseleave="handleMouseLeave">
-    <span class="transaction-tab-pause-txt" v-if="pauseType == 1">⏸ 已暂停</span>
     <el-table :data="subscribeSwap" max-height="890px">
       <el-table-column>
         <template #header>
@@ -126,6 +125,9 @@ const useChainInfo = useChainInfoStore()
 const { chainInfo } = storeToRefs(useChainInfo)
 
 const timer = ref<any>(null)
+
+const emit = defineEmits(['pauseAndPlay'])
+
 defineProps({
   baseInfo: {
     type: Object,
@@ -138,7 +140,6 @@ defineProps({
 const useSubscribeKChart = useSubscribeKChartInfo()
 
 const subscribeSwap = ref<any>(useSubscribeKChart.subscribeSwap || [])
-const pauseType = ref<number>(0)
 
 onMounted(() => {
   timer.value = setInterval(() => {
@@ -147,7 +148,7 @@ onMounted(() => {
 })
 
 const handleMouseOver = () => {
-  pauseType.value = 1
+  emit('pauseAndPlay', 1)
   clearInterval(timer.value)
   timer.value = null
   timer.value = setInterval(() => {
@@ -156,7 +157,7 @@ const handleMouseOver = () => {
 }
 
 const handleMouseLeave = () => {
-  pauseType.value = 0
+  emit('pauseAndPlay', 0)
   clearInterval(timer.value)
   timer.value = null
   timer.value = setInterval(() => {
@@ -187,17 +188,5 @@ onUnmounted(() => {
     color: #2e90fa;
     margin: 0 4px;
   }
-}
-.transaction-tab-pause-txt {
-  padding: 1px 5px;
-  margin-left: 8px;
-  border-radius: 4px;
-  font-size: 12px;
-  color: #ffec42;
-  background-color: #595000;
-  font-family: 'PingFangSC-Medium';
-  position: absolute;
-  top: 19px;
-  right: 12px;
 }
 </style>
