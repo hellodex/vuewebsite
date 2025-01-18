@@ -47,6 +47,7 @@
                 <!-- <div class="refresh-box">
                   <RefreshHold v-if="activeName == 'seven'" />
                 </div> -->
+                <span class="transaction-tab-pause-txt" v-if="pauseType == 1">⏸ 已暂停</span>
                 <div
                   class="data-items display-flex align-items-center"
                   v-if="activeName == 'fourth'"
@@ -73,7 +74,11 @@
               </div>
               <div class="coinWallet-tabs-content">
                 <PondTab :pondTabInfo="pondTabInfo" v-if="activeName == 'first'" />
-                <TransactionTab v-else-if="activeName == 'second'" :baseInfo="baseInfo" />
+                <TransactionTab
+                  v-else-if="activeName == 'second'"
+                  :baseInfo="baseInfo"
+                  @pauseAndPlay="handelPauseAndPlay"
+                />
                 <!-- <TransferAccountsTab
                   v-else-if="activeName == 'third'"
                   :transferAccountsTabInfo="transferAccountsTabInfo"
@@ -339,6 +344,11 @@ const myCoinTabInfo = ref<any>({
 })
 
 const earliest100TraderData = ref<any>({})
+
+const pauseType = ref<number>(0)
+const handelPauseAndPlay = (val: number) => {
+  pauseType.value = val
+}
 
 useChainInfo.createChainInfo({
   chainCode: route.query.chainCode, // 币ID
@@ -629,6 +639,18 @@ onUnmounted(() => {
     display: inline-block;
   }
 
+  .transaction-tab-pause-txt {
+    padding: 1px 5px;
+    margin-left: 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    color: #ffec42;
+    background-color: #595000;
+    font-family: 'PingFangSC-Medium';
+    position: relative;
+    top: 8px;
+  }
+
   // .resize-box:hover {
   //   background-color: var(--hover-bg-color);
   // }
@@ -677,7 +699,6 @@ onUnmounted(() => {
     // background-color: rgba(23, 24, 27, 0.3);
     // border-radius: 12px;
     padding: 12px;
-    position: relative;
   }
   .coinWallet-tabs-head:after {
     content: '';
