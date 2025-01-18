@@ -761,9 +761,9 @@ const handelLimitSell = async () => {
     fromTokenDecimals: parseFloat(sellInfo.value.baseTokenDecimals), // 卖出地址Decimals
     toTokenDecimals: parseFloat(buyInfo.value.baseTokenDecimals), // 买入地址Decimals
     fromTokenAmount: spendAmount, // 卖出数额
-    targetPrice: parseFloat(targetPrice.value) || 0, // 目标价格
-    targetMarketCap: parseFloat(targetMarketCap.value) || 0, // 目标市值
-    targetPoolMarketCap: parseFloat(targetPoolMarketCap.value) || 0, // 池子目标市值
+    targetPrice: parseFloat(targetPrice.value || '0'), // 目标价格
+    targetMarketCap: parseFloat(targetMarketCap.value || '0'), // 目标市值
+    targetPoolMarketCap: parseFloat(targetPoolMarketCap.value || '0'), // 池子目标市值
     slippage: slippage.value.toString(), // 滑点
     expireTime: 86400 * 30 * 365, // 超时时间 秒级时间戳
     uiType, // 价格 1，市值 2
