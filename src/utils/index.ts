@@ -50,7 +50,6 @@ export function formatDate(time: any) {
     return time
   }
   const date = new Date(parseFloat(time))
-  console.log(date)
   const year = date.getFullYear(),
     month = repair(date.getMonth() + 1), //月份是从0开始的
     day = repair(date.getDate()),
@@ -454,7 +453,6 @@ export function handleCoinPairInfo(tokenInfo: any) {
       logo: tokenInfo?.logo
     }
 
-    console.log('isBasePackCurrency', 1)
     return {
       buyCoin,
       sellCoin
@@ -478,7 +476,6 @@ export function handleCoinPairInfo(tokenInfo: any) {
       logo: tokenInfo?.logo
     }
 
-    console.log('isQuotePackCurrency', 2)
     return {
       buyCoin,
       sellCoin
@@ -501,7 +498,7 @@ export function handleCoinPairInfo(tokenInfo: any) {
     chainCode: tokenInfo?.chainCode,
     logo: tokenInfo?.logo
   }
-  console.log('NoQuotePackCurrency&NoBasePackCurrency', 3)
+
   return {
     buyCoin,
     sellCoin
