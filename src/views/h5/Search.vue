@@ -121,7 +121,9 @@ onMounted(() => {
   //   message: i18n.t('h5.loading')
   // })
   const searchHistory: any = localStorage.getItem('searchAppHistory')
-  searchHistory ? (historyList.value = JSON.parse(searchHistory)) : (historyList.value = [])
+  searchHistory
+    ? (historyList.value = JSON.parse(searchHistory).reverse())
+    : (historyList.value = [])
   // getAppSearchList()
 })
 </script>
