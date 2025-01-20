@@ -203,6 +203,9 @@ const handelCancel = (row: any) => {
     transition: all 0.2s;
     color: #848e9c;
   }
+  .btn:hover {
+    color: #f5f5f5;
+  }
   .type-color {
     color: #ffc422;
   }
