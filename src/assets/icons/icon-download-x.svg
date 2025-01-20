@@ -1,0 +1,22 @@
+<svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="gg 1" clip-path="url(#clip0_5520_25519)">
+<g id="Clip path group">
+<mask id="mask0_5520_25519" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="0" y="1" width="20" height="19">
+<g id="clip0_6600_49">
+<path id="Vector" d="M19.063 1.4375H0.929688V19.5708H19.063V1.4375Z" fill="white"/>
+</g>
+</mask>
+<g mask="url(#mask0_5520_25519)">
+<g id="Group">
+<path id="Vector_2" d="M6.12891 6.08789H7.3384L14.0477 14.9732H12.8382L6.12891 6.08789Z" fill="white"/>
+<path id="Vector_3" fill-rule="evenodd" clip-rule="evenodd" d="M9.99635 1.4375C4.98883 1.4375 0.929688 5.49665 0.929688 10.5042C0.929688 15.5117 4.98883 19.5708 9.99635 19.5708C15.0039 19.5708 19.063 15.5117 19.063 10.5042C19.063 5.49665 15.0039 1.4375 9.99635 1.4375ZM7.75961 5.06417H4.13294L8.63454 10.9784L4.49561 15.9442H6.12761L9.42334 12.0156L12.4144 15.9442H15.9804L11.311 9.76523L15.255 5.06417H13.5623L10.5195 8.71622L7.75961 5.06417Z" fill="white"/>
+</g>
+</g>
+</g>
+</g>
+<defs>
+<clipPath id="clip0_5520_25519">
+<rect width="20" height="20" fill="white" transform="translate(0 0.5)"/>
+</clipPath>
+</defs>
+</svg>

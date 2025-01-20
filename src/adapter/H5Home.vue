@@ -17,7 +17,7 @@
         <svg-icon
           name="download-01"
           class="download-01"
-          @click="handelOpenWindow('http://lnk.bio/HelloDex')"
+          @click="router.push('/Download')"
         ></svg-icon>
         <!-- <van-badge :content="5">
           <svg-icon name="h5-vector" class="vector"></svg-icon>
