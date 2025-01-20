@@ -68,7 +68,7 @@
         </div>
       </div>
       <img src="../assets/img/download-img.png" alt="" class="download-img" />
-      <img src="../assets/img/download-bac.png" alt="" class="download-bac" />
+      <img src="../assets/img/download-h5-bac.png" alt="" class="download-bac" />
     </div>
   </section>
 </template>
@@ -114,7 +114,6 @@ const router = useRouter()
   .download-content {
     position: relative;
     padding-top: 0.8rem;
-    padding-bottom: 0.2667rem;
     .download-logo-main {
       font-size: 0.7467rem;
       color: #f5f5f5;
@@ -159,7 +158,6 @@ const router = useRouter()
       width: 90%;
       display: block;
       margin: 0.8rem auto 0;
-      background-color: #000;
     }
     .download-bac {
       width: 100vw;
