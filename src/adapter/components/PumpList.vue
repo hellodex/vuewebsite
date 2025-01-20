@@ -196,7 +196,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, computed, reactive } from 'vue'
+import { ref, onMounted, onUnmounted, computed, reactive, onActivated, onDeactivated } from 'vue'
 import { ApiGetPumpRanking } from '@/api'
 import { useI18n } from 'vue-i18n'
 import { useGlobalStore } from '@/stores/global'
@@ -262,6 +262,12 @@ const getPumpRanking = async (type: number) => {
 const getToken = async () => {
   const res: any = await getTokenList('SOLANA', customWalletInfo.value.walletInfo?.wallet)
   tokenList.value = res || []
+}
+
+const setPolling = () => {
+  timer.value = setInterval(() => {
+    isConnected.value && getToken()
+  }, 5000)
 }
 
 const setPolling1 = () => {
@@ -341,21 +347,21 @@ const handleMouseLeave = (index: number) => {
     setPolling3()
   }
 }
-onMounted(async () => {
-  skeletonLoading.value = true
+
+const initData = async () => {
   await getPumpRanking(1)
   await getPumpRanking(2)
   await getPumpRanking(3)
-  skeletonLoading.value = false
+}
+
+const startTimer = () => {
   setPolling1()
   setPolling2()
   setPolling3()
-  timer.value = setInterval(() => {
-    isConnected.value && getToken()
-  }, 5000)
-})
+  setPolling()
+}
 
-onUnmounted(() => {
+const stopTimer = () => {
   clearInterval(timer.value)
   clearInterval(timer1.value)
   clearInterval(timer2.value)
@@ -364,6 +370,24 @@ onUnmounted(() => {
   timer1.value = null
   timer2.value = null
   timer3.value = null
+}
+
+onDeactivated(() => {
+  // 在从 DOM 上移除、进入缓存
+  // 以及组件卸载时调用
+  stopTimer()
+  console.log('stopTimer')
+})
+
+onMounted(async () => {
+  skeletonLoading.value = true
+  initData()
+  skeletonLoading.value = false
+  startTimer()
+})
+
+onUnmounted(() => {
+  stopTimer()
 })
 </script>
 
