@@ -5,7 +5,7 @@
       <div class="display-flex align-items-center activity-content">
         <span>🔥HelloDex：利润80%分给用户的链上交易工具，平台币预售中</span>
         <span
-          @click="router.push('/ido')"
+          @click="router.push('/Ido')"
           class="display-flex align-items-center"
           style="
             color: #569cee;
@@ -99,13 +99,9 @@
           <img src="@/assets/img/invite.gif" alt="" class="icon-invite" />
           <span>邀请返佣</span>
         </div>
-        <a
-          href="http://lnk.bio/HelloDex"
-          target="_blank"
-          class="download-btn display-flex align-items-center"
-        >
+        <div class="download-btn display-flex align-items-center" @click="router.push('/Download')">
           <svg-icon name="download-01" class="download-01"></svg-icon>
-        </a>
+        </div>
         <LanguageOperation />
       </div>
     </div>
@@ -385,6 +381,7 @@ onUnmounted(() => {
   }
   .download-btn {
     margin-left: 10px;
+    cursor: pointer;
     .download-01 {
       width: 24px;
       height: 24px;

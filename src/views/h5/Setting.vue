@@ -19,14 +19,14 @@
         </div>
         <div class="application">
           <a
-            href="https://lnk.bio/HelloDex"
+            href="https://lnk.bio/go?d=https%3A%2F%2Ftwitter.com%2FHelloDexCN&hash=f3d7fbce65a2531a29d1028b5ad52c44&id=7108163&ext=-1861636&timezone=America%2FNew_York&type=1"
             target="_blank"
             class="application-item display-flex align-items-center"
           >
             <span>Twitter</span>
           </a>
           <a
-            href="https://lnk.bio/HelloDex"
+            href="https://lnk.bio/go?d=https%3A%2F%2Ft.me%2FHelloDex_cn&hash=8e2b8abee04f4dd77925055774555bb3&id=7108162&ext=-1861636&timezone=America%2FNew_York&type=1"
             target="_blank"
             class="application-item display-flex align-items-center"
           >
