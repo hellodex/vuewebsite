@@ -40,7 +40,9 @@ export function useBaseInfo() {
     const res = await GoPlus.tokenSecurity(CHAIN_ID[chainCode], baseAddress, 30)
     if (res.code != ErrorCode.SUCCESS) {
       console.error(res.message)
-      // getGoPlus(baseAddress, chainCode)
+      setTimeout(() => {
+        getGoPlus(baseAddress, chainCode)
+      }, 2000)
     } else {
       const data = res.result?.[baseAddress.toLocaleLowerCase()] || {}
       coinGoPlusInfo.value = { ...data }
@@ -58,7 +60,9 @@ export function useBaseInfo() {
         chainCode: 'SOLANA'
       }
     } else {
-      // getSolGoPlus(baseAddress)
+      setTimeout(() => {
+        getSolGoPlus(baseAddress)
+      }, 2000)
     }
   }
   getTokenPrice()

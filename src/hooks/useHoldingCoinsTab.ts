@@ -31,6 +31,9 @@ export function useHoldingCoinsTab(num: any, name: string) {
     const res = await GoPlus.tokenSecurity(CHAIN_ID[params.chainCode], params.baseAddress, 30)
     if (res.code != ErrorCode.SUCCESS) {
       console.error(res.message)
+      setTimeout(() => {
+        getGoPlus()
+      }, 2000)
     } else {
       const data =
         params.baseAddress && res.result ? res.result[params.baseAddress.toLocaleLowerCase()] : {}
