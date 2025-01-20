@@ -208,8 +208,8 @@ const useSubscribeKChart = useSubscribeKChartInfo()
 
 const priceIncrease = computed(() => {
   return {
-    price: useSubscribeKChart.subscribeKChartInfo?.C || props.baseInfo.priceInfo?.price || 0,
-    increase: useSubscribeKChart.subscribeKChartInfo?.chg || props.baseInfo.priceInfo?.chg || 0
+    price: useSubscribeKChart.subscribeKChartInfo?.C || 0,
+    increase: useSubscribeKChart.subscribeKChartInfo?.chg || 0
   }
 })
 
@@ -392,17 +392,6 @@ const riskList = computed(() => {
           type: obj?.personal_slippage_modifiable == 0 ? 'success' : 'warning'
         }
       ]
-})
-
-const holdersPercentage = computed(() => {
-  const obj = props.baseInfo?.coinGoPlusInfo
-  let percentage = 0
-
-  obj?.holders?.forEach((item: any) => {
-    percentage += parseFloat(item.percent)
-  })
-
-  return percentage.toFixed(2)
 })
 
 const isblackHole = (address: string) => {

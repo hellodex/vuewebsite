@@ -30,10 +30,6 @@ export default class CustomDataFeed {
     // 数据源准备就绪时的操作，例如认证、连接等
     const useSubscribeKChart = useSubscribeKChartInfo()
     useSubscribeKChart.subscribeSwap = []
-    if (socket) {
-      socket.off()
-      socket.disconnect()
-    }
     setTimeout(() =>
       callback({
         exchanges: [], // 可用的交易所列表
@@ -180,6 +176,11 @@ export default class CustomDataFeed {
       baseAddress: tokenInfo?.baseAddress,
       chainCode: chainInfo?.chainCode
     })
+
+    if (socket) {
+      socket.off()
+      socket.disconnect()
+    }
 
     socket = io(
       `https://wss.apihellodex.lol?pair=${chainInfo?.pairAddress}&chainCode=${chainInfo?.chainCode}`
