@@ -193,7 +193,14 @@ const subscribeBars = async () => {
     startTime: startTime.value
   })
   const useSubscribeKChart = useSubscribeKChartInfo()
-  useSubscribeKChart.createSubscribeKChartInfo(res)
+  useSubscribeKChart.createSubscribeKChartInfo({
+    ...res,
+    C: res?.chart?.C,
+    H: res?.chart?.H,
+    L: res?.chart?.L,
+    O: res?.chart?.O,
+    timestamp: res?.chart?.timestamp
+  })
   if (res?.chart?.timestamp) {
     startTime.value = res.chart.timestamp
   }

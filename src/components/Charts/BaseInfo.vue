@@ -300,8 +300,8 @@ const useSubscribeKChart = useSubscribeKChartInfo()
 
 const priceIncrease = computed(() => {
   return {
-    price: useSubscribeKChart.subscribeKChartInfo?.C || props.baseInfo.priceInfo?.price || 0,
-    increase: useSubscribeKChart.subscribeKChartInfo?.chg || props.baseInfo.priceInfo?.chg || 0
+    price: useSubscribeKChart.subscribeKChartInfo?.C || 0,
+    increase: useSubscribeKChart.subscribeKChartInfo?.chg || 0
   }
 })
 

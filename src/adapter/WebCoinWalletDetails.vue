@@ -391,7 +391,7 @@ const getData = async () => {
     currentTokenHoldInfo.value =
       initLimitedOrders.value.positions.find(
         (item: any) =>
-          item.tokenAddress.toLowerCase() == baseInfo.value.tokenInfo?.baseAddress.toLowerCase()
+          item.tokenAddress.toLowerCase() == baseInfo.value.tokenInfo?.baseAddress?.toLowerCase()
       ) || {}
   }
 }
@@ -408,9 +408,8 @@ const getEarliest100Trader = async () => {
 
 const priceIncrease = computed(() => {
   return {
-    price: useSubscribeKChart.subscribeKChartInfo?.C || baseInfo.value.priceInfo?.price || 0,
-    increase:
-      useSubscribeKChart.subscribeKChartInfo?.chg || baseInfo.value.baseInfo?.priceInfo?.chg || 0
+    price: useSubscribeKChart.subscribeKChartInfo?.C || 0,
+    increase: useSubscribeKChart.subscribeKChartInfo?.chg || 0
   }
 })
 
@@ -509,9 +508,6 @@ const setPolling = async () => {
   skeleton.value = false
   timer.value = setInterval(() => {
     rightSideBarInfo.value = useRightSideBar()
-    // if (walletType.value !== 'Email') {
-    //   myCoinTabInfo.value = useMyCoinTab()
-    // }
     localStorage.getItem('accountInfo') && getData()
   }, 5000)
 }
@@ -581,6 +577,7 @@ const resizeController = () => {
 
 onUnmounted(() => {
   clearInterval(timer.value)
+  timer.value = null
 })
 </script>
 <style lang="scss" scoped>

@@ -1,12 +1,14 @@
 import { ref } from 'vue'
 import { useTokenInfoStore } from '@/stores/tokenInfo'
 import { useChainInfoStore } from '@/stores/chainInfo'
+import { useSubscribeKChartInfo } from '@/stores/subscribeKChartInfo'
 import { APItokenPrice, APIGetSolGoPlus } from '@/api/coinWalletDetails'
 
 import { GoPlus, ErrorCode } from '@goplus/sdk-node'
 import { CHAIN_ID } from '@/types'
 
 export function useBaseInfo() {
+  const useSubscribeKChart = useSubscribeKChartInfo()
   const tradingLoading = ref<boolean>(true)
   const useChainInfo = useChainInfoStore()
   const chainInfo = useChainInfo.chainInfo
@@ -14,15 +16,22 @@ export function useBaseInfo() {
   const tokenInfo = useTokenInfo.tokenInfo // 解构变量 通过 storeToRefs 变成响应式
   const coinGoPlusInfo = ref<any>(null)
 
-  const priceInfo = ref<any>({})
-
   async function getTokenPrice() {
     const res: any = await APItokenPrice({
       pairAddress: chainInfo?.pairAddress,
       chainCode: chainInfo?.chainCode
     })
-    priceInfo.value = res
-    sessionStorage.setItem('basePrice', priceInfo.value.price)
+
+    useSubscribeKChart.createSubscribeKChartInfo({
+      C: res?.price,
+      H: res?.price,
+      L: res?.price,
+      O: res?.price,
+      chg: res?.chg,
+      timestamp: ''
+    })
+
+    sessionStorage.setItem('basePrice', res?.price)
     tradingLoading.value = false
   }
 
@@ -31,7 +40,7 @@ export function useBaseInfo() {
     const res = await GoPlus.tokenSecurity(CHAIN_ID[chainCode], baseAddress, 30)
     if (res.code != ErrorCode.SUCCESS) {
       console.error(res.message)
-      getGoPlus(baseAddress, chainCode)
+      // getGoPlus(baseAddress, chainCode)
     } else {
       const data = res.result?.[baseAddress.toLocaleLowerCase()] || {}
       coinGoPlusInfo.value = { ...data }
@@ -49,7 +58,7 @@ export function useBaseInfo() {
         chainCode: 'SOLANA'
       }
     } else {
-      getSolGoPlus(baseAddress)
+      // getSolGoPlus(baseAddress)
     }
   }
   getTokenPrice()
@@ -64,7 +73,6 @@ export function useBaseInfo() {
 
   return {
     tradingLoading,
-    priceInfo,
     tokenInfo,
     coinGoPlusInfo,
     chainInfo
