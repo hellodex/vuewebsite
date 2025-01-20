@@ -518,8 +518,6 @@ watch(
   () => customWalletInfo.value,
   (newVal, oldVal) => {
     setPolling()
-
-    console.log('watch:', 'timer.value')
   }
 )
 
@@ -545,7 +543,6 @@ onMounted(() => {
   initTokenData()
   resizeController()
   setPolling()
-  console.log('onMounted:', 'timer.value')
 })
 
 const resizeController = () => {
