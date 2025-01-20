@@ -54,6 +54,9 @@ export function usePondTabApp() {
     const res = await GoPlus.tokenSecurity(CHAIN_ID[chainCode], baseAddress, 30)
     if (res.code != ErrorCode.SUCCESS) {
       console.error(res.message)
+      setTimeout(() => {
+        getGoPlus(baseAddress, chainCode)
+      }, 2000)
     }
     const data = res.result?.[baseAddress.toLocaleLowerCase()] || {}
     lpList.value = data.lp_holders

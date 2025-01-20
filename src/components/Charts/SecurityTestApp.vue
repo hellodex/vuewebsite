@@ -203,164 +203,169 @@ const isMainToken = computed(() => {
 
 const riskList = computed(() => {
   const obj = props.coinGoPlusInfo
-  return obj?.chainCode == 'SOLANA'
-    ? [
-        {
-          title: obj?.non_transferable == 0 ? '可转账' : '不可转账，有风险',
-          type: obj?.non_transferable == 0 ? 'success' : 'warning'
-        },
-        {
-          title: obj?.transfer_hook?.length == 0 ? '无外部转账合约调用' : '有外部转账合约调用',
-          type: obj?.transfer_hook?.length == 0 ? 'success' : 'warning'
-        },
-        {
-          title: obj?.mintable?.status == 0 ? '不可增发' : '可增发',
-          type: obj?.mintable?.status == 0 ? 'success' : 'warning'
-        },
-        {
-          title: obj?.freezable?.status == 0 ? '不可冻结代币' : '可冻结代币',
-          type: obj?.freezable?.status == 0 ? 'success' : 'warning'
-        },
-        {
-          title:
-            obj?.closable?.status == 0
-              ? '不可随时关闭代币'
-              : '可随时关闭代币。如关闭，所有资产将被销毁',
-          type: obj?.closable?.status == 0 ? 'success' : 'warning'
-        },
-        {
-          title: obj?.transfer_fee_upgradable?.status == 0 ? '不可更改转账费' : '可更改转账费',
-          type: obj?.transfer_fee_upgradable?.status == 0 ? 'success' : 'warning'
-        },
-        {
-          title:
-            obj?.default_account_state_upgradable?.status == 0
-              ? '不可更改账户状态'
-              : '可更改账户状态',
-          type: obj?.default_account_state_upgradable?.status == 0 ? 'success' : 'warning'
-        },
-        {
-          title:
-            obj?.balance_mutable_authority?.status == 0
-              ? '不可更改持有者代币余额'
-              : '可更改持有者代币余额',
-          type: obj?.balance_mutable_authority?.status == 0 ? 'success' : 'warning'
-        },
-        {
-          title:
-            obj?.transfer_hook_upgradable?.status == 0
-              ? '不可更改外部转账合约'
-              : '可更改外部转账合约',
-          type: obj?.transfer_hook_upgradable?.status == 0 ? 'success' : 'warning'
-        }
-      ]
-    : [
-        {
-          title: obj?.is_open_source == 1 ? '合约已开源' : '合约未开源,请注意风险',
-          type: obj?.is_open_source == 1 ? 'success' : 'warning'
-        },
-        {
-          title: obj?.is_proxy == 0 ? '不存在代理合约' : '存在代理合约，可能包含重大风险',
-          type: obj?.is_proxy == 0 ? 'success' : 'warning'
-        },
-        {
-          title: obj?.is_mintable == 0 ? '不存在铸造代币功能' : '存在铸造代币，可能引发大规模抛售',
-          type: obj?.is_mintable == 0 ? 'success' : 'warning'
-        },
-        {
-          title:
-            obj?.can_take_back_ownership == 0
-              ? '无法收回所有权'
-              : '可收回所有权，具有铸造、修改滑点、暂停交易、设置黑名单等',
-          type: obj?.can_take_back_ownership == 0 ? 'success' : 'warning'
-        },
-        {
-          title:
-            obj?.owner_change_balance == 0
-              ? '无法更改代币持有者余额'
-              : '可更改代币持有人的余额，或大量铸造和抛售',
-          type: obj?.owner_change_balance == 0 ? 'success' : 'warning'
-        },
-        {
-          title: obj?.hidden_owner == 0 ? '没有隐藏的所有权' : '有隐藏的所有权，恶意合约别参与！',
-          type: obj?.hidden_owner == 0 ? 'success' : 'warning'
-        },
-        {
-          title:
-            obj?.selfdestruct == 0
-              ? '无法自毁'
-              : '可自毁，合约将被销毁，所有功能不可用，相关资产也将被抹去',
-          type: obj?.selfdestruct == 0 ? 'success' : 'warning'
-        },
-        {
-          title:
-            obj?.external_call == 0
-              ? '无外部调用'
-              : '可外部调用合，可能会有风险，也可能没有风险，请自行了解',
-          type: obj?.external_call == 0 ? 'success' : 'warning'
-        },
-        {
-          title:
-            obj?.gas_abuse == 1
-              ? '有无滥用Gas，与此类地址的任何互动都可能导致财产损失'
-              : '无滥用Gas',
-          type: obj?.gas_abuse == 1 ? 'warning' : 'success'
-        },
-        {
-          title:
-            obj?.cannot_sell_all == 0
-              ? '可全部出售代币'
-              : '无法一次性全部卖掉，无法在一次中卖掉你所有的代币。',
-          type: obj?.cannot_sell_all == 0 ? 'success' : 'warning'
-        },
-        {
-          title: obj?.slippage_modifiable == 0 ? '无法修改交易税' : '可修改交易税，请谨慎判断',
-          type: obj?.slippage_modifiable == 0 ? 'success' : 'warning'
-        },
-        {
-          title: obj?.is_honeypot == 0 ? '不是蜜罐' : '是蜜罐无法出售',
-          type: obj?.is_honeypot == 0 ? 'success' : 'warning'
-        },
-        {
-          title:
-            obj?.transfer_pausable == 0
-              ? '无法暂停交易'
-              : '可随时暂停交易，此后任何人都将无法出售，除非拥有特殊权限的人',
-          type: obj?.transfer_pausable == 0 ? 'success' : 'warning'
-        },
-        {
-          title: obj?.is_blacklisted == 0 ? '无黑名单' : '有黑名单，被拉黑后持币者无法进行交易',
-          type: obj?.transfer_pausable == 0 ? 'success' : 'warning'
-        },
-        {
-          title:
-            obj?.is_whitelisted == 0
-              ? '没有白名单(白名单只限制特定地址可交易'
-              : '有白名单可暂停交易代币',
-          type: obj?.is_whitelisted == 0 ? 'success' : 'warning'
-        },
-        {
-          title:
-            obj?.is_anti_whale == 0
-              ? '无可修改的防鲸鱼'
-              : '有防鲸鱼，可限制最大交易金额或最大持币数量',
-          type: obj?.is_anti_whale == 0 ? 'success' : 'warning'
-        },
-        {
-          title:
-            obj?.trading_cooldown == 0
-              ? '无交易冷却'
-              : '有交易冷却，可以限制两笔交易之间的间距时间',
-          type: obj?.trading_cooldown == 0 ? 'success' : 'warning'
-        },
-        {
-          title:
-            obj?.personal_slippage_modifiable == 0
-              ? '无修改指定地址交易税'
-              : '有修改指定地址交易税',
-          type: obj?.personal_slippage_modifiable == 0 ? 'success' : 'warning'
-        }
-      ]
+  if (obj?.chainCode) {
+    return obj.chainCode == 'SOLANA'
+      ? [
+          {
+            title: obj?.non_transferable == 0 ? '可转账' : '不可转账，有风险',
+            type: obj?.non_transferable == 0 ? 'success' : 'warning'
+          },
+          {
+            title: obj?.transfer_hook?.length == 0 ? '无外部转账合约调用' : '有外部转账合约调用',
+            type: obj?.transfer_hook?.length == 0 ? 'success' : 'warning'
+          },
+          {
+            title: obj?.mintable?.status == 0 ? '不可增发' : '可增发',
+            type: obj?.mintable?.status == 0 ? 'success' : 'warning'
+          },
+          {
+            title: obj?.freezable?.status == 0 ? '不可冻结代币' : '可冻结代币',
+            type: obj?.freezable?.status == 0 ? 'success' : 'warning'
+          },
+          {
+            title:
+              obj?.closable?.status == 0
+                ? '不可随时关闭代币'
+                : '可随时关闭代币。如关闭，所有资产将被销毁',
+            type: obj?.closable?.status == 0 ? 'success' : 'warning'
+          },
+          {
+            title: obj?.transfer_fee_upgradable?.status == 0 ? '不可更改转账费' : '可更改转账费',
+            type: obj?.transfer_fee_upgradable?.status == 0 ? 'success' : 'warning'
+          },
+          {
+            title:
+              obj?.default_account_state_upgradable?.status == 0
+                ? '不可更改账户状态'
+                : '可更改账户状态',
+            type: obj?.default_account_state_upgradable?.status == 0 ? 'success' : 'warning'
+          },
+          {
+            title:
+              obj?.balance_mutable_authority?.status == 0
+                ? '不可更改持有者代币余额'
+                : '可更改持有者代币余额',
+            type: obj?.balance_mutable_authority?.status == 0 ? 'success' : 'warning'
+          },
+          {
+            title:
+              obj?.transfer_hook_upgradable?.status == 0
+                ? '不可更改外部转账合约'
+                : '可更改外部转账合约',
+            type: obj?.transfer_hook_upgradable?.status == 0 ? 'success' : 'warning'
+          }
+        ]
+      : [
+          {
+            title: obj?.is_open_source == 1 ? '合约已开源' : '合约未开源,请注意风险',
+            type: obj?.is_open_source == 1 ? 'success' : 'warning'
+          },
+          {
+            title: obj?.is_proxy == 0 ? '不存在代理合约' : '存在代理合约，可能包含重大风险',
+            type: obj?.is_proxy == 0 ? 'success' : 'warning'
+          },
+          {
+            title:
+              obj?.is_mintable == 0 ? '不存在铸造代币功能' : '存在铸造代币，可能引发大规模抛售',
+            type: obj?.is_mintable == 0 ? 'success' : 'warning'
+          },
+          {
+            title:
+              obj?.can_take_back_ownership == 0
+                ? '无法收回所有权'
+                : '可收回所有权，具有铸造、修改滑点、暂停交易、设置黑名单等',
+            type: obj?.can_take_back_ownership == 0 ? 'success' : 'warning'
+          },
+          {
+            title:
+              obj?.owner_change_balance == 0
+                ? '无法更改代币持有者余额'
+                : '可更改代币持有人的余额，或大量铸造和抛售',
+            type: obj?.owner_change_balance == 0 ? 'success' : 'warning'
+          },
+          {
+            title: obj?.hidden_owner == 0 ? '没有隐藏的所有权' : '有隐藏的所有权，恶意合约别参与！',
+            type: obj?.hidden_owner == 0 ? 'success' : 'warning'
+          },
+          {
+            title:
+              obj?.selfdestruct == 0
+                ? '无法自毁'
+                : '可自毁，合约将被销毁，所有功能不可用，相关资产也将被抹去',
+            type: obj?.selfdestruct == 0 ? 'success' : 'warning'
+          },
+          {
+            title:
+              obj?.external_call == 0
+                ? '无外部调用'
+                : '可外部调用合，可能会有风险，也可能没有风险，请自行了解',
+            type: obj?.external_call == 0 ? 'success' : 'warning'
+          },
+          {
+            title:
+              obj?.gas_abuse == 1
+                ? '有无滥用Gas，与此类地址的任何互动都可能导致财产损失'
+                : '无滥用Gas',
+            type: obj?.gas_abuse == 1 ? 'warning' : 'success'
+          },
+          {
+            title:
+              obj?.cannot_sell_all == 0
+                ? '可全部出售代币'
+                : '无法一次性全部卖掉，无法在一次中卖掉你所有的代币。',
+            type: obj?.cannot_sell_all == 0 ? 'success' : 'warning'
+          },
+          {
+            title: obj?.slippage_modifiable == 0 ? '无法修改交易税' : '可修改交易税，请谨慎判断',
+            type: obj?.slippage_modifiable == 0 ? 'success' : 'warning'
+          },
+          {
+            title: obj?.is_honeypot == 0 ? '不是蜜罐' : '是蜜罐无法出售',
+            type: obj?.is_honeypot == 0 ? 'success' : 'warning'
+          },
+          {
+            title:
+              obj?.transfer_pausable == 0
+                ? '无法暂停交易'
+                : '可随时暂停交易，此后任何人都将无法出售，除非拥有特殊权限的人',
+            type: obj?.transfer_pausable == 0 ? 'success' : 'warning'
+          },
+          {
+            title: obj?.is_blacklisted == 0 ? '无黑名单' : '有黑名单，被拉黑后持币者无法进行交易',
+            type: obj?.transfer_pausable == 0 ? 'success' : 'warning'
+          },
+          {
+            title:
+              obj?.is_whitelisted == 0
+                ? '没有白名单(白名单只限制特定地址可交易'
+                : '有白名单可暂停交易代币',
+            type: obj?.is_whitelisted == 0 ? 'success' : 'warning'
+          },
+          {
+            title:
+              obj?.is_anti_whale == 0
+                ? '无可修改的防鲸鱼'
+                : '有防鲸鱼，可限制最大交易金额或最大持币数量',
+            type: obj?.is_anti_whale == 0 ? 'success' : 'warning'
+          },
+          {
+            title:
+              obj?.trading_cooldown == 0
+                ? '无交易冷却'
+                : '有交易冷却，可以限制两笔交易之间的间距时间',
+            type: obj?.trading_cooldown == 0 ? 'success' : 'warning'
+          },
+          {
+            title:
+              obj?.personal_slippage_modifiable == 0
+                ? '无修改指定地址交易税'
+                : '有修改指定地址交易税',
+            type: obj?.personal_slippage_modifiable == 0 ? 'success' : 'warning'
+          }
+        ]
+  } else {
+    return []
+  }
 })
 
 const holdersPercentage = computed(() => {

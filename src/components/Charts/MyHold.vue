@@ -291,10 +291,17 @@ const handelTableRow = (row: any) => {
     transition: all 0.2s;
     color: #848e9c;
     margin-bottom: 8px;
+    transition: all 0.2s;
+  }
+  .hold-btn:hover {
+    color: #f5f5f5;
   }
   .btn-trade {
     background: rgba(246, 70, 93, 0.1);
     color: var(--down-color);
+  }
+  .btn-trade:hover {
+    color: red;
   }
   .coin-box {
     .logo {
