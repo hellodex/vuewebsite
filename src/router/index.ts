@@ -156,6 +156,11 @@ const router = createRouter({
       component: () => import('@/views/ido.vue')
     },
     {
+      path: '/Download',
+      name: 'Download',
+      component: () => import('@/views/download.vue')
+    },
+    {
       path: '/h5/register',
       name: 'Register',
       component: () => import('@/views/h5/Register.vue')
