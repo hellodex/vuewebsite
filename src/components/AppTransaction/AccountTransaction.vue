@@ -981,6 +981,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   clearInterval(timer.value)
+  timer.value = null
 })
 </script>
 
