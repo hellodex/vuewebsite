@@ -113,7 +113,7 @@
         :amount="amount"
         v-if="nounScreenId !== 13"
       />
-      <PumpList :amount="amount" v-else />
+      <PumpList :amount="amount" v-if="nounScreenId == 13" />
     </div>
   </section>
 </template>
@@ -323,7 +323,6 @@ async function getChainList() {
 const handelNounScreenTab = async (item: any) => {
   nounScreenId.value = item.id
   localStorage.setItem('nounScreenId', nounScreenId.value.toString())
-  clearInterval(timer.value)
   if (nounScreenId.value !== 13) {
     tableLoading.value = true
     await getRankings()
@@ -341,7 +340,6 @@ const handelChain = async (item: any) => {
   chainName.value = item.chainName
   tableLoading.value = true
   popperVisible.value = false
-  clearInterval(timer.value)
   await getRankings()
   await getFreshPriceList()
   tableLoading.value = false
@@ -365,6 +363,7 @@ const getHomeData = () => {
 }
 
 const setPolling = () => {
+  clearInterval(timer.value)
   timer.value = setInterval(() => {
     getFreshPriceList()
   }, 5000)
@@ -412,7 +411,6 @@ watch(
 onActivated(() => {
   // 调用时机为首次挂载
   // 以及每次从缓存中被重新插入时
-  clearInterval(timer.value)
   setPolling()
 })
 
@@ -420,6 +418,7 @@ onDeactivated(() => {
   // 在从 DOM 上移除、进入缓存
   // 以及组件卸载时调用
   clearInterval(timer.value)
+  timer.value = null
 })
 onMounted(() => {
   getHomeData()
@@ -427,15 +426,8 @@ onMounted(() => {
 
 onUnmounted(() => {
   clearInterval(timer.value)
+  timer.value = null
 })
-
-const handelJump = (item: any) => {
-  window.open(`/k/${item.pairAddress}?chainCode=${item.chainCode}&timeType=15m`)
-}
-
-const handelOpenWindow = () => {
-  window.open('https://t.me/HelloDex_cn')
-}
 </script>
 
 <style lang="scss" scoped>
