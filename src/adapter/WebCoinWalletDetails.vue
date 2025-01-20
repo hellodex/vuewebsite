@@ -506,6 +506,8 @@ const setPolling = async () => {
   skeleton.value = true
   localStorage.getItem('accountInfo') && (await getData())
   skeleton.value = false
+  clearInterval(timer.value)
+  timer.value = null
   timer.value = setInterval(() => {
     rightSideBarInfo.value = useRightSideBar()
     localStorage.getItem('accountInfo') && getData()
@@ -515,8 +517,9 @@ const setPolling = async () => {
 watch(
   () => customWalletInfo.value,
   (newVal, oldVal) => {
-    clearInterval(timer.value)
     setPolling()
+
+    console.log('watch:', 'timer.value')
   }
 )
 
@@ -531,8 +534,6 @@ onBeforeRouteUpdate((to, from) => {
     pairAddress: to.params.pairAddress, // 币 pairAddress
     timeType: to.query.timeType // 时间类型
   })
-  clearInterval(timer.value)
-  initTokenData()
 })
 
 onMounted(() => {
@@ -541,10 +542,10 @@ onMounted(() => {
   if (tradingViewHeight) {
     tradingView.style.height = tradingViewHeight + 'px'
   }
-  clearInterval(timer.value)
   initTokenData()
   resizeController()
   setPolling()
+  console.log('onMounted:', 'timer.value')
 })
 
 const resizeController = () => {
