@@ -387,6 +387,7 @@ const getData = async () => {
 
   if (res) {
     initLimitedOrders.value = res
+    useSubscribeKChart.createSubscribePositions(initLimitedOrders.value.positions)
     currentTokenHoldInfo.value =
       initLimitedOrders.value.positions.find(
         (item: any) =>
@@ -534,6 +535,7 @@ onBeforeRouteUpdate((to, from) => {
     pairAddress: to.params.pairAddress, // 币 pairAddress
     timeType: to.query.timeType // 时间类型
   })
+  clearInterval(timer.value)
   initTokenData()
 })
 
