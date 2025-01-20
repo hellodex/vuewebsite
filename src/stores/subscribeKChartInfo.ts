@@ -10,6 +10,8 @@ import { defineStore } from 'pinia'
 export const useSubscribeKChartInfo = defineStore('subscribeKChartInfo', () => {
   const subscribeKChartInfo = ref<any>({})
   const subscribeSwap = ref<any>([])
+  const subscribePositions = ref<any>([])
+
   function createSubscribeKChartInfo(val: any): void {
     subscribeKChartInfo.value = val || {}
   }
@@ -21,5 +23,16 @@ export const useSubscribeKChartInfo = defineStore('subscribeKChartInfo', () => {
     }
   }
 
-  return { subscribeKChartInfo, subscribeSwap, createSubscribeKChartInfo, createSubscribeSwapInfo }
+  function createSubscribePositions(val: any): void {
+    subscribePositions.value = val || []
+  }
+
+  return {
+    subscribeKChartInfo,
+    subscribeSwap,
+    subscribePositions,
+    createSubscribeKChartInfo,
+    createSubscribeSwapInfo,
+    createSubscribePositions
+  }
 })
