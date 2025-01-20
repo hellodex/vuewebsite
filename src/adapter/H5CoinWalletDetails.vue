@@ -32,10 +32,6 @@
                   v-copy="baseInfo?.tokenInfo?.baseAddress"
                 ></svg-icon>
               </div>
-              <!-- <div class="display-flex align-items-center increase-text">
-                <span>{{ numberFormat(baseInfo?.priceInfo?.price) }}</span>
-                <PercentageChange class="ml-5" :value="baseInfo?.priceInfo?.chg || 0" />
-              </div> -->
             </div>
           </div>
         </div>
@@ -617,8 +613,8 @@ const transactionList = computed(() => {
 
 const priceIncrease = computed(() => {
   return {
-    price: useSubscribeKChart.subscribeKChartInfo?.chart?.C || baseInfo.value.priceInfo?.price || 0,
-    increase: useSubscribeKChart.subscribeKChartInfo?.chg || baseInfo.value.priceInfo?.chg || 0
+    price: useSubscribeKChart.subscribeKChartInfo?.C || 0,
+    increase: useSubscribeKChart.subscribeKChartInfo?.chg || 0
   }
 })
 
