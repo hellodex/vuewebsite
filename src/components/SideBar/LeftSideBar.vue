@@ -186,8 +186,8 @@
                   <div
                     class="table-items-main"
                     v-for="(item, index) in holdStatus
-                      ? holdList
-                      : holdList.filter((item: any, index: any) => index < 3)"
+                      ? subscribePositions
+                      : subscribePositions.filter((item: any, index: any) => index < 3)"
                     :key="index"
                     @click="handelJump(item)"
                   >
@@ -219,12 +219,12 @@
                   <div
                     @click="holdStatus = !holdStatus"
                     class="chevron-icon"
-                    v-if="holdList.length > 3"
+                    v-if="subscribePositions.length > 3"
                   >
                     <svg-icon name="chevron-up" class="chevron-icon" v-if="holdStatus"></svg-icon>
                     <svg-icon name="chevron-down" class="chevron-icon" v-else></svg-icon>
                   </div>
-                  <empty-data :imageSize="80" v-if="holdList.length == 0"></empty-data>
+                  <empty-data :imageSize="80" v-if="subscribePositions.length == 0"></empty-data>
                 </template>
               </el-skeleton>
             </div>
@@ -381,13 +381,13 @@ import PercentageNotbg from '@/components/Percentage/PercentageNotbg.vue'
 import Favorite from '@/components/Favorite.vue'
 import WalletConnect from '@/components/Wallet/WalletConnect.vue'
 import { useGlobalStore } from '@/stores/global'
-import { initLimitedOrderPage } from '@/api/coinWalletDetails'
-
+import { useSubscribeKChartInfo } from '@/stores/subscribeKChartInfo'
 import { numberFormat, timeago } from '@/utils'
 
 const i18n = useI18n()
 const router = useRouter()
 const globalStore = useGlobalStore()
+const useSubscribeKChart = useSubscribeKChartInfo()
 
 const timer = ref<any>(null) // 定时器
 const skeletonLoading = ref<boolean>(true)
@@ -403,7 +403,10 @@ const favoriteData = computed(() => globalStore.favoriteData)
 const isConnected = computed(() => globalStore.walletInfo.isConnected)
 const walletType = computed(() => globalStore.walletInfo.walletType)
 
-const holdList = ref<any>([])
+const subscribePositions = computed(() => {
+  return useSubscribeKChart.subscribePositions || []
+})
+
 const favoriteStatus = ref<boolean>(false)
 const holdStatus = ref<boolean>(false)
 
@@ -460,20 +463,10 @@ const handelHoldTab = (item: { id: number }) => {
 }
 
 const setPolling = async () => {
-  localStorage.getItem('accountInfo') && getListHold()
   getPumpRanking()
   timer.value = setInterval(() => {
     getPumpRanking()
-    localStorage.getItem('accountInfo') && getListHold()
   }, 1000)
-}
-
-const getListHold = async () => {
-  const res: any = await initLimitedOrderPage({
-    walletId: parseFloat(customWalletInfo.value.walletInfo?.walletId),
-    walletKey: customWalletInfo.value.walletInfo?.walletKey
-  })
-  holdList.value = res?.positions || []
 }
 
 const getPumpRanking = async () => {
