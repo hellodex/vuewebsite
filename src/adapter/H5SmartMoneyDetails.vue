@@ -1,5 +1,5 @@
 <template>
-  <div class="smart-money">努力开放中，敬请期待</div>
+  <div class="smart-money">努力开发中，敬请期待</div>
 </template>
 
 <style scoped lang="scss">

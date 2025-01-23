@@ -58,14 +58,26 @@
       <div class="smartMoneyDetails-items display-flex align-items-center justify-content-sp">
         <div class="smartMoneyDetails-item">
           <h6 class="display-flex align-items-center justify-content-sp">
-            <span>最近7D盈亏</span>
+            <span>最近{{ days }}盈亏</span>
             <strong>胜率</strong>
           </h6>
           <h3 class="display-flex align-items-center justify-content-sp">
-            <span class="up-color">+1384.13%</span>
-            <span>100%</span>
+            <span
+              :class="
+                parseFloat(walletAnalysisSummary?.plRate || '0') <= 0 ? 'down-color' : 'up-color'
+              "
+              >{{ parseFloat(walletAnalysisSummary?.plRate || '0').toFixed(2) }}%</span
+            >
+            <span>{{ parseFloat(walletAnalysisSummary?.winningRate || '0').toFixed(2) }}%</span>
           </h3>
-          <p class="display-flex align-items-center justify-content-sp up-color">+$177.65</p>
+          <p
+            class="display-flex align-items-center justify-content-sp"
+            :class="
+              parseFloat(walletAnalysisSummary?.plProfit || '0') <= 0 ? 'down-color' : ' up-color'
+            "
+          >
+            ${{ numberFormat(walletAnalysisSummary?.plProfit || 0) }}
+          </p>
 
           <div class="line-chart-box display-flex justify-content-fd">
             <div class="line-chart">
@@ -152,27 +164,45 @@
         <div class="smartMoneyDetails-item">
           <h6 class="display-flex align-items-center justify-content-sp">
             <span>利润</span>
-            <div>7D 交易数 0/<i>2</i></div>
+            <div>
+              {{ days }} 交易数
+              <i class="up-color">{{ numberFormat(walletAnalysisSummary?.buyNumber || 0) }}</i
+              >/<i class="down">{{ numberFormat(walletAnalysisSummary?.sellNumber || 0) }}</i>
+            </div>
           </h6>
           <p class="display-flex align-items-center justify-content-sp">
             <span>总盈亏</span>
-            <strong class="up-color">+$4,424.65 (+94.83%)</strong>
+            <strong
+              :class="
+                parseFloat(walletAnalysisSummary?.totalPl || '0') <= 0 ? 'down-color' : ' up-color'
+              "
+              >${{ numberFormat(walletAnalysisSummary?.totalPl || 0) }} ({{
+                parseFloat(walletAnalysisSummary?.totalPlRate || '0').toFixed(2)
+              }}%)</strong
+            >
           </p>
           <p class="display-flex align-items-center justify-content-sp">
             <span>未实现利润</span>
             <strong class="down-color">-$0.234</strong>
           </p>
           <p class="display-flex align-items-center justify-content-sp">
-            <span>7D 买入总成本</span>
-            <strong>$12.82</strong>
+            <span>{{ days }} 买入总成本</span>
+            <strong>${{ numberFormat(walletAnalysisSummary?.totalBuying || 0) }}</strong>
           </p>
           <p class="display-flex align-items-center justify-content-sp">
-            <span>7D 代币平均买入成本</span>
-            <strong>$6.41</strong>
+            <span>{{ days }} 代币平均买入成本</span>
+            <strong>${{ numberFormat(walletAnalysisSummary?.averageBuying || 0) }}</strong>
           </p>
           <p class="display-flex align-items-center justify-content-sp">
-            <span>7D 代币平均实现利润</span>
-            <strong class="up-color">+$44.41</strong>
+            <span>{{ days }} 代币平均实现利润</span>
+            <strong
+              :class="
+                parseFloat(walletAnalysisSummary?.averageRealizedProfit || '0') <= 0
+                  ? 'down-color'
+                  : ' up-color'
+              "
+              >${{ numberFormat(walletAnalysisSummary?.averageRealizedProfit || 0) }}</strong
+            >
           </p>
           <p class="display-flex align-items-center justify-content-sp">
             <span>ETH 余额</span>
@@ -181,42 +211,69 @@
         </div>
         <div class="smartMoneyDetails-item">
           <h6 class="display-flex align-items-center justify-content-sp">
-            <span>盈利分布 (4)</span>
+            <span>盈利分布 ({{ numberFormat(walletAnalysisSummary?.pnlTokenNum || 0) }})</span>
           </h6>
           <p class="display-flex align-items-center justify-content-sp">
             <span class="display-flex align-items-center">
               <i style="background-color: rgba(46, 189, 133, 1)"></i>
               &gt;500%
             </span>
-            <strong style="color: rgba(46, 189, 133, 1)">2 (50%)</strong>
+            <strong
+              :style="{
+                color: walletAnalysisSummary?.pnlGt5xNum == 0 ? '#fff' : 'rgba(46, 189, 133, 1)'
+              }"
+              >{{ numberFormat(walletAnalysisSummary?.pnlGt5xNum || 0) }}</strong
+            >
           </p>
           <p class="display-flex align-items-center justify-content-sp">
             <span class="display-flex align-items-center">
               <i style="background-color: rgba(46, 189, 133, 0.7)"></i>
               200% ~ 500%
             </span>
-            <strong>0</strong>
+            <strong
+              :style="{
+                color: walletAnalysisSummary?.pnl2x5xNum == 0 ? '#fff' : 'rgba(46, 189, 133, 0.7)'
+              }"
+              >{{ numberFormat(walletAnalysisSummary?.pnl2x5xNum || 0) }}</strong
+            >
           </p>
           <p class="display-flex align-items-center justify-content-sp">
             <span class="display-flex align-items-center">
               <i style="background-color: rgba(46, 189, 133, 0.5)"></i>
               0% ~ 200%
             </span>
-            <strong style="color: rgba(46, 189, 133, 0.5)">2 (50%)</strong>
+            <strong
+              :style="{
+                color: walletAnalysisSummary?.pnlLt2xNum == 0 ? '#fff' : 'rgba(46, 189, 133, .5)'
+              }"
+              >{{ numberFormat(walletAnalysisSummary?.pnlLt2xNum || 0) }}
+            </strong>
           </p>
           <p class="display-flex align-items-center justify-content-sp">
             <span class="display-flex align-items-center">
               <i style="background-color: rgba(246, 70, 93, 0.5)"></i>
               0% ~ -50%
             </span>
-            <strong>0</strong>
+            <strong
+              :style="{
+                color:
+                  walletAnalysisSummary?.pnlMinusDot50xNum == 0 ? '#fff' : 'rgba(246, 70, 93, 0.5)'
+              }"
+              >{{ numberFormat(walletAnalysisSummary?.pnlMinusDot50xNum || 0) }}</strong
+            >
           </p>
           <p class="display-flex align-items-center justify-content-sp">
             <span class="display-flex align-items-center">
               <i style="background-color: rgba(246, 70, 93, 1)"></i>
               &lt;-50%
             </span>
-            <strong>0</strong>
+            <strong
+              :style="{
+                color:
+                  walletAnalysisSummary?.pnlLtMinusDot5Num == 0 ? '#fff' : 'rgba(246, 70, 93, 1)'
+              }"
+              >{{ numberFormat(walletAnalysisSummary?.pnlLtMinusDot5Num || 0) }}</strong
+            >
           </p>
           <p class="display-flex align-items-center justify-content-sp progress-p">
             <span></span>
@@ -244,13 +301,13 @@
             <el-table :data="tableData" scrollbar-always-on>
               <el-table-column prop="date" label="币种/最后活跃" sortable sort-by="date" />
               <el-table-column prop="name" label="未实现利润" sortable sort-by="date" />
-              <el-table-column prop="name" label="30D 已实现利润" sortable sort-by="date" />
+              <el-table-column prop="name" :label="days + '已实现利润'" sortable sort-by="date" />
               <el-table-column prop="name" label="总利润" sortable sort-by="date" />
               <el-table-column prop="name" label="余额" sortable sort-by="date" />
               <el-table-column prop="name" label="持仓" sortable sort-by="date" />
               <el-table-column prop="address" label="总买入" />
               <el-table-column prop="address" label="已卖出" />
-              <el-table-column prop="address" label="30D 交易数" />
+              <el-table-column prop="address" :label="days + '交易数'" />
               <el-table-column>
                 <template #default>
                   <div class="display-flex align-items-center justify-content-center">
@@ -319,21 +376,33 @@ const isConnected = computed(() => globalStore.walletInfo.isConnected)
 const walletType = computed(() => globalStore.walletInfo.walletType)
 const customWalletInfo = computed(() => globalStore.customWalletInfo)
 
+// const walletAddress = ref(
+//   walletType.value == 'Email' ? customWalletInfo.value.walletInfo?.wallet : address.value
+// )
+
+const walletAddress = ref('9nnLbotNTcUhvbrsA6Mdkx45Sm82G35zo28AqUvjExn8')
+
+const walletAnalysisSummary = ref<any>({})
+
 const timeTabIndex = ref<string>('7d')
 const timeTabList = [
   {
-    label: '7d',
+    label: '7D',
     value: '7d'
   },
   {
-    label: '30d',
+    label: '30D',
     value: '30d'
   }
 ]
 
 const handelTimeTab = (item: any) => {
   timeTabIndex.value = item.value
+  getWalletAnalysisSummary()
+  getWalletAnalysisToken()
 }
+
+const days = computed(() => timeTabList.find((item) => item.value == timeTabIndex.value)?.label)
 
 const listTab = [
   {
@@ -355,7 +424,7 @@ const listTabIndex = ref(1)
 const handelListTab = (item: any) => {
   listTabIndex.value = item.value
 }
-console.log(route.params)
+
 const tableData = [
   {
     date: '2016-05-03',
@@ -442,20 +511,19 @@ const tableData = [
 const getWalletAnalysisSummary = async () => {
   const res = await APIwalletAnalysisSummary({
     chainCode: route.params.chain,
-    walletAddress:
-      walletType.value == 'Email' ? customWalletInfo.value.walletInfo?.wallet : address.value,
-    period: '7d'
+    walletAddress: walletAddress.value,
+    period: timeTabIndex.value
   })
 
   console.log(res)
+  walletAnalysisSummary.value = res || {}
 }
 
 const getWalletAnalysisToken = async () => {
   const res = await APIwalletAnalysisToken({
     chainCode: route.params.chain,
-    walletAddress:
-      walletType.value == 'Email' ? customWalletInfo.value.walletInfo?.wallet : address.value,
-    period: '7d'
+    walletAddress: walletAddress.value,
+    period: timeTabIndex.value
   })
 
   console.log(res)
@@ -464,9 +532,27 @@ const getWalletAnalysisToken = async () => {
 const getWalletAnalysisHoldings = async () => {
   const res = await APIwalletAnalysisHoldings({
     chainCode: route.params.chain,
-    walletAddress:
-      walletType.value == 'Email' ? customWalletInfo.value.walletInfo?.wallet : address.value,
-    period: '7d'
+    walletAddress: walletAddress.value,
+    direction: 'asc'
+  })
+
+  console.log(res)
+}
+
+const getWalletAnalysisRecentPL = async () => {
+  const res = await APIwalletAnalysisRecentPL({
+    chainCode: route.params.chain,
+    walletAddress: walletAddress.value,
+    direction: 'asc'
+  })
+
+  console.log(res)
+}
+
+const getWalletAnalysisActivity = async () => {
+  const res = await APIwalletAnalysisActivity({
+    chainCode: route.params.chain,
+    walletAddress: walletAddress.value
   })
 
   console.log(res)
@@ -476,6 +562,8 @@ onMounted(() => {
   getWalletAnalysisSummary()
   getWalletAnalysisToken()
   getWalletAnalysisHoldings()
+  getWalletAnalysisRecentPL()
+  getWalletAnalysisActivity()
 })
 </script>
 

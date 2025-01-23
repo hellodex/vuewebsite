@@ -93,20 +93,6 @@
         </el-form>
       </div>
     </div>
-    <el-dialog v-model="visible" align-center center width="350">
-      <template #header="{ titleId, titleClass }">
-        <h4 :id="titleId" :class="titleClass">未收到验证码？</h4>
-      </template>
-      <span>
-        如您没有找到验证码邮件，请检查邮箱的垃圾邮件及垃圾桶分类，以确保验证码邮件没有被误标为垃圾邮件。长时间无法收到验证码邮件，请前往Telegram社区联系客服进行处理。
-      </span>
-      <template #footer>
-        <div class="footer-btn">
-          <img src="@/assets/img/img-tg.png" alt="" />
-          <span>前往Telegram</span>
-        </div>
-      </template>
-    </el-dialog>
   </div>
 </template>
 
@@ -129,7 +115,7 @@ const router = useRouter()
 const invitationCode: any = route.query.invitationCode
 
 const loading = ref<boolean>(false)
-const visible = ref<boolean>(false)
+
 // 正则表达式
 const minLength = /.{8,}/ // 至少8个字符
 const containsNumber = /[0-9]/ // 至少一个数字
@@ -343,7 +329,6 @@ const submitForm = async (formEl: FormInstance | undefined) => {
   .web-refer-right {
     width: 52%;
     height: 100%;
-    display: flex;
     display: flex;
     flex-direction: column;
     align-items: center;
