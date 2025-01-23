@@ -299,10 +299,16 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { numberFormat, shortifyAddress } from '@/utils'
-import { APIwalletNew, APIuniqueToken, APIwalletHoldings } from '@/api'
+import {
+  APIwalletAnalysisSummary,
+  APIwalletAnalysisToken,
+  APIwalletAnalysisHoldings,
+  APIwalletAnalysisRecentPL,
+  APIwalletAnalysisActivity
+} from '@/api'
 import { useGlobalStore } from '@/stores/global'
 
 const route = useRoute()
@@ -310,16 +316,18 @@ const globalStore = useGlobalStore()
 
 const address = computed(() => globalStore.walletInfo.address)
 const isConnected = computed(() => globalStore.walletInfo.isConnected)
+const walletType = computed(() => globalStore.walletInfo.walletType)
+const customWalletInfo = computed(() => globalStore.customWalletInfo)
 
-const timeTabIndex = ref<number>(7)
+const timeTabIndex = ref<string>('7d')
 const timeTabList = [
   {
     label: '7d',
-    value: 7
+    value: '7d'
   },
   {
     label: '30d',
-    value: 30
+    value: '30d'
   }
 ]
 
@@ -430,6 +438,45 @@ const tableData = [
     address: 'No. 189, Grove St, Los Angeles'
   }
 ]
+
+const getWalletAnalysisSummary = async () => {
+  const res = await APIwalletAnalysisSummary({
+    chainCode: route.params.chain,
+    walletAddress:
+      walletType.value == 'Email' ? customWalletInfo.value.walletInfo?.wallet : address.value,
+    period: '7d'
+  })
+
+  console.log(res)
+}
+
+const getWalletAnalysisToken = async () => {
+  const res = await APIwalletAnalysisToken({
+    chainCode: route.params.chain,
+    walletAddress:
+      walletType.value == 'Email' ? customWalletInfo.value.walletInfo?.wallet : address.value,
+    period: '7d'
+  })
+
+  console.log(res)
+}
+
+const getWalletAnalysisHoldings = async () => {
+  const res = await APIwalletAnalysisHoldings({
+    chainCode: route.params.chain,
+    walletAddress:
+      walletType.value == 'Email' ? customWalletInfo.value.walletInfo?.wallet : address.value,
+    period: '7d'
+  })
+
+  console.log(res)
+}
+
+onMounted(() => {
+  getWalletAnalysisSummary()
+  getWalletAnalysisToken()
+  getWalletAnalysisHoldings()
+})
 </script>
 
 <style lang="scss" scoped>
