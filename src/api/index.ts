@@ -673,37 +673,62 @@ export function APIlistTransferHistory(data: object) {
  * @param data
  * @returns
  */
-export function APIwalletNew(data: any) {
+export function APIwalletAnalysisSummary(data: object) {
   return http({
-    url: `${WEB_URL}/wallet/eoprrt/V1/walletNew/${data.wallet}`,
-    method: 'GET'
+    url: `${WEB_URL}/api/webv2/walletAnalysis/walletAnalysisSummary`,
+    method: 'POST',
+    data
   })
 }
 
 /**
- * 最近 token 盈利情况
+ * 盈利分布详情
  * @param data
  * @returns
  */
-export function APIuniqueToken(data: any) {
+export function APIwalletAnalysisToken(data: object) {
   return http({
-    url: `${WEB_URL}/wallet/report/V1/uniqueToken/${data.wallet}`,
-    method: 'GET'
+    url: `${WEB_URL}/api/webv2/walletAnalysis/walletAnalysisToken`,
+    method: 'POST',
+    data
   })
 }
 
 /**
- * toekn 汇总
- * /api/webv2/walletAnalysis/walletAnalysisSummary
- * /api/webv2/walletAnalysis/walletAnalysisToken
- * /api/webv2/walletAnalysis/walletAnalysisHoldings
+ * 持有代币
  * @param data
  * @returns
  */
-
-export function APIwalletHoldings(data: any) {
+export function APIwalletAnalysisHoldings(data: object) {
   return http({
-    url: `${WEB_URL}/wallet/report/V1/walletHoldings/${data.wallet}`,
-    method: 'GET'
+    url: `${WEB_URL}/api/webv2/walletAnalysis/walletAnalysisHoldings`,
+    method: 'POST',
+    data
+  })
+}
+
+/**
+ * 最近盈亏 Recent Profit and Loss
+ * @param data
+ * @returns
+ */
+export function APIwalletAnalysisRecentPL(data: object) {
+  return http({
+    url: `${WEB_URL}/api/webv2/walletAnalysis/walletAnalysisRecentPL`,
+    method: 'POST',
+    data
+  })
+}
+
+/**
+ * 活动
+ * @param data
+ * @returns
+ */
+export function APIwalletAnalysisActivity(data: object) {
+  return http({
+    url: `${WEB_URL}/api/webv2/walletAnalysis/walletAnalysisActivity`,
+    method: 'POST',
+    data
   })
 }

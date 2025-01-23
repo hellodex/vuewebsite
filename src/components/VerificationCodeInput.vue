@@ -1,5 +1,5 @@
 <template>
-  <div class="display-flex align-items-center">
+  <div class="input-box display-flex align-items-center">
     <el-input
       v-model="item.value"
       autocomplete="off"
