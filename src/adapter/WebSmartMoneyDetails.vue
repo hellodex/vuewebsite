@@ -2,30 +2,30 @@
   <el-scrollbar height="calc(100vh - 120px)">
     <div class="smartMoneyDetails-view">
       <div class="smartMoneyDetails-info display-flex align-items-center justify-content-sp">
-        <div class="display-flex align-items-center">
-          <img src="https://ipfs.io/ipfs/QmZqMneqDQ6dkFSq7SHtWtcT8BaBLoupQUksxsS4UTsnyD" alt="" />
-          <div class="info">
-            <div class="edit-address display-flex align-items-center">
-              <span class="shortifyAddress">{{
-                shortifyAddress('0x9003c0aedc4b6cb70c12761e1461a4d9727037fc')
-              }}</span>
-              <el-icon size="22"><EditPen /></el-icon>
+        <div class="display-flex flex-direction-col">
+          <div class="display-flex align-items-center">
+            <img src="https://ipfs.io/ipfs/QmZqMneqDQ6dkFSq7SHtWtcT8BaBLoupQUksxsS4UTsnyD" alt="" />
+            <div class="info">
+              <div class="edit-address display-flex align-items-center">
+                <span class="shortifyAddress">{{
+                  shortifyAddress('0x9003c0aedc4b6cb70c12761e1461a4d9727037fc')
+                }}</span>
+                <el-icon size="16" color="#9AA0AA"><EditPen /></el-icon>
+              </div>
+              <div class="address display-flex align-items-center">
+                <span>0x9003c0aedc4b6cb70c12761e1461a4d9727037fc</span>
+                <svg-icon
+                  name="copy"
+                  class="copy"
+                  v-copy="'0x9003c0aedc4b6cb70c12761e1461a4d9727037fc'"
+                ></svg-icon>
+              </div>
             </div>
-            <div class="address display-flex align-items-center">
-              <span>0x9003c0aedc4b6cb70c12761e1461a4d9727037fc</span>
-              <svg-icon
-                name="copy"
-                class="copy"
-                v-copy="'0x9003c0aedc4b6cb70c12761e1461a4d9727037fc'"
-              ></svg-icon>
-            </div>
-            <div class="display-flex align-items-center">
-              <svg-icon name="icon-money" class="icon-money"></svg-icon>
-              <el-icon size="16" style="margin-right: 4px; cursor: pointer"
-                ><RefreshRight
-              /></el-icon>
-              <span>更新于: 1h 以前</span>
-            </div>
+          </div>
+          <div class="display-flex align-items-center update-txt">
+            <!-- <svg-icon name="icon-money" class="icon-money"></svg-icon> -->
+            <el-icon size="14" style="margin-right: 4px; cursor: pointer"><RefreshRight /></el-icon>
+            <span>更新于: 1h 以前</span>
           </div>
         </div>
         <div class="display-flex align-items-fd flex-direction-col">
@@ -56,22 +56,25 @@
       </div>
 
       <div class="smartMoneyDetails-items display-flex align-items-center justify-content-sp">
-        <div class="smartMoneyDetails-item">
+        <div class="smartMoneyDetails-item item-1">
           <h6 class="display-flex align-items-center justify-content-sp">
-            <span>最近{{ days }}盈亏</span>
-            <strong>胜率</strong>
+            <span class="font-family-Medium">最近{{ days }}盈亏</span>
+            <strong class="font-family-Medium">胜率</strong>
           </h6>
           <h3 class="display-flex align-items-center justify-content-sp">
             <span
+              class="font-family-Heavy"
               :class="
                 parseFloat(walletAnalysisSummary?.plRate || '0') <= 0 ? 'down-color' : 'up-color'
               "
               >{{ parseFloat(walletAnalysisSummary?.plRate || '0').toFixed(2) }}%</span
             >
-            <span>{{ parseFloat(walletAnalysisSummary?.winningRate || '0').toFixed(2) }}%</span>
+            <span class="font-family-Heavy"
+              >{{ parseFloat(walletAnalysisSummary?.winningRate || '0').toFixed(2) }}%</span
+            >
           </h3>
           <p
-            class="display-flex align-items-center justify-content-sp"
+            class="display-flex align-items-center justify-content-sp font-family-Medium"
             :class="
               parseFloat(walletAnalysisSummary?.plProfit || '0') <= 0 ? 'down-color' : ' up-color'
             "
@@ -161,127 +164,177 @@
             </div>
           </div>
         </div>
-        <div class="smartMoneyDetails-item">
-          <h6 class="display-flex align-items-center justify-content-sp">
-            <span>利润</span>
-            <div>
-              {{ days }} 交易数
-              <i class="up-color">{{ numberFormat(walletAnalysisSummary?.buyNumber || 0) }}</i
-              >/<i class="down">{{ numberFormat(walletAnalysisSummary?.sellNumber || 0) }}</i>
+        <div class="flex-2">
+          <div class="display-flex align-items-center justify-content-sp">
+            <div class="smartMoneyDetails-item item-2">
+              <h6 class="display-flex align-items-center justify-content-sp">
+                <span>利润</span>
+                <div class="number-txt">
+                  {{ days }} 交易数
+                  <i class="up-color">{{ numberFormat(walletAnalysisSummary?.buyNumber || 0) }}</i
+                  >/<i class="down">{{ numberFormat(walletAnalysisSummary?.sellNumber || 0) }}</i>
+                </div>
+              </h6>
+              <p class="display-flex align-items-center justify-content-sp">
+                <span>总盈亏</span>
+                <strong
+                  :class="
+                    parseFloat(walletAnalysisSummary?.totalPl || '0') <= 0
+                      ? 'down-color'
+                      : ' up-color'
+                  "
+                  >${{ numberFormat(walletAnalysisSummary?.totalPl || 0) }} ({{
+                    parseFloat(walletAnalysisSummary?.totalPlRate || '0').toFixed(2)
+                  }}%)</strong
+                >
+              </p>
+              <p class="display-flex align-items-center justify-content-sp">
+                <span>未实现利润</span>
+                <strong class="down-color">-$0.234</strong>
+              </p>
+              <p class="display-flex align-items-center justify-content-sp">
+                <span>{{ days }} 买入总成本</span>
+                <strong>${{ numberFormat(walletAnalysisSummary?.totalBuying || 0) }}</strong>
+              </p>
+              <p class="display-flex align-items-center justify-content-sp">
+                <span>{{ days }} 代币平均买入成本</span>
+                <strong>${{ numberFormat(walletAnalysisSummary?.averageBuying || 0) }}</strong>
+              </p>
+              <p class="display-flex align-items-center justify-content-sp">
+                <span>{{ days }} 代币平均实现利润</span>
+                <strong
+                  :class="
+                    parseFloat(walletAnalysisSummary?.averageRealizedProfit || '0') <= 0
+                      ? 'down-color'
+                      : ' up-color'
+                  "
+                  >${{ numberFormat(walletAnalysisSummary?.averageRealizedProfit || 0) }}</strong
+                >
+              </p>
+              <p class="display-flex align-items-center justify-content-sp">
+                <span>ETH 余额</span>
+                <strong>0 ETH ($0)</strong>
+              </p>
             </div>
-          </h6>
-          <p class="display-flex align-items-center justify-content-sp">
-            <span>总盈亏</span>
-            <strong
-              :class="
-                parseFloat(walletAnalysisSummary?.totalPl || '0') <= 0 ? 'down-color' : ' up-color'
-              "
-              >${{ numberFormat(walletAnalysisSummary?.totalPl || 0) }} ({{
-                parseFloat(walletAnalysisSummary?.totalPlRate || '0').toFixed(2)
-              }}%)</strong
-            >
-          </p>
-          <p class="display-flex align-items-center justify-content-sp">
-            <span>未实现利润</span>
-            <strong class="down-color">-$0.234</strong>
-          </p>
-          <p class="display-flex align-items-center justify-content-sp">
-            <span>{{ days }} 买入总成本</span>
-            <strong>${{ numberFormat(walletAnalysisSummary?.totalBuying || 0) }}</strong>
-          </p>
-          <p class="display-flex align-items-center justify-content-sp">
-            <span>{{ days }} 代币平均买入成本</span>
-            <strong>${{ numberFormat(walletAnalysisSummary?.averageBuying || 0) }}</strong>
-          </p>
-          <p class="display-flex align-items-center justify-content-sp">
-            <span>{{ days }} 代币平均实现利润</span>
-            <strong
-              :class="
-                parseFloat(walletAnalysisSummary?.averageRealizedProfit || '0') <= 0
-                  ? 'down-color'
-                  : ' up-color'
-              "
-              >${{ numberFormat(walletAnalysisSummary?.averageRealizedProfit || 0) }}</strong
-            >
-          </p>
-          <p class="display-flex align-items-center justify-content-sp">
-            <span>ETH 余额</span>
-            <strong>0 ETH ($0)</strong>
-          </p>
-        </div>
-        <div class="smartMoneyDetails-item">
-          <h6 class="display-flex align-items-center justify-content-sp">
-            <span>盈利分布 ({{ numberFormat(walletAnalysisSummary?.pnlTokenNum || 0) }})</span>
-          </h6>
-          <p class="display-flex align-items-center justify-content-sp">
-            <span class="display-flex align-items-center">
-              <i style="background-color: rgba(46, 189, 133, 1)"></i>
-              &gt;500%
-            </span>
-            <strong
-              :style="{
-                color: walletAnalysisSummary?.pnlGt5xNum == 0 ? '#fff' : 'rgba(46, 189, 133, 1)'
-              }"
-              >{{ numberFormat(walletAnalysisSummary?.pnlGt5xNum || 0) }}</strong
-            >
-          </p>
-          <p class="display-flex align-items-center justify-content-sp">
-            <span class="display-flex align-items-center">
-              <i style="background-color: rgba(46, 189, 133, 0.7)"></i>
-              200% ~ 500%
-            </span>
-            <strong
-              :style="{
-                color: walletAnalysisSummary?.pnl2x5xNum == 0 ? '#fff' : 'rgba(46, 189, 133, 0.7)'
-              }"
-              >{{ numberFormat(walletAnalysisSummary?.pnl2x5xNum || 0) }}</strong
-            >
-          </p>
-          <p class="display-flex align-items-center justify-content-sp">
-            <span class="display-flex align-items-center">
-              <i style="background-color: rgba(46, 189, 133, 0.5)"></i>
-              0% ~ 200%
-            </span>
-            <strong
-              :style="{
-                color: walletAnalysisSummary?.pnlLt2xNum == 0 ? '#fff' : 'rgba(46, 189, 133, .5)'
-              }"
-              >{{ numberFormat(walletAnalysisSummary?.pnlLt2xNum || 0) }}
-            </strong>
-          </p>
-          <p class="display-flex align-items-center justify-content-sp">
-            <span class="display-flex align-items-center">
-              <i style="background-color: rgba(246, 70, 93, 0.5)"></i>
-              0% ~ -50%
-            </span>
-            <strong
-              :style="{
-                color:
-                  walletAnalysisSummary?.pnlMinusDot50xNum == 0 ? '#fff' : 'rgba(246, 70, 93, 0.5)'
-              }"
-              >{{ numberFormat(walletAnalysisSummary?.pnlMinusDot50xNum || 0) }}</strong
-            >
-          </p>
-          <p class="display-flex align-items-center justify-content-sp">
-            <span class="display-flex align-items-center">
-              <i style="background-color: rgba(246, 70, 93, 1)"></i>
-              &lt;-50%
-            </span>
-            <strong
-              :style="{
-                color:
-                  walletAnalysisSummary?.pnlLtMinusDot5Num == 0 ? '#fff' : 'rgba(246, 70, 93, 1)'
-              }"
-              >{{ numberFormat(walletAnalysisSummary?.pnlLtMinusDot5Num || 0) }}</strong
-            >
-          </p>
-          <p class="display-flex align-items-center justify-content-sp progress-p">
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-          </p>
+            <div class="smartMoneyDetails-item item-3">
+              <h6 class="display-flex align-items-center justify-content-sp">
+                <span>盈利分布 ({{ numberFormat(walletAnalysisSummary?.pnlTokenNum || 0) }})</span>
+              </h6>
+              <p class="display-flex align-items-center justify-content-sp">
+                <span class="display-flex align-items-center">
+                  <i style="background-color: rgba(46, 189, 133, 1)"></i>
+                  &gt;500%
+                </span>
+                <strong
+                  :style="{
+                    color: walletAnalysisSummary?.pnlGt5xNum == 0 ? '#fff' : 'rgba(46, 189, 133, 1)'
+                  }"
+                  >{{ numberFormat(walletAnalysisSummary?.pnlGt5xNum || 0) }}</strong
+                >
+              </p>
+              <p class="display-flex align-items-center justify-content-sp">
+                <span class="display-flex align-items-center">
+                  <i style="background-color: rgba(46, 189, 133, 0.7)"></i>
+                  200% ~ 500%
+                </span>
+                <strong
+                  :style="{
+                    color:
+                      walletAnalysisSummary?.pnl2x5xNum == 0 ? '#fff' : 'rgba(46, 189, 133, 0.7)'
+                  }"
+                  >{{ numberFormat(walletAnalysisSummary?.pnl2x5xNum || 0) }}</strong
+                >
+              </p>
+              <p class="display-flex align-items-center justify-content-sp">
+                <span class="display-flex align-items-center">
+                  <i style="background-color: rgba(46, 189, 133, 0.5)"></i>
+                  0% ~ 200%
+                </span>
+                <strong
+                  :style="{
+                    color:
+                      walletAnalysisSummary?.pnlLt2xNum == 0 ? '#fff' : 'rgba(46, 189, 133, .5)'
+                  }"
+                  >{{ numberFormat(walletAnalysisSummary?.pnlLt2xNum || 0) }}
+                </strong>
+              </p>
+              <p class="display-flex align-items-center justify-content-sp">
+                <span class="display-flex align-items-center">
+                  <i style="background-color: rgba(246, 70, 93, 0.5)"></i>
+                  0% ~ -50%
+                </span>
+                <strong
+                  :style="{
+                    color:
+                      walletAnalysisSummary?.pnlMinusDot50xNum == 0
+                        ? '#fff'
+                        : 'rgba(246, 70, 93, 0.5)'
+                  }"
+                  >{{ numberFormat(walletAnalysisSummary?.pnlMinusDot50xNum || 0) }}</strong
+                >
+              </p>
+              <p class="display-flex align-items-center justify-content-sp">
+                <span class="display-flex align-items-center">
+                  <i style="background-color: rgba(246, 70, 93, 1)"></i>
+                  &lt;-50%
+                </span>
+                <strong
+                  :style="{
+                    color:
+                      walletAnalysisSummary?.pnlLtMinusDot5Num == 0
+                        ? '#fff'
+                        : 'rgba(246, 70, 93, 1)'
+                  }"
+                  >{{ numberFormat(walletAnalysisSummary?.pnlLtMinusDot5Num || 0) }}</strong
+                >
+              </p>
+              <p class="display-flex align-items-center justify-content-sp progress-p">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+              </p>
+            </div>
+          </div>
+          <div class="smartMoneyDetails-item item-4">
+            <h6 class="display-flex align-items-center">
+              <svg-icon name="icon-fish" class="icon-fish"></svg-icon>
+              <span>钓鱼检测</span>
+            </h6>
+            <div class="display-flex align-items-center">
+              <p class="display-flex align-items-center fish-p">
+                <span class="display-flex align-items-center">
+                  <i style="background-color: var(--up-color)"></i>
+                  黑名单:
+                </span>
+                <strong></strong>
+              </p>
+              <p class="display-flex align-items-center fish-p">
+                <span class="display-flex align-items-center">
+                  <i style="background-color: var(--up-color)"></i>
+                  未购买:
+                </span>
+                <strong></strong>
+              </p>
+            </div>
+            <div class="display-flex align-items-center" style="margin-top: 8px">
+              <p class="display-flex align-items-center fish-p">
+                <span class="display-flex align-items-center">
+                  <i style="background-color: var(--up-color)"></i>
+                  卖出量大于买入量:
+                </span>
+                <strong></strong>
+              </p>
+              <p class="display-flex align-items-center fish-p">
+                <span class="display-flex align-items-center">
+                  <i style="background-color: var(--up-color)"></i>
+                  十秒内完成买/卖:
+                </span>
+                <strong></strong>
+              </p>
+            </div>
+          </div>
         </div>
       </div>
       <div class="smartMoneyDetails-list">
@@ -581,97 +634,118 @@ onMounted(() => {
     font-size: 14px;
     line-height: 1.2;
     img {
-      width: 80px;
-      height: 80px;
+      width: 48px;
+      height: 48px;
       border-radius: 50%;
-      margin-right: 20px;
+      margin-right: 10px;
     }
     .copy,
     .icon-money {
-      width: 14px;
-      height: 14px;
+      width: 12px;
+      height: 12px;
     }
     .copy {
-      margin-left: 6px;
+      margin-left: 4px;
     }
     .icon-money {
       margin-right: 6px;
     }
     .shortifyAddress {
       color: var(--font-color-default);
-      font-size: 24px;
-      margin-right: 6px;
+      font-size: 16px;
+      font-family: 'PingFangSC-Heavy';
+      margin-right: 4px;
     }
     .address {
       margin-bottom: 8px;
+      color: #9aa0aa;
+      font-size: 12px;
+      font-family: 'PingFangSC-Medium';
     }
     .btn {
-      border-radius: 35px;
+      border-radius: 100px;
       cursor: pointer;
-      min-width: 104px;
-      height: 40px;
-      padding: 0 12px;
+      min-width: 96px;
+      padding: 5px 0;
       background-color: var(--font-color-default);
       cursor: pointer;
-      color: var(--bg-color);
+      color: #101114;
       margin-left: 12px;
+      font-size: 14px;
     }
     .btn-defa {
-      background-color: var(--hover-bg-color);
-      color: var(--dex-color-4);
+      background-color: rgba(58, 60, 64, 0.4);
+      color: #9aa0aa;
     }
     .timeTab {
-      padding: 2px;
-      border-radius: 8px;
-      border: 1px solid var(--color-border);
+      border-radius: 4px;
+      border: 1px solid rgba(38, 40, 44, 0.3);
       margin-top: 15px;
+      font-size: 12px;
+      overflow: hidden;
       span {
         display: inline-flex;
-        border-radius: 8px;
-        padding: 4px 12px;
+        padding: 6px 12px;
         background-color: transparent;
-        color: var(--dex-color-4);
+        color: #5c6068;
         cursor: pointer;
         transition: all 0.1s;
       }
       span.active {
-        color: var(--font-color-default);
-        background-color: var(--hover-bg-color);
+        color: #f5f5f5;
+        background-color: #17181b;
       }
+    }
+    .update-txt {
+      font-size: 12px;
+      margin-top: 10px;
+      color: #9aa0aa;
+      font-family: 'PingFangSC-Medium';
     }
   }
   .smartMoneyDetails-items {
     margin: 16px 0;
+
     .smartMoneyDetails-item {
       flex: 1;
-      height: 282px;
-      padding: 24px 24px 12px;
-      border-radius: 10px;
-      background: var(--card-bg-color);
-      font-size: 14px;
+      padding: 16px;
+      border-radius: 8px;
+      background: rgba(23, 24, 27, 0.3);
+      font-size: 13px;
+      font-family: 'PingFangSC-Medium';
       strong {
         font-weight: normal;
       }
       h6 {
-        margin-bottom: 15px;
-        font-size: 14px;
+        margin-bottom: 8px;
+        font-size: 13px;
+        font-weight: normal;
         span {
           color: var(--font-color-default);
-          font-size: 16px;
+          font-size: 15px;
         }
         i {
           color: var(--down-color);
           font-style: normal;
         }
+        .icon-fish {
+          width: 14px;
+          height: 14px;
+          margin-right: 4px;
+        }
       }
       h3 {
         font-size: 32px;
         margin-bottom: 4px;
+        font-weight: normal;
+      }
+      .number-txt {
+        color: #9aa0aa;
       }
       p {
-        margin-bottom: 15px;
+        margin-bottom: 8px;
         span {
-          color: var(--dex-color-4);
+          color: #9aa0aa;
         }
         i {
           display: flex;
@@ -683,6 +757,10 @@ onMounted(() => {
       }
       p:last-child {
         margin: 0;
+      }
+      .fish-p {
+        margin: 0;
+        flex: 1;
       }
       .progress-p {
         span {
@@ -711,14 +789,32 @@ onMounted(() => {
         }
       }
     }
-    .smartMoneyDetails-item:nth-child(2) {
-      margin: 0 16px;
+    .flex-2 {
+      flex: 2;
     }
+    .item-1 {
+      height: 338px;
+      margin-right: 16px;
+    }
+
+    .item-2 {
+      height: 215px;
+      margin-right: 12px;
+    }
+    .item-3 {
+      height: 215px;
+    }
+
+    .item-4 {
+      margin-top: 16px;
+      height: 107px;
+    }
+
     .line-chart-box {
-      margin-top: 35px;
+      margin-top: 80px;
     }
     .line-chart {
-      height: 100px;
+      height: 124px;
       display: flex;
       .line-chart-item {
         height: 100%;
@@ -756,19 +852,19 @@ onMounted(() => {
       justify-content: center;
       height: 28px;
       padding: 0 10px;
-      border-radius: 8px;
-      border: 1px solid var(--border-color);
+      border-radius: 4px;
       margin-right: 10px;
       line-height: 1.2;
       cursor: pointer;
       transition: all 0.1s;
       background-color: transparent;
-      color: #828282;
+      color: #848e9c;
       white-space: nowrap;
+      font-family: 'PingFangSC-Medium';
     }
     span.active {
       color: var(--font-color-default);
-      background-color: var(--hover-bg-color);
+      background-color: rgba(58, 60, 64, 0.4);
     }
   }
   .table-box {

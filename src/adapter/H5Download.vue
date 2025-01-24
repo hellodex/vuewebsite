@@ -19,7 +19,7 @@
           <a
             href="https://lnk.bio/go?d=https%3A%2F%2Ftestflight.apple.com%2Fjoin%2FQWSnSN6O&hash=06969aa126356fc0d702a3f7cacd6b26&id=7108159&ext=-1861636&timezone=America%2FNew_York&type=1"
             target="_blank"
-            class="download-item display-flex align-items-center"
+            class="download-item display-flex align-items-center justify-content-center"
           >
             <svg-icon name="icon-download-ios" class="icon-svg"></svg-icon>
             <span>苹果TF版下载</span>
@@ -27,7 +27,7 @@
           <a
             href="https://lnk.bio/go?d=https%3A%2F%2Fpub-9b1a3493aabe403482e838e3d4cb36d0.r2.dev%2Fdex.apk&hash=12ddafb09f0354cf20438d437f70fc0b&id=7108156&ext=-1861636&timezone=America%2FNew_York&type=1"
             target="_blank"
-            class="download-item display-flex align-items-center"
+            class="download-item display-flex align-items-center justify-content-center"
           >
             <svg-icon name="icon-download-android" class="icon-svg"></svg-icon>
             <span>安卓下载</span>
@@ -35,7 +35,7 @@
           <a
             href="https://lnk.bio/go?d=https%3A%2F%2Fhellodex.io%2Fido&hash=d4e78b59d2ae7a3d22af3028e71c906d&id=7108140&ext=-1861636&timezone=America%2FNew_York&type=1"
             target="_blank"
-            class="download-item display-flex align-items-center"
+            class="download-item display-flex align-items-center justify-content-center"
           >
             <svg-icon name="icon-download-doc" class="icon-svg"></svg-icon>
             <span>白皮书(预售中)</span>
@@ -43,7 +43,7 @@
           <a
             href="https://lnk.bio/go?d=https%3A%2F%2Ft.me%2FHelloDex_cn&hash=8e2b8abee04f4dd77925055774555bb3&id=7108162&ext=-1861636&timezone=America%2FNew_York&type=1"
             target="_blank"
-            class="download-item display-flex align-items-center"
+            class="download-item display-flex align-items-center justify-content-center"
           >
             <svg-icon name="icon-download-tg" class="icon-svg"></svg-icon>
             <span>TG(电报群)</span>
@@ -52,7 +52,7 @@
           <a
             href="https://lnk.bio/go?d=https%3A%2F%2Fdiscord.gg%2Fhellodex&hash=eae14c6f6ce9957447444b2a147b7229&id=7313058&ext=-1861636&timezone=America%2FNew_York&type=1"
             target="_blank"
-            class="download-item display-flex align-items-center"
+            class="download-item display-flex align-items-center justify-content-center"
           >
             <svg-icon name="icon-download-discord" class="icon-svg"></svg-icon>
             <span>Discord</span>
@@ -60,7 +60,7 @@
           <a
             href="https://lnk.bio/go?d=https%3A%2F%2Ftwitter.com%2FHelloDexCN&hash=f3d7fbce65a2531a29d1028b5ad52c44&id=7108163&ext=-1861636&timezone=America%2FNew_York&type=1"
             target="_blank"
-            class="download-item display-flex align-items-center"
+            class="download-item display-flex align-items-center justify-content-center"
           >
             <svg-icon name="icon-download-x" class="icon-svg"></svg-icon>
             <span>X</span>
