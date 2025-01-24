@@ -23,6 +23,19 @@
       <FooterBar v-if="windowWidth >= 1144 && route.name !== 'Refer'" />
     </main>
     <Loading v-if="tgWebAppData && isTradeUrl"></Loading>
+    <!-- <vue-danmaku
+    ref="danmaku"
+    v-model:danmus="danmus"
+    useSlot
+    isSuspend
+    :channels="5"
+    class="danmaku-box"
+    style="pointer-events: none"
+  >
+    <template v-slot:dm="{ index, danmu }">
+      <span class="danmaku-item">{{ index }}{{ danmu.name }}：{{ danmu.text }}</span>
+    </template>
+  </vue-danmaku> -->
   </TonConnectUIProvider>
 </template>
 <script setup>
@@ -39,17 +52,24 @@ import LeftSideBar from '@/components/SideBar/LeftSideBar.vue'
 import { TonConnectUIProvider, THEME } from '@townsquarelabs/ui-vue'
 import { useGlobalStore } from '@/stores/global'
 import { useWindowWidth } from '@/hooks/useWindowWidth'
+import vueDanmaku from 'vue3-danmaku'
 
 import { createAppKit } from '@reown/appkit/vue'
 import { SolanaAdapter } from '@reown/appkit-adapter-solana'
 import { EthersAdapter } from '@reown/appkit-adapter-ethers'
 
-import { solana, solanaTestnet, solanaDevnet } from '@reown/appkit/networks'
+import { solana } from '@reown/appkit/networks'
 import { mainnet, bsc, arbitrum, xLayer, base, optimism } from '@reown/appkit/networks'
 
 import { SolflareWalletAdapter, PhantomWalletAdapter } from '@solana/wallet-adapter-wallets'
 
 const { windowWidth } = useWindowWidth()
+
+const danmus = ref([
+  { avatar: 'http://a.com/a.jpg', name: 'a', text: 'aaa' },
+  { avatar: 'http://a.com/b.jpg', name: 'b', text: 'bbb' }
+])
+
 const telegram__initParams = sessionStorage.getItem('__telegram__initParams')
 const tgWebAppData = (telegram__initParams && JSON.parse(telegram__initParams)?.tgWebAppData) || ''
 
@@ -75,6 +95,12 @@ initTheme()
 // init language
 const i18n = useI18n()
 const routerState = ref(true)
+
+socket.on('smartWalletDanmaku', (message) => {
+  const data = JSON.parse(message)
+  console.info(`socket-danmaku:`, data)
+})
+
 onMounted(async () => {
   const language = globalStore.language ?? browserLang()
   i18n.locale.value = language
@@ -97,6 +123,7 @@ const loadPromise = new Promise(function (resolve, reject) {
     resolve(false)
   }, 2000)
 })
+
 loadPromise.then((val) => {
   loading = val
   const canvasBox = document.getElementById('canvas-box')
@@ -161,6 +188,35 @@ createAppKit({
 })
 </script>
 <style lang="scss">
+.danmaku-box {
+  position: fixed;
+  top: 80px;
+  width: 100%;
+  height: 300px;
+  z-index: 999;
+  overflow: hidden;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000;
+  -webkit-backface-visibility: hidden;
+  -webkit-perspective: 1000;
+  :deep(.danmus) {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000;
+    -webkit-backface-visibility: hidden;
+    -webkit-perspective: 1000;
+    -webkit-user-select: none;
+    user-select: none;
+    .danmaku-item {
+      pointer-events: auto;
+      color: var(--up-color);
+      cursor: pointer;
+    }
+  }
+}
 w3m-modal {
   z-index: 9999999;
 }

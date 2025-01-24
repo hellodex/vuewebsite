@@ -156,26 +156,10 @@
       />
     </div>
   </div>
-
-  <!-- <vue-danmaku
-    ref="danmaku"
-    v-model:danmus="danmus"
-    useSlot
-    isSuspend
-    :channels="5"
-    class="danmaku-box"
-    style="pointer-events: none"
-  >
-    <template v-slot:dm="{ index, danmu }">
-      <span class="danmaku-item">{{ index }}{{ danmu.name }}：{{ danmu.text }}</span>
-    </template>
-  </vue-danmaku> -->
 </template>
 <script lang="ts" setup>
 import { onMounted, ref, onUnmounted, computed, watch } from 'vue'
-import { useRoute, onBeforeRouteUpdate } from 'vue-router'
-
-import vueDanmaku from 'vue3-danmaku'
+import { useRoute, onBeforeRouteUpdate, onBeforeRouteLeave } from 'vue-router'
 
 import { useI18n } from 'vue-i18n'
 
@@ -216,11 +200,6 @@ import { useMyCoinTab } from '@/hooks/useMyCoinTab' // 我的 hook
 import { useSubscribeKChartInfo } from '@/stores/subscribeKChartInfo'
 import { numberFormat } from '@/utils'
 import { socket } from '@/utils/socket'
-
-const danmus = ref([
-  { avatar: 'http://a.com/a.jpg', name: 'a', text: 'aaa' },
-  { avatar: 'http://a.com/b.jpg', name: 'b', text: 'bbb' }
-])
 
 const useSubscribeKChart = useSubscribeKChartInfo()
 
@@ -522,30 +501,36 @@ watch(
   }
 )
 
-watch(
-  () => useChainInfo.chainInfo,
-  (newVal, oldVal) => {
-    socket.emit(
-      'kchart-off',
-      JSON.stringify({
-        pair: oldVal?.pairAddress,
-        chainCode: oldVal?.chainCode
-      })
-    )
-  }
-)
-
 // 路由更新时的操作
 onBeforeRouteUpdate((to, from) => {
   console.log('组件K : onBeforeRouteUpdate - to :', to)
   console.log('组件K : onBeforeRouteUpdate - from :', from)
   console.log(`即将跳转到 /k/${to.params.pairAddress},请稍等`)
   // 交易信息
+  socket.emit(
+    'kchart-off',
+    JSON.stringify({
+      pair: from.params?.pairAddress,
+      chainCode: from.query?.chainCode
+    })
+  )
   useChainInfo.createChainInfo({
     chainCode: to.query.chainCode, // 币ID
     pairAddress: to.params.pairAddress, // 币 pairAddress
     timeType: to.query.timeType // 时间类型
   })
+})
+
+onBeforeRouteLeave((to, from) => {
+  console.log('🔥onBeforeRouteLeave - to :', to)
+  console.log('🔥onBeforeRouteLeave - from :', from)
+  socket.emit(
+    'kchart-off',
+    JSON.stringify({
+      pair: from.params?.pairAddress,
+      chainCode: from.query?.chainCode
+    })
+  )
 })
 
 onMounted(() => {
@@ -590,39 +575,9 @@ const resizeController = () => {
 onUnmounted(() => {
   clearInterval(timer.value)
   timer.value = null
-  console.log('onUnmounted>>>>>')
 })
 </script>
 <style lang="scss" scoped>
-.danmaku-box {
-  position: fixed;
-  top: 80px;
-  width: 100%;
-  height: 300px;
-  z-index: 999;
-  overflow: hidden;
-  -webkit-transform: translateZ(0);
-  transform: translateZ(0);
-  backface-visibility: hidden;
-  perspective: 1000;
-  -webkit-backface-visibility: hidden;
-  -webkit-perspective: 1000;
-  :deep(.danmus) {
-    -webkit-transform: translateZ(0);
-    transform: translateZ(0);
-    backface-visibility: hidden;
-    perspective: 1000;
-    -webkit-backface-visibility: hidden;
-    -webkit-perspective: 1000;
-    -webkit-user-select: none;
-    user-select: none;
-    .danmaku-item {
-      pointer-events: auto;
-      color: var(--up-color);
-      cursor: pointer;
-    }
-  }
-}
 .coinWalletDetails {
   height: calc(100vh - 135px);
   .resize-box {
