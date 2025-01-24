@@ -3,7 +3,7 @@ import { useTokenInfoStore } from '@/stores/tokenInfo'
 import { useSubscribeKChartInfo } from '@/stores/subscribeKChartInfo'
 import { APIpairInfo } from '@/api/coinWalletDetails'
 import { formatDecimals, formatDate } from '@/utils'
-import { io } from 'socket.io-client'
+import { socket } from '@/utils/socket'
 
 // 自定义数据源对象
 import { APIkCharts } from '@/api'
@@ -20,7 +20,6 @@ function timeFormat(time: any) {
   }
 }
 
-let socket: any = null
 export default class CustomDataFeed {
   _startTime = 0
   timestamp = 0
@@ -30,10 +29,6 @@ export default class CustomDataFeed {
     // 数据源准备就绪时的操作，例如认证、连接等
     const useSubscribeKChart = useSubscribeKChartInfo()
     useSubscribeKChart.subscribeSwap = []
-    if (socket) {
-      socket.off()
-      socket.disconnect()
-    }
 
     setTimeout(() =>
       callback({
@@ -182,14 +177,14 @@ export default class CustomDataFeed {
       chainCode: chainInfo?.chainCode
     })
 
-    if (socket) {
-      socket.off()
-      socket.disconnect()
-    }
-
-    socket = io(
-      `https://wss.apihellodex.lol?pair=${chainInfo?.pairAddress}&chainCode=${chainInfo?.chainCode}`
+    socket.emit(
+      'kchart-on',
+      JSON.stringify({
+        pair: chainInfo?.pairAddress,
+        chainCode: chainInfo?.chainCode
+      })
     )
+
     socket.on('kchart', async (message: any) => {
       const data = JSON.parse(message)
       console.info(`socket-message: ${data.txTime} <========> ${formatDate(data.txTime * 1000)}`)

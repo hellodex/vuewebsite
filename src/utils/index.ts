@@ -525,3 +525,9 @@ export function getQueryParams(url: string) {
 
   return params
 }
+
+export function priceNumFormat(txt: number | string): string {
+  const txtString = typeof txt === 'number' ? txt.toString() : txt
+
+  return (txtString[0] === '-' ? '-$' : '$') + numberFormat(txtString.replace(/-/g, ''))
+}
