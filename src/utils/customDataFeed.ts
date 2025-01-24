@@ -185,7 +185,7 @@ export default class CustomDataFeed {
       })
     )
 
-    socket.on('kchart', async (message: any) => {
+    socket.on('kchart', (message: any) => {
       const data = JSON.parse(message)
       console.info(`socket-message: ${data.txTime} <========> ${formatDate(data.txTime * 1000)}`)
       useSubscribeKChart.createSubscribeKChartInfo({
@@ -208,7 +208,7 @@ export default class CustomDataFeed {
         low: parseFloat(data.price),
         volume: parseFloat(data.orderAmount)
       }
-      await onRealtimeCallback(bar)
+      onRealtimeCallback(bar)
     })
   }
 
