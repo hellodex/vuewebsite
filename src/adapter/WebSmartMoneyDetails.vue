@@ -79,7 +79,7 @@
               parseFloat(walletAnalysisSummary?.plProfit || '0') <= 0 ? 'down-color' : ' up-color'
             "
           >
-            ${{ numberFormat(walletAnalysisSummary?.plProfit || 0) }}
+            {{ priceNumFormat(walletAnalysisSummary?.plProfit || 0) }}
           </p>
 
           <div class="line-chart-box display-flex justify-content-fd">
@@ -183,7 +183,7 @@
                       ? 'down-color'
                       : ' up-color'
                   "
-                  >${{ numberFormat(walletAnalysisSummary?.totalPl || 0) }} ({{
+                  >{{ priceNumFormat(walletAnalysisSummary?.totalPl || 0) }} ({{
                     parseFloat(walletAnalysisSummary?.totalPlRate || '0').toFixed(2)
                   }}%)</strong
                 >
@@ -194,11 +194,11 @@
               </p>
               <p class="display-flex align-items-center justify-content-sp">
                 <span>{{ days }} 买入总成本</span>
-                <strong>${{ numberFormat(walletAnalysisSummary?.totalBuying || 0) }}</strong>
+                <strong>{{ priceNumFormat(walletAnalysisSummary?.totalBuying || 0) }}</strong>
               </p>
               <p class="display-flex align-items-center justify-content-sp">
                 <span>{{ days }} 代币平均买入成本</span>
-                <strong>${{ numberFormat(walletAnalysisSummary?.averageBuying || 0) }}</strong>
+                <strong>{{ priceNumFormat(walletAnalysisSummary?.averageBuying || 0) }}</strong>
               </p>
               <p class="display-flex align-items-center justify-content-sp">
                 <span>{{ days }} 代币平均实现利润</span>
@@ -208,7 +208,7 @@
                       ? 'down-color'
                       : ' up-color'
                   "
-                  >${{ numberFormat(walletAnalysisSummary?.averageRealizedProfit || 0) }}</strong
+                  >{{ priceNumFormat(walletAnalysisSummary?.averageRealizedProfit || 0) }}</strong
                 >
               </p>
               <p class="display-flex align-items-center justify-content-sp">
@@ -351,16 +351,82 @@
         </div>
         <div class="table-box">
           <template v-if="listTabIndex == 1">
-            <el-table :data="tableData" scrollbar-always-on>
-              <el-table-column prop="date" label="币种/最后活跃" sortable sort-by="date" />
-              <el-table-column prop="name" label="未实现利润" sortable sort-by="date" />
-              <el-table-column prop="name" :label="days + '已实现利润'" sortable sort-by="date" />
-              <el-table-column prop="name" label="总利润" sortable sort-by="date" />
-              <el-table-column prop="name" label="余额" sortable sort-by="date" />
-              <el-table-column prop="name" label="持仓" sortable sort-by="date" />
-              <el-table-column prop="address" label="总买入" />
-              <el-table-column prop="address" label="已卖出" />
-              <el-table-column prop="address" :label="days + '交易数'" />
+            <el-table :data="walletAnalysisRecentPL" scrollbar-always-on>
+              <el-table-column label="币种/最后活跃" sortable sort-by="date">
+                <template #default="scope">
+                  <div class="logo-item display-flex align-items-center">
+                    <span>{{ scope.row.tokenName }}</span>
+                    <svg-icon name="copy" class="copy" v-copy="scope.row.token"></svg-icon>
+                    <el-icon size="13"><Search /></el-icon>
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column label="未实现利润" sortable sort-by="date">
+                <template #default="scope">
+                  <div
+                    class="display-flex flex-direction-col"
+                    :class="
+                      scope.row.totalUnrealizedProfitPercentage < 0 ? 'down-color' : 'up-color'
+                    "
+                  >
+                    <span>{{ priceNumFormat(scope.row.totalUnrealizedProfit || 0) }}</span>
+                    <span>{{ scope.row.totalUnrealizedProfitPercentage || 0 }}%</span>
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column label="已实现利润" sortable sort-by="date">
+                <template #default="scope">
+                  <div class="display-flex flex-direction-col up-color">持有</div>
+                </template>
+              </el-table-column>
+              <el-table-column label="总利润" sortable sort-by="date">
+                <template #default="scope">
+                  <div
+                    class="display-flex flex-direction-col"
+                    :class="scope.row.totalProfitPercentage < 0 ? 'down-color' : 'up-color'"
+                  >
+                    <span>{{ priceNumFormat(scope.row.totalProfit || 0) }}</span>
+                    <span>{{ scope.row.totalProfitPercentage || 0 }}%</span>
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column label="余额" sortable sort-by="date">
+                <template #default="scope">
+                  <div class="display-flex flex-direction-col">
+                    <span>{{ priceNumFormat(scope.row.balance || 0) }}</span>
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column prop="name" label="持仓" sortable sort-by="date">
+                <template #default="scope">
+                  <span>{{ scope.row.position || 0 }}%</span>
+                </template>
+              </el-table-column>
+              <el-table-column label="总买入/平均">
+                <template #default="scope">
+                  <div class="display-flex flex-direction-col">
+                    <span>{{ priceNumFormat(scope.row.totalBuying || 0) }}</span>
+                    <span>{{ priceNumFormat(scope.row.averageBuying || 0) }}</span>
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column prop="address" label="总卖出/平均">
+                <template #default="scope">
+                  <div class="display-flex flex-direction-col">
+                    <span>{{ priceNumFormat(scope.row.totalSelling || 0) }}</span>
+                    <span>{{ priceNumFormat(scope.row.averageSelling || 0) }}</span>
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column prop="address" label="30D 交易数">
+                <template #default="scope">
+                  <div class="display-flex align-items-center">
+                    <span class="up-color">{{ numberFormat(scope.row.buyCount30d || 0) }}</span>
+                    /
+                    <span class="down-color">{{ numberFormat(scope.row.sellCount30d || 0) }}</span>
+                  </div>
+                </template>
+              </el-table-column>
               <el-table-column>
                 <template #default>
                   <div class="display-flex align-items-center justify-content-center">
@@ -372,15 +438,88 @@
             </el-table>
           </template>
           <template v-else-if="listTabIndex == 2">
-            <el-table :data="tableData" scrollbar-always-on>
-              <el-table-column prop="date" label="币种/最后活跃" sortable sort-by="date" />
-              <el-table-column prop="name" label="未实现利润" sortable sort-by="date" />
-              <el-table-column prop="name" label="总利润" sortable sort-by="date" />
-              <el-table-column prop="name" label="余额" sortable sort-by="date" />
-              <el-table-column prop="name" label="持仓" sortable sort-by="date" />
-              <el-table-column prop="address" label="总买入" />
-              <el-table-column prop="address" label="已卖出" />
-              <el-table-column prop="address" label="30D 交易数" />
+            <el-table :data="walletAnalysisHoldings" scrollbar-always-on>
+              <el-table-column label="币种/最后活跃" sortable sort-by="date">
+                <template #default="scope">
+                  <div class="logo-item display-flex align-items-center">
+                    <span>{{ scope.row.tokenName }}</span>
+                    <svg-icon name="copy" class="copy" v-copy="scope.row.token"></svg-icon>
+                    <el-icon size="13"><Search /></el-icon>
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column label="未实现利润" sortable sort-by="date">
+                <template #default="scope">
+                  <div
+                    class="display-flex flex-direction-col"
+                    :class="
+                      scope.row.totalUnrealizedProfitPercentage < 0 ? 'down-color' : 'up-color'
+                    "
+                  >
+                    <span>{{ priceNumFormat(scope.row.totalUnrealizedProfit || 0) }}</span>
+                    <span>{{ scope.row.totalUnrealizedProfitPercentage || 0 }}%</span>
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column label="已实现利润" sortable sort-by="date">
+                <template #default="scope">
+                  <div
+                    class="display-flex flex-direction-col"
+                    :class="scope.row.realizedProfitPercentage < 0 ? 'down-color' : 'up-color'"
+                  >
+                    <span>{{ priceNumFormat(scope.row.realizedProfit || 0) }}</span>
+                    <span>{{ scope.row.realizedProfitPercentage || 0 }}%</span>
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column label="总利润" sortable sort-by="date">
+                <template #default="scope">
+                  <div
+                    class="display-flex flex-direction-col"
+                    :class="scope.row.totalProfitPercentage < 0 ? 'down-color' : 'up-color'"
+                  >
+                    <span>{{ priceNumFormat(scope.row.totalProfit || 0) }}</span>
+                    <span>{{ scope.row.totalProfitPercentage || 0 }}%</span>
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column label="余额" sortable sort-by="date">
+                <template #default="scope">
+                  <div class="display-flex flex-direction-col">
+                    <span>{{ priceNumFormat(scope.row.balance || 0) }}</span>
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column label="持仓" sortable sort-by="date">
+                <template #default="scope">
+                  <span>{{ scope.row.position || 0 }}%</span>
+                </template>
+              </el-table-column>
+              <el-table-column label="总买入/平均">
+                <template #default="scope">
+                  <div class="display-flex flex-direction-col">
+                    <span>{{ priceNumFormat(scope.row.totalBuying || 0) }}</span>
+                    <span>{{ priceNumFormat(scope.row.averageBuying || 0) }}</span>
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column label="总卖出/平均">
+                <template #default="scope">
+                  <div class="display-flex flex-direction-col">
+                    <span>{{ priceNumFormat(scope.row.totalSelling || 0) }}</span>
+                    <span>{{ priceNumFormat(scope.row.averageSelling || 0) }}</span>
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column label="30D 交易数">
+                <template #default="scope">
+                  <div class="display-flex align-items-center">
+                    <span class="up-color">{{ numberFormat(scope.row.buyCount30d || 0) }}</span>
+                    /
+                    <span class="down-color">{{ numberFormat(scope.row.sellCount30d || 0) }}</span>
+                  </div>
+                </template>
+              </el-table-column>
               <el-table-column>
                 <template #default>
                   <div class="display-flex align-items-center justify-content-center">
@@ -392,14 +531,67 @@
             </el-table>
           </template>
           <template v-else-if="listTabIndex == 3">
-            <el-table :data="tableData" scrollbar-always-on>
-              <el-table-column prop="date" label="类型" />
-              <el-table-column prop="name" label="币种" />
-              <el-table-column prop="name" label="总额" />
-              <el-table-column prop="name" label="数量" />
-              <el-table-column prop="name" label="价格" />
-              <el-table-column prop="name" label="利润" />
+            <el-table :data="walletAnalysisActivity" scrollbar-always-on>
+              <el-table-column label="类型">
+                <template #default="scope">
+                  <div class="display-flex align-items-center">
+                    <span :class="scope.row.transactionType == 1 ? 'up-color' : 'down-color'">{{
+                      scope.row.transactionType == 1 ? '买入' : '卖出'
+                    }}</span>
+                    <svg-icon
+                      name="first-buy-star"
+                      class="first-buy-star"
+                      v-if="scope.row.isFirstBuy"
+                      style="margin-left: 4px"
+                    ></svg-icon>
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column label="币种">
+                <template #default="scope">
+                  <div class="logo-item display-flex align-items-center">
+                    <span>{{ scope.row.tokenName }}</span>
+                    <svg-icon name="copy" class="copy" v-copy="scope.row.token"></svg-icon>
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column prop="name" label="总额">
+                <template #default="scope">
+                  <span :class="scope.row.transactionType == 1 ? 'up-color' : 'down-color'">{{
+                    priceNumFormat(scope.row.transactionAmount || 0)
+                  }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column prop="name" label="数量">
+                <template #default="scope">
+                  <span :class="scope.row.transactionType == 1 ? 'up-color' : 'down-color'">{{
+                    priceNumFormat(scope.row.transactionQuantity || 0)
+                  }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column prop="name" label="价格">
+                <template #default="scope">
+                  <span :class="scope.row.transactionType == 1 ? 'up-color' : 'down-color'">{{
+                    priceNumFormat(scope.row.transactionPrice || 0)
+                  }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column prop="name" label="利润">
+                <template #default="scope">
+                  <span :class="scope.row.transactionType == 1 ? 'up-color' : 'down-color'">{{
+                    priceNumFormat(scope.row.profit || 0)
+                  }}</span>
+                </template>
+              </el-table-column>
               <el-table-column prop="address" label="时长" />
+              <el-table-column>
+                <template #default>
+                  <div class="display-flex align-items-center justify-content-center">
+                    <svg-icon name="share-04" class="icon-user"></svg-icon>
+                    <span>分享</span>
+                  </div>
+                </template>
+              </el-table-column>
             </el-table>
           </template>
         </div>
@@ -411,7 +603,7 @@
 <script lang="ts" setup>
 import { computed, ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-import { numberFormat, shortifyAddress } from '@/utils'
+import { numberFormat, shortifyAddress, priceNumFormat } from '@/utils'
 import {
   APIwalletAnalysisSummary,
   APIwalletAnalysisToken,
@@ -436,6 +628,9 @@ const customWalletInfo = computed(() => globalStore.customWalletInfo)
 const walletAddress = ref('9nnLbotNTcUhvbrsA6Mdkx45Sm82G35zo28AqUvjExn8')
 
 const walletAnalysisSummary = ref<any>({})
+const walletAnalysisHoldings = ref<any>([])
+const walletAnalysisRecentPL = ref<any>([])
+const walletAnalysisActivity = ref<any>([])
 
 const timeTabIndex = ref<string>('7d')
 const timeTabList = [
@@ -472,7 +667,7 @@ const listTab = [
   }
 ]
 
-const listTabIndex = ref(1)
+const listTabIndex = ref(3)
 
 const handelListTab = (item: any) => {
   listTabIndex.value = item.value
@@ -589,6 +784,7 @@ const getWalletAnalysisHoldings = async () => {
     direction: 'asc'
   })
 
+  walletAnalysisHoldings.value = res || []
   console.log(res)
 }
 
@@ -598,16 +794,17 @@ const getWalletAnalysisRecentPL = async () => {
     walletAddress: walletAddress.value,
     direction: 'asc'
   })
-
+  walletAnalysisRecentPL.value = res || []
   console.log(res)
 }
 
 const getWalletAnalysisActivity = async () => {
-  const res = await APIwalletAnalysisActivity({
+  const res: any = await APIwalletAnalysisActivity({
     chainCode: route.params.chain,
     walletAddress: walletAddress.value
   })
 
+  walletAnalysisActivity.value = res?.list || []
   console.log(res)
 }
 
@@ -832,19 +1029,8 @@ onMounted(() => {
   }
   .filter-box {
     padding-bottom: 15px;
-    position: sticky;
-    top: 0;
-    z-index: 9;
-    background-color: var(--bg-color);
   }
-  :deep(.el-table) {
-    overflow: initial;
-  }
-  :deep(.el-table .el-table__header-wrapper) {
-    position: sticky;
-    top: 43px;
-    z-index: 8;
-  }
+
   .list-tab {
     span {
       display: flex;
@@ -868,9 +1054,19 @@ onMounted(() => {
     }
   }
   .table-box {
-    padding: 12px;
-    border-radius: 10px;
-    background-color: var(--card-bg-color);
+    border-radius: 8px;
+    overflow: hidden;
+    .logo-item {
+      .copy {
+        width: 12px;
+        height: 12px;
+        margin: 0 4px;
+      }
+    }
+    .first-buy-star {
+      width: 12px;
+      height: 12px;
+    }
   }
 }
 </style>

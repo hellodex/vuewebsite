@@ -215,6 +215,7 @@ import { useMyCoinTab } from '@/hooks/useMyCoinTab' // 我的 hook
 
 import { useSubscribeKChartInfo } from '@/stores/subscribeKChartInfo'
 import { numberFormat } from '@/utils'
+import { socket } from '@/utils/socket'
 
 const danmus = ref([
   { avatar: 'http://a.com/a.jpg', name: 'a', text: 'aaa' },
@@ -521,6 +522,19 @@ watch(
   }
 )
 
+watch(
+  () => useChainInfo.chainInfo,
+  (newVal, oldVal) => {
+    socket.emit(
+      'kchart-off',
+      JSON.stringify({
+        pair: oldVal?.pairAddress,
+        chainCode: oldVal?.chainCode
+      })
+    )
+  }
+)
+
 // 路由更新时的操作
 onBeforeRouteUpdate((to, from) => {
   console.log('组件K : onBeforeRouteUpdate - to :', to)
@@ -576,6 +590,7 @@ const resizeController = () => {
 onUnmounted(() => {
   clearInterval(timer.value)
   timer.value = null
+  console.log('onUnmounted>>>>>')
 })
 </script>
 <style lang="scss" scoped>
