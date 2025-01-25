@@ -1,6 +1,7 @@
 import { useChainInfoStore } from '@/stores/chainInfo'
 import { useTokenInfoStore } from '@/stores/tokenInfo'
 import { useSubscribeKChartInfo } from '@/stores/subscribeKChartInfo'
+import { useGlobalStore } from '@/stores/global'
 import { APIpairInfo } from '@/api/coinWalletDetails'
 import { formatDecimals, formatDate } from '@/utils'
 import { socket } from '@/utils/socket'
@@ -184,6 +185,10 @@ export default class CustomDataFeed {
         chainCode: chainInfo?.chainCode
       })
     )
+
+    const globalStore = useGlobalStore()
+
+    globalStore.SetSocketKchartConnectType('kChart_connect')
 
     socket.on('kchart', (message: any) => {
       const data = JSON.parse(message)
