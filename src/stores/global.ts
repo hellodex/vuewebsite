@@ -51,6 +51,9 @@ export const useGlobalStore = defineStore('global', () => {
   // 代币收藏数据
   const favoriteData = ref<any>([])
 
+  // k线 socket 连接状态
+  const socketKchartConnectType = ref<string | null>(null)
+
   /** 处置操作 */
 
   // 修改语言
@@ -99,6 +102,10 @@ export const useGlobalStore = defineStore('global', () => {
     favoriteData.value = val
   }
 
+  function SetSocketKchartConnectType(val: string | null): void {
+    socketKchartConnectType.value = val
+  }
+
   return {
     theme,
     language,
@@ -110,6 +117,7 @@ export const useGlobalStore = defineStore('global', () => {
     accountInfo,
     customWalletInfo,
     favoriteData,
+    socketKchartConnectType,
     setTheme,
     setLanguage,
     setDialogVisible,
@@ -118,6 +126,7 @@ export const useGlobalStore = defineStore('global', () => {
     setWalletInfo,
     setAccountInfo,
     setCustomWalletInfo,
-    setFavoriteData
+    setFavoriteData,
+    SetSocketKchartConnectType
   }
 })

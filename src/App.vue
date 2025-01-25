@@ -23,27 +23,47 @@
       <FooterBar v-if="windowWidth >= 1144 && route.name !== 'Refer'" />
     </main>
     <Loading v-if="tgWebAppData && isTradeUrl"></Loading>
-    <!-- <vue-danmaku
-    ref="danmaku"
-    v-model:danmus="danmus"
-    useSlot
-    isSuspend
-    :channels="5"
-    class="danmaku-box"
-    style="pointer-events: none"
-  >
-    <template v-slot:dm="{ index, danmu }">
-      <span class="danmaku-item">{{ index }}{{ danmu.name }}：{{ danmu.text }}</span>
-    </template>
-  </vue-danmaku> -->
+    <vue-danmaku
+      ref="danmaku"
+      v-model:danmus="danmus"
+      useSlot
+      isSuspend
+      randomChannel
+      :speeds="80"
+      :channels="5"
+      class="danmaku-box"
+      style="pointer-events: none"
+    >
+      <template v-slot:dm="{ index, danmu }">
+        <div class="danmaku-item display-flex align-items-center" @click="handelRoute(danmu)">
+          <el-image :src="danmu.smartWallet.avatar" alt="" class="danmaku-avatar">
+            <template #error>
+              <svg-icon name="logo1" class="danmaku-avatar"></svg-icon>
+            </template>
+          </el-image>
+          <span class="twitterName">{{ danmu.smartWallet.twitterName }}</span>
+          <span
+            >&nbsp;买入&nbsp;<i class="num-txt"
+              >{{ numberFormat(danmu.transaction.volume || 0) }} &nbsp;{{
+                CHAIN_SYMBOL[danmu.transaction.chainCode]
+              }}</i
+            >，数量&nbsp;<i class="num-txt">{{
+              numberFormat(danmu.transaction.amount || 0)
+            }}</i></span
+          >
+        </div>
+      </template>
+    </vue-danmaku>
   </TonConnectUIProvider>
 </template>
 <script setup>
 import { ref, onMounted, provide, nextTick, computed } from 'vue'
-import { RouterView, useRoute } from 'vue-router'
+import { RouterView, useRoute, useRouter } from 'vue-router'
 import { useTheme } from '@/hooks/useTheme'
 import { useI18n } from 'vue-i18n'
-import { browserLang } from '@/utils'
+import { browserLang, numberFormat } from '@/utils'
+import { CHAIN_SYMBOL } from '@/types'
+
 import { socket } from '@/utils/socket'
 import Loading from '@/components/Loading/index.vue'
 import NavBar from '@/components/SideBar/NavBar.vue'
@@ -65,10 +85,7 @@ import { SolflareWalletAdapter, PhantomWalletAdapter } from '@solana/wallet-adap
 
 const { windowWidth } = useWindowWidth()
 
-const danmus = ref([
-  { avatar: 'http://a.com/a.jpg', name: 'a', text: 'aaa' },
-  { avatar: 'http://a.com/b.jpg', name: 'b', text: 'bbb' }
-])
+const danmus = ref([])
 
 const telegram__initParams = sessionStorage.getItem('__telegram__initParams')
 const tgWebAppData = (telegram__initParams && JSON.parse(telegram__initParams)?.tgWebAppData) || ''
@@ -82,6 +99,7 @@ const options = {
 }
 
 const route = useRoute()
+const router = useRouter()
 
 const globalStore = useGlobalStore()
 
@@ -99,6 +117,7 @@ const routerState = ref(true)
 socket.on('smartWalletDanmaku', (message) => {
   const data = JSON.parse(message)
   console.info(`socket-danmaku:`, data)
+  danmus.value.push(data)
 })
 
 onMounted(async () => {
@@ -186,10 +205,16 @@ createAppKit({
     email: false
   }
 })
+
+const handelRoute = (danmu) => {
+  router.push(
+    `/k/${danmu.transaction.pairAddress}?chainCode=${danmu.transaction.chainCode}&timeType=15m`
+  )
+}
 </script>
 <style lang="scss">
 .danmaku-box {
-  position: fixed;
+  position: fixed !important;
   top: 80px;
   width: 100%;
   height: 300px;
@@ -201,7 +226,7 @@ createAppKit({
   perspective: 1000;
   -webkit-backface-visibility: hidden;
   -webkit-perspective: 1000;
-  :deep(.danmus) {
+  .danmus {
     -webkit-transform: translateZ(0);
     transform: translateZ(0);
     backface-visibility: hidden;
@@ -212,8 +237,22 @@ createAppKit({
     user-select: none;
     .danmaku-item {
       pointer-events: auto;
-      color: var(--up-color);
+      color: #f5f5f5;
       cursor: pointer;
+      font-size: 14px;
+      padding: 12px;
+      border-radius: 100px;
+      background-color: var(--hover-bg-color);
+    }
+    .num-txt {
+      color: var(--up-color);
+      font-style: normal;
+    }
+    .danmaku-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      margin-right: 6px;
     }
   }
 }

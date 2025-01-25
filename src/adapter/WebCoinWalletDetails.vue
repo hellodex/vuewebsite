@@ -514,6 +514,7 @@ onBeforeRouteUpdate((to, from) => {
       chainCode: from.query?.chainCode
     })
   )
+  globalStore.SetSocketKchartConnectType(null)
   useChainInfo.createChainInfo({
     chainCode: to.query.chainCode, // 币ID
     pairAddress: to.params.pairAddress, // 币 pairAddress
@@ -531,6 +532,7 @@ onBeforeRouteLeave((to, from) => {
       chainCode: from.query?.chainCode
     })
   )
+  globalStore.SetSocketKchartConnectType(null)
 })
 
 onMounted(() => {
