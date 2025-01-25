@@ -359,6 +359,7 @@
                     <svg-icon name="copy" class="copy" v-copy="scope.row.token"></svg-icon>
                     <el-icon size="13"><Search /></el-icon>
                   </div>
+                  <span class="timeago-txt">{{ timeago(scope.row.lastTime || 0) }}</span>
                 </template>
               </el-table-column>
               <el-table-column label="未实现利润" sortable sort-by="date">
@@ -446,6 +447,7 @@
                     <svg-icon name="copy" class="copy" v-copy="scope.row.token"></svg-icon>
                     <el-icon size="13"><Search /></el-icon>
                   </div>
+                  <span class="timeago-txt">{{ timeago(scope.row.lastTime || 0) }}</span>
                 </template>
               </el-table-column>
               <el-table-column label="未实现利润" sortable sort-by="date">
@@ -538,12 +540,14 @@
                     <span :class="scope.row.transactionType == 1 ? 'up-color' : 'down-color'">{{
                       scope.row.transactionType == 1 ? '买入' : '卖出'
                     }}</span>
-                    <svg-icon
-                      name="first-buy-star"
-                      class="first-buy-star"
-                      v-if="scope.row.isFirstBuy"
-                      style="margin-left: 4px"
-                    ></svg-icon>
+                    <el-tooltip content="✨ 首次购买该代币的钱包" effect="light">
+                      <svg-icon
+                        name="first-buy-star"
+                        class="first-buy-star"
+                        v-if="scope.row.isFirstBuy"
+                        style="margin-left: 4px"
+                      ></svg-icon>
+                    </el-tooltip>
                   </div>
                 </template>
               </el-table-column>
@@ -583,7 +587,11 @@
                   }}</span>
                 </template>
               </el-table-column>
-              <el-table-column prop="address" label="时长"></el-table-column>
+              <el-table-column prop="address" label="时长">
+                <template #default="scope">
+                  <span>{{ timeago(scope.row.transactionTime || 0) }}</span>
+                </template>
+              </el-table-column>
               <el-table-column>
                 <template #default>
                   <div class="display-flex align-items-center justify-content-center">
@@ -603,7 +611,7 @@
 <script lang="ts" setup>
 import { computed, ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-import { numberFormat, shortifyAddress, priceNumFormat } from '@/utils'
+import { numberFormat, shortifyAddress, priceNumFormat, timeago } from '@/utils'
 import {
   APIwalletAnalysisSummary,
   APIwalletAnalysisToken,
@@ -980,9 +988,13 @@ onMounted(() => {
         margin: 0 4px;
       }
     }
+    .timeago-txt {
+      font-size: 10px;
+    }
     .first-buy-star {
       width: 12px;
       height: 12px;
+      cursor: pointer;
     }
   }
 }
