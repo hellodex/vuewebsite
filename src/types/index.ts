@@ -67,6 +67,16 @@ export const CHAIN_ID: any = {
   OP: '10'
 }
 
+export const CHAIN_SYMBOL: any = {
+  BSC: 'BNB',
+  ETH: 'ETH',
+  ARB: 'ETH',
+  BASE: 'ETH',
+  SOLANA: 'SOL',
+  XLAYER: 'OKB',
+  OP: 'ETH'
+}
+
 export const CHAIN_NETWORKS: any = {
   1: mainnet,
   56: bsc,
