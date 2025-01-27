@@ -95,7 +95,6 @@
 
         <template #default="scope">
           <div class="display-flex align-items-center justify-content-fd">
-            <span>{{ shortifyAddress(scope.row.tx) }} &nbsp;</span>
             <svg-icon name="share-04" class="img"></svg-icon>
             <svg-icon name="filter-funnel-01" class="img"></svg-icon>
             <a :href="CHAIN_URL[chainInfo.chainCode] + scope.row.tx" target="_blank">
