@@ -35,21 +35,35 @@
       style="pointer-events: none"
     >
       <template v-slot:dm="{ index, danmu }">
-        <div class="danmaku-item display-flex align-items-center" @click="handelRoute(danmu)">
-          <el-image :src="danmu.smartWallet.avatar" alt="" class="danmaku-avatar">
-            <template #error>
-              <svg-icon name="logo1" class="danmaku-avatar"></svg-icon>
-            </template>
-          </el-image>
-          <span class="twitterName">{{ danmu.smartWallet.twitterName }}</span>
-          <span
-            >&nbsp;买入&nbsp;<i class="num-txt"
-              >{{ numberFormat(danmu.transaction.volume || 0) }} &nbsp;{{
-                CHAIN_SYMBOL[danmu.transaction.chainCode]
+        <div class="danmaku-item display-flex align-items-center">
+          <a
+            :href="`https://x.com/${danmu.smartWallet.twitterUsername}`"
+            class="display-flex align-items-center"
+            target="_blank"
+          >
+            <el-image :src="danmu.smartWallet.avatar" alt="" class="danmaku-avatar">
+              <template #error>
+                <img src="@/assets/icons/logo1.svg" alt="" class="danmaku-avatar" />
+              </template>
+            </el-image>
+            <span class="twitterName">{{ danmu.smartWallet.twitterName }}</span>
+          </a>
+          <img
+            src="@/assets/icons/copy.svg"
+            alt=""
+            class="copy"
+            v-copy="[danmu.smartWallet.walletAddress, '钱包地址已复制']"
+          />
+          <span @click="handelRoute(danmu)"
+            >&nbsp;{{ danmu.transaction.flag ? '卖出' : '买入' }}&nbsp;<i
+              :class="danmu.transaction.flag ? 'down-color num-txt' : 'up-color num-txt'"
+              >{{ numberFormat(danmu.transaction.amount || 0) }} &nbsp;{{
+                danmu.transaction.symbol
               }}</i
-            >，数量&nbsp;<i class="num-txt">{{
-              numberFormat(danmu.transaction.amount || 0)
-            }}</i></span
+            >，交易额&nbsp;<i
+              :class="danmu.transaction.flag ? 'down-color num-txt' : 'up-color num-txt'"
+              >${{ numberFormat(danmu.transaction.volume || 0) }}</i
+            ></span
           >
         </div>
       </template>
@@ -207,7 +221,7 @@ createAppKit({
 })
 
 const handelRoute = (danmu) => {
-  router.push(
+  window.open(
     `/k/${danmu.transaction.pairAddress}?chainCode=${danmu.transaction.chainCode}&timeType=15m`
   )
 }
@@ -245,8 +259,15 @@ const handelRoute = (danmu) => {
       background-color: var(--hover-bg-color);
     }
     .num-txt {
-      color: var(--up-color);
       font-style: normal;
+    }
+    .twitterName {
+      color: #f5f5f5;
+    }
+    .copy {
+      width: 13px;
+      height: 13px;
+      margin: 0 3px;
     }
     .danmaku-avatar {
       width: 32px;
