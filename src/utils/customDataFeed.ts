@@ -175,7 +175,7 @@ export default class CustomDataFeed {
       chainCode: chainInfo?.chainCode
     })
 
-    socket.off()
+    socket.off('kchart')
 
     socket.emit(
       'kchart-off',
