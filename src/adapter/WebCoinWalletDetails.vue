@@ -218,13 +218,6 @@ const globalStore = useGlobalStore()
 const walletType = computed(() => globalStore.walletInfo.walletType)
 const isConnected = computed(() => globalStore.walletInfo.isConnected)
 const customWalletInfo = computed(() => globalStore.customWalletInfo)
-const activeName = ref(
-  !isConnected.value
-    ? 'first'
-    : isConnected.value && walletType.value == 'Email'
-      ? 'seven'
-      : 'second'
-) // tabs 切换
 
 const skeleton = ref<boolean>(false)
 const initLimitedOrders = ref<any>({})
@@ -282,6 +275,11 @@ const coinWalletTabs = computed(() => {
     ]
   }
 })
+
+const activeName = ref(
+  coinWalletTabs.value.find((item) => item.code == localStorage.getItem('kchart_tab'))?.code ||
+    'second'
+) // tabs 切换
 
 const timer = ref<any>(null) // 定时器
 // 代币信息
@@ -402,6 +400,7 @@ watch(
 
 const handleTabClick = (item: { code: string }) => {
   activeName.value = item.code
+  localStorage.setItem('kchart_tab', activeName.value)
 }
 
 const topData = [
