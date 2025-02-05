@@ -27,10 +27,6 @@ export default class CustomDataFeed {
   _intervalId: any
   // 初始化方法
   onReady(callback: any) {
-    // 数据源准备就绪时的操作，例如认证、连接等
-    const useSubscribeKChart = useSubscribeKChartInfo()
-    useSubscribeKChart.subscribeSwap = []
-
     setTimeout(() =>
       callback({
         exchanges: [], // 可用的交易所列表
@@ -137,6 +133,7 @@ export default class CustomDataFeed {
         queryTimeBegin: 0
       }
     })
+    useSubscribeKChart.subscribeSwap = []
 
     res?.swap?.reverse().forEach((item: any) => {
       useSubscribeKChart.createSubscribeSwapInfo(item)
@@ -178,6 +175,15 @@ export default class CustomDataFeed {
       chainCode: chainInfo?.chainCode
     })
 
+    socket.off()
+
+    socket.emit(
+      'kchart-off',
+      JSON.stringify({
+        pair: chainInfo?.pairAddress,
+        chainCode: chainInfo?.chainCode
+      })
+    )
     socket.emit(
       'kchart-on',
       JSON.stringify({
@@ -192,7 +198,7 @@ export default class CustomDataFeed {
 
     socket.on('kchart', (message: any) => {
       const data = JSON.parse(message)
-      console.info(`socket-message: ${data.txTime} <========> ${formatDate(data.txTime * 1000)}`)
+      console.info(`socket-message: ${data.tx} <========> ${formatDate(data.txTime * 1000)}`)
       useSubscribeKChart.createSubscribeKChartInfo({
         C: data.price,
         H: data.price,
