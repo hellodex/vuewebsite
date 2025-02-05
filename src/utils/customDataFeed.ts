@@ -101,6 +101,9 @@ export default class CustomDataFeed {
     // 将数据传递给TradingView
     // onHistoryCallback(data, { noData: false });
     console.log(symbolInfo, resolution, periodParams, onErrorCallback)
+
+    localStorage.setItem('kchart_tradingTime', resolution)
+
     if (this._intervalId) {
       clearInterval(this._intervalId)
     }
