@@ -5,20 +5,14 @@
         <div class="display-flex flex-direction-col">
           <div class="display-flex align-items-center">
             <img src="https://ipfs.io/ipfs/QmZqMneqDQ6dkFSq7SHtWtcT8BaBLoupQUksxsS4UTsnyD" alt="" />
-            <div class="info">
+            <div class="info display-flex flex-direction-col">
               <div class="edit-address display-flex align-items-center">
-                <span class="shortifyAddress">{{
-                  shortifyAddress('0x9003c0aedc4b6cb70c12761e1461a4d9727037fc')
-                }}</span>
+                <span class="shortifyAddress">{{ shortifyAddress(route.params.address) }}</span>
                 <el-icon size="16" color="#9AA0AA"><EditPen /></el-icon>
               </div>
               <div class="address display-flex align-items-center">
-                <span>0x9003c0aedc4b6cb70c12761e1461a4d9727037fc</span>
-                <svg-icon
-                  name="copy"
-                  class="copy"
-                  v-copy="'0x9003c0aedc4b6cb70c12761e1461a4d9727037fc'"
-                ></svg-icon>
+                <span>{{ route.params.address }}</span>
+                <svg-icon name="copy" class="copy" v-copy="route.params.address"></svg-icon>
               </div>
             </div>
           </div>
@@ -619,21 +613,8 @@ import {
   APIwalletAnalysisRecentPL,
   APIwalletAnalysisActivity
 } from '@/api'
-import { useGlobalStore } from '@/stores/global'
 
 const route = useRoute()
-const globalStore = useGlobalStore()
-
-const address = computed(() => globalStore.walletInfo.address)
-const isConnected = computed(() => globalStore.walletInfo.isConnected)
-const walletType = computed(() => globalStore.walletInfo.walletType)
-const customWalletInfo = computed(() => globalStore.customWalletInfo)
-
-// const walletAddress = ref(
-//   walletType.value == 'Email' ? customWalletInfo.value.walletInfo?.wallet : address.value
-// )
-
-const walletAddress = ref('9nnLbotNTcUhvbrsA6Mdkx45Sm82G35zo28AqUvjExn8')
 
 const walletAnalysisSummary = ref<any>({})
 const walletAnalysisHoldings = ref<any>([])
@@ -684,7 +665,7 @@ const handelListTab = (item: any) => {
 const getWalletAnalysisSummary = async () => {
   const res = await APIwalletAnalysisSummary({
     chainCode: route.params.chain,
-    walletAddress: walletAddress.value,
+    walletAddress: route.params.address,
     period: timeTabIndex.value
   })
 
@@ -695,7 +676,7 @@ const getWalletAnalysisSummary = async () => {
 const getWalletAnalysisToken = async () => {
   const res = await APIwalletAnalysisToken({
     chainCode: route.params.chain,
-    walletAddress: walletAddress.value,
+    walletAddress: route.params.address,
     period: timeTabIndex.value
   })
 
@@ -705,7 +686,7 @@ const getWalletAnalysisToken = async () => {
 const getWalletAnalysisHoldings = async () => {
   const res = await APIwalletAnalysisHoldings({
     chainCode: route.params.chain,
-    walletAddress: walletAddress.value,
+    walletAddress: route.params.address,
     direction: 'asc'
   })
 
@@ -716,7 +697,7 @@ const getWalletAnalysisHoldings = async () => {
 const getWalletAnalysisRecentPL = async () => {
   const res = await APIwalletAnalysisRecentPL({
     chainCode: route.params.chain,
-    walletAddress: walletAddress.value,
+    walletAddress: route.params.address,
     direction: 'asc'
   })
   walletAnalysisRecentPL.value = res || []
@@ -726,7 +707,7 @@ const getWalletAnalysisRecentPL = async () => {
 const getWalletAnalysisActivity = async () => {
   const res: any = await APIwalletAnalysisActivity({
     chainCode: route.params.chain,
-    walletAddress: walletAddress.value
+    walletAddress: route.params.address
   })
 
   walletAnalysisActivity.value = res?.list || []

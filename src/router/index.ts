@@ -111,6 +111,22 @@ const router = createRouter({
       ]
     },
     {
+      path: '/Monitor',
+      name: 'Monitor',
+      component: () => import('@/views/monitor/index.vue'),
+      redirect: '/Monitor/Strategy',
+      children: [
+        {
+          path: 'Strategy',
+          name: 'Strategy',
+          meta: {
+            title: 'HelloDex-监控配置'
+          },
+          component: () => import('@/views/monitor/strategy.vue')
+        }
+      ]
+    },
+    {
       path: '/Search',
       name: 'Search',
       component: () => import('@/views/h5/Search.vue')
