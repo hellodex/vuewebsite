@@ -12,7 +12,7 @@
           class="sniper-item"
           v-for="(item, index) in earliest100TraderData?.traders || []"
           :key="index"
-          v-copy="item.wallet"
+          @click="handelRouter(item)"
         >
           <el-tooltip :content="tips(item)" effect="light" placement="bottom">
             <div class="sniper-info">
@@ -67,6 +67,8 @@
 
 <script lang="ts" setup>
 import { ref, computed, onMounted, watch } from 'vue'
+import { useRouter } from 'vue-router'
+
 import { numberFormat } from '@/utils'
 import { useI18n } from 'vue-i18n'
 import { useGlobalStore } from '@/stores/global'
@@ -74,6 +76,8 @@ import { useGlobalStore } from '@/stores/global'
 const globalStore = useGlobalStore()
 
 const i18n = useI18n()
+
+const router = useRouter()
 
 const emit = defineEmits(['close'])
 
@@ -127,6 +131,10 @@ const tips = (item: any) => {
   if (item.sellState == 2) {
     return '卖出部分'
   }
+}
+
+const handelRouter = (item: any) => {
+  router.push(`/${props.baseInfo.chainInfo.chainCode}/address/${item.wallet}`)
 }
 
 onMounted(() => {})

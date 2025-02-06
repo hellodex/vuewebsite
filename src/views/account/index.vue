@@ -38,24 +38,24 @@ const router = useRouter()
 </script>
 <style scoped lang="scss">
 .account-main {
-  padding: 0 16px 16px;
+  padding: 12px;
   .account-left {
     font-size: 12px;
-    width: 220px;
-    min-width: 220px;
-    padding: 16px;
+    width: 200px;
+    min-width: 200px;
+    padding: 12px;
     border-radius: 12px;
 
     font-style: normal;
     background-color: var(--card-bg-color);
-    height: calc(-136px + 100vh);
+    height: calc(-144px + 100vh);
     a {
       display: block;
       color: var(--dex-color-4);
       line-height: 32px;
       font-size: 14px;
       margin-bottom: 12px;
-      padding: 12px;
+      padding: 6px 12px;
       border-radius: 12px;
       font-style: normal;
     }
@@ -72,14 +72,14 @@ const router = useRouter()
       .icon-user-item {
         width: 20px;
         height: 21px;
-        margin-right: 12px;
+        margin-right: 8px;
         color: var(--dex-color-4);
       }
     }
   }
   .account-right {
-    width: calc(100vw - 220px);
-    height: calc(-136px + 100vh);
+    width: calc(100vw - 200px);
+    height: calc(-144px + 100vh);
     border-radius: 12px;
 
     font-style: normal;
