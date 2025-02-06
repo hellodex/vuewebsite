@@ -282,3 +282,11 @@ export const MAIN_COIN: any = {
   WETH: 'ETH',
   BTCB: 'BTC'
 }
+
+export const QUICK_TRADE_CONFIG = {
+  buyAmount: [0.1, 0.3, 1, 3, 10],
+  sellAmount: [20, 40, 60, 80, 100],
+  x: 380,
+  y: 250,
+  switch: true
+}

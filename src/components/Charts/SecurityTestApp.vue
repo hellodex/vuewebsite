@@ -194,6 +194,12 @@ const props = defineProps({
     default: () => {
       return {}
     }
+  },
+  chainInfo: {
+    type: Object,
+    default: () => {
+      return {}
+    }
   }
 })
 
@@ -202,7 +208,7 @@ const isMainToken = computed(() => {
 })
 
 const riskList = computed(() => {
-  const obj = props.coinGoPlusInfo
+  const obj = props.chainInfo
   if (obj?.chainCode) {
     return obj.chainCode == 'SOLANA'
       ? [

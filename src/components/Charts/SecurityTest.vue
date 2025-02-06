@@ -233,7 +233,7 @@ const isMainToken = computed(() => {
 })
 
 const riskList = computed(() => {
-  const obj = props.baseInfo?.coinGoPlusInfo
+  const obj = props.baseInfo?.chainInfo
   if (obj?.chainCode) {
     return obj.chainCode == 'SOLANA'
       ? [
