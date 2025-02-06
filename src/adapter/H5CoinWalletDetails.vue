@@ -439,6 +439,7 @@
       <SecurityTest
         :coinGoPlusInfo="pondTabInfo?.coinGoPlusInfo"
         :tokenInfo="baseInfo?.tokenInfo"
+        :chainInfo="baseInfo?.chainInfo"
       />
     </template>
     <SearchPop :popupShow="popupShow" type="detail" @close="handleClose" />

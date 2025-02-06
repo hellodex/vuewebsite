@@ -76,7 +76,7 @@ import { RouterView, useRoute, useRouter } from 'vue-router'
 import { useTheme } from '@/hooks/useTheme'
 import { useI18n } from 'vue-i18n'
 import { browserLang, numberFormat } from '@/utils'
-import { CHAIN_SYMBOL } from '@/types'
+import { CHAIN_SYMBOL, QUICK_TRADE_CONFIG } from '@/types'
 
 import { socket } from '@/utils/socket'
 import Loading from '@/components/Loading/index.vue'
@@ -135,10 +135,16 @@ socket.on('smartWalletDanmaku', (message) => {
 })
 
 onMounted(async () => {
+  const config = localStorage.getItem('quick_trade_config')
   const language = globalStore.language ?? browserLang()
   i18n.locale.value = language
   globalStore.setLanguage(language)
   sessionStorage.setItem('language', language)
+
+  if (!config) {
+    localStorage.setItem('quick_trade_config', JSON.stringify(QUICK_TRADE_CONFIG))
+  }
+
   if (globalStore.accountInfo) {
     globalStore.setWalletInfo({
       address: null,

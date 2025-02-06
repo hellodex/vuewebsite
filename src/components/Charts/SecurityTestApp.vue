@@ -194,6 +194,12 @@ const props = defineProps({
     default: () => {
       return {}
     }
+  },
+  chainInfo: {
+    type: Object,
+    default: () => {
+      return {}
+    }
   }
 })
 
@@ -203,8 +209,9 @@ const isMainToken = computed(() => {
 
 const riskList = computed(() => {
   const obj = props.coinGoPlusInfo
-  if (obj?.chainCode) {
-    return obj.chainCode == 'SOLANA'
+
+  if (props.chainInfo?.chainCode) {
+    return props.chainInfo.chainCode == 'SOLANA'
       ? [
           {
             title: obj?.non_transferable == 0 ? '可转账' : '不可转账，有风险',

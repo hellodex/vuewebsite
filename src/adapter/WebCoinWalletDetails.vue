@@ -48,6 +48,15 @@
                   <RefreshHold v-if="activeName == 'seven'" />
                 </div> -->
                 <span class="transaction-tab-pause-txt" v-if="pauseType == 1">⏸ 已暂停</span>
+                <div class="data-items display-flex align-items-center">
+                  <span style="margin-right: 4px">快捷交易</span>
+                  <el-switch
+                    v-model="config.switch"
+                    @change="handelClose"
+                    size="small"
+                    style="--el-switch-on-color: #13ce66; --el-switch-off-color: #26282c"
+                  />
+                </div>
                 <div
                   class="data-items display-flex align-items-center"
                   v-if="activeName == 'fourth'"
@@ -155,6 +164,16 @@
         :baseInfo="baseInfo"
       />
     </div>
+    <div id="draggable-box">
+      <QuickTrading
+        v-if="config.switch"
+        :config="config"
+        :coinInfo="coinInfo"
+        :pairInfo="{ ...rightSideBarInfo.pairInfo, price: priceIncrease.price }"
+        @circulation="handelCirculation"
+        @close="handelClose"
+      />
+    </div>
   </div>
 </template>
 <script lang="ts" setup>
@@ -185,7 +204,7 @@ import CommissionHistory from '@/components/Charts/CommissionHistory.vue'
 
 import RightSideBar from '@/components/SideBar/RightSideBar.vue'
 import RefreshHold from '@/components/RefreshHold.vue'
-
+import QuickTrading from '@/components/SideBar/components/QuickTrading.vue'
 // hook 函数
 import { useGlobalStore } from '@/stores/global'
 import { useCoinWalletDetail } from '@/hooks/useCoinWalletDetail'
@@ -198,7 +217,7 @@ import { useFlowGroup, useListPeriod, useTopNet, useTopProfit } from '@/hooks/us
 import { useMyCoinTab } from '@/hooks/useMyCoinTab' // 我的 hook
 
 import { useSubscribeKChartInfo } from '@/stores/subscribeKChartInfo'
-import { numberFormat } from '@/utils'
+import { numberFormat, handleCoinPairInfo } from '@/utils'
 import { socket } from '@/utils/socket'
 
 const useSubscribeKChart = useSubscribeKChartInfo()
@@ -323,6 +342,8 @@ const myCoinTabInfo = ref<any>({
 
 const earliest100TraderData = ref<any>({})
 
+const coinInfo = ref<any>({})
+
 const pauseType = ref<number>(0)
 const handelPauseAndPlay = (val: number) => {
   pauseType.value = val
@@ -349,6 +370,10 @@ async function initTokenData() {
   holdingCoinsTabInfo.value = useHoldingCoinsTab(10, 'Top 10')
   flowGroupInfo.value = useFlowGroup()
   listPeriodInfo.value = useListPeriod('1H')
+  coinInfo.value = handleCoinPairInfo({
+    ...baseInfo.value.tokenInfo,
+    chainCode: baseInfo.value.chainInfo?.chainCode
+  })
   // topNetInfo.value = useTopNet(0)
   // if (walletType.value !== 'Email') {
   //   myCoinTabInfo.value = useMyCoinTab()
@@ -540,6 +565,7 @@ onMounted(() => {
   if (tradingViewHeight) {
     tradingView.style.height = tradingViewHeight + 'px'
   }
+  quickTradMoveElement()
   initTokenData()
   resizeController()
   setPolling()
@@ -571,6 +597,68 @@ const resizeController = () => {
   }
   resize.setCapture && resize.setCapture() //该函数在属于当前线程的指定窗口里设置鼠标捕获
   return false
+}
+
+const config = ref<any>(JSON.parse(localStorage.getItem('quick_trade_config') || '{}'))
+
+const quickTradMoveElement = () => {
+  const dragElement = document.getElementById('draggable-box') as HTMLElement
+  const tradingView = document.getElementById('trading-view-box') as HTMLElement
+
+  dragElement.style.left = config.value.x + 'px'
+  dragElement.style.top = config.value.y + 'px'
+
+  let isDragging = false
+  let offsetX: number, offsetY: number
+
+  dragElement.addEventListener('mousedown', (e) => {
+    // 记录鼠标点击位置与元素左上角的偏移
+    offsetX = e.clientX - dragElement.getBoundingClientRect().left
+    offsetY = e.clientY - dragElement.getBoundingClientRect().top
+    isDragging = true
+
+    // 鼠标移动事件
+    const moveElement = (e: any) => {
+      if (isDragging) {
+        dragElement.style.left = e.clientX - offsetX + 'px'
+        dragElement.style.top = e.clientY - offsetY + 'px'
+        tradingView.style.pointerEvents = 'none'
+        const obj = Object.assign({}, config.value, {
+          x: e.clientX - offsetX,
+          y: e.clientY - offsetY
+        })
+        localStorage.setItem('quick_trade_config', JSON.stringify(obj))
+
+        config.value = obj
+      }
+    }
+
+    // 鼠标释放事件
+    const stopDragging = () => {
+      isDragging = false
+      tradingView.style.pointerEvents = 'auto'
+      document.removeEventListener('mousemove', moveElement)
+      document.removeEventListener('mouseup', stopDragging)
+    }
+
+    // 监听鼠标移动和释放事件
+    document.addEventListener('mousemove', moveElement)
+    document.addEventListener('mouseup', stopDragging)
+  })
+}
+
+const handelCirculation = (val: any) => {
+  const obj = Object.assign({}, config.value, val)
+  localStorage.setItem('quick_trade_config', JSON.stringify(obj))
+  config.value = obj
+}
+
+const handelClose = (val: boolean) => {
+  const obj = Object.assign({}, config.value, {
+    switch: val
+  })
+  localStorage.setItem('quick_trade_config', JSON.stringify(obj))
+  config.value = obj
 }
 
 onUnmounted(() => {
@@ -666,7 +754,7 @@ onUnmounted(() => {
   .coinWallet-tabs-box {
     // background-color: rgba(23, 24, 27, 0.3);
     // border-radius: 12px;
-    padding: 12px;
+    padding: 0 12px 12px;
   }
   .coinWallet-tabs-head:after {
     content: '';
@@ -677,7 +765,6 @@ onUnmounted(() => {
   }
   .coinWallet-tabs-item {
     float: left;
-    margin-bottom: 12px;
     // border: 1px solid rgba(38, 40, 44, 0.3);
     // border-radius: 4px;
     padding: 2px;
@@ -711,7 +798,7 @@ onUnmounted(() => {
     border-radius: 6px;
     background: var(--bg-color);
     float: right;
-    margin-bottom: 12px;
+    margin: 2px 0 2px 6px;
     .item {
       padding: 4px 8px;
       border-radius: 4px;
@@ -725,6 +812,10 @@ onUnmounted(() => {
       color: var(--font-color-default);
       background: var(--tab-bg-color);
     }
+  }
+  #draggable-box {
+    position: fixed;
+    z-index: 990;
   }
 }
 @media (max-width: 1700px) {
