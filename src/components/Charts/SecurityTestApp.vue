@@ -208,9 +208,10 @@ const isMainToken = computed(() => {
 })
 
 const riskList = computed(() => {
-  const obj = props.chainInfo
-  if (obj?.chainCode) {
-    return obj.chainCode == 'SOLANA'
+  const obj = props.coinGoPlusInfo
+
+  if (props.chainInfo?.chainCode) {
+    return props.chainInfo.chainCode == 'SOLANA'
       ? [
           {
             title: obj?.non_transferable == 0 ? '可转账' : '不可转账，有风险',
