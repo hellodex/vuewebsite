@@ -124,8 +124,8 @@ export const USDT_CONFIG: any = {
     decimals: '18'
   },
   SOLANA: {
-    symbol: 'USDC',
-    address: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
+    symbol: 'USDT',
+    address: 'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB',
     decimals: '6'
   }
 }
