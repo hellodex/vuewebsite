@@ -99,12 +99,14 @@ watch([address, chainId], () => {
   )
 })
 
-if (address.value) {
-  getProperty(
-    chainConfigs.value?.find((item: { chainId: any }) => item.chainId == chainId.value).chainCode,
-    address.value
-  )
-}
+watch(chainConfigs, () => {
+  if (address.value) {
+    getProperty(
+      chainConfigs.value?.find((item: { chainId: any }) => item.chainId == chainId.value).chainCode,
+      address.value
+    )
+  }
+})
 </script>
 <style lang="scss">
 .address-popper-box {
