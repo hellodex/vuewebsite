@@ -30,7 +30,8 @@
               <van-icon name="question-o" class="question-o-icon" />
             </div>
             <el-switch
-              v-model="value1"
+              v-model="advancedSetting.antiPinchSwitch"
+              @change="handelSwitch"
               size="small"
               style="--el-switch-on-color: #fff; --el-switch-off-color: #43464f"
             />
@@ -43,7 +44,8 @@
             <div class="display-flex align-items-center justify-content-sp">
               <span class="setting-span">自动</span>
               <el-switch
-                v-model="value2"
+                v-model="advancedSetting.autoSlippage"
+                @change="handelSwitch"
                 size="small"
                 style="--el-switch-on-color: #fff; --el-switch-off-color: #43464f"
               />
@@ -52,19 +54,19 @@
               <span
                 v-for="(item, index) in slippageRange"
                 :key="index"
-                :class="slippageIndex == item.value ? 'active' : ''"
+                :class="advancedSetting.slippageIndex == item.value ? 'active' : ''"
                 @click="handelSlippage(item)"
               >
                 {{ item.label }}
               </span>
               <el-input
-                v-model="slippageVal"
+                v-model="advancedSetting.slippageVal"
                 style="width: 65px"
                 size="small"
                 placeholder="自定义"
                 onkeyup="value=value.replace(/[^\d||/.]/g,'')"
                 oninput="if(value){value=value.replace(/[^\d||/.]/g,'')}if(value<0){value=''}if(value>100){value=100}"
-                :maxlength="3"
+                :maxlength="4"
                 :minlength="1"
                 @input="handelInput"
               >
@@ -82,7 +84,9 @@
               <div
                 v-for="(item, index) in gasType"
                 :key="index"
-                :class="gasTypeIndex == item.id ? 'active gas-type-item' : 'gas-type-item'"
+                :class="
+                  advancedSetting.gasTypeIndex == item.id ? 'active gas-type-item' : 'gas-type-item'
+                "
                 @click="handelGasType(item)"
               >
                 <span>{{ item.label }}</span>
@@ -113,7 +117,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, reactive } from 'vue'
 import { mainNetworkCurrency, numberFormat } from '@/utils'
 import { decimalsFormat, getEvmGasGwei } from '@/utils/transition'
 import DoubleCost from '@/components/DoubleCost.vue'
@@ -142,8 +146,7 @@ const gasObj = ref<any>({
   gasPrice: 0
 }) // Gas费
 const timer = ref<any>(null) // 定时器
-const value1 = ref<boolean>(true)
-const value2 = ref<boolean>(false)
+
 const slippageRange = [
   {
     label: '3%',
@@ -163,33 +166,58 @@ const slippageRange = [
   }
 ]
 
+let advancedSetting = reactive<any>({
+  antiPinchSwitch: true, // 防夹开关
+  autoSlippage: false, // 自动滑点
+  slippageVal: '', // 滑点
+  slippageIndex: 0.03,
+  gasTypeIndex: 1
+})
+
 const account: any = localStorage.getItem('accountInfo')
-const slippageIndex = ref<number>(0)
-const slippageVal = ref<any>('') // 滑点
+const advancedSettingLocal = localStorage.getItem('advancedSetting')
+
 if (account) {
   const slippage = slippageRange.find((item: any) => item.value == JSON.parse(account).slippage)
   if (slippage) {
-    slippageIndex.value = JSON.parse(account).slippage
-    slippageVal.value = ''
+    advancedSetting.slippageIndex = parseFloat(JSON.parse(account).slippage)
+    advancedSetting.slippageVal = ''
   } else {
-    slippageIndex.value = 0
-    slippageVal.value = (JSON.parse(account).slippage * 100).toString()
+    advancedSetting.slippageIndex = 0
+    advancedSetting.slippageVal = (JSON.parse(account).slippage * 100).toString()
   }
 } else {
-  slippageIndex.value = 0.03
-  slippageVal.value = ''
+  advancedSetting.slippageIndex = 0.03
+  advancedSetting.slippageVal = ''
+}
+
+if (advancedSettingLocal) {
+  const obj = JSON.parse(advancedSettingLocal)
+  for (const key in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
+      advancedSetting[key] = obj[key]
+    }
+  }
 }
 
 const handelSlippage = (item: { value: number }) => {
-  slippageIndex.value = item.value
-  emit('slippage', slippageIndex.value)
+  advancedSetting.slippageIndex = item.value
+  advancedSetting.slippageVal = ''
+  emit('slippage', advancedSetting.slippageIndex)
+  localStorage.setItem('advancedSetting', JSON.stringify(advancedSetting))
 }
 
 const handelInput = () => {
-  emit('slippage', parseFloat(slippageVal.value) / 100)
+  advancedSetting.slippageIndex = 0
+  emit('slippage', parseFloat(advancedSetting.slippageVal) / 100)
+  localStorage.setItem('advancedSetting', JSON.stringify(advancedSetting))
 }
 
-const gasTypeIndex = ref<number>(1)
+const handelSwitch = (val: boolean) => {
+  console.log(val)
+  localStorage.setItem('advancedSetting', JSON.stringify(advancedSetting))
+}
+
 const gasType = [
   {
     label: '普通',
@@ -208,7 +236,8 @@ const gasType = [
   }
 ]
 const handelGasType = (item: { id: number }) => {
-  gasTypeIndex.value = item.id
+  advancedSetting.gasTypeIndex = item.id
+  localStorage.setItem('advancedSetting', JSON.stringify(advancedSetting))
 }
 
 const increaseSet = ref<string>(localStorage.getItem('increaseSet') || '100')
@@ -234,7 +263,7 @@ onUnmounted(() => {
 
 defineExpose({
   gasObj,
-  gasTypeIndex,
+  gasTypeIndex: advancedSetting.gasTypeIndex,
   gasType
 })
 </script>

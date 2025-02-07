@@ -267,7 +267,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
   .card-box {
     padding: 16px;
     border-radius: 12px;
-    background-color: var(--card-bg-color);
+    background-color: rgba(23, 24, 27, 0.3);
     margin-bottom: 16px;
     .icon-google,
     .icon-lock {
