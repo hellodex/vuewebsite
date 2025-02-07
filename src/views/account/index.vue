@@ -47,33 +47,39 @@ const router = useRouter()
     border-radius: 12px;
 
     font-style: normal;
-    background-color: var(--card-bg-color);
+    background-color: rgba(23, 24, 27, 0.3);
     height: calc(-144px + 100vh);
     a {
       display: block;
-      color: var(--dex-color-4);
+      color: #5c6068;
       line-height: 32px;
       font-size: 14px;
       margin-bottom: 12px;
       padding: 6px 12px;
       border-radius: 12px;
       font-style: normal;
+      .user-item {
+        i {
+          font-style: normal;
+        }
+        .icon-user-item {
+          width: 20px;
+          height: 21px;
+          margin-right: 8px;
+          color: #5c6068;
+        }
+      }
     }
     a:hover {
-      background: var(--hover-bg-color);
+      background: rgba(58, 60, 64, 0.4);
     }
     .router-link-active.router-link-exact-active {
-      background: var(--hover-bg-color);
-    }
-    .user-item {
-      i {
-        font-style: normal;
-      }
-      .icon-user-item {
-        width: 20px;
-        height: 21px;
-        margin-right: 8px;
-        color: var(--dex-color-4);
+      background: rgba(58, 60, 64, 0.4);
+      color: #f5f5f5;
+      .user-item {
+        .icon-user-item {
+          color: #f5f5f5;
+        }
       }
     }
   }

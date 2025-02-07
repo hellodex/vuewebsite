@@ -185,7 +185,7 @@ onMounted(() => {
   .card-box {
     padding: 16px;
     border-radius: 12px;
-    background-color: var(--card-bg-color);
+    background-color: rgba(23, 24, 27, 0.3);
     margin-bottom: 16px;
   }
   .rebate-link {
@@ -198,7 +198,7 @@ onMounted(() => {
   .rebate-proportion {
     padding: 16px;
     border-radius: 8px;
-    background: var(--hover-bg-color);
+    background: rgba(58, 60, 64, 0.4);
     width: 250px;
     height: 180px;
 
@@ -218,7 +218,7 @@ onMounted(() => {
   }
   .qrcode {
     border-radius: 8px;
-    background: var(--hover-bg-color);
+    background: rgba(58, 60, 64, 0.4);
     padding: 8px;
     width: 180px;
     height: 180px;
@@ -232,7 +232,7 @@ onMounted(() => {
     flex: 1;
     height: 48px;
     border-radius: 4px;
-    background: var(--hover-bg-color);
+    background: rgba(58, 60, 64, 0.4);
     font-size: 14px;
     padding: 8px 16px;
     i {
@@ -288,7 +288,7 @@ onMounted(() => {
     flex: 1;
     height: 110px;
     padding: 16px;
-    background: var(--hover-bg-color);
+    background: rgba(58, 60, 64, 0.4);
     border-radius: 8px;
     margin-right: 16px;
     .price-btn {
@@ -318,11 +318,11 @@ onMounted(() => {
     margin-top: 16px;
     flex: 1;
     padding: 16px;
-    background: var(--hover-bg-color);
+    background: rgba(58, 60, 64, 0.4);
     border-radius: 8px;
     .rebate-list-head {
       padding: 12px;
-      background-color: var(--card-bg-color);
+      background-color: rgba(23, 24, 27, 0.3);
       border-radius: 12px;
       height: 100px;
     }

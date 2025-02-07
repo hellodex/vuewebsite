@@ -106,7 +106,7 @@ watch(customWalletInfo, (newValue) => {
   :deep(.el-collapse-item) {
     padding: 16px;
     border-radius: 12px;
-    background-color: var(--card-bg-color);
+    background-color: rgba(23, 24, 27, 0.3);
     margin-bottom: 16px;
   }
   :deep(.el-collapse-item__content) {
