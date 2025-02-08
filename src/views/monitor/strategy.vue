@@ -60,6 +60,11 @@
                 </div>
               </template>
             </el-table-column>
+            <el-table-column label="目标价格">
+              <template #default="scope">
+                <span>{{ numberFormat(scope.row.targetPrice) }}</span>
+              </template>
+            </el-table-column>
             <el-table-column label="状态">
               <template #default="scope">
                 <span>{{
@@ -238,7 +243,7 @@ import {
   APIupdateCommonSubscribe,
   APIlistUserTokenSubscribe
 } from '@/api'
-import { timeago } from '@/utils'
+import { timeago, numberFormat } from '@/utils'
 
 const globalStore = useGlobalStore()
 const { chainLogoObj, chainList } = globalStore
