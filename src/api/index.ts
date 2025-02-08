@@ -732,3 +732,65 @@ export function APIwalletAnalysisActivity(data: object) {
     data
   })
 }
+
+/**
+ * @description 根据 token 获取代币
+ * @param data
+ * @returns
+ */
+export function APIgetTokenMata(data: object) {
+  return http({
+    url: WEB_URL + '/api/webv2/token/getTokenMata',
+    method: 'POST',
+    data
+  })
+}
+
+/**
+ * @description 根据 BaseAddress 进行询价
+ * @param data
+ * @returns
+ */
+export function APItokenPriceByBaseAddress(data: object) {
+  return http({
+    url: WEB_URL + '/api/webv2/token/tokenPriceByBaseAddress',
+    method: 'POST',
+    data
+  })
+}
+
+/**
+ * @description 创建或更新用户token订阅
+ * @param data
+ * @returns
+ */
+
+export function APIupdateCommonSubscribe(data: object) {
+  const account: any = localStorage.getItem('accountInfo')
+  return http({
+    url: WEB_URL + '/api/auth/sub/updateCommonSubscribe',
+    method: 'POST',
+    data,
+    headers: {
+      [`${JSON.parse(account)?.tokenInfo.tokenName}`]: `Bearer ${JSON.parse(account)?.tokenInfo.tokenValue}`
+    }
+  })
+}
+
+/**
+ * @description 获取某个链的用户代币订阅列表
+ * @param data
+ * @returns
+ */
+
+export function APIlistUserTokenSubscribe(data: object) {
+  const account: any = localStorage.getItem('accountInfo')
+  return http({
+    url: WEB_URL + '/api/auth/sub/listUserTokenSubscribe',
+    method: 'POST',
+    data,
+    headers: {
+      [`${JSON.parse(account)?.tokenInfo.tokenName}`]: `Bearer ${JSON.parse(account)?.tokenInfo.tokenValue}`
+    }
+  })
+}
