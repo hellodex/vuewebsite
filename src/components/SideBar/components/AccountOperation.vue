@@ -111,6 +111,7 @@ import { APIlogout } from '@/api/login'
 import { useI18n } from 'vue-i18n'
 import { shortifyAddress, numberFormat } from '@/utils'
 import { getTokenList } from '@/utils/transition'
+import { socketOffMonitor } from '@/utils/socket'
 
 const router = useRouter()
 const route = useRoute()
@@ -150,6 +151,8 @@ const handelLogon = async () => {
       console.log(res)
       if (res) {
         ElMessage.success(`账号退出成功`)
+        await socketOffMonitor(globalStore.accountInfo.uuid)
+  
         localStorage.removeItem('accountInfo')
         localStorage.removeItem('customWalletIndex')
         localStorage.removeItem('customWalletIndex1')
@@ -160,7 +163,7 @@ const handelLogon = async () => {
           chainId: null,
           walletType: null
         })
-        if (route.fullPath.indexOf('/Account/') !== -1) {
+        if (route.fullPath.indexOf('/Account/') !== -1||route.fullPath.indexOf('/Monitor/') !== -1) {
           router.replace('/')
         }
       }

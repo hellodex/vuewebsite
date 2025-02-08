@@ -71,14 +71,14 @@
   </TonConnectUIProvider>
 </template>
 <script setup>
-import { ref, onMounted, provide, nextTick, computed } from 'vue'
+import { ref, onMounted, provide, nextTick, computed, watch } from 'vue'
 import { RouterView, useRoute, useRouter } from 'vue-router'
 import { useTheme } from '@/hooks/useTheme'
 import { useI18n } from 'vue-i18n'
 import { browserLang, numberFormat } from '@/utils'
 import { CHAIN_SYMBOL, QUICK_TRADE_CONFIG } from '@/types'
 
-import { socket } from '@/utils/socket'
+import { socket, socketOnMonitor } from '@/utils/socket'
 import Loading from '@/components/Loading/index.vue'
 import NavBar from '@/components/SideBar/NavBar.vue'
 import FooterBar from '@/components/SideBar/FooterBar.vue'
@@ -116,6 +116,7 @@ const route = useRoute()
 const router = useRouter()
 
 const globalStore = useGlobalStore()
+const accountInfo = computed(() => globalStore.accountInfo)
 
 const isTradeUrl = computed(() => {
   return window.location.href.indexOf('/trade/') !== -1
@@ -128,10 +129,24 @@ initTheme()
 const i18n = useI18n()
 const routerState = ref(true)
 
+socket.off('smartWalletDanmaku')
+
 socket.on('smartWalletDanmaku', (message) => {
   const data = JSON.parse(message)
   console.info(`socket-danmaku:`, data)
   danmus.value.push(data)
+})
+
+watch(accountInfo, (newValue) => {
+  if (accountInfo.value) {
+    globalStore.setWalletInfo({
+      address: null,
+      isConnected: true,
+      chainId: null,
+      walletType: 'Email'
+    })
+    socketOnMonitor(accountInfo.value.uuid)
+  }
 })
 
 onMounted(async () => {
@@ -143,15 +158,6 @@ onMounted(async () => {
 
   if (!config) {
     localStorage.setItem('quick_trade_config', JSON.stringify(QUICK_TRADE_CONFIG))
-  }
-
-  if (globalStore.accountInfo) {
-    globalStore.setWalletInfo({
-      address: null,
-      isConnected: true,
-      chainId: null,
-      walletType: 'Email'
-    })
   }
 })
 
