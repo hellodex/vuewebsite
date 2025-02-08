@@ -21,7 +21,7 @@ export const socketOnMonitor = (uuid: string) => {
 
   socket.on('price', (message: string) => {
     const data = JSON.parse(message)
-    console.info(`price-danmaku:`, data)
+    console.info(`price-monitor:`, data)
   })
 
   // 订阅1d价格变化率
@@ -34,7 +34,7 @@ export const socketOnMonitor = (uuid: string) => {
 
   socket.on('chg', (message: string) => {
     const data = JSON.parse(message)
-    console.info(`chg-danmaku:`, data)
+    console.info(`chg-monitor:`, data)
   })
 
   // 大额买单
@@ -47,7 +47,7 @@ export const socketOnMonitor = (uuid: string) => {
 
   socket.on('buy', (message: string) => {
     const data = JSON.parse(message)
-    console.info(`buy-danmaku:`, data)
+    console.info(`buy-monitor:`, data)
   })
 
   // 大额卖单
@@ -60,7 +60,7 @@ export const socketOnMonitor = (uuid: string) => {
 
   socket.on('sell', (message: string) => {
     const data = JSON.parse(message)
-    console.info(`sell-danmaku:`, data)
+    console.info(`sell-monitor:`, data)
   })
 }
 
