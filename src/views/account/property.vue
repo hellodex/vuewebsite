@@ -34,7 +34,7 @@
                 class="wallet-to-out"
                 @click="
                   handelTransfeOut({
-                    symbol: null,
+                    symbol: customWalletInfo.symbol,
                     wallet: customWalletInfo.walletInfo?.wallet,
                     walletId: customWalletInfo.walletInfo?.walletId,
                     walletKey: customWalletInfo.walletInfo?.walletKey,

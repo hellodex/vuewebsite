@@ -40,9 +40,10 @@
           <a href="https://hellodex.gitbook.io/hellodex" target="_blank" class="link">
             <span class="link">Web3变革</span>
           </a>
-          <!-- <RouterLink :to="item.to" v-for="item in navList" :key="item.name">
+
+          <RouterLink :to="item.to" v-for="item in navList" :key="item.name">
             <span class="link">{{ item.name }}</span>
-          </RouterLink> -->
+          </RouterLink>
         </div>
       </div>
       <div class="seach-block" ref="SearchBlockRef">
@@ -174,21 +175,24 @@ const getTokenList = async () => {
   searchLoading.value = false
 }
 
+const globalStore = useGlobalStore()
+const accountInfo = computed(() => globalStore.accountInfo)
 // 菜单
 const navList = computed(() => {
-  return [
-    { name: 'AI监控', to: '/Monitor/Strategy' }
-    // { name: '冲狗基金', to: '/ChongDogVentures' }
-    // { name: i18n.t('tabbar.smart'), to: '/Smartmoney' },
-    // { name: i18n.t('tabbar.tools'), to: '/Tools' },
-    // { name: '质押', to: '/Staking' }
-  ]
+  return accountInfo.value
+    ? [
+        { name: 'AI监控', to: '/Monitor/Strategy' }
+        // { name: '冲狗基金', to: '/ChongDogVentures' }
+        // { name: i18n.t('tabbar.smart'), to: '/Smartmoney' },
+        // { name: i18n.t('tabbar.tools'), to: '/Tools' },
+        // { name: '质押', to: '/Staking' }
+      ]
+    : []
 })
 
 // 主题切换
 const theme = ref(true)
 const { switchDark } = useTheme()
-const globalStore = useGlobalStore()
 
 watch(
   () => theme.value,
