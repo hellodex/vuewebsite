@@ -78,7 +78,7 @@ import { useI18n } from 'vue-i18n'
 import { browserLang, numberFormat } from '@/utils'
 import { CHAIN_SYMBOL, QUICK_TRADE_CONFIG } from '@/types'
 
-import { socket, socketOnMonitor } from '@/utils/socket'
+import { socket, socketOnMonitor, socketOffMonitor } from '@/utils/socket'
 import Loading from '@/components/Loading/index.vue'
 import NavBar from '@/components/SideBar/NavBar.vue'
 import FooterBar from '@/components/SideBar/FooterBar.vue'
@@ -137,6 +137,8 @@ socket.on('smartWalletDanmaku', (message) => {
   danmus.value.push(data)
 })
 
+localStorage.removeItem('addSocketMonitorType')
+
 watch(accountInfo, (newValue) => {
   if (accountInfo.value) {
     globalStore.setWalletInfo({
@@ -145,7 +147,15 @@ watch(accountInfo, (newValue) => {
       chainId: null,
       walletType: 'Email'
     })
-    socketOnMonitor(accountInfo.value.uuid)
+
+    const addSocketMonitorType = localStorage.getItem('addSocketMonitorType')
+    if (!addSocketMonitorType) {
+      setTimeout(() => {
+        socketOffMonitor(accountInfo.value.uuid)
+        socketOnMonitor(accountInfo.value.uuid)
+        localStorage.setItem('addSocketMonitorType', true)
+      }, 1000)
+    }
   }
 })
 
