@@ -74,13 +74,6 @@
                 <span>{{ typeList.find((item: any) => item.value == scope.row.type)?.label }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="通知频率">
-              <template #default="scope">
-                <span>{{
-                  noticeTypeList.find((item: any) => item.value == scope.row.noticeType)?.label
-                }}</span>
-              </template>
-            </el-table-column>
             <el-table-column label="监控币名称">
               <template #default="scope">
                 <div class="display-flex align-items-center">
@@ -99,13 +92,13 @@
             </el-table-column>
             <el-table-column label="目标价格">
               <template #default="scope">
-                <span>{{ numberFormat(scope.row.targetPrice) }}</span>
+                <span>${{ numberFormat(scope.row.targetPrice) }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="状态">
+            <el-table-column label="通知频率">
               <template #default="scope">
                 <span>{{
-                  statusList.find((item: any) => item.value == scope.row.status)?.label
+                  noticeTypeList.find((item: any) => item.value == scope.row.noticeType)?.label
                 }}</span>
               </template>
             </el-table-column>
@@ -116,9 +109,10 @@
                 }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="操作">
+            <el-table-column label="操作" width="180" align="right">
               <template #default="scope">
-                <el-icon size="18" class="edit" @click="handelEdit(scope.row)"><Edit /></el-icon>
+                <span class="monitor-btn" @click="handelEdit(scope.row)">编辑</span>
+                <span class="monitor-btn btn-del" @click.stop="handelDel(scope.row)">删除</span>
               </template>
             </el-table-column>
             <template #empty>
@@ -196,7 +190,7 @@
             </el-select>
           </el-form-item>
         </div>
-        <el-form-item prop="baseAddress">
+        <el-form-item prop="baseAddress" label="合约地址">
           <el-select
             v-model="ruleForm.baseAddress"
             :teleported="false"
@@ -205,6 +199,7 @@
             :remote-method="remoteMethod"
             :loading="loading"
             filterable
+            :disabled="dialogType == 'edit'"
             @change="handelSelectBaseAddress"
           >
             <el-option v-for="item in options" :key="item.value" :value="item.value">
@@ -275,10 +270,11 @@
 <script setup lang="ts">
 import { reactive, ref, onMounted, computed } from 'vue'
 import type { ComponentSize, FormInstance, FormRules } from 'element-plus'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import { useGlobalStore } from '@/stores/global'
 import { APIgetTokenMata, APIupdateCommonSubscribe, APIlistUserTokenSubscribe } from '@/api'
 import { timeago, numberFormat } from '@/utils'
+import { useI18n } from 'vue-i18n'
 import WalletConnect from '@/components/Wallet/WalletConnect.vue'
 
 // const data = {
@@ -298,13 +294,14 @@ import WalletConnect from '@/components/Wallet/WalletConnect.vue'
 //   duration: 0,
 //   customClass: 'socket-elMessage',
 //   message: `
-//   <div class='display-flex flex-direction-col'>
+//   <div class="display-flex flex-direction-col">
 //     <strong style="margin-bottom:8px;font-family:'PingFangSC-Heavy'">AI价格监控：${data.symbol}</strong>
 //     <span style="color:#fff;font-size:12px">价格已到：${numberFormat(data.price)} 、交易额：${numberFormat(data.volume)}、方向：${data.flag == 0 ? '买入' : '卖出'}</span>
 //   </div>
 //   `
 // })
 
+const i18n = useI18n()
 const globalStore = useGlobalStore()
 const { chainLogoObj, chainList } = globalStore
 const chainData = chainList.filter((item: any) => item.chainType !== -1)
@@ -328,6 +325,7 @@ const handelTab = (item: any) => {
 const monitorChainCode = ref<string>('DEX')
 const dialogVisible = ref<boolean>(false)
 const dialogFormVisible = ref<boolean>(false)
+
 const handelDialog = () => {
   dialogVisible.value = false
   dialogFormVisible.value = true
@@ -382,6 +380,7 @@ const statusList = [
   }
 ]
 
+const dialogType = ref<string>('add')
 const ruleFormRef = ref<FormInstance>()
 const formSize = ref<ComponentSize>('large')
 const ruleForm = reactive<any>({
@@ -461,9 +460,15 @@ const remoteMethod = async (query: string) => {
 }
 
 const handelAdd = (formEl: FormInstance | undefined) => {
+  dialogType.value = 'add'
   dialogVisible.value = true
   ruleForm.logo = ''
   ruleForm.symbol = ''
+  ruleForm.baseAddress = ''
+  ruleForm.data = ''
+  ruleForm.startPrice = ''
+  ruleForm.targetPrice = ''
+
   if (!formEl) return
   formEl.resetFields()
 }
@@ -495,7 +500,6 @@ const deleteForm = async (formEl: FormInstance | undefined) => {
       getTableData()
       ElMessage.success(`${typeList.find((item) => item.value == ruleForm.type)?.label}删除成功`)
       dialogFormVisible.value = false
-      formEl.resetFields()
     } else {
       console.log('error submit!', fields)
     }
@@ -513,7 +517,6 @@ const submitForm = async (formEl: FormInstance | undefined) => {
       getTableData()
       ElMessage.success(`${typeList.find((item) => item.value == ruleForm.type)?.label}创建成功`)
       dialogFormVisible.value = false
-      formEl.resetFields()
     } else {
       console.log('error submit!', fields)
     }
@@ -531,6 +534,7 @@ const getTableData = async () => {
 }
 
 const handelEdit = (row: any) => {
+  dialogType.value = 'edit'
   for (const key in ruleForm) {
     if (Object.prototype.hasOwnProperty.call(ruleForm, key)) {
       ruleForm[key] = row[key]
@@ -538,6 +542,24 @@ const handelEdit = (row: any) => {
   }
   ruleForm.coin = 'Single'
   dialogFormVisible.value = true
+}
+
+const handelDel = async (row: any) => {
+  ElMessageBox.confirm('确定要删除此条监控', i18n.t('Tips'), {
+    confirmButtonText: i18n.t('Confirm'),
+    cancelButtonText: i18n.t('Cancel'),
+    type: 'info'
+  })
+    .then(async () => {
+      const params = row
+      params.status = 0
+      await APIupdateCommonSubscribe({
+        ...params
+      })
+      getTableData()
+      ElMessage.success(`${typeList.find((item) => item.value == params.type)?.label}创建成功`)
+    })
+    .catch(() => {})
 }
 
 const handelChangeChainCode = () => {
@@ -623,8 +645,30 @@ onMounted(() => {
       right: -1px;
       bottom: 0px;
     }
-    .edit {
+
+    .monitor-btn {
+      display: inline-block;
+      line-height: 1.2;
+      padding: 4px 12px;
+      border-radius: 16px;
+      border: 1px solid #222;
+      font-size: 12px;
       cursor: pointer;
+      white-space: nowrap;
+      margin-left: 8px;
+      transition: all 0.2s;
+      color: #848e9c;
+      transition: all 0.2s;
+    }
+    .monitor-btn:hover {
+      color: #f5f5f5;
+    }
+    .btn-del {
+      background: rgba(246, 70, 93, 0.1);
+      color: var(--down-color);
+    }
+    .btn-del:hover {
+      color: red;
     }
   }
   :deep(.el-popper) {
