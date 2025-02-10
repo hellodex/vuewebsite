@@ -163,7 +163,7 @@ const handelLogon = async () => {
           chainId: null,
           walletType: null
         })
-        if (route.fullPath.indexOf('/Account/') !== -1||route.fullPath.indexOf('/Monitor/') !== -1) {
+        if (route.fullPath.indexOf('/Account/') !== -1) {
           router.replace('/')
         }
       }
