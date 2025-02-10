@@ -179,15 +179,13 @@ const globalStore = useGlobalStore()
 const accountInfo = computed(() => globalStore.accountInfo)
 // 菜单
 const navList = computed(() => {
-  return accountInfo.value
-    ? [
-        { name: 'AI监控', to: '/Monitor/Strategy' }
-        // { name: '冲狗基金', to: '/ChongDogVentures' }
-        // { name: i18n.t('tabbar.smart'), to: '/Smartmoney' },
-        // { name: i18n.t('tabbar.tools'), to: '/Tools' },
-        // { name: '质押', to: '/Staking' }
-      ]
-    : []
+  return [
+    { name: 'AI监控', to: '/Monitor/Strategy' }
+    // { name: '冲狗基金', to: '/ChongDogVentures' }
+    // { name: i18n.t('tabbar.smart'), to: '/Smartmoney' },
+    // { name: i18n.t('tabbar.tools'), to: '/Tools' },
+    // { name: '质押', to: '/Staking' }
+  ]
 })
 
 // 主题切换
