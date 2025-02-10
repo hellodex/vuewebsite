@@ -14,7 +14,13 @@
         </div>
       </div>
       <div class="display-flex align-items-center">
-        <div class="display-flex align-items-center add-btn" @click="dialogVisible = true">
+        <WalletConnect v-if="!accountInfo">
+          <div class="display-flex align-items-center add-btn">
+            <el-icon size="14"><Plus /></el-icon>
+            <span>创建监控</span>
+          </div>
+        </WalletConnect>
+        <div class="display-flex align-items-center add-btn" @click="handelAdd(ruleFormRef)" v-else>
           <el-icon size="14"><Plus /></el-icon>
           <span>创建监控</span>
         </div>
@@ -103,8 +109,7 @@
           <span>代币监控</span>
         </div>
         <p class="description-txt">
-          当代币发生价格涨跌到特定金额或TopN 持仓变动等特定行为时，您会收到通知。（示例： "Solana
-          价格跌到$140"）。
+          设置代币到达指定价格时通过 网页、APP、TG机器人、邮件发送通知。
         </p>
       </div>
     </div>
@@ -145,7 +150,12 @@
                   class="icon-svg"
                 />
               </template>
-              <el-option v-for="(item, index) in chainData" :key="index" :value="item.chainCode">
+              <el-option
+                v-for="(item, index) in chainData"
+                :key="index"
+                :value="item.chainCode"
+                :label="item.chainName"
+              >
                 <div class="display-flex align-items-center">
                   <img v-if="item.logo" :src="item.logo" alt="" class="icon-svg" />
                   <img src="@/assets/icons/coinDEX.svg" alt="" class="icon-svg" v-else />
@@ -159,7 +169,7 @@
           <el-select
             v-model="ruleForm.baseAddress"
             :teleported="false"
-            placeholder="请输入Token地址以便于搜索"
+            placeholder="请先输入代币合约地址"
             remote
             :remote-method="remoteMethod"
             :loading="loading"
@@ -184,13 +194,22 @@
           style="width: 100%"
         >
           <el-form-item label="当前价格" style="width: 48%" prop="startPrice">
-            <el-input v-model="ruleForm.startPrice" placeholder="请输入当前价格" disabled>
-              <template #suffix>$</template>
-            </el-input>
+            <div class="startPrice display-flex align-items-center">
+              <el-image :src="ruleForm.logo" alt="" class="icon-svg" v-if="ruleForm.logo">
+                <template #error>
+                  <svg-icon name="logo1" class="icon-svg"></svg-icon>
+                </template>
+              </el-image>
+              <span v-if="ruleForm.symbol" style="margin-left: 1px">{{ ruleForm.symbol }}</span>
+              <span style="margin-left: 4px">$</span>
+              <span style="margin-left: 2px" v-if="ruleForm.startPrice">{{
+                numberFormat(ruleForm.startPrice)
+              }}</span>
+            </div>
           </el-form-item>
           <el-form-item label="目标价格" style="width: 48%" prop="targetPrice">
             <el-input v-model="ruleForm.targetPrice" placeholder="请输入目标价格">
-              <template #suffix>$</template>
+              <template #prefix>$</template>
             </el-input>
           </el-form-item>
         </div>
@@ -201,7 +220,7 @@
         </el-form-item>
         <el-form-item label="触发条件" prop="data" v-else>
           <el-input v-model="ruleForm.data" placeholder="请输入买单或卖单金额">
-            <template #suffix>$</template>
+            <template #prefix>$</template>
           </el-input>
         </el-form-item>
         <el-form-item label="通知频率" prop="noticeType">
@@ -214,26 +233,16 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="状态" prop="status">
-          <el-select v-model="ruleForm.status" :teleported="false">
-            <el-option
-              v-for="item in statusList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
-          </el-select>
-        </el-form-item>
         <div class="display-flex align-items-center justify-content-fd btn">
-          <span @click="(dialogFormVisible = false), (dialogVisible = true)">上一步</span>
-          <span class="submit" @click="submitForm(ruleFormRef)">提交</span>
+          <span class="delete" @click="deleteForm(ruleFormRef)">删除监控</span>
+          <span class="submit" @click="submitForm(ruleFormRef)">保存监控</span>
         </div>
       </el-form>
     </div>
   </el-dialog>
 </template>
 <script setup lang="ts">
-import { reactive, ref, onMounted, computed } from 'vue'
+import { reactive, ref, onMounted, computed, watch } from 'vue'
 import type { ComponentSize, FormInstance, FormRules } from 'element-plus'
 import { ElMessage } from 'element-plus'
 import { useGlobalStore } from '@/stores/global'
@@ -244,11 +253,13 @@ import {
   APIlistUserTokenSubscribe
 } from '@/api'
 import { timeago, numberFormat } from '@/utils'
+import WalletConnect from '@/components/Wallet/WalletConnect.vue'
 
 const globalStore = useGlobalStore()
 const { chainLogoObj, chainList } = globalStore
 const chainData = chainList.filter((item: any) => item.chainType !== -1)
 const customWalletInfo = computed(() => globalStore.customWalletInfo)
+const accountInfo = computed(() => globalStore.accountInfo)
 
 const strategyList = [
   {
@@ -266,7 +277,6 @@ const handelTab = (item: any) => {
 
 const dialogVisible = ref<boolean>(false)
 const dialogFormVisible = ref<boolean>(false)
-
 const handelDialog = () => {
   dialogVisible.value = false
   dialogFormVisible.value = true
@@ -306,7 +316,7 @@ const noticeTypeList = [
   },
   {
     value: 0,
-    label: '关闭'
+    label: '暂停监控'
   }
 ]
 
@@ -348,7 +358,7 @@ const rules = reactive<FormRules<any>>({
   baseAddress: [
     {
       required: true,
-      message: '请输入Token地址以便于搜索',
+      message: '请先输入代币合约地址',
       trigger: ['blur', 'change']
     }
   ],
@@ -399,6 +409,14 @@ const remoteMethod = async (query: string) => {
   }
 }
 
+const handelAdd = (formEl: FormInstance | undefined) => {
+  dialogVisible.value = true
+  ruleForm.logo = ''
+  ruleForm.symbol = ''
+  if (!formEl) return
+  formEl.resetFields()
+}
+
 const handelSelectBaseAddress = (val: any) => {
   ruleForm.symbol = options.value.find((item: any) => item.address == val).symbol
   ruleForm.startPrice = options.value.find((item: any) => item.address == val).price
@@ -412,6 +430,25 @@ const handelSelectType = () => {
     ruleForm.targetPrice = ''
     ruleForm.startPrice = ''
   }
+}
+
+const deleteForm = async (formEl: FormInstance | undefined) => {
+  if (!formEl) return
+  await formEl.validate(async (valid, fields) => {
+    if (valid) {
+      ruleForm.status = 0
+      console.log(ruleForm)
+      await APIupdateCommonSubscribe({
+        ...ruleForm
+      })
+      getTableData()
+      ElMessage.success(`${typeList.find((item) => item.value == ruleForm.type)?.label}删除成功`)
+      dialogFormVisible.value = false
+      formEl.resetFields()
+    } else {
+      console.log('error submit!', fields)
+    }
+  })
 }
 
 const submitForm = async (formEl: FormInstance | undefined) => {
@@ -451,10 +488,20 @@ const handelEdit = (row: any) => {
   ruleForm.coin = 'Single'
   dialogFormVisible.value = true
 }
-onMounted(async () => {
-  skeleton.value = true
-  await getTableData()
-  skeleton.value = false
+
+watch(customWalletInfo, () => {
+  initData()
+})
+
+const initData = async () => {
+  if (accountInfo.value) {
+    skeleton.value = true
+    await getTableData()
+    skeleton.value = false
+  }
+}
+onMounted(() => {
+  initData()
 })
 </script>
 
@@ -494,6 +541,10 @@ onMounted(async () => {
     span {
       margin-left: 6px;
     }
+  }
+  .connect-wallet-btn {
+    min-width: 0;
+    padding: 0;
   }
   .table-box {
     margin-top: 12px;
@@ -564,12 +615,23 @@ onMounted(async () => {
       color: var(--font-color-default);
     }
   }
+  :deep(.el-input__prefix-inner) {
+    margin-right: 4px;
+  }
   .icon-svg {
     width: 20px;
     height: 20px;
+    display: block;
   }
   .span-txt {
     margin-left: 6px;
+  }
+  .startPrice {
+    width: 100%;
+    cursor: not-allowed;
+    padding: 0px 15px;
+    border: 1px solid #212121;
+    border-radius: 4px;
   }
   .btn {
     span {
@@ -588,6 +650,11 @@ onMounted(async () => {
     .submit {
       color: #000;
       background-color: #f5f5f5;
+    }
+    .delete {
+      background-color: transparent;
+      border: 1px solid var(--down-color);
+      color: var(--down-color);
     }
   }
 }

@@ -78,10 +78,7 @@ axiosInstance.interceptors.response.use(
         chainId: null,
         walletType: null
       })
-      if (
-        window.location.href.indexOf('/Account/') !== -1 ||
-        window.location.href.indexOf('/Monitor/') !== -1
-      ) {
+      if (window.location.href.indexOf('/Account/') !== -1) {
         window.location.href = '/'
       }
     } else if (
