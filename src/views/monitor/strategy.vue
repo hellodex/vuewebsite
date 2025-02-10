@@ -13,7 +13,38 @@
           <span>{{ item.label }}</span>
         </div>
       </div>
+
       <div class="display-flex align-items-center">
+        <div style="width: 130px; margin-right: 12px">
+          <el-select
+            v-model="monitorChainCode"
+            :teleported="false"
+            placeholder="请选择网络"
+            @change="handelChangeChainCode"
+          >
+            <template #prefix>
+              <img
+                :src="chainData.find((item: any) => item.chainCode == monitorChainCode)?.logo"
+                alt=""
+                class="icon-svg"
+                v-if="chainData.find((item: any) => item.chainCode == monitorChainCode)?.logo"
+              />
+              <img src="@/assets/icons/coinDEX.svg" alt="" class="icon-svg" v-else />
+            </template>
+            <el-option
+              v-for="(item, index) in chainList"
+              :key="index"
+              :value="item.chainCode"
+              :label="item.chainName"
+            >
+              <div class="display-flex align-items-center">
+                <img v-if="item.logo" :src="item.logo" alt="" class="icon-svg" />
+                <img src="@/assets/icons/coinDEX.svg" alt="" class="icon-svg" v-else />
+                <span class="span-txt">{{ item.chainName }}</span>
+              </div>
+            </el-option>
+          </el-select>
+        </div>
         <WalletConnect v-if="!accountInfo">
           <div class="display-flex align-items-center add-btn">
             <el-icon size="14"><Plus /></el-icon>
@@ -242,23 +273,42 @@
   </el-dialog>
 </template>
 <script setup lang="ts">
-import { reactive, ref, onMounted, computed, watch } from 'vue'
+import { reactive, ref, onMounted, computed } from 'vue'
 import type { ComponentSize, FormInstance, FormRules } from 'element-plus'
 import { ElMessage } from 'element-plus'
 import { useGlobalStore } from '@/stores/global'
-import {
-  APIgetTokenMata,
-  APItokenPriceByBaseAddress,
-  APIupdateCommonSubscribe,
-  APIlistUserTokenSubscribe
-} from '@/api'
+import { APIgetTokenMata, APIupdateCommonSubscribe, APIlistUserTokenSubscribe } from '@/api'
 import { timeago, numberFormat } from '@/utils'
 import WalletConnect from '@/components/Wallet/WalletConnect.vue'
+
+// const data = {
+//   baseAddress: '6LjccmR327LvnfbabH44xnKUBpDbErzMnbMovL8Kpump',
+//   chainCode: 'SOLANA',
+//   pairAddress: 'Drya4jMXfmGjh3LPg7JnkxAqiSpaPUDzyPWA85s7xhEg',
+//   symbol: 'TRUMP',
+//   price: '0.000447070755860641864914488145',
+//   volume: '32.911237090021688249023105436791365885',
+//   chg: '44.6531',
+//   flag: 1
+// }
+
+// ElMessage({
+//   type: data.flag == 0 ? 'success' : 'error',
+//   dangerouslyUseHTMLString: true,
+//   duration: 0,
+//   customClass: 'socket-elMessage',
+//   message: `
+//   <div class='display-flex flex-direction-col'>
+//     <strong style="margin-bottom:8px;font-family:'PingFangSC-Heavy'">AI价格监控：${data.symbol}</strong>
+//     <span style="color:#fff;font-size:12px">价格已到：${numberFormat(data.price)} 、交易额：${numberFormat(data.volume)}、方向：${data.flag == 0 ? '买入' : '卖出'}</span>
+//   </div>
+//   `
+// })
 
 const globalStore = useGlobalStore()
 const { chainLogoObj, chainList } = globalStore
 const chainData = chainList.filter((item: any) => item.chainType !== -1)
-const customWalletInfo = computed(() => globalStore.customWalletInfo)
+
 const accountInfo = computed(() => globalStore.accountInfo)
 
 const strategyList = [
@@ -275,6 +325,7 @@ const handelTab = (item: any) => {
   strategyIndex.value = item.value
 }
 
+const monitorChainCode = ref<string>('DEX')
 const dialogVisible = ref<boolean>(false)
 const dialogFormVisible = ref<boolean>(false)
 const handelDialog = () => {
@@ -474,7 +525,7 @@ const skeleton = ref(false)
 
 const getTableData = async () => {
   const res = await APIlistUserTokenSubscribe({
-    chainCode: customWalletInfo.value.chainCode
+    chainCode: monitorChainCode.value == 'DEX' ? '' : monitorChainCode.value
   })
   tableData.value = res || []
 }
@@ -489,9 +540,9 @@ const handelEdit = (row: any) => {
   dialogFormVisible.value = true
 }
 
-watch(customWalletInfo, () => {
+const handelChangeChainCode = () => {
   initData()
-})
+}
 
 const initData = async () => {
   if (accountInfo.value) {
@@ -576,6 +627,14 @@ onMounted(() => {
       cursor: pointer;
     }
   }
+  :deep(.el-popper) {
+    .el-select-dropdown__item {
+      color: var(--dex-color-4);
+    }
+    .el-select-dropdown__item.is-selected {
+      color: var(--font-color-default);
+    }
+  }
 }
 .strategy-dialog-content {
   .strategy-dialog-content-item {
@@ -618,14 +677,6 @@ onMounted(() => {
   :deep(.el-input__prefix-inner) {
     margin-right: 4px;
   }
-  .icon-svg {
-    width: 20px;
-    height: 20px;
-    display: block;
-  }
-  .span-txt {
-    margin-left: 6px;
-  }
   .startPrice {
     width: 100%;
     cursor: not-allowed;
@@ -657,5 +708,14 @@ onMounted(() => {
       color: var(--down-color);
     }
   }
+}
+
+.icon-svg {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+.span-txt {
+  margin-left: 6px;
 }
 </style>
