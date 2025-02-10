@@ -1,6 +1,8 @@
 import { useChainInfoStore } from '@/stores/chainInfo'
 import { useGlobalStore } from '@/stores/global'
 import { io } from 'socket.io-client'
+import { ElMessage } from 'element-plus'
+import { numberFormat } from '@/utils'
 
 const URL = 'https://wss.apihellodex.lol'
 
@@ -22,6 +24,17 @@ export const socketOnMonitor = (uuid: string) => {
   socket.on('price', (message: string) => {
     const data = JSON.parse(message)
     console.info(`price-monitor:`, data)
+
+    ElMessage({
+      type: data.flag == 0 ? 'success' : 'error',
+      dangerouslyUseHTMLString: true,
+      duration: 5000,
+      customClass: 'socket-elMessage',
+      message: `<div class='display-flex flex-direction-col'>
+                  <strong style="margin-bottom:8px;font-family:'PingFangSC-Heavy'">AI价格监控：${data.symbol}</strong>
+                  <span style="color:#fff;font-size:12px">价格已到：${numberFormat(data.price)} 、交易额：${numberFormat(data.volume)}、方向：${data.flag == 0 ? '买入' : '卖出'}</span>
+                </div>`
+    })
   })
 
   // 订阅1d价格变化率
