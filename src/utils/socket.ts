@@ -1,8 +1,43 @@
 import { useChainInfoStore } from '@/stores/chainInfo'
+import { useTokenInfoStore } from '@/stores/tokenInfo'
 import { useGlobalStore } from '@/stores/global'
 import { io } from 'socket.io-client'
 import { ElMessage } from 'element-plus'
 import { numberFormat } from '@/utils'
+
+function priceMessage(data: any) {
+  const startTime = new Date().getTime() // 记录开始时间
+  const tokenInfo = useTokenInfoStore().tokenInfo
+  ElMessage({
+    type: data.flag == 0 ? 'success' : 'error',
+    dangerouslyUseHTMLString: true,
+    duration: 5000,
+    customClass: 'socket-elMessage',
+    message: `<div class='display-flex flex-direction-col'>
+                <strong style="margin-bottom:8px;font-family:'PingFangSC-Heavy'">AI价格监控：${data.symbol}</strong>
+                <span style="color:#fff;font-size:12px">价格已到：${numberFormat(data.price)} 、交易额：${numberFormat(data.volume)}、方向：${data.flag == 0 ? '买入' : '卖出'}</span>
+              </div>`,
+    showClose: true,
+    onClose: () => {
+      const endTime = new Date().getTime() // 记录关闭时间
+      const duration = endTime - startTime // 计算持续时间
+
+      if (duration >= 5000) {
+        console.log('消息是自动关闭的')
+      } else {
+        console.log('消息是手动关闭的')
+        if (
+          window.location.href.indexOf('/k/') >= 0 &&
+          data.baseAddress == tokenInfo?.baseAddress
+        ) {
+          console.info('消息是手动关闭的', data.pairAddress)
+          return false
+        }
+        window.open(`/k/${data.pairAddress}?chainCode=${data.chainCode}&timeType=15m`)
+      }
+    }
+  })
+}
 
 const URL = 'https://wss.apihellodex.lol'
 
@@ -24,24 +59,7 @@ export const socketOnMonitor = (uuid: string) => {
   socket.on('price', (message: string) => {
     const data = JSON.parse(message)
     console.info(`price-monitor:`, data)
-
-    ElMessage({
-      type: data.flag == 0 ? 'success' : 'error',
-      dangerouslyUseHTMLString: true,
-      duration: 5000,
-      customClass: 'socket-elMessage',
-      message: `<div class='display-flex flex-direction-col'>
-                  <strong style="margin-bottom:8px;font-family:'PingFangSC-Heavy'">AI价格监控：${data.symbol}</strong>
-                  <span style="color:#fff;font-size:12px">价格已到：${numberFormat(data.price)} 、交易额：${numberFormat(data.volume)}、方向：${data.flag == 0 ? '买入' : '卖出'}</span>
-                </div>`,
-      showClose: true,
-      onClose: () => {
-        if (window.location.href.indexOf(data.pairAddress) < 0) {
-          console.info('window.open', window.location.href.indexOf(data.pairAddress), data)
-          //   window.open(`/k/${data.pairAddress}?chainCode=${data.chainCode}&timeType=15m`)
-        }
-      }
-    })
+    priceMessage(data)
   })
 
   // 订阅1d价格变化率
