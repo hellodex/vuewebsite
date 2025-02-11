@@ -36,7 +36,6 @@ export const socketOnMonitor = (uuid: string) => {
                 </div>`,
       showClose: true,
       onClose: () => {
-        console.log(data, window.location.href)
         if (window.location.href.indexOf(data.pairAddress) < 0) {
           window.open(`/k/${data.pairAddress}?chainCode=${data.chainCode}&timeType=15m`)
         }

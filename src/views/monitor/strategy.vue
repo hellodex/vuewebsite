@@ -130,7 +130,7 @@
       </el-skeleton>
     </div>
   </div>
-  <el-dialog v-model="dialogVisible" title="创建监控" width="600" :show-close="false">
+  <el-dialog v-model="dialogVisible" title="创建监控" width="600">
     <div class="strategy-dialog-content">
       <div
         class="display-flex flex-direction-col strategy-dialog-content-item"
@@ -147,7 +147,7 @@
     </div>
   </el-dialog>
 
-  <el-dialog v-model="dialogFormVisible" title="创建监控" width="600" :show-close="false">
+  <el-dialog v-model="dialogFormVisible" title="创建监控" width="600">
     <div class="strategy-dialog-content">
       <el-form
         ref="ruleFormRef"
@@ -169,8 +169,8 @@
         </el-form-item>
         <div class="display-flex align-items-center justify-content-sp">
           <el-form-item label="监控对象" style="width: 48%">
-            <el-select v-model="ruleForm.coin" :teleported="false">
-              <el-option label="单币" value="Single" />
+            <el-select v-model="ruleForm.coin" :teleported="false" disabled>
+              <el-option label="代币" value="Single" />
             </el-select>
           </el-form-item>
           <el-form-item label="链" style="width: 48%">
@@ -202,10 +202,12 @@
             v-model="ruleForm.baseAddress"
             :teleported="false"
             placeholder="请先输入代币合约地址"
+            remote-show-suffix
             remote
             :remote-method="remoteMethod"
             :loading="loading"
             filterable
+            clearable
             :disabled="dialogType == 'edit'"
             @change="handelSelectBaseAddress"
           >
@@ -217,6 +219,7 @@
                   </template>
                 </el-image>
                 <span class="span-txt">{{ item.label }}</span>
+                <span class="span-txt">{{ numberFormat(item.price) }}</span>
               </div>
             </el-option>
           </el-select>
@@ -754,6 +757,9 @@ onMounted(() => {
   }
   :deep(.el-input__prefix-inner) {
     margin-right: 4px;
+  }
+  :deep(.el-select__wrapper.is-disabled) {
+    background-color: transparent;
   }
   .startPrice {
     width: 100%;
