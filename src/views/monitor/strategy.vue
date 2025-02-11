@@ -109,8 +109,15 @@
                 }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="操作" width="180" align="right">
+            <el-table-column label="操作" width="240">
               <template #default="scope">
+                <span
+                  class="monitor-btn"
+                  @click="handelPlay(scope.row)"
+                  v-if="scope.row.noticeType == 0"
+                  >启动监控</span
+                >
+                <span class="monitor-btn" @click="handelPause(scope.row)" v-else>暂停监控</span>
                 <span class="monitor-btn" @click="handelEdit(scope.row)">编辑</span>
                 <span class="monitor-btn btn-del" @click.stop="handelDel(scope.row)">删除</span>
               </template>
@@ -298,7 +305,14 @@ import WalletConnect from '@/components/Wallet/WalletConnect.vue'
 //     <strong style="margin-bottom:8px;font-family:'PingFangSC-Heavy'">AI价格监控：${data.symbol}</strong>
 //     <span style="color:#fff;font-size:12px">价格已到：${numberFormat(data.price)} 、交易额：${numberFormat(data.volume)}、方向：${data.flag == 0 ? '买入' : '卖出'}</span>
 //   </div>
-//   `
+//   `,
+//   showClose: true,
+//   onClose: () => {
+//     console.log()
+//     if (window.location.href.indexOf(data.pairAddress) < 0) {
+//       window.open(`/k/${data.pairAddress}?chainCode=${data.chainCode}&timeType=15m`)
+//     }
+//   }
 // })
 
 const i18n = useI18n()
@@ -562,6 +576,26 @@ const handelDel = async (row: any) => {
     .catch(() => {})
 }
 
+const handelPause = async (row: any) => {
+  const params = row
+  params.noticeType = 0
+  await APIupdateCommonSubscribe({
+    ...params
+  })
+  getTableData()
+  ElMessage.success(`${typeList.find((item) => item.value == params.type)?.label}已暂停`)
+}
+
+const handelPlay = async (row: any) => {
+  const params = row
+  params.noticeType = 3
+  await APIupdateCommonSubscribe({
+    ...params
+  })
+  getTableData()
+  ElMessage.success(`${typeList.find((item) => item.value == params.type)?.label}已启动`)
+}
+
 const handelChangeChainCode = () => {
   initData()
 }
@@ -655,7 +689,7 @@ onMounted(() => {
       font-size: 12px;
       cursor: pointer;
       white-space: nowrap;
-      margin-left: 8px;
+      margin-right: 8px;
       transition: all 0.2s;
       color: #848e9c;
       transition: all 0.2s;

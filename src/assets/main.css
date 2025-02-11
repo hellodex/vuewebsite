@@ -393,8 +393,20 @@ a,
   animation: slide 1s linear infinite;
 }
 
-.socket-elMessage .el-icon {
+.socket-elMessage {
+  position: relative;
+}
+.socket-elMessage .el-message__icon {
   display: none !important;
+}
+.socket-elMessage .el-message__closeBtn {
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  opacity: 0;
 }
 
 @keyframes slide {
