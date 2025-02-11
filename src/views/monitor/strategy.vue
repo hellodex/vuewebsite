@@ -622,7 +622,7 @@ onMounted(() => {
   background-color: rgba(23, 24, 27, 0.3);
   height: 100%;
   .tab-content {
-    padding: 5px 12px;
+    padding: 7px 12px;
     font-size: 12px;
     font-family: 'PingFangSC-Medium';
     color: #5c6068;
@@ -641,7 +641,7 @@ onMounted(() => {
   }
 
   .add-btn {
-    padding: 5px 12px;
+    padding: 7px 12px;
     font-size: 12px;
     border-radius: 4px;
     font-family: 'PingFangSC-Medium';
