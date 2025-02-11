@@ -33,7 +33,14 @@ export const socketOnMonitor = (uuid: string) => {
       message: `<div class='display-flex flex-direction-col'>
                   <strong style="margin-bottom:8px;font-family:'PingFangSC-Heavy'">AI价格监控：${data.symbol}</strong>
                   <span style="color:#fff;font-size:12px">价格已到：${numberFormat(data.price)} 、交易额：${numberFormat(data.volume)}、方向：${data.flag == 0 ? '买入' : '卖出'}</span>
-                </div>`
+                </div>`,
+      showClose: true,
+      onClose: () => {
+        console.log(data, window.location.href)
+        if (window.location.href.indexOf(data.pairAddress) < 0) {
+          window.open(`/k/${data.pairAddress}?chainCode=${data.chainCode}&timeType=15m`)
+        }
+      }
     })
   })
 
