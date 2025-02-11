@@ -4,6 +4,7 @@ import { useGlobalStore } from '@/stores/global'
 import { io } from 'socket.io-client'
 import { ElMessage } from 'element-plus'
 import { numberFormat } from '@/utils'
+import CryptoJS from 'crypto-js'
 
 function priceMessage(data: any) {
   const startTime = new Date().getTime() // 记录开始时间
@@ -39,7 +40,13 @@ function priceMessage(data: any) {
   })
 }
 
-const URL = 'https://wss.apihellodex.lol'
+const version = '1.0'
+let channel = import.meta.env.VITE_NOT_TG_CHANNEL
+let key = import.meta.env.VITE_NOT_TG_KEY
+let ts = String(new Date().getTime())
+let sign = CryptoJS.SHA256(channel + ts + version + key).toString()
+
+const URL = `https://wss.apihellodex.lol?channel=${channel}&ts=${ts}&version=${version}&sign=${sign}`
 
 export const socket: any = io(URL)
 
