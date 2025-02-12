@@ -794,3 +794,57 @@ export function APIlistUserTokenSubscribe(data: object) {
     }
   })
 }
+
+/**
+ * @description 更新用户订阅设置
+ * @param data
+ * @returns
+ */
+
+export function APIupdateUserSubscribeSetting(data: object) {
+  const account: any = localStorage.getItem('accountInfo')
+  return http({
+    url: WEB_URL + '/api/auth/sub/updateUserSubscribeSetting',
+    method: 'POST',
+    data,
+    headers: {
+      [`${JSON.parse(account)?.tokenInfo.tokenName}`]: `Bearer ${JSON.parse(account)?.tokenInfo.tokenValue}`
+    }
+  })
+}
+
+/**
+ * @description 删除用户的某个代币的某种订阅
+ * @param data
+ * @returns
+ */
+
+export function APIdeleteUserTokenSubscribe(data: object) {
+  const account: any = localStorage.getItem('accountInfo')
+  return http({
+    url: WEB_URL + '/api/auth/sub/deleteUserTokenSubscribe',
+    method: 'POST',
+    data,
+    headers: {
+      [`${JSON.parse(account)?.tokenInfo.tokenName}`]: `Bearer ${JSON.parse(account)?.tokenInfo.tokenValue}`
+    }
+  })
+}
+
+/**
+ * @description 暂停用户的某个代币的某种订阅
+ * @param data
+ * @returns
+ */
+
+export function APIpauseUserTokenSubscribe(data: object) {
+  const account: any = localStorage.getItem('accountInfo')
+  return http({
+    url: WEB_URL + '/api/auth/sub/pauseUserTokenSubscribe',
+    method: 'POST',
+    data,
+    headers: {
+      [`${JSON.parse(account)?.tokenInfo.tokenName}`]: `Bearer ${JSON.parse(account)?.tokenInfo.tokenValue}`
+    }
+  })
+}
