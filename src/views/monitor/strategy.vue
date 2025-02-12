@@ -12,6 +12,20 @@
           <svg-icon :name="item.icon" class="icon"></svg-icon>
           <span>{{ item.label }}</span>
         </div>
+
+        <div class="display-flex align-items-center checkout-box">
+          <span>推送渠道：</span>
+          <el-checkbox-group v-model="checkedChannel" @change="handleCheckedChannel">
+            <el-checkbox
+              v-for="(item, index) in channels"
+              :key="index"
+              :label="item.label"
+              :value="item.value"
+            >
+              {{ item.label }}
+            </el-checkbox>
+          </el-checkbox-group>
+        </div>
       </div>
 
       <div class="display-flex align-items-center">
@@ -282,7 +296,14 @@ import { reactive, ref, onMounted, computed } from 'vue'
 import type { ComponentSize, FormInstance, FormRules } from 'element-plus'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { useGlobalStore } from '@/stores/global'
-import { APIgetTokenMata, APIupdateCommonSubscribe, APIlistUserTokenSubscribe } from '@/api'
+import {
+  APIgetTokenMata,
+  APIupdateCommonSubscribe,
+  APIlistUserTokenSubscribe,
+  APIupdateUserSubscribeSetting,
+  APIdeleteUserTokenSubscribe,
+  APIpauseUserTokenSubscribe
+} from '@/api'
 import { timeago, numberFormat } from '@/utils'
 import { useI18n } from 'vue-i18n'
 import WalletConnect from '@/components/Wallet/WalletConnect.vue'
@@ -322,12 +343,39 @@ const i18n = useI18n()
 const globalStore = useGlobalStore()
 const { chainLogoObj, chainList } = globalStore
 const chainData = chainList.filter((item: any) => item.chainType !== -1)
-
 const accountInfo = computed(() => globalStore.accountInfo)
+
+const channels = [
+  { value: 'app', label: 'app' },
+  {
+    value: 'web',
+    label: 'web'
+  },
+  {
+    value: 'telegram',
+    label: 'telegram'
+  }
+]
+
+const checkedChannel = ref<any>(accountInfo.value?.subscribeSetting || [])
+const handleCheckedChannel = async (val: any) => {
+  console.log(val)
+  await APIupdateUserSubscribeSetting({
+    channels: val
+  })
+
+  const obj = Object.assign({}, accountInfo.value, {
+    subscribeSetting: val
+  })
+  localStorage.setItem('accountInfo', JSON.stringify(obj))
+  globalStore.setAccountInfo(obj)
+
+  ElMessage.success(`渠道设置成功`)
+}
 
 const strategyList = [
   {
-    label: '代币监控',
+    label: '监控列表',
     value: 1,
     icon: 'icon-coin-strategy'
   }
@@ -569,24 +617,30 @@ const handelDel = async (row: any) => {
   })
     .then(async () => {
       const params = row
-      params.status = 0
-      await APIupdateCommonSubscribe({
-        ...params
+      const res = await APIdeleteUserTokenSubscribe({
+        chainCode: params.chainCode,
+        baseAddress: params.baseAddress,
+        type: params.type
       })
-      getTableData()
-      ElMessage.success(`${typeList.find((item) => item.value == params.type)?.label}创建成功`)
+      if (res) {
+        getTableData()
+        ElMessage.success(`${typeList.find((item) => item.value == params.type)?.label}删除成功`)
+      }
     })
     .catch(() => {})
 }
 
 const handelPause = async (row: any) => {
   const params = row
-  params.noticeType = 0
-  await APIupdateCommonSubscribe({
-    ...params
+  const res = await APIpauseUserTokenSubscribe({
+    chainCode: params.chainCode,
+    baseAddress: params.baseAddress,
+    type: params.type
   })
-  getTableData()
-  ElMessage.success(`${typeList.find((item) => item.value == params.type)?.label}已暂停`)
+  if (res) {
+    getTableData()
+    ElMessage.success(`${typeList.find((item) => item.value == params.type)?.label}已暂停`)
+  }
 }
 
 const handelPlay = async (row: any) => {
@@ -621,6 +675,26 @@ onMounted(() => {
   border-radius: 12px;
   background-color: rgba(23, 24, 27, 0.3);
   height: 100%;
+  .checkout-box {
+    margin-left: 12px;
+
+    :deep(.el-checkbox) {
+      margin-right: 15px;
+    }
+    :deep(.el-checkbox__label) {
+      font-size: 12px;
+    }
+    :deep(.el-checkbox__input.is-checked + .el-checkbox__label) {
+      color: var(--font-color-default);
+    }
+    :deep(.el-checkbox__input.is-checked .el-checkbox__inner) {
+      background-color: var(--font-color-default);
+      border-color: var(--font-color-default);
+    }
+    :deep(.el-checkbox__input.is-checked .el-checkbox__inner:after) {
+      border-color: var(--bg-color);
+    }
+  }
   .tab-content {
     padding: 7px 12px;
     font-size: 12px;
