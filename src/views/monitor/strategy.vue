@@ -432,7 +432,7 @@ const rules = reactive<FormRules<any>>({
   data: [
     {
       required: true,
-      message: '请输入',
+      message: ruleForm.type == 'chg' ? '请输入涨幅或跌幅百分比' : '请输入买单或卖单金额',
       trigger: ['blur', 'change']
     }
   ],
@@ -767,6 +767,11 @@ onMounted(() => {
     padding: 0px 15px;
     border: 1px solid #212121;
     border-radius: 4px;
+    transition: all 0.2s;
+  }
+
+  .startPrice:hover {
+    border: 1px solid var(--dex-color-4);
   }
   .btn {
     span {
