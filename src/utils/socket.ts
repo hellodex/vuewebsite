@@ -159,8 +159,8 @@ socket.on('connect', () => {
           chainCode: chainInfo?.chainCode
         })
       )
+      globalStore.SetSocketKchartConnectType('kChart_connect')
     }
-    globalStore.SetSocketKchartConnectType('kChart_connect')
     socketOffMonitor(globalStore.accountInfo.uuid)
     socketOnMonitor(globalStore.accountInfo.uuid)
   }, 2500)
