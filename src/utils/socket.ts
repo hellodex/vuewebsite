@@ -24,9 +24,9 @@ function priceMessage(data: any) {
       const duration = endTime - startTime // 计算持续时间
 
       if (duration >= 5000) {
-        console.log('消息是自动关闭的')
+        console.info('消息是自动关闭的')
       } else {
-        console.log('消息是手动关闭的')
+        console.info('消息是手动关闭的')
         if (
           window.location.href.indexOf('/k/') >= 0 &&
           data.baseAddress == tokenInfo?.baseAddress
