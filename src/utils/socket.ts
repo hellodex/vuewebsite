@@ -46,9 +46,16 @@ let key = import.meta.env.VITE_NOT_TG_KEY
 let ts = String(new Date().getTime())
 let sign = CryptoJS.SHA256(channel + ts + version + key).toString()
 
-const URL = `https://wss.apihellodex.lol?channel=${channel}&ts=${ts}&version=${version}&sign=${sign}`
+const URL = `https://wss.apihellodex.lol`
 
-export const socket: any = io(URL)
+export const socket: any = io(URL, {
+  query: {
+    channel,
+    ts,
+    version,
+    sign
+  }
+})
 
 export const socketOnMonitor = (uuid: string) => {
   socket.off('price')
@@ -143,8 +150,8 @@ socket.on('connect', () => {
   console.info('🔥🔥🔥🔥🔥🔥 socket_ID：', socket.id)
   const globalStore = useGlobalStore()
   const chainInfo = useChainInfoStore().chainInfo
-  if (globalStore.socketKchartConnectType == 'kChart_disconnect') {
-    setTimeout(() => {
+  setTimeout(() => {
+    if (globalStore.socketKchartConnectType == 'kChart_disconnect') {
       socket.emit(
         'kchart-on',
         JSON.stringify({
@@ -152,9 +159,12 @@ socket.on('connect', () => {
           chainCode: chainInfo?.chainCode
         })
       )
-    }, 2500)
+    }
     globalStore.SetSocketKchartConnectType('kChart_connect')
-  }
+    socketOffMonitor(globalStore.accountInfo.uuid)
+    socketOnMonitor(globalStore.accountInfo.uuid)
+  }, 2500)
+
   console.log('socket connect 🔥🔥🔥🔥🔥🔥')
 })
 
@@ -164,4 +174,10 @@ socket.on('disconnect', () => {
     globalStore.SetSocketKchartConnectType('kChart_disconnect')
   }
   console.log('socket disconnect 🔥🔥🔥🔥🔥🔥')
+})
+
+socket.on('connect_error', (err: any) => {
+  const ts = String(new Date().getTime())
+  socket.io.opts.query.ts = ts
+  socket.io.opts.query.sign = CryptoJS.SHA256(channel + ts + version + key).toString()
 })
