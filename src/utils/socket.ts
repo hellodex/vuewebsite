@@ -140,6 +140,7 @@ export const socketOffMonitor = (uuid: string) => {
 }
 
 socket.on('connect', () => {
+  console.info('🔥🔥🔥🔥🔥🔥 socket_ID：', socket.id)
   const globalStore = useGlobalStore()
   const chainInfo = useChainInfoStore().chainInfo
   if (globalStore.socketKchartConnectType == 'kChart_disconnect') {
@@ -154,14 +155,13 @@ socket.on('connect', () => {
     }, 2500)
     globalStore.SetSocketKchartConnectType('kChart_connect')
   }
-  console.info('🔥🔥🔥🔥🔥🔥 socket connect 🔥🔥🔥🔥🔥🔥')
+  console.log('socket connect 🔥🔥🔥🔥🔥🔥')
 })
 
 socket.on('disconnect', () => {
   const globalStore = useGlobalStore()
-  console.log('🔥🔥🔥🔥🔥🔥', globalStore.socketKchartConnectType)
   if (globalStore.socketKchartConnectType) {
     globalStore.SetSocketKchartConnectType('kChart_disconnect')
   }
-  console.info('🔥🔥🔥🔥🔥🔥 socket disconnect 🔥🔥🔥🔥🔥🔥')
+  console.log('socket disconnect 🔥🔥🔥🔥🔥🔥')
 })
