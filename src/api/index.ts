@@ -848,3 +848,21 @@ export function APIpauseUserTokenSubscribe(data: object) {
     }
   })
 }
+
+/**
+ * @description 启动用户的某个代币的某种订阅
+ * @param data
+ * @returns
+ */
+
+export function APIresumeUserTokenSubscribe(data: object) {
+  const account: any = localStorage.getItem('accountInfo')
+  return http({
+    url: WEB_URL + '/api/auth/sub/resumeUserTokenSubscribe',
+    method: 'POST',
+    data,
+    headers: {
+      [`${JSON.parse(account)?.tokenInfo.tokenName}`]: `Bearer ${JSON.parse(account)?.tokenInfo.tokenValue}`
+    }
+  })
+}
