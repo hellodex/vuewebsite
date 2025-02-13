@@ -355,9 +355,10 @@ import {
   APIlistUserTokenSubscribe,
   APIupdateUserSubscribeSetting,
   APIdeleteUserTokenSubscribe,
-  APIpauseUserTokenSubscribe
+  APIpauseUserTokenSubscribe,
+  APIresumeUserTokenSubscribe
 } from '@/api'
-import { timeago, numberFormat, isAllSpaces } from '@/utils'
+import { timeago, numberFormat } from '@/utils'
 import { useI18n } from 'vue-i18n'
 import WalletConnect from '@/components/Wallet/WalletConnect.vue'
 
@@ -410,19 +411,14 @@ const channels = [
   }
 ]
 
-const checkedChannel = ref<any>(accountInfo.value?.subscribeSetting || [])
+const checkedChannel = ref<any>([])
 const handleCheckedChannel = async (val: any) => {
   console.log(val)
   await APIupdateUserSubscribeSetting({
     channels: val
   })
 
-  const obj = Object.assign({}, accountInfo.value, {
-    subscribeSetting: val
-  })
-  localStorage.setItem('accountInfo', JSON.stringify(obj))
-  globalStore.setAccountInfo(obj)
-
+  getTableData()
   ElMessage.success(`渠道设置成功`)
 }
 
@@ -651,10 +647,11 @@ const tableData = ref<any>([])
 const skeleton = ref(false)
 
 const getTableData = async () => {
-  const res = await APIlistUserTokenSubscribe({
+  const res: any = await APIlistUserTokenSubscribe({
     chainCode: monitorChainCode.value == 'DEX' ? '' : monitorChainCode.value
   })
-  tableData.value = res || []
+  tableData.value = res?.subscribeList || []
+  checkedChannel.value = res?.subscribeSetting || []
 }
 
 const handelEdit = (row: any) => {
@@ -704,12 +701,16 @@ const handelPause = async (row: any) => {
 
 const handelPlay = async (row: any) => {
   const params = row
-  params.noticeType = 3
-  await APIupdateCommonSubscribe({
-    ...params
+
+  const res = await APIresumeUserTokenSubscribe({
+    chainCode: params.chainCode,
+    baseAddress: params.baseAddress,
+    type: params.type
   })
-  getTableData()
-  ElMessage.success(`${typeList.find((item) => item.value == params.type)?.label}已启动`)
+  if (res) {
+    getTableData()
+    ElMessage.success(`${typeList.find((item) => item.value == params.type)?.label}已启动`)
+  }
 }
 
 const handelChangeChainCode = () => {
