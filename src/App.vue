@@ -137,8 +137,6 @@ socket.on('smartWalletDanmaku', (message) => {
   danmus.value.push(data)
 })
 
-localStorage.removeItem('addSocketMonitorType')
-
 watch(accountInfo, (newValue) => {
   if (accountInfo.value) {
     globalStore.setWalletInfo({
@@ -147,15 +145,6 @@ watch(accountInfo, (newValue) => {
       chainId: null,
       walletType: 'Email'
     })
-
-    const addSocketMonitorType = localStorage.getItem('addSocketMonitorType')
-    if (!addSocketMonitorType) {
-      setTimeout(() => {
-        socketOffMonitor(accountInfo.value.uuid)
-        socketOnMonitor(accountInfo.value.uuid)
-        localStorage.setItem('addSocketMonitorType', true)
-      }, 1000)
-    }
   }
 })
 

@@ -106,7 +106,8 @@
             </el-table-column>
             <el-table-column label="目标价格">
               <template #default="scope">
-                <span>${{ numberFormat(scope.row.targetPrice) }}</span>
+                <span v-if="scope.row.targetPrice">${{ numberFormat(scope.row.targetPrice) }}</span>
+                <span v-else>-</span>
               </template>
             </el-table-column>
             <el-table-column label="通知频率">
@@ -631,6 +632,9 @@ const submitForm = async (formEl: FormInstance | undefined) => {
   await formEl.validate(async (valid, fields) => {
     if (valid) {
       console.log(ruleForm)
+      if (ruleForm.type == 'chg') {
+        ruleForm.data = ruleForm.data / 100
+      }
       await APIupdateCommonSubscribe({
         ...ruleForm
       })
@@ -661,6 +665,10 @@ const handelEdit = (row: any) => {
       ruleForm[key] = row[key]
     }
   }
+  if (ruleForm.type == 'chg') {
+    ruleForm.data = ruleForm.data * 100
+  }
+
   ruleForm.coin = 'Single'
   dialogFormVisible.value = true
 }
