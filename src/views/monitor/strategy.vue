@@ -104,10 +104,14 @@
                 </div>
               </template>
             </el-table-column>
-            <el-table-column label="目标价格">
+            <el-table-column label="触发条件">
               <template #default="scope">
-                <span v-if="scope.row.targetPrice">${{ numberFormat(scope.row.targetPrice) }}</span>
-                <span v-else>-</span>
+                <span v-if="scope.row.type == 'price'"
+                  >${{ numberFormat(scope.row.targetPrice || 0) }}</span
+                >
+                <span v-if="scope.row.type == 'chg'">{{ scope.row.data * 100 }}%</span>
+                <span v-if="scope.row.type == 'buy'">${{ numberFormat(scope.row.data) }}</span>
+                <span v-if="scope.row.type == 'sell'">${{ numberFormat(scope.row.data) }}</span>
               </template>
             </el-table-column>
             <el-table-column label="通知频率">
