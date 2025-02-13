@@ -133,7 +133,7 @@ socket.off('smartWalletDanmaku')
 
 socket.on('smartWalletDanmaku', (message) => {
   const data = JSON.parse(message)
-  console.info(`socket-danmaku:`, data)
+  console.log(`socket-danmaku:`, data)
   danmus.value.push(data)
 })
 
