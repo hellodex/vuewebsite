@@ -346,14 +346,14 @@ const chainData = chainList.filter((item: any) => item.chainType !== -1)
 const accountInfo = computed(() => globalStore.accountInfo)
 
 const channels = [
-  { value: 'app', label: 'app' },
+  { value: 'app', label: 'APP' },
   {
     value: 'web',
-    label: 'web'
+    label: '网页'
   },
   {
     value: 'telegram',
-    label: 'telegram'
+    label: 'Telegram'
   }
 ]
 
