@@ -148,15 +148,47 @@
     <div class="strategy-dialog-content">
       <div
         class="display-flex flex-direction-col strategy-dialog-content-item"
-        @click="handelDialog"
+        @click="handelDialog('price')"
       >
         <div class="display-flex align-items-center title-txt">
           <svg-icon name="icon-coin-monitor" class="icon"></svg-icon>
-          <span>代币监控</span>
+          <span>价格监控</span>
         </div>
         <p class="description-txt">
           设置代币到达指定价格时通过 网页、APP、TG机器人、邮件发送通知。
         </p>
+      </div>
+      <div
+        class="display-flex flex-direction-col strategy-dialog-content-item"
+        @click="handelDialog('chg')"
+      >
+        <div class="display-flex align-items-center title-txt">
+          <svg-icon name="icon-coin-monitor" class="icon"></svg-icon>
+          <span>涨跌幅监控</span>
+        </div>
+        <p class="description-txt">
+          设置代币到达指定涨跌幅时通过 网页、APP、TG机器人、邮件发送通知。
+        </p>
+      </div>
+      <div
+        class="display-flex flex-direction-col strategy-dialog-content-item"
+        @click="handelDialog('buy')"
+      >
+        <div class="display-flex align-items-center title-txt">
+          <svg-icon name="icon-coin-monitor" class="icon"></svg-icon>
+          <span>大单买入监控</span>
+        </div>
+        <p class="description-txt">设置代币每笔交易额通过 网页、APP、TG机器人、邮件发送通知。</p>
+      </div>
+      <div
+        class="display-flex flex-direction-col strategy-dialog-content-item"
+        @click="handelDialog('sell')"
+      >
+        <div class="display-flex align-items-center title-txt">
+          <svg-icon name="icon-coin-monitor" class="icon"></svg-icon>
+          <span>大单卖出监控</span>
+        </div>
+        <p class="description-txt">设置代币每笔交易额通过 网页、APP、TG机器人、邮件发送通知。</p>
       </div>
     </div>
   </el-dialog>
@@ -172,7 +204,7 @@
         :hide-required-asterisk="true"
       >
         <el-form-item label="监控类型" prop="type">
-          <el-select v-model="ruleForm.type" :teleported="false" @click="handelSelectType">
+          <el-select v-model="ruleForm.type" :teleported="false" disabled>
             <el-option
               v-for="item in typeList"
               :key="item.value"
@@ -234,6 +266,7 @@
                 </el-image>
                 <span class="span-txt">{{ item.label }}</span>
                 <span class="span-txt">{{ numberFormat(item.price) }}</span>
+                <span class="span-txt">{{ item.chg }}%</span>
               </div>
             </el-option>
           </el-select>
@@ -263,13 +296,33 @@
             </el-input>
           </el-form-item>
         </div>
-        <el-form-item label="触发条件" prop="data" v-else-if="ruleForm.type == 'chg'">
-          <el-input v-model="ruleForm.data" placeholder="请输入涨幅或跌幅百分比">
+        <el-form-item
+          label="触发条件"
+          prop="data"
+          v-else-if="ruleForm.type == 'chg'"
+          :rules="[
+            {
+              validator: validateChgData,
+              trigger: ['blur', 'change']
+            }
+          ]"
+        >
+          <el-input v-model="ruleForm.data" placeholder="设置当天涨跌幅">
             <template #suffix>%</template>
           </el-input>
         </el-form-item>
-        <el-form-item label="触发条件" prop="data" v-else>
-          <el-input v-model="ruleForm.data" placeholder="请输入买单或卖单金额">
+        <el-form-item
+          label="触发条件"
+          prop="data"
+          :rules="[
+            {
+              validator: validateBuySellData,
+              trigger: ['blur', 'change']
+            }
+          ]"
+          v-else
+        >
+          <el-input v-model="ruleForm.data" placeholder="请输入每笔交易总金额">
             <template #prefix>$</template>
           </el-input>
         </el-form-item>
@@ -304,7 +357,7 @@ import {
   APIdeleteUserTokenSubscribe,
   APIpauseUserTokenSubscribe
 } from '@/api'
-import { timeago, numberFormat } from '@/utils'
+import { timeago, numberFormat, isAllSpaces } from '@/utils'
 import { useI18n } from 'vue-i18n'
 import WalletConnect from '@/components/Wallet/WalletConnect.vue'
 
@@ -346,14 +399,14 @@ const chainData = chainList.filter((item: any) => item.chainType !== -1)
 const accountInfo = computed(() => globalStore.accountInfo)
 
 const channels = [
-  { value: 'app', label: 'app' },
+  { value: 'app', label: 'APP' },
   {
     value: 'web',
-    label: 'web'
+    label: '网页'
   },
   {
     value: 'telegram',
-    label: 'telegram'
+    label: 'Telegram'
   }
 ]
 
@@ -391,9 +444,17 @@ const monitorChainCode = ref<string>('DEX')
 const dialogVisible = ref<boolean>(false)
 const dialogFormVisible = ref<boolean>(false)
 
-const handelDialog = () => {
+const handelDialog = (type: string) => {
   dialogVisible.value = false
   dialogFormVisible.value = true
+  ruleForm.type = type
+
+  if (ruleForm.type == 'price') {
+    ruleForm.data = ''
+  } else {
+    ruleForm.targetPrice = ''
+    ruleForm.startPrice = ''
+  }
 }
 
 const typeList = [
@@ -434,16 +495,29 @@ const noticeTypeList = [
   }
 ]
 
-const statusList = [
-  {
-    value: 1,
-    label: '存在'
-  },
-  {
-    value: 0,
-    label: '删除'
+const validateTargetPrice = (rule: any, value: any, callback: any) => {
+  if (/^[1-9]\d*(\.\d+)?$|^0\.\d+$/.test(value)) {
+    callback()
+  } else {
+    callback(new Error('请输入目标价格'))
   }
-]
+}
+
+const validateBuySellData = (rule: any, value: any, callback: any) => {
+  if (/^[1-9]\d*(\.\d+)?$|^0\.\d+$/.test(value)) {
+    callback()
+  } else {
+    callback(new Error('请输入每笔交易总金额'))
+  }
+}
+
+const validateChgData = (rule: any, value: any, callback: any) => {
+  if (/^-?\d+(\.\d+)?$/.test(value)) {
+    callback()
+  } else {
+    callback(new Error('设置当天涨跌幅'))
+  }
+}
 
 const dialogType = ref<string>('add')
 const ruleFormRef = ref<FormInstance>()
@@ -477,13 +551,6 @@ const rules = reactive<FormRules<any>>({
       trigger: ['blur', 'change']
     }
   ],
-  data: [
-    {
-      required: true,
-      message: ruleForm.type == 'chg' ? '请输入涨幅或跌幅百分比' : '请输入买单或卖单金额',
-      trigger: ['blur', 'change']
-    }
-  ],
   startPrice: [
     {
       required: true,
@@ -496,7 +563,8 @@ const rules = reactive<FormRules<any>>({
       required: true,
       message: '请输入目标价格',
       trigger: ['blur', 'change']
-    }
+    },
+    { validator: validateTargetPrice, trigger: ['blur', 'change'] }
   ]
 })
 
@@ -542,15 +610,6 @@ const handelSelectBaseAddress = (val: any) => {
   ruleForm.symbol = options.value.find((item: any) => item.address == val).symbol
   ruleForm.startPrice = options.value.find((item: any) => item.address == val).price
   ruleForm.logo = options.value.find((item: any) => item.address == val).logo
-}
-
-const handelSelectType = () => {
-  if (ruleForm.type == 'price') {
-    ruleForm.data = ''
-  } else {
-    ruleForm.targetPrice = ''
-    ruleForm.startPrice = ''
-  }
 }
 
 const deleteForm = async (formEl: FormInstance | undefined) => {
@@ -737,6 +796,7 @@ onMounted(() => {
       width: 14px;
       height: 14px;
       margin-left: 4px;
+      cursor: pointer;
     }
     .logo {
       width: 32px;
