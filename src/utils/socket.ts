@@ -6,7 +6,7 @@ import { ElMessage } from 'element-plus'
 import { numberFormat } from '@/utils'
 import CryptoJS from 'crypto-js'
 
-function priceMessage(data: any) {
+function priceMessage(title: string, data: any) {
   const startTime = new Date().getTime() // 记录开始时间
   const tokenInfo = useTokenInfoStore().tokenInfo
   ElMessage({
@@ -15,7 +15,7 @@ function priceMessage(data: any) {
     duration: 5000,
     customClass: 'socket-elMessage',
     message: `<div class='display-flex flex-direction-col'>
-                <strong style="margin-bottom:8px;font-family:'PingFangSC-Heavy'">AI价格监控：${data.symbol}</strong>
+                <strong style="margin-bottom:8px;font-family:'PingFangSC-Heavy'">AI${title}：${data.symbol}</strong>
                 <span style="color:#fff;font-size:12px">价格已到：${numberFormat(data.price)} 、交易额：${numberFormat(data.volume)}、方向：${data.flag == 0 ? '买入' : '卖出'}</span>
               </div>`,
     showClose: true,
@@ -73,7 +73,7 @@ export const socketOnMonitor = (uuid: string) => {
   socket.on('price', (message: string) => {
     const data = JSON.parse(message)
     console.info(`price-monitor:`, data)
-    priceMessage(data)
+    priceMessage('价格监控', data)
   })
 
   // 订阅1d价格变化率
@@ -87,6 +87,7 @@ export const socketOnMonitor = (uuid: string) => {
   socket.on('chg', (message: string) => {
     const data = JSON.parse(message)
     console.info(`chg-monitor:`, data)
+    priceMessage('涨跌幅监控', data)
   })
 
   // 大额买单
@@ -100,6 +101,7 @@ export const socketOnMonitor = (uuid: string) => {
   socket.on('buy', (message: string) => {
     const data = JSON.parse(message)
     console.info(`buy-monitor:`, data)
+    priceMessage('大单买入监控', data)
   })
 
   // 大额卖单
@@ -113,6 +115,7 @@ export const socketOnMonitor = (uuid: string) => {
   socket.on('sell', (message: string) => {
     const data = JSON.parse(message)
     console.info(`sell-monitor:`, data)
+    priceMessage('大单卖出监控', data)
   })
 }
 
