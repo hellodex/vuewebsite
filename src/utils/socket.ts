@@ -26,7 +26,7 @@ function priceMessage(data: any) {
       if (duration >= 5000) {
         console.info('消息是自动关闭的')
       } else {
-        console.info('消息是手动关闭的')
+        console.info('消息是手动关闭的', data)
         if (
           window.location.href.indexOf('/k/') >= 0 &&
           data.baseAddress == tokenInfo?.baseAddress
