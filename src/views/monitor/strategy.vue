@@ -367,37 +367,6 @@ import { timeago, numberFormat } from '@/utils'
 import { useI18n } from 'vue-i18n'
 import WalletConnect from '@/components/Wallet/WalletConnect.vue'
 
-// const data = {
-//   baseAddress: '6LjccmR327LvnfbabH44xnKUBpDbErzMnbMovL8Kpump',
-//   chainCode: 'SOLANA',
-//   pairAddress: 'Drya4jMXfmGjh3LPg7JnkxAqiSpaPUDzyPWA85s7xhEg',
-//   symbol: 'TRUMP',
-//   price: '0.000447070755860641864914488145',
-//   volume: '32.911237090021688249023105436791365885',
-//   chg: '44.6531',
-//   flag: 1
-// }
-
-// ElMessage({
-//   type: data.flag == 0 ? 'success' : 'error',
-//   dangerouslyUseHTMLString: true,
-//   duration: 0,
-//   customClass: 'socket-elMessage',
-//   message: `
-//   <div class="display-flex flex-direction-col">
-//     <strong style="margin-bottom:8px;font-family:'PingFangSC-Heavy'">AI价格监控：${data.symbol}</strong>
-//     <span style="color:#fff;font-size:12px">价格已到：${numberFormat(data.price)} 、交易额：${numberFormat(data.volume)}、方向：${data.flag == 0 ? '买入' : '卖出'}</span>
-//   </div>
-//   `,
-//   showClose: true,
-//   onClose: () => {
-//     console.log()
-//     if (window.location.href.indexOf(data.pairAddress) < 0) {
-//       window.open(`/k/${data.pairAddress}?chainCode=${data.chainCode}&timeType=15m`)
-//     }
-//   }
-// })
-
 const i18n = useI18n()
 const globalStore = useGlobalStore()
 const { chainLogoObj, chainList } = globalStore
