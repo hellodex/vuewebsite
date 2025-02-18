@@ -1,5 +1,5 @@
 <template>
-  <WebRefer v-if="windowWidth >= 1144" />
+  <WebRefer v-if="windowWidth > 700" />
   <H5Refer v-else />
 </template>
 

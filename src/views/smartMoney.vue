@@ -1,6 +1,6 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
-  <WebSmartMoney v-if="windowWidth >= 1144" />
+  <WebSmartMoney v-if="windowWidth > 700" />
   <H5SmartMoney v-else />
 </template>
 

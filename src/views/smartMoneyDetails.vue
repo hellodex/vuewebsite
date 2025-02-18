@@ -1,5 +1,5 @@
 <template>
-  <WebSmartMoneyDetails v-if="windowWidth >= 1144" />
+  <WebSmartMoneyDetails v-if="windowWidth > 700" />
   <H5SmartMoneyDetails v-else />
 </template>
 

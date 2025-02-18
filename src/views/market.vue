@@ -1,6 +1,6 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
-  <WebMarket v-if="windowWidth >= 1144" />
+  <WebMarket v-if="windowWidth > 700" />
   <H5Market v-else />
 </template>
 
