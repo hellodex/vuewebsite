@@ -1,5 +1,5 @@
 <template>
-  <WebHome v-if="windowWidth >= 1144" />
+  <WebHome v-if="windowWidth > 700" />
   <H5Home v-else />
 </template>
 

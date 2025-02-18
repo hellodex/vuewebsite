@@ -1,5 +1,5 @@
 <template>
-  <WebDownload v-if="windowWidth >= 1144" />
+  <WebDownload v-if="windowWidth > 700" />
   <H5Download v-else />
 </template>
 

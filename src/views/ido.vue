@@ -1,5 +1,5 @@
 <template>
-  <WebIdo v-if="windowWidth >= 1144" />
+  <WebIdo v-if="windowWidth > 700" />
   <H5Ido v-else />
 </template>
 

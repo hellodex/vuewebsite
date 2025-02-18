@@ -1,18 +1,18 @@
 <template>
   <TonConnectUIProvider :options="options">
-    <div v-show="windowWidth >= 1144 && route.name !== 'Refer'">
+    <div v-show="windowWidth > 700 && route.name !== 'Refer'">
       <NavBar />
     </div>
     <main class="display-flex flex-direction-col main">
       <section
         :class="
-          route.fullPath.indexOf('/k/') !== -1 && windowWidth >= 1144
+          route.fullPath.indexOf('/k/') !== -1 && windowWidth > 700
             ? 'content-app display-flex align-items-fs'
             : 'content-app'
         "
         v-if="routerState"
       >
-        <LeftSideBar v-if="route.fullPath.indexOf('/k/') !== -1 && windowWidth >= 1144" />
+        <LeftSideBar v-if="route.fullPath.indexOf('/k/') !== -1 && windowWidth > 700" />
         <router-view v-slot="{ Component }">
           <keep-alive>
             <component :is="Component" v-if="route.meta.keepAlive" :key="route.path" />
@@ -20,7 +20,7 @@
           <component :is="Component" v-if="!route.meta.keepAlive" :key="route.path" />
         </router-view>
       </section>
-      <FooterBar v-if="windowWidth >= 1144 && route.name !== 'Refer'" />
+      <FooterBar v-if="windowWidth > 700 && route.name !== 'Refer'" />
     </main>
     <Loading v-if="tgWebAppData && isTradeUrl"></Loading>
     <vue-danmaku
@@ -293,7 +293,6 @@ w3m-modal {
 }
 .main {
   width: 100%;
-  background-color: var(--bg-color);
 }
 .content-app {
   width: 100%;
@@ -327,14 +326,12 @@ w3m-modal {
   }
 }
 
-@media (max-width: 1143px) {
+@media (max-width: 700px) {
   body {
     background-color: #fff;
   }
   .main {
-    // width: 10rem;
     margin: 0 auto;
-    background-color: #fff;
   }
   .content-app {
     width: 100%;

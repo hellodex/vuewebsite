@@ -17,7 +17,7 @@ export function useTheme() {
 
   // init theme
   const initTheme = () => {
-    switchDark()
+    // switchDark()
   }
 
   return {

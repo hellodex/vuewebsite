@@ -1,5 +1,5 @@
 <template>
-  <WebCoinWalletDetails v-if="windowWidth >= 1144" />
+  <WebCoinWalletDetails v-if="windowWidth > 700" />
   <H5CoinWalletDetails v-else />
 </template>
 <script setup lang="ts">

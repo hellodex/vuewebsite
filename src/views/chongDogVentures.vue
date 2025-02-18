@@ -1,5 +1,5 @@
 <template>
-  <WebChongDogVentures v-if="windowWidth >= 1144" />
+  <WebChongDogVentures v-if="windowWidth > 700" />
   <H5ChongDogVentures v-else />
 </template>
 
