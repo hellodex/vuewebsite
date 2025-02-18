@@ -1,6 +1,6 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
-  <WebInvite v-if="windowWidth >= 1144" />
+  <WebInvite v-if="windowWidth > 700" />
   <H5Invite v-else />
 </template>
 

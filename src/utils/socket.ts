@@ -16,7 +16,7 @@ function sendMessage(title: string, data: any) {
     customClass: 'socket-elMessage',
     message: `<div class='display-flex flex-direction-col'>
                 <strong style="margin-bottom:8px;font-family:'PingFangSC-Heavy'">AI${title}：${data.symbol}</strong>
-                <span style="color:#fff;font-size:12px">价格已到：${numberFormat(data.price)} 、交易额：${numberFormat(data.volume)}、方向：${data.flag == 0 ? '买入' : '卖出'}</span>
+                <span style="color:#fff;font-size:12px;line-height:1.5;">价格已到：${numberFormat(data.price)} 、交易额：${numberFormat(data.volume)}、方向：${data.flag == 0 ? '买入' : '卖出'}</span>
               </div>`,
     showClose: true,
     onClose: () => {
