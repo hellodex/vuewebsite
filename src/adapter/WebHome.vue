@@ -296,12 +296,19 @@ async function getFreshPriceList() {
     ],
     period: timeTabIndex.value
   })
-  const chainIdDataPriceList = priceList?.priceAndInfo?.filter(
-    (item: { pairAddress: any }) => !mainstreamCoinsPairAddressList.includes(item.pairAddress)
-  )
-  const mainstreamCoinsPriceList = priceList?.priceAndInfo?.filter((item: { pairAddress: any }) =>
-    mainstreamCoinsPairAddressList.includes(item.pairAddress)
-  )
+
+  const chainIdDataPriceList =
+    (priceList.priceAndInfo &&
+      priceList.priceAndInfo.filter(
+        (item: { pairAddress: any }) => !mainstreamCoinsPairAddressList.includes(item.pairAddress)
+      )) ||
+    []
+  const mainstreamCoinsPriceList =
+    (priceList?.priceAndInfo &&
+      priceList.priceAndInfo.filter((item: { pairAddress: any }) =>
+        mainstreamCoinsPairAddressList.includes(item.pairAddress)
+      )) ||
+    []
 
   console.log('chainIdDataPriceList', chainIdDataPriceList)
   console.log('mainstreamCoinsPriceList', mainstreamCoinsPriceList)

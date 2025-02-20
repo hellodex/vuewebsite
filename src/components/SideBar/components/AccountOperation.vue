@@ -151,8 +151,11 @@ const handelLogon = async () => {
       console.log(res)
       if (res) {
         ElMessage.success(`账号退出成功`)
-        await socketOffMonitor(globalStore.accountInfo.uuid)
-  
+        await socketOffMonitor(
+          globalStore.accountInfo.uuid,
+          globalStore.accountInfo.tokenInfo.tokenValue
+        )
+
         localStorage.removeItem('accountInfo')
         localStorage.removeItem('customWalletIndex')
         localStorage.removeItem('customWalletIndex1')
