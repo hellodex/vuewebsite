@@ -110,6 +110,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { isAllSpaces } from '@/utils'
 import { APIdologin, APIuserInfo, APIsendMessage } from '@/api/login'
 import { showLoadingToast, showSuccessToast } from 'vant'
+import { socketOffMonitor, socketOnMonitor } from '@/utils/socket'
 
 const route = useRoute()
 const router = useRouter()
@@ -269,6 +270,8 @@ const submitForm = async (formEl: FormInstance | undefined) => {
           chainId: null,
           walletType: 'Email'
         })
+        socketOffMonitor(globalStore.accountInfo.uuid, globalStore.accountInfo.tokenInfo.tokenValue)
+        socketOnMonitor(globalStore.accountInfo.uuid, globalStore.accountInfo.tokenInfo.tokenValue)
         loading.value = false
         router.back()
         return

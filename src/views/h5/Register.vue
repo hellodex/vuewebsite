@@ -132,6 +132,7 @@ import { APIsendMessage, APIdologin, APIuserInfo } from '@/api/login'
 import { useGlobalStore } from '@/stores/global'
 import { isAllSpaces } from '@/utils'
 import { showLoadingToast, showSuccessToast } from 'vant'
+import { socketOffMonitor, socketOnMonitor } from '@/utils/socket'
 
 const route = useRoute()
 const router = useRouter()
@@ -315,6 +316,8 @@ const submitForm = async (formEl: FormInstance | undefined) => {
           chainId: null,
           walletType: 'Email'
         })
+        socketOffMonitor(globalStore.accountInfo.uuid, globalStore.accountInfo.tokenInfo.tokenValue)
+        socketOnMonitor(globalStore.accountInfo.uuid, globalStore.accountInfo.tokenInfo.tokenValue)
         loading.value = false
         return
       }
