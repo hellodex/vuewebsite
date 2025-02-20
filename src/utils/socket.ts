@@ -5,6 +5,7 @@ import { io } from 'socket.io-client'
 import { ElMessage } from 'element-plus'
 import { numberFormat } from '@/utils'
 import CryptoJS from 'crypto-js'
+import { useRouter, useRoute } from 'vue-router'
 
 function sendMessage(title: string, data: any) {
   const startTime = new Date().getTime() // 记录开始时间
@@ -157,6 +158,32 @@ export const socketOffMonitor = (uuid: string, token: string) => {
   )
 }
 
+export function socketLogout() {
+  socket.off('logout')
+  socket.on('logout', (message: string) => {
+    const data = JSON.parse(message)
+
+    if (data) {
+      const globalStore = useGlobalStore()
+      const route = useRoute()
+      const router = useRouter()
+      ElMessage.error(`此账户已在新设备登录，如有问题请尽快联系客服`)
+      socketOffMonitor(globalStore.accountInfo.uuid, globalStore.accountInfo.tokenInfo.tokenValue)
+      localStorage.removeItem('accountInfo')
+      localStorage.removeItem('customWalletIndex')
+      localStorage.removeItem('customWalletIndex1')
+      globalStore.setAccountInfo(null)
+      globalStore.setWalletInfo({
+        address: null,
+        isConnected: false,
+        chainId: null,
+        walletType: null
+      })
+      location.reload()
+    }
+  })
+}
+
 socket.on('connect', () => {
   console.info('🔥🔥🔥🔥🔥🔥 socket_ID：', socket.id)
   const globalStore = useGlobalStore()
@@ -172,8 +199,11 @@ socket.on('connect', () => {
       )
       globalStore.SetSocketKchartConnectType('kChart_connect')
     }
-    socketOffMonitor(globalStore.accountInfo.uuid, globalStore.accountInfo.tokenInfo.tokenValue)
-    socketOnMonitor(globalStore.accountInfo.uuid, globalStore.accountInfo.tokenInfo.tokenValue)
+    socketLogout()
+    if (globalStore.accountInfo) {
+      socketOffMonitor(globalStore.accountInfo.uuid, globalStore.accountInfo.tokenInfo.tokenValue)
+      socketOnMonitor(globalStore.accountInfo.uuid, globalStore.accountInfo.tokenInfo.tokenValue)
+    }
   }, 2500)
 
   console.log('socket connect 🔥🔥🔥🔥🔥🔥')
