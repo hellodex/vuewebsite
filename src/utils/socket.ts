@@ -57,7 +57,7 @@ export const socket: any = io(URL, {
   }
 })
 
-export const socketOnMonitor = (uuid: string) => {
+export const socketOnMonitor = (uuid: string, token: string) => {
   socket.off('price')
   socket.off('chg')
   socket.off('buy')
@@ -66,7 +66,8 @@ export const socketOnMonitor = (uuid: string) => {
   socket.emit(
     'price-on',
     JSON.stringify({
-      uuid
+      uuid,
+      token
     })
   )
 
@@ -80,7 +81,8 @@ export const socketOnMonitor = (uuid: string) => {
   socket.emit(
     'chg-on',
     JSON.stringify({
-      uuid
+      uuid,
+      token
     })
   )
 
@@ -94,7 +96,8 @@ export const socketOnMonitor = (uuid: string) => {
   socket.emit(
     'buy-on',
     JSON.stringify({
-      uuid
+      uuid,
+      token
     })
   )
 
@@ -108,7 +111,8 @@ export const socketOnMonitor = (uuid: string) => {
   socket.emit(
     'sell-on',
     JSON.stringify({
-      uuid
+      uuid,
+      token
     })
   )
 
@@ -119,32 +123,36 @@ export const socketOnMonitor = (uuid: string) => {
   })
 }
 
-export const socketOffMonitor = (uuid: string) => {
+export const socketOffMonitor = (uuid: string, token: string) => {
   socket.emit(
     'price-off',
     JSON.stringify({
-      uuid
+      uuid,
+      token
     })
   )
 
   socket.emit(
     'chg-off',
     JSON.stringify({
-      uuid
+      uuid,
+      token
     })
   )
 
   socket.emit(
     'buy-off',
     JSON.stringify({
-      uuid
+      uuid,
+      token
     })
   )
 
   socket.emit(
     'sell-off',
     JSON.stringify({
-      uuid
+      uuid,
+      token
     })
   )
 }
@@ -164,8 +172,8 @@ socket.on('connect', () => {
       )
       globalStore.SetSocketKchartConnectType('kChart_connect')
     }
-    socketOffMonitor(globalStore.accountInfo.uuid)
-    socketOnMonitor(globalStore.accountInfo.uuid)
+    socketOffMonitor(globalStore.accountInfo.uuid, globalStore.accountInfo.tokenInfo.tokenValue)
+    socketOnMonitor(globalStore.accountInfo.uuid, globalStore.accountInfo.tokenInfo.tokenValue)
   }, 2500)
 
   console.log('socket connect 🔥🔥🔥🔥🔥🔥')
