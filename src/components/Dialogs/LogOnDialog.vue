@@ -165,6 +165,7 @@ import VerificationCodeInput from '@/components/VerificationCodeInput.vue'
 import { isAllSpaces } from '@/utils'
 import { APIdologin, APIuserInfo, APIsendMessage } from '@/api/login'
 import { ElMessage } from 'element-plus'
+import { socketOffMonitor, socketOnMonitor } from '@/utils/socket'
 
 // 正则表达式
 const minLength = /.{8,}/ // 至少8个字符
@@ -395,6 +396,8 @@ const submitForm = async (formEl: FormInstance | undefined) => {
           chainId: null,
           walletType: 'Email'
         })
+        socketOffMonitor(globalStore.accountInfo.uuid, globalStore.accountInfo.tokenInfo.tokenValue)
+        socketOnMonitor(globalStore.accountInfo.uuid, globalStore.accountInfo.tokenInfo.tokenValue)
         loading.value = false
         return
       }

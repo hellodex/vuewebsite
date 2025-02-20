@@ -102,6 +102,7 @@ import { APIsendMessage, APIdologin, APIuserInfo } from '@/api/login'
 import { useGlobalStore } from '@/stores/global'
 import { isAllSpaces } from '@/utils'
 import VerificationCodeInput from '@/components/VerificationCodeInput.vue'
+import { socketOffMonitor, socketOnMonitor } from '@/utils/socket'
 
 const globalStore = useGlobalStore()
 
@@ -276,6 +277,8 @@ const submitForm = async (formEl: FormInstance | undefined) => {
           walletType: 'Email'
         })
         loading.value = false
+        socketOffMonitor(globalStore.accountInfo.uuid, globalStore.accountInfo.tokenInfo.tokenValue)
+        socketOnMonitor(globalStore.accountInfo.uuid, globalStore.accountInfo.tokenInfo.tokenValue)
         router.replace('/')
         return
       }

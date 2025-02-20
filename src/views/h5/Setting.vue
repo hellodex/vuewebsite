@@ -63,6 +63,7 @@ import { useI18n } from 'vue-i18n'
 import { useGlobalStore } from '@/stores/global'
 import { APIlogout } from '@/api/login'
 import { showLoadingToast, showSuccessToast } from 'vant'
+import { socketOffMonitor } from '@/utils/socket'
 
 const { reload }: any = inject('reload')
 const globalStore = useGlobalStore()
@@ -106,6 +107,10 @@ const handelLogout = async () => {
   console.log(res)
   if (res) {
     showSuccessToast(`账号退出成功`)
+    await socketOffMonitor(
+      globalStore.accountInfo.uuid,
+      globalStore.accountInfo.tokenInfo.tokenValue
+    )
     localStorage.removeItem('accountInfo')
     localStorage.removeItem('customWalletIndex')
     localStorage.removeItem('customWalletIndex1')

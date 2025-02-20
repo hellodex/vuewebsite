@@ -350,7 +350,7 @@
   </el-dialog>
 </template>
 <script setup lang="ts">
-import { reactive, ref, onMounted, computed } from 'vue'
+import { reactive, ref, onMounted, computed, watch } from 'vue'
 import type { ComponentSize, FormInstance, FormRules } from 'element-plus'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { useGlobalStore } from '@/stores/global'
@@ -697,6 +697,12 @@ const handelPlay = async (row: any) => {
 const handelChangeChainCode = () => {
   initData()
 }
+
+watch(accountInfo, (newValue) => {
+  if (accountInfo.value) {
+    getTableData()
+  }
+})
 
 const initData = async () => {
   if (accountInfo.value) {
