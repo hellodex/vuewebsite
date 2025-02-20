@@ -78,7 +78,7 @@ import { useI18n } from 'vue-i18n'
 import { browserLang, numberFormat } from '@/utils'
 import { CHAIN_SYMBOL, QUICK_TRADE_CONFIG } from '@/types'
 
-import { socket, socketOnMonitor, socketOffMonitor } from '@/utils/socket'
+import { socket } from '@/utils/socket'
 import Loading from '@/components/Loading/index.vue'
 import NavBar from '@/components/SideBar/NavBar.vue'
 import FooterBar from '@/components/SideBar/FooterBar.vue'
