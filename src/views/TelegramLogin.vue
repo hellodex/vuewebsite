@@ -14,7 +14,7 @@ const route = useRoute()
 const router = useRouter()
 const globalStore = useGlobalStore()
 
-const { setDialogVisible, setAccountInfo, setWalletInfo } = globalStore
+const { setAccountInfo, setWalletInfo } = globalStore
 
 const login = async () => {
   const res: any = await APItgToWebDologin({
@@ -28,12 +28,6 @@ const login = async () => {
     localStorage.setItem('accountInfo', JSON.stringify(obj))
 
     setAccountInfo(obj)
-    setDialogVisible({
-      registerDialogVisible: false,
-      logOnDialogVisible: false,
-      forgotPasswordDialogVisible: false,
-      notReceivedCodeDialogVisible: false
-    })
     setWalletInfo({
       address: null,
       isConnected: true,
