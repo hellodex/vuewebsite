@@ -1,5 +1,8 @@
 <template>
-  <div class="telegram_login">正在登录...</div>
+  <div class="telegram_login">
+    <div class="loader"></div>
+    <p>正在通过TG Bot 登录中，请稍后</p>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -57,11 +60,49 @@ onMounted(() => {
   right: 0;
   width: 100vw;
   height: 100vh;
-  z-index: 9999;
+  z-index: 99;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
+  font-size: 20px;
   background-color: rgba(16, 17, 20, 0.8);
+  font-family: 'PingFangSC-Heavy';
+  .loader {
+    width: 100px;
+    aspect-ratio: 1;
+    padding: 10px;
+    box-sizing: border-box;
+    display: grid;
+    background-color: transparent;
+    filter: blur(1px) contrast(10);
+    // mix-blend-mode: darken;
+    margin-bottom: 12px;
+  }
+  .loader:before,
+  .loader:after {
+    content: '';
+    grid-area: 1/1;
+    background:
+      linear-gradient(#fff 0 0) left,
+      linear-gradient(#fff 0 0) right;
+    background-size: 20px 40px;
+    background-origin: content-box;
+    background-repeat: no-repeat;
+  }
+  .loader:after {
+    height: 20px;
+    width: 20px;
+    margin: auto 0;
+    border-radius: 50%;
+    background: #fff;
+    animation: l10 1s infinite;
+  }
+  @keyframes l10 {
+    90%,
+    100% {
+      transform: translate(300%);
+    }
+  }
 }
 </style>

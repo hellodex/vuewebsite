@@ -16,7 +16,7 @@
           <strong>欢迎来到HelloDex</strong>
           <span>开创和主导Web3变革，利润80%分给用户</span>
         </div>
-        <img src="../../assets/img/image-641.png" alt="" class="image-641" />
+        <!-- <img src="../../assets/img/image-641.png" alt="" class="image-641" /> -->
       </div>
       <div class="connect-wallet-tab display-flex align-items-center justify-content-sp">
         <div
@@ -25,7 +25,8 @@
           :key="index"
           @click="handelTab(item)"
         >
-          <svg-icon :name="item.icon" :class="item.icon"></svg-icon>
+          <svg-icon :name="item.icon" :class="item.icon" v-if="item.icon"></svg-icon>
+          <img src="../../assets/img/img-tg.png" alt="" class="icon-tg" v-else />
           <span>{{ item.label }}</span>
           <div class="checkmark-container" v-if="tabIndex == item.value">
             <svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg" class="checkmark">
@@ -33,19 +34,28 @@
             </svg>
           </div>
         </div>
-        <a
-          :href="`https://t.me/hellodextestbot?start=l_${new Date().getTime()}_P_Web`"
-          target="_blank"
-          class="tab-item display-flex align-items-center justify-content-center"
-        >
-          <img src="../../assets/img/img-tg.png" alt="" class="icon-tg" />
-          <span>Telegram</span>
-        </a>
       </div>
       <el-divider> 登录 </el-divider>
       <div class="tab-content">
         <transition name="fade">
           <template v-if="tabIndex == 1">
+            <div class="display-flex flex-direction-col align-items-center">
+              <p class="tg-trade-title">快速交易，快速跟单</p>
+              <p class="tg-trade-title">快速自动交易🚀</p>
+
+              <span class="tg-trade-subtitle">更快发现，秒级交易🚀 1 秒光速上链，点击即交易</span>
+              <a
+                :href="`https://t.me/hellodextestbot?start=l_${new Date().getTime()}_P_Web`"
+                target="_blank"
+                class="form-btn"
+              >
+                <span>连接 Telegram</span>
+              </a>
+            </div>
+          </template>
+        </transition>
+        <transition name="fade">
+          <template v-if="tabIndex == 2">
             <el-form
               ref="ruleFormRef"
               :model="ruleForm"
@@ -109,7 +119,7 @@
           </template>
         </transition>
         <transition name="fade">
-          <template v-if="tabIndex == 2">
+          <template v-if="tabIndex == 3">
             <div class="web3-connect-wallet">
               <div
                 class="connect-wallet-item display-flex align-items-center"
@@ -178,13 +188,17 @@ const containsUpperCase = /[A-Z]/ // 至少一个大写字母
 
 const tabList = [
   {
+    label: 'Telegram',
+    value: 1
+  },
+  {
     label: '邮箱登录',
-    value: 1,
+    value: 2,
     icon: 'icon-google'
   },
   {
     label: 'Web3钱包',
-    value: 2,
+    value: 3,
     icon: 'walletconnect'
   }
 ]
