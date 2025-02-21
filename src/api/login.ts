@@ -74,3 +74,16 @@ export function APIuserInfo() {
     }
   })
 }
+
+/**
+ * @description TG to WEB 登陆
+ * @param data
+ * @returns
+ */
+export function APItgToWebDologin(data: object) {
+  return http({
+    url: WEB_URL + '/api/auth/tgToWebDologin',
+    method: 'POST',
+    data
+  })
+}

@@ -33,10 +33,14 @@
             </svg>
           </div>
         </div>
-        <div class="tab-item display-flex align-items-center justify-content-center">
+        <a
+          :href="`https://t.me/hellodextestbot?start=l_${new Date().getTime()}_P_Web`"
+          target="_blank"
+          class="tab-item display-flex align-items-center justify-content-center"
+        >
           <img src="../../assets/img/img-tg.png" alt="" class="icon-tg" />
           <span>Telegram</span>
-        </div>
+        </a>
       </div>
       <el-divider> 登录 </el-divider>
       <div class="tab-content">
