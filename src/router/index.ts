@@ -200,6 +200,11 @@ const router = createRouter({
       path: '/h5/commission',
       name: 'H5Commission',
       component: () => import('@/views/h5/Commission.vue')
+    },
+    {
+      path: '/TelegramLogin',
+      name: 'TelegramLogin',
+      component: () => import('@/views/TelegramLogin.vue')
     }
   ]
 })
