@@ -154,7 +154,14 @@ onMounted(async () => {
   i18n.locale.value = language
   globalStore.setLanguage(language)
   sessionStorage.setItem('language', language)
-
+  if (accountInfo.value) {
+    globalStore.setWalletInfo({
+      address: null,
+      isConnected: true,
+      chainId: null,
+      walletType: 'Email'
+    })
+  }
   if (!config) {
     localStorage.setItem('quick_trade_config', JSON.stringify(QUICK_TRADE_CONFIG))
   }
