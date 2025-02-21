@@ -171,6 +171,7 @@ onMounted(() => {})
       .sellpart {
         width: 0.64rem;
         height: 0.64rem;
+        color: var(--down-color);
       }
       .snipe-icon {
         width: 0.32rem;
@@ -207,6 +208,7 @@ onMounted(() => {})
         width: 0.2667rem;
         height: 0.2667rem;
         margin-right: 0.16rem;
+        color: var(--down-color);
       }
     }
     .txt {
