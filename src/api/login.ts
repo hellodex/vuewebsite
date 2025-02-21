@@ -64,11 +64,12 @@ export function APImodifyPwd(data: object) {
  * @description 获取用户信息
  * @returns
  */
-export function APIuserInfo() {
+export function APIuserInfo(data = {}) {
   const account: any = localStorage.getItem('accountInfo')
   return http({
     url: WEB_URL + '/api/auth/userInfo',
     method: 'POST',
+    data,
     headers: {
       [`${JSON.parse(account)?.tokenInfo.tokenName}`]: `Bearer ${JSON.parse(account)?.tokenInfo.tokenValue}`
     }
