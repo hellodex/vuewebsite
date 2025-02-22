@@ -5,7 +5,7 @@ import { io } from 'socket.io-client'
 import { ElMessage } from 'element-plus'
 import { numberFormat } from '@/utils'
 import CryptoJS from 'crypto-js'
-import { useRouter, useRoute } from 'vue-router'
+import test from 'node:test'
 
 function sendMessage(title: string, data: any) {
   const startTime = new Date().getTime() // 记录开始时间
@@ -54,7 +54,8 @@ export const socket: any = io(URL, {
     channel,
     ts,
     version,
-    sign
+    sign,
+    test: '222222'
   }
 })
 
@@ -162,11 +163,8 @@ export function socketLogout() {
   socket.off('logout')
   socket.on('logout', (message: string) => {
     const data = JSON.parse(message)
-
     if (data) {
       const globalStore = useGlobalStore()
-      const route = useRoute()
-      const router = useRouter()
       ElMessage.error(`此账户已在新设备登录，如有问题请尽快联系客服`)
       socketOffMonitor(globalStore.accountInfo.uuid, globalStore.accountInfo.tokenInfo.tokenValue)
       localStorage.removeItem('accountInfo')
