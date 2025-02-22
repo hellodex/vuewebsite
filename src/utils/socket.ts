@@ -54,7 +54,8 @@ export const socket: any = io(URL, {
     channel,
     ts,
     version,
-    sign
+    sign,
+    test: '222222'
   }
 })
 
