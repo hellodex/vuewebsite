@@ -1,7 +1,9 @@
 <template>
   <div class="telegram_login">
-    <div class="loader"></div>
-    <p>正在通过TG Bot 登录中，请稍后</p>
+    <div class="content">
+      <div class="loader"></div>
+      <p>正在通过 TG Bot 登录中，请稍后</p>
+    </div>
   </div>
 </template>
 
@@ -62,21 +64,30 @@ onMounted(() => {
   height: 100vh;
   z-index: 99;
   display: flex;
-  flex-direction: column;
+
   align-items: center;
   justify-content: center;
   font-size: 20px;
-  background-color: rgba(16, 17, 20, 0.8);
+  background-color: rgba(16, 17, 20, 0.9);
   font-family: 'PingFangSC-Heavy';
+  .content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(16, 17, 20);
+    padding: 50px;
+    border-radius: 10px;
+  }
   .loader {
     width: 100px;
     aspect-ratio: 1;
     padding: 10px;
     box-sizing: border-box;
     display: grid;
-    background-color: transparent;
-    filter: blur(1px) contrast(10);
-    // mix-blend-mode: darken;
+    background-color: rgba(16, 17, 20);
+    filter: blur(5px) contrast(10);
+    mix-blend-mode: screen;
     margin-bottom: 12px;
   }
   .loader:before,
