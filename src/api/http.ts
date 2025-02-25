@@ -54,7 +54,7 @@ axiosInstance.interceptors.request.use(
 
 // 添加响应拦截器
 axiosInstance.interceptors.response.use(
-  (response: AxiosResponse) => {
+  async (response: AxiosResponse) => {
     // 对响应数据做点什么
     if (response.data.code == 200) {
       return response.data.data || response.data.msg
@@ -89,6 +89,14 @@ axiosInstance.interceptors.response.use(
         type: 'error',
         message: `${response.data.code} ${response.data.msg}  ${JSON.stringify(response.config.url)}`
       })
+    } else if (response.config.url?.indexOf('/api/auth/tgToWebDologin') !== -1) {
+      ElMessage({
+        type: 'error',
+        message: response.data.msg
+      })
+      setTimeout(() => {
+        window.location.href = '/'
+      }, 1000)
     } else {
       ElMessage({
         type: 'error',
