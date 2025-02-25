@@ -168,6 +168,10 @@
         height: 18px;
       }
     }
+    .telegram-pump {
+      width: 16px;
+      height: 16px;
+    }
     .captcha-box {
       width: 100%;
       .el-input {
@@ -262,15 +266,16 @@
     opacity: 0;
   }
   .tg-trade-title {
-    font-size: 28px;
+    font-size: 20px;
     color: #f5f5f5;
     font-family: 'PingFangSC-Heavy';
     line-height: 1.8;
   }
   .tg-trade-subtitle {
-    margin-top: 36px;
-    font-size: 16px;
-    margin-bottom: 26px;
+    margin-top: 24px;
+    font-size: 13px;
+    margin-bottom: 30px;
+    color: #9aa0aa;
     font-family: 'PingFangSC-Medium';
   }
 }
