@@ -109,39 +109,6 @@
           </div>
         </div>
         <div class="display-flex align-items-center">
-          <div class="display-flex flex-direction-col align-items-fd snipe-text">
-            <span class="margin-element">市值</span>
-            <span class="font-family-Heavy snipe-num"
-              >${{ numberFormat(props.pairInfo?.circulationVol || 0) }}</span
-            >
-          </div>
-          <div class="display-flex flex-direction-col align-items-fd snipe-text">
-            <span class="margin-element">池子</span>
-            <span class="font-family-Heavy snipe-num">${{ numberFormat(props.pairInfo.tvl) }}</span>
-          </div>
-          <div
-            class="display-flex flex-direction-col snipe-text"
-            @click="sniperDialogVisible = true"
-          >
-            <div class="display-flex align-items-center margin-element">
-              <span>狙击者</span>
-              <svg-icon name="chevron-right" class="chevron-right"></svg-icon>
-            </div>
-            <div class="display-flex align-items-center">
-              <svg-icon name="snipe-icon" class="snipe-icon"></svg-icon>
-              <span class="font-family-Heavy snipe-num"
-                >{{
-                  earliest100TraderData?.traders?.filter((item: any) => item.sniper)?.length || 0
-                }}/{{ earliest100TraderData?.traders?.length || 0 }}</span
-              >
-            </div>
-          </div>
-          <div class="display-flex flex-direction-col align-items-center snipe-text">
-            <span class="margin-element">持有者</span>
-            <strong class="font-family-Heavy snipe-num">{{
-              numberFormat(props.holdingCoinsTabInfo?.topHolders?.holds || 0)
-            }}</strong>
-          </div>
           <template v-if="baseInfo?.chainInfo?.chainCode != 'SOLANA'">
             <div class="display-flex align-items-center pond-start">
               <div class="display-flex flex-direction-col">
@@ -198,8 +165,11 @@
               <svg-icon name="chevron-right" class="chevron-right"></svg-icon>
             </div>
             <div class="display-flex align-items-center">
-              <svg-icon name="shield-tick1" class="shield-tick1"></svg-icon>
-              <span class="font-family-Heavy up-color">安全</span>
+              <svg-icon
+                name="auth-check"
+                style="width: 14px; height: 14px; color: var(--down-color)"
+              ></svg-icon>
+              <span class="font-family-Heavy down-color">安全</span>
             </div>
           </div>
           <!-- <div class="display-flex align-items-center pond-audit">
@@ -222,14 +192,6 @@
     :baseInfo="baseInfo"
     @close="handleClose"
     v-if="shareDialogVisible"
-  />
-
-  <SniperDialog
-    :sniperDialogVisible="sniperDialogVisible"
-    :baseInfo="baseInfo"
-    :earliest100TraderData="earliest100TraderData"
-    @close="handleClose"
-    v-if="sniperDialogVisible"
   />
 
   <el-drawer
@@ -255,7 +217,7 @@ import { numberFormat, shortifyAddress } from '@/utils'
 import { useSubscribeKChartInfo } from '@/stores/subscribeKChartInfo'
 import PercentageChange from '@/components/Percentage/PercentageChange.vue'
 import ShareDialog from '@/components/Dialogs/ShareDialog.vue'
-import SniperDialog from '@/components/Dialogs/SniperDialog.vue'
+
 import Favorite from '@/components/Favorite.vue'
 import SecurityTest from '@/components/Charts/SecurityTest.vue'
 
@@ -266,7 +228,7 @@ import { MAIN_COIN } from '@/types'
 const i18n = useI18n()
 
 const shareDialogVisible = ref<boolean>(false) // 弹框显示隐藏状态
-const sniperDialogVisible = ref<boolean>(false)
+
 const securityTestDrawer = ref<boolean>(false)
 
 const props = defineProps({
@@ -283,12 +245,6 @@ const props = defineProps({
     }
   },
   holdingCoinsTabInfo: {
-    type: Object,
-    default: () => {
-      return {}
-    }
-  },
-  earliest100TraderData: {
     type: Object,
     default: () => {
       return {}
@@ -318,7 +274,6 @@ const isContract = computed(() => {
 
 const handleClose = (val: boolean) => {
   shareDialogVisible.value = val
-  sniperDialogVisible.value = val
 }
 
 const handelIcon = () => {
