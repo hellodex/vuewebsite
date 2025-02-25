@@ -16,7 +16,7 @@
           <strong>欢迎来到HelloDex</strong>
           <span>开创和主导Web3变革，利润80%分给用户</span>
         </div>
-        <img src="../../assets/img/image-641.png" alt="" class="image-641" />
+        <!-- <img src="../../assets/img/image-641.png" alt="" class="image-641" /> -->
       </div>
       <el-divider> 注册 </el-divider>
       <el-form ref="ruleFormRef" :model="ruleForm" :rules="rules" :size="formSize">

@@ -261,6 +261,18 @@
   .fade-leave-to {
     opacity: 0;
   }
+  .tg-trade-title {
+    font-size: 28px;
+    color: #f5f5f5;
+    font-family: 'PingFangSC-Heavy';
+    line-height: 1.8;
+  }
+  .tg-trade-subtitle {
+    margin-top: 36px;
+    font-size: 16px;
+    margin-bottom: 26px;
+    font-family: 'PingFangSC-Medium';
+  }
 }
 
 @keyframes fadeIn {
