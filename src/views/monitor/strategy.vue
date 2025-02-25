@@ -152,48 +152,56 @@
   <el-dialog v-model="dialogVisible" title="创建监控" width="600">
     <div class="strategy-dialog-content">
       <div
-        class="display-flex flex-direction-col strategy-dialog-content-item"
+        class="display-flex align-items-center justify-content-sp strategy-dialog-content-item"
         @click="handelDialog('price')"
       >
         <div class="display-flex align-items-center title-txt">
-          <svg-icon name="icon-coin-monitor" class="icon"></svg-icon>
-          <span>价格监控</span>
+          <svg-icon name="price-monitor" class="price-monitor icon"></svg-icon>
+          <div>
+            <span>价格监控</span>
+            <p class="description-txt">设置代币到达指定价格时通知。</p>
+          </div>
         </div>
-        <p class="description-txt">
-          设置代币到达指定价格时通过 网页、APP、TG机器人、邮件发送通知。
-        </p>
+        <svg-icon name="chevron-right" class="chevron-right"></svg-icon>
       </div>
       <div
-        class="display-flex flex-direction-col strategy-dialog-content-item"
+        class="display-flex align-items-center justify-content-sp strategy-dialog-content-item"
         @click="handelDialog('chg')"
       >
         <div class="display-flex align-items-center title-txt">
-          <svg-icon name="icon-coin-monitor" class="icon"></svg-icon>
-          <span>涨跌幅监控</span>
+          <svg-icon name="chg-monitor" class="chg-monitor icon"></svg-icon>
+          <div>
+            <span>涨跌幅监控</span>
+            <p class="description-txt">设置代币到达指定涨跌幅知。</p>
+          </div>
         </div>
-        <p class="description-txt">
-          设置代币到达指定涨跌幅时通过 网页、APP、TG机器人、邮件发送通知。
-        </p>
+        <svg-icon name="chevron-right" class="chevron-right"></svg-icon>
       </div>
       <div
-        class="display-flex flex-direction-col strategy-dialog-content-item"
+        class="display-flex align-items-center justify-content-sp strategy-dialog-content-item"
         @click="handelDialog('buy')"
       >
         <div class="display-flex align-items-center title-txt">
-          <svg-icon name="icon-coin-monitor" class="icon"></svg-icon>
-          <span>大单买入监控</span>
+          <svg-icon name="buy-monitor" class="icon buy-monitor"></svg-icon>
+          <div>
+            <span>大单买入监控</span>
+            <p class="description-txt">设置代币每笔买入交易额通知。</p>
+          </div>
         </div>
-        <p class="description-txt">设置代币每笔交易额通过 网页、APP、TG机器人、邮件发送通知。</p>
+        <svg-icon name="chevron-right" class="chevron-right"></svg-icon>
       </div>
       <div
-        class="display-flex flex-direction-col strategy-dialog-content-item"
+        class="display-flex align-items-center justify-content-sp strategy-dialog-content-item"
         @click="handelDialog('sell')"
       >
         <div class="display-flex align-items-center title-txt">
-          <svg-icon name="icon-coin-monitor" class="icon"></svg-icon>
-          <span>大单卖出监控</span>
+          <svg-icon name="sell-monitor" class="icon sell-monitor"></svg-icon>
+          <div>
+            <span>大单卖出监控</span>
+            <p class="description-txt">设置代币每笔卖出交易额通知。</p>
+          </div>
         </div>
-        <p class="description-txt">设置代币每笔交易额通过 网页、APP、TG机器人、邮件发送通知。</p>
+        <svg-icon name="chevron-right" class="chevron-right"></svg-icon>
       </div>
     </div>
   </el-dialog>
@@ -841,9 +849,9 @@ onMounted(() => {
 }
 .strategy-dialog-content {
   .strategy-dialog-content-item {
-    border: 1px solid rgb(92, 96, 104);
-    padding: 12px;
     border-radius: 12px;
+    background: rgba(37, 37, 37, 0.2);
+    padding: 12px;
     transition: all 0.2s;
     cursor: pointer;
     margin-bottom: 12px;
@@ -851,22 +859,35 @@ onMounted(() => {
       color: #cfd3dc;
     }
     .icon {
-      width: 24px;
-      height: 24px;
+      width: 25px;
+      height: 25px;
       margin-right: 8px;
-      color: #cfd3dc;
     }
+    .price-monitor {
+      color: #bf8c00;
+    }
+    .chg-monitor,
+    .sell-monitor {
+      color: var(--down-color);
+    }
+    .buy-monitor {
+      color: var(--up-color);
+    }
+
     .description-txt {
       font-size: 12px;
-      margin-top: 8px;
+      margin-top: 4px;
       color: var(--dex-color-4);
+    }
+    .chevron-right {
+      width: 24px;
+      height: 24px;
+      color: #666;
     }
   }
   .strategy-dialog-content-item:hover {
-    border: 1px solid #f5f5f5;
-    .title-txt,
-    .icon {
-      color: #f5f5f5;
+    .txt {
+      font-family: 'Times New Roman', Times, serif;
     }
   }
   :deep(.el-popper) {

@@ -1,17 +1,16 @@
 <template>
   <div class="coinWalletDetails">
-    <BaseInfo
-      :baseInfo="baseInfo"
-      :pairInfo="rightSideBarInfo.pairInfo"
-      :holdingCoinsTabInfo="holdingCoinsTabInfo"
-      :earliest100TraderData="earliest100TraderData"
-    />
     <div class="coinWalletDetails-content display-flex align-items-fs">
       <!-- 币信息 -->
       <section
         class="coinWalletDetails-section"
         :style="{ width: `calc(100vw - 350px - ${switchLeftState ? '300px' : '0px'})` }"
       >
+        <BaseInfo
+          :baseInfo="baseInfo"
+          :pairInfo="rightSideBarInfo.pairInfo"
+          :holdingCoinsTabInfo="holdingCoinsTabInfo"
+        />
         <!-- K线 -->
         <el-scrollbar>
           <div class="coinWalletDetails-section-main">
@@ -162,6 +161,7 @@
         :currentTokenHoldInfo="currentTokenHoldInfo"
         :holdingCoinsTabInfo="holdingCoinsTabInfo"
         :baseInfo="baseInfo"
+        :earliest100TraderData="earliest100TraderData"
       />
     </div>
     <div id="draggable-box">

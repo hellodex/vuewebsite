@@ -217,6 +217,7 @@ socket.on('disconnect', () => {
 
 socket.on('connect_error', (err: any) => {
   const ts = String(new Date().getTime())
+  console.info('connect_error', ts)
   socket.io.opts.query.ts = ts
   socket.io.opts.query.sign = CryptoJS.SHA256(channel + ts + version + key).toString()
 })

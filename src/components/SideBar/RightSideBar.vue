@@ -2,54 +2,133 @@
   <el-scrollbar height="calc(100vh - 206px)">
     <aside class="right-layout">
       <el-skeleton style="width: 100%" :loading="props.loadRightSideBar" animated :rows="28">
-        <div class="menu-box display-flex align-items-center justify-content-sp">
-          <a
-            :href="`https://x.com/search?q=${props.baseInfo.tokenInfo?.baseSymbol}`"
-            target="_blank"
-            class="menu-item"
-          >
-            <el-icon class="menu-icon"><Search /></el-icon>
-            <span>名称</span>
-          </a>
-          <a
-            :href="`https://x.com/search?q=${props.baseInfo.tokenInfo?.baseAddress}`"
-            target="_blank"
-            class="menu-item"
-          >
-            <el-icon class="menu-icon"><Search /></el-icon>
-            <span>合约</span>
-          </a>
-          <div class="menu-item">
-            <svg-icon name="website-pump" class="website-pump menu-icon"></svg-icon>
+        <div class="pond-main">
+          <div class="publicize-main align-items-center justify-content-sp">
+            <div class="publicize-content">
+              <div class="display-flex align-items-center">
+                <span class="txt">宣传代币 就在HelloDex</span>
+              </div>
+              <a href="https://t.me/HelloDex_cn" target="_blank" class="arrow-down-info">
+                <span>点击免费收录</span>
+              </a>
+            </div>
+            <div class="menu-box display-flex">
+              <div class="menu-item">
+                <svg-icon name="x" class="x-icon menu-icon"></svg-icon>
+              </div>
+              <div class="menu-item">
+                <svg-icon name="website-pump" class="website-pump menu-icon"></svg-icon>
+              </div>
+              <div class="menu-item">
+                <svg-icon name="tg-app" class="menu-icon"></svg-icon>
+              </div>
+              <a
+                :href="`https://x.com/search?q=${props.baseInfo.tokenInfo?.baseSymbol}`"
+                target="_blank"
+                class="menu-item"
+              >
+                <svg-icon name="x" class="x-icon menu-icon"></svg-icon>
+                <span>搜索名称</span>
+              </a>
+              <a
+                :href="`https://x.com/search?q=${props.baseInfo.tokenInfo?.baseAddress}`"
+                target="_blank"
+                class="menu-item"
+              >
+                <svg-icon name="x" class="x-icon menu-icon"></svg-icon>
+                <span>搜索合约</span>
+              </a>
+            </div>
+            <img src="@/assets/img/rocket-logo.png" alt="" class="rocket-logo" />
           </div>
-          <div class="menu-item">
-            <svg-icon name="tg-app" class="menu-icon"></svg-icon>
+          <div class="pond-info">
+            <div class="pond-info-item display-flex align-items-center justify-content-sp">
+              <div
+                class="flex-1 display-flex flex-direction-col snipe-text"
+                @click="sniperDialogVisible = true"
+              >
+                <div class="display-flex align-items-center margin-element">
+                  <span>狙击者</span>
+                  <svg-icon name="chevron-right" class="chevron-right"></svg-icon>
+                </div>
+                <div class="display-flex align-items-center">
+                  <svg-icon name="snipe-icon" class="snipe-icon"></svg-icon>
+                  <span class="font-family-Heavy snipe-num"
+                    >{{
+                      earliest100TraderData?.traders?.filter((item: any) => item.sniper)?.length ||
+                      0
+                    }}/{{ earliest100TraderData?.traders?.length || 0 }}</span
+                  >
+                </div>
+              </div>
+              <div class="flex-1 display-flex flex-direction-col align-items-center">
+                <span>总市值</span>
+                <strong>${{ numberFormat(props.pairInfo?.circulationVol || 0) }}</strong>
+              </div>
+              <div class="flex-1 display-flex flex-direction-col align-items-center">
+                <span>{{ i18n.t('kChart.Vol1D') }}</span>
+                <strong>${{ numberFormat(props.pairInfo.tradeTvl) }}</strong>
+              </div>
+              <div class="flex-1 display-flex flex-direction-col align-items-fd">
+                <span>持币人</span>
+                <strong>{{
+                  numberFormat(props.holdingCoinsTabInfo?.topHolders?.holds || 0)
+                }}</strong>
+              </div>
+            </div>
           </div>
-          <div class="menu-item">
-            <svg-icon name="x" class="x-icon menu-icon"></svg-icon>
+          <div class="pond-info">
+            <div class="pond-info-item display-flex flex-direction-col" style="padding: 10px">
+              <div
+                class="flex-1 display-flex align-items-center justify-content-sp"
+                style="padding: 0"
+              >
+                <span>{{ baseInfo.tokenInfo?.baseSymbol }}</span>
+                <strong
+                  >{{ numberFormat(pairInfo.baseAmount || 0) }} ${{
+                    numberFormat(pairInfo.basePrice)
+                  }}</strong
+                >
+              </div>
+              <div
+                class="flex-1 display-flex align-items-center justify-content-sp"
+                style="margin: 4px 0"
+              >
+                <span>{{ baseInfo.tokenInfo?.quoteSymbol }}</span>
+                <strong
+                  >{{ numberFormat(pairInfo.quoteAmount || 0) }} ${{
+                    numberFormat(pairInfo.quotePrice)
+                  }}</strong
+                >
+              </div>
+              <div
+                class="flex-1 display-flex align-items-center justify-content-sp"
+                style="padding: 0"
+              >
+                <span>开盘时间</span>
+                <strong>{{ formatLineDate((pairInfo.startTime || 0) * 1000) }}</strong>
+              </div>
+            </div>
           </div>
-          <a href="https://t.me/HelloDex_cn" target="_blank" class="menu-item">
-            <svg-icon name="crown" class="menu-icon"></svg-icon>
-            <svg-icon name="update-icon" class="update-icon"></svg-icon>
-          </a>
+          <div class="pond-time display-flex align-items-center justify-content-sp">
+            <div class="flex-1 display-flex flex-direction-col align-items-center">
+              <span>5m</span>
+              <PercentageNotbg :value="props.pairInfo.chg5m || 0" />
+            </div>
+            <div class="flex-1 display-flex flex-direction-col align-items-center">
+              <span>1h</span>
+              <PercentageNotbg :value="props.pairInfo.chg1h || 0" />
+            </div>
+            <div class="flex-1 display-flex flex-direction-col align-items-center">
+              <span>4h</span>
+              <PercentageNotbg :value="props.pairInfo.chg4h || 0" />
+            </div>
+            <div class="flex-1 display-flex flex-direction-col align-items-center">
+              <span>24h</span>
+              <PercentageNotbg :value="props.pairInfo.chg1d || 0" />
+            </div>
+          </div>
         </div>
-        <a
-          href="https://t.me/HelloDex_cn"
-          target="_blank"
-          class="publicize-main align-items-center justify-content-sp"
-        >
-          <!-- <div class="display-flex flex-direction-col">
-            <div class="display-flex align-items-center">
-              <svg-icon name="publicize-coin" class="publicize-coin"></svg-icon>
-              <span>就在HelloDex</span>
-            </div>
-            <div class="display-flex align-items-center arrow-down-info">
-              <span>申请更新信息</span>
-              <svg-icon name="chevron-right" class="arrow-down"></svg-icon>
-            </div>
-          </div> -->
-          <img src="@/assets/img/rocket-logo.svg" alt="" class="rocket-logo" />
-        </a>
         <div class="transaction-box">
           <template v-if="walletType == 'Email'">
             <div class="display-flex align-items-center justify-content-sp coin-info-main">
@@ -172,32 +251,8 @@
         </div>
 
         <div class="pond-main">
-          <div class="pond-time display-flex align-items-center justify-content-sp">
-            <div class="flex-1 display-flex flex-direction-col align-items-center">
-              <span>5m</span>
-              <PercentageNotbg :value="props.pairInfo.chg5m || 0" />
-            </div>
-            <div class="flex-1 display-flex flex-direction-col align-items-center">
-              <span>1h</span>
-              <PercentageNotbg :value="props.pairInfo.chg1h || 0" />
-            </div>
-            <div class="flex-1 display-flex flex-direction-col align-items-center">
-              <span>4h</span>
-              <PercentageNotbg :value="props.pairInfo.chg4h || 0" />
-            </div>
-            <div class="flex-1 display-flex flex-direction-col align-items-center">
-              <span>24h</span>
-              <PercentageNotbg :value="props.pairInfo.chg1d || 0" />
-            </div>
-          </div>
           <div class="pond-info">
-            <div class="pond-info-item display-flex align-items-center justify-content-sp">
-              <div class="flex-1 display-flex flex-direction-col align-items-fs">
-                <span>持币人</span>
-                <strong>{{
-                  numberFormat(props.holdingCoinsTabInfo?.topHolders?.holds || 0)
-                }}</strong>
-              </div>
+            <!-- <div class="pond-info-item display-flex align-items-center justify-content-sp">
               <div class="flex-1 display-flex flex-direction-col align-items-center">
                 <span>{{ i18n.t('kChart.TotalSupply') }}</span>
                 <strong
@@ -210,11 +265,7 @@
                 <span>池子市值</span>
                 <strong>${{ numberFormat(props.pairInfo.tvl) }}</strong>
               </div>
-              <div class="flex-1 display-flex flex-direction-col align-items-center">
-                <span>{{ i18n.t('kChart.Vol1D') }}</span>
-                <strong>${{ numberFormat(props.pairInfo.tradeTvl) }}</strong>
-              </div>
-            </div>
+            </div> -->
             <div class="pond-info-item display-flex align-items-center justify-content-sp">
               <div class="flex-1 display-flex flex-direction-col align-items-fs">
                 <span>开盘价格</span>
@@ -251,10 +302,6 @@
                 <strong>{{ props.pairInfo?.circulationRate || 0 }}%</strong>
               </div>
             </div>
-            <div class="display-flex align-items-center justify-content-sp pond-info-title">
-              <span>总市值</span>
-              <span>${{ numberFormat(props.pairInfo?.circulationVol || 0) }}</span>
-            </div>
           </div>
         </div>
 
@@ -280,6 +327,13 @@
           </div>
         </div> -->
       </el-skeleton>
+      <SniperDialog
+        :sniperDialogVisible="sniperDialogVisible"
+        :baseInfo="baseInfo"
+        :earliest100TraderData="earliest100TraderData"
+        @close="handleClose"
+        v-if="sniperDialogVisible"
+      />
     </aside>
   </el-scrollbar>
 </template>
@@ -289,11 +343,12 @@ import { ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { useI18n } from 'vue-i18n'
-import { handleCoinPairInfo, numberFormat, shortifyAddress } from '@/utils'
+import { handleCoinPairInfo, numberFormat, shortifyAddress, formatLineDate } from '@/utils'
 import { useSubscribeKChartInfo } from '@/stores/subscribeKChartInfo'
 import PercentageNotbg from '@/components/Percentage/PercentageNotbg.vue'
 import Transaction from './components/Transaction.vue'
 import OneClickTrading from './components/OneClickTrading.vue'
+import SniperDialog from '@/components/Dialogs/SniperDialog.vue'
 import BuyLimit from './components/BuyLimit.vue'
 import SellLimit from './components/SellLimit.vue'
 import { useGlobalStore } from '@/stores/global'
@@ -307,6 +362,7 @@ const walletType = computed(() => globalStore.walletInfo.walletType)
 const i18n = useI18n()
 
 const childrenRef = ref<any>(null)
+const sniperDialogVisible = ref<boolean>(false)
 
 const props = defineProps({
   pairInfo: {
@@ -332,6 +388,12 @@ const props = defineProps({
     }
   },
   holdingCoinsTabInfo: {
+    type: Object,
+    default: () => {
+      return {}
+    }
+  },
+  earliest100TraderData: {
     type: Object,
     default: () => {
       return {}
@@ -400,6 +462,10 @@ const handelExchangeTab = (item: any) => {
     return false
   }
   exchangeTabIndex.value = item.id
+}
+
+const handleClose = (val: boolean) => {
+  sniperDialogVisible.value = val
 }
 </script>
 <style scoped lang="scss">
