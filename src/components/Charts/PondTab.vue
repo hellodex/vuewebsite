@@ -239,7 +239,7 @@ const rightTab = (item: any, index: number) => {
   }
   .pond-txt-act {
     color: var(--font-color-default);
-    background-color: var(--tab-bg-color);
+    background: rgba(58, 60, 64, 0.3);
   }
   .percent-p {
     display: grid;
@@ -307,7 +307,7 @@ const rightTab = (item: any, index: number) => {
   }
   .pond-tab-active {
     border-radius: 8px;
-    background: var(--tab-bg-color);
+    background: rgba(58, 60, 64, 0.3);
     .pond-tab-item-txt {
       color: var(--font-color-default);
     }

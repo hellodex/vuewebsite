@@ -63,6 +63,27 @@ export function formatDate(time: any) {
 
 /**
  * @description 时间格式化
+ * @param time
+ * @returns
+ */
+export function formatLineDate(time: any) {
+  if (!time) {
+    return time
+  }
+  const date = new Date(parseFloat(time))
+  const year = date.getFullYear(),
+    month = repair(date.getMonth() + 1), //月份是从0开始的
+    day = repair(date.getDate()),
+    hour = repair(date.getHours()),
+    min = repair(date.getMinutes()),
+    sec = repair(date.getSeconds())
+
+  const formatedDate = `${year}-${month}-${day} ${hour}:${min}:${sec}`
+  return formatedDate
+}
+
+/**
+ * @description 时间格式化
  * @param time 时间戳
  * @returns
  */
