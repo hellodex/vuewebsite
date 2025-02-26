@@ -49,6 +49,7 @@
                 target="_blank"
                 class="form-btn"
               >
+                <svg-icon name="telegram-pump" class="telegram-pump"></svg-icon>
                 <span>连接 Telegram</span>
               </a>
             </div>
