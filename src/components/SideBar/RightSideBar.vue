@@ -1,5 +1,5 @@
 <template>
-  <el-scrollbar height="calc(100vh - 206px)">
+  <el-scrollbar height="calc(100vh - 136px)">
     <aside class="right-layout">
       <el-skeleton style="width: 100%" :loading="props.loadRightSideBar" animated :rows="28">
         <div class="pond-main">
@@ -39,7 +39,7 @@
                 <span>搜索合约</span>
               </a>
             </div>
-            <img src="@/assets/img/rocket-logo.png" alt="" class="rocket-logo" />
+            <img src="@/assets/img/rocket-logo.svg" alt="" class="rocket-logo" />
           </div>
           <div class="pond-info">
             <div class="pond-info-item display-flex align-items-center justify-content-sp">
