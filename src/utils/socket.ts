@@ -5,7 +5,9 @@ import { io } from 'socket.io-client'
 import { ElMessage } from 'element-plus'
 import { numberFormat } from '@/utils'
 import CryptoJS from 'crypto-js'
-import test from 'node:test'
+import { customMessage } from './message'
+import BuyImg from '@/assets/img/buy-img.png'
+import SellImg from '@/assets/img/sell-img.png'
 
 function sendMessage(title: string, data: any) {
   const startTime = new Date().getTime() // 记录开始时间
@@ -16,8 +18,30 @@ function sendMessage(title: string, data: any) {
     duration: 5000,
     customClass: 'socket-elMessage',
     message: `<div class='display-flex flex-direction-col'>
-                <strong style="margin-bottom:8px;font-family:'PingFangSC-Heavy'">AI${title}：${data.symbol}</strong>
-                <span style="color:#fff;font-size:12px;line-height:1.5;">价格已到：${numberFormat(data.price)} 、交易额：${numberFormat(data.volume)}、方向：${data.flag == 0 ? '买入' : '卖出'}</span>
+                <div class='display-flex align-items-center'>
+                  ${(() => {
+                    if (data.flag == 0) {
+                      return `<img src='${BuyImg}'/>`
+                    } else {
+                      return `<img src='${SellImg}'/>`
+                    }
+                  })()}
+                  <strong class='title'>AI${title}：${data.symbol}</strong>
+                </div>
+                <div class='sun-title display-flex align-items-center'>
+                  <div>
+                    <span>价格已到:</span>
+                    <strong>${numberFormat(data.price)}</strong>
+                  </div>
+                  <div style='margin:0 14px;'>
+                    <span>交易额:</span>
+                    <strong>${numberFormat(data.volume)}</strong>
+                  </div>
+                  <div>
+                    <span>方向:</span>
+                    <strong class='${data.flag == 0 ? 'up-color' : 'down-color'}'>${data.flag == 0 ? '买入' : '卖出'}</strong>
+                  </div>
+                </div>
               </div>`,
     showClose: true,
     onClose: () => {
@@ -165,7 +189,10 @@ export function socketLogout() {
     const data = JSON.parse(message)
     if (data) {
       const globalStore = useGlobalStore()
-      ElMessage.error(`此账户已在新设备登录，如有问题请尽快联系客服`)
+      customMessage({
+        type: 'error',
+        title: '此账户已在新设备登录，如有问题请尽快联系客服'
+      })
       socketOffMonitor(globalStore.accountInfo.uuid, globalStore.accountInfo.tokenInfo.tokenValue)
       localStorage.removeItem('accountInfo')
       localStorage.removeItem('customWalletIndex')

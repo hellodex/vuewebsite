@@ -100,7 +100,6 @@
 
 <script lang="ts" setup>
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
-import { ElMessage } from 'element-plus'
 import { mainNetworkCurrency, numberFormat } from '@/utils'
 import { infinityAmount } from '@/types'
 import BigNumber from 'bignumber.js'
@@ -128,6 +127,7 @@ import { useChainConfigsStore } from '@/stores/chainConfigs'
 import { useGlobalStore } from '@/stores/global'
 import WalletConnect from '@/components/Wallet/WalletConnect.vue'
 import AdvancedSetting from './AdvancedSetting.vue'
+import { customMessage } from '@/utils/message'
 
 const globalStore = useGlobalStore()
 const chainConfigs = useChainConfigsStore().chainConfigs
@@ -578,7 +578,10 @@ watch(isConnected, (newValue) => {
   if (newValue) {
     updateTradingInfo()
     if (walletType.value !== 'Email') {
-      ElMessage.success(i18n.t('WalletConnected'))
+      customMessage({
+        type: 'success',
+        title: i18n.t('WalletConnected')
+      })
     }
   }
 })
@@ -587,7 +590,10 @@ watch(isConnected, (newValue) => {
 watch([address, chainId], () => {
   updateTradingInfo()
   if (isConnected.value && walletType.value !== 'Email') {
-    ElMessage.success(i18n.t('WalletDetailsUpdated'))
+    customMessage({
+      type: 'success',
+      title: i18n.t('WalletDetailsUpdated')
+    })
   }
 })
 

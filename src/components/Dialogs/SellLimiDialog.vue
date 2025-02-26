@@ -152,7 +152,6 @@
 <script setup lang="ts">
 import { ref, computed, reactive } from 'vue'
 import type { CSSProperties } from 'vue'
-import { ElMessage } from 'element-plus'
 import BigNumber from 'bignumber.js'
 import { USDT_CONFIG } from '@/types'
 import { shortifyAddress, numberFormat, quantityUnitFormat, isAllSpaces } from '@/utils'
@@ -162,6 +161,7 @@ import { resetAddress } from '@/utils/transition'
 import { notificationInfo, notificationSuccessful, notificationFailed } from '@/utils/notification'
 
 import { APIcreateOrder } from '@/api'
+import { customMessage } from '@/utils/message'
 
 const okCoin = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
 
@@ -348,15 +348,24 @@ const handelPositionInput = () => {
 
 const handelConfirm = async () => {
   if (tabIndex.value == 1 && isAllSpaces(marketValue.value)) {
-    ElMessage.error('请输入触发市值')
+    customMessage({
+      type: 'error',
+      title: '请输入触发市值'
+    })
     return
   }
   if (tabIndex.value == 2 && isAllSpaces(priceValue.value)) {
-    ElMessage.error('请输入触发价格')
+    customMessage({
+      type: 'error',
+      title: '请输入触发价格'
+    })
     return
   }
   if (isAllSpaces(amount.value)) {
-    ElMessage.error('请输入数量')
+    customMessage({
+      type: 'error',
+      title: '请输入数量'
+    })
     return
   }
   notificationInfo({

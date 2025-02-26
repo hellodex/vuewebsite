@@ -104,7 +104,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { ElMessage, ElMessageBox } from 'element-plus'
+import { ElMessageBox } from 'element-plus'
 import { useGlobalStore } from '@/stores/global'
 import { useChainConfigsStore } from '@/stores/chainConfigs'
 import { APIlogout } from '@/api/login'
@@ -112,6 +112,7 @@ import { useI18n } from 'vue-i18n'
 import { shortifyAddress, numberFormat } from '@/utils'
 import { getTokenList } from '@/utils/transition'
 import { socketOffMonitor } from '@/utils/socket'
+import { customMessage } from '@/utils/message'
 
 const router = useRouter()
 const route = useRoute()
@@ -150,7 +151,10 @@ const handelLogon = async () => {
       const res = await APIlogout()
       console.log(res)
       if (res) {
-        ElMessage.success(`账号退出成功`)
+        customMessage({
+          type: 'success',
+          title: '账号退出成功'
+        })
         await socketOffMonitor(
           globalStore.accountInfo.uuid,
           globalStore.accountInfo.tokenInfo.tokenValue

@@ -360,7 +360,7 @@
 <script setup lang="ts">
 import { reactive, ref, onMounted, computed, watch } from 'vue'
 import type { ComponentSize, FormInstance, FormRules } from 'element-plus'
-import { ElMessage, ElMessageBox } from 'element-plus'
+import { ElMessageBox } from 'element-plus'
 import { useGlobalStore } from '@/stores/global'
 import {
   APIgetTokenMata,
@@ -374,6 +374,7 @@ import {
 import { timeago, numberFormat } from '@/utils'
 import { useI18n } from 'vue-i18n'
 import WalletConnect from '@/components/Wallet/WalletConnect.vue'
+import { customMessage } from '@/utils/message'
 
 const i18n = useI18n()
 const globalStore = useGlobalStore()
@@ -401,7 +402,10 @@ const handleCheckedChannel = async (val: any) => {
   })
 
   getTableData()
-  ElMessage.success(`渠道设置成功`)
+  customMessage({
+    type: 'success',
+    title: `渠道设置成功`
+  })
 }
 
 const strategyList = [
@@ -600,7 +604,10 @@ const deleteForm = async (formEl: FormInstance | undefined) => {
         ...ruleForm
       })
       getTableData()
-      ElMessage.success(`${typeList.find((item) => item.value == ruleForm.type)?.label}删除成功`)
+      customMessage({
+        type: 'success',
+        title: `${typeList.find((item) => item.value == ruleForm.type)?.label}删除成功`
+      })
       dialogFormVisible.value = false
     } else {
       console.log('error submit!', fields)
@@ -620,7 +627,10 @@ const submitForm = async (formEl: FormInstance | undefined) => {
         ...ruleForm
       })
       getTableData()
-      ElMessage.success(`${typeList.find((item) => item.value == ruleForm.type)?.label}创建成功`)
+      customMessage({
+        type: 'success',
+        title: `${typeList.find((item) => item.value == ruleForm.type)?.label}创建成功`
+      })
       dialogFormVisible.value = false
     } else {
       console.log('error submit!', fields)
@@ -669,7 +679,10 @@ const handelDel = async (row: any) => {
       })
       if (res) {
         getTableData()
-        ElMessage.success(`${typeList.find((item) => item.value == params.type)?.label}删除成功`)
+        customMessage({
+          type: 'success',
+          title: `${typeList.find((item) => item.value == params.type)?.label}删除成功`
+        })
       }
     })
     .catch(() => {})
@@ -684,7 +697,10 @@ const handelPause = async (row: any) => {
   })
   if (res) {
     getTableData()
-    ElMessage.success(`${typeList.find((item) => item.value == params.type)?.label}已暂停`)
+    customMessage({
+      type: 'info',
+      title: `${typeList.find((item) => item.value == params.type)?.label}已暂停！`
+    })
   }
 }
 
@@ -698,7 +714,10 @@ const handelPlay = async (row: any) => {
   })
   if (res) {
     getTableData()
-    ElMessage.success(`${typeList.find((item) => item.value == params.type)?.label}已启动`)
+    customMessage({
+      type: 'success',
+      title: `${typeList.find((item) => item.value == params.type)?.label}已启动`
+    })
   }
 }
 
@@ -849,10 +868,12 @@ onMounted(() => {
 }
 .strategy-dialog-content {
   .strategy-dialog-content-item {
+    position: relative;
+    overflow: hidden;
     border-radius: 12px;
     background: rgba(37, 37, 37, 0.2);
     padding: 12px;
-    transition: all 0.2s;
+    transition: all 0.2s ease;
     cursor: pointer;
     margin-bottom: 12px;
     .title-txt {
@@ -885,11 +906,30 @@ onMounted(() => {
       color: #666;
     }
   }
-  .strategy-dialog-content-item:hover {
-    .txt {
-      font-family: 'Times New Roman', Times, serif;
-    }
+  /* 水波纹效果 */
+  .strategy-dialog-content-item::after {
+    content: '';
+    position: absolute;
+    background: rgba(37, 37, 37, 0.6);
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    opacity: 0;
+    transform: translate(-50%, -50%); /* 居中 */
+    transition:
+      width 1.5s,
+      height 1.5s; /* 平滑过渡 */
+    pointer-events: none; /* 防止影响点击 */
   }
+
+  .strategy-dialog-content-item:hover::after {
+    opacity: 1;
+    width: 200%; /* 宽度增加到原来的两倍 */
+    height: 200%; /* 高度增加到原来的两倍 */
+  }
+
   :deep(.el-popper) {
     .el-select-dropdown__item {
       color: var(--dex-color-4);
@@ -949,5 +989,13 @@ onMounted(() => {
 }
 .span-txt {
   margin-left: 6px;
+}
+
+/* 水波纹动画 */
+@keyframes ripple {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
 }
 </style>

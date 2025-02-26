@@ -179,8 +179,8 @@ import VerificationCodeInput from '@/components/VerificationCodeInput.vue'
 
 import { isAllSpaces } from '@/utils'
 import { APIdologin, APIuserInfo, APIsendMessage } from '@/api/login'
-import { ElMessage } from 'element-plus'
 import { socketOffMonitor, socketOnMonitor } from '@/utils/socket'
+import { customMessage } from '@/utils/message'
 
 // 正则表达式
 const minLength = /.{8,}/ // 至少8个字符
@@ -398,7 +398,10 @@ const submitForm = async (formEl: FormInstance | undefined) => {
       if (res) {
         localStorage.setItem('accountInfo', JSON.stringify(res))
         const userInfo: any = await APIuserInfo()
-        ElMessage.success('账户登陆成功')
+        customMessage({
+          type: 'success',
+          title: '账户登陆成功'
+        })
         const obj = Object.assign({}, res, userInfo)
         localStorage.setItem('accountInfo', JSON.stringify(obj))
 

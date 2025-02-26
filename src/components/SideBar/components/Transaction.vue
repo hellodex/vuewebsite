@@ -156,7 +156,6 @@
 <script lang="ts" setup>
 import { ref, reactive, onMounted, watch, computed, onUnmounted } from 'vue'
 import type { CSSProperties } from 'vue'
-import { ElMessage } from 'element-plus'
 import SearchTransactionDialog from '@/components/Dialogs/SearchTransactionDialog.vue'
 import WalletConnect from '@/components/Wallet/WalletConnect.vue'
 
@@ -183,6 +182,7 @@ import {
   handelSwitchNetwork,
   handleEvmApprove
 } from '@/utils/transition'
+import { customMessage } from '@/utils/message'
 
 const globalStore = useGlobalStore()
 const { chainLogoObj } = globalStore
@@ -460,12 +460,18 @@ const handleTrade = async () => {
   tradeLoading.value = true
   if (parseFloat(sellingVal.value || '0') == 0) {
     tradeLoading.value = false
-    ElMessage.error('请输入数量')
+    customMessage({
+      type: 'error',
+      title: `请输入数量`
+    })
     return
   }
   if (sellingcoinInfo.value.balance == 0) {
     tradeLoading.value = false
-    ElMessage.error('余额不足')
+    customMessage({
+      type: 'error',
+      title: `余额不足`
+    })
     return
   }
 
@@ -489,7 +495,10 @@ const handleTrade = async () => {
         )
         if (!approveResult) {
           tradeLoading.value = false
-          ElMessage.error('代币授权失败')
+          customMessage({
+            type: 'error',
+            title: `代币授权失败`
+          })
           return false
         }
       }
@@ -524,10 +533,16 @@ const handleTrade = async () => {
     buyVal.value = ''
     positionVal.value = 0
     updateWalletInfo()
-    ElMessage.success(i18n.t('TransactionSuccessful'))
+    customMessage({
+      type: 'success',
+      title: i18n.t('TransactionSuccessful')
+    })
   } else {
     tradeLoading.value = false
-    ElMessage.error(i18n.t('TransactionFailed'))
+    customMessage({
+      type: 'error',
+      title: i18n.t('TransactionFailed')
+    })
   }
 }
 
@@ -535,7 +550,10 @@ const handleTrade = async () => {
 watch(isConnected, (newValue) => {
   if (newValue) {
     updateWalletInfo()
-    ElMessage.success(i18n.t('WalletConnected'))
+    customMessage({
+      type: 'success',
+      title: i18n.t('WalletConnected')
+    })
   }
 })
 
@@ -543,7 +561,10 @@ watch(isConnected, (newValue) => {
 watch([address, chainId], () => {
   updateWalletInfo()
   if (isConnected.value) {
-    ElMessage.success(i18n.t('WalletDetailsUpdated'))
+    customMessage({
+      type: 'success',
+      title: i18n.t('WalletDetailsUpdated')
+    })
   }
 })
 
