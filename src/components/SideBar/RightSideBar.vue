@@ -341,7 +341,6 @@
 import BigNumber from 'bignumber.js'
 import { ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { ElMessage } from 'element-plus'
 import { useI18n } from 'vue-i18n'
 import { handleCoinPairInfo, numberFormat, shortifyAddress, formatLineDate } from '@/utils'
 import { useSubscribeKChartInfo } from '@/stores/subscribeKChartInfo'
@@ -353,6 +352,7 @@ import BuyLimit from './components/BuyLimit.vue'
 import SellLimit from './components/SellLimit.vue'
 import { useGlobalStore } from '@/stores/global'
 import { balanceFormat } from '@/utils/transition'
+import { customMessage } from '@/utils/message'
 
 const globalStore = useGlobalStore()
 const useSubscribeKChart = useSubscribeKChartInfo()
@@ -458,7 +458,10 @@ const exchangeTabIndex = ref(1) // tab 当前值
 const handelExchangeTab = (item: any) => {
   // tab切换函数
   if ([3].includes(item.id)) {
-    ElMessage(i18n.t('h5.ComingSoon'))
+    customMessage({
+      type: 'info',
+      title: i18n.t('h5.ComingSoon')
+    })
     return false
   }
   exchangeTabIndex.value = item.id

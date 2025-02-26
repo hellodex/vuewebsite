@@ -12,8 +12,8 @@ import { onMounted } from 'vue'
 import { useGlobalStore } from '@/stores/global'
 import { useRouter, useRoute } from 'vue-router'
 import { APItgToWebDologin, APIuserInfo } from '@/api/login'
-import { ElMessage } from 'element-plus'
 import { socketOffMonitor, socketOnMonitor } from '@/utils/socket'
+import { customMessage } from '@/utils/message'
 
 const route = useRoute()
 const router = useRouter()
@@ -28,7 +28,10 @@ const login = async () => {
   if (res) {
     localStorage.setItem('accountInfo', JSON.stringify(res))
     const userInfo: any = await APIuserInfo()
-    ElMessage.success('tg账户登陆成功')
+    customMessage({
+      type: 'success',
+      title: 'tg账户登陆成功'
+    })
     const obj = Object.assign({}, res, userInfo)
     localStorage.setItem('accountInfo', JSON.stringify(obj))
 

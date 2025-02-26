@@ -17,7 +17,6 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { ElMessage } from 'element-plus'
 import { handleCoinPairInfo, mainNetworkCurrency, numberFormat } from '@/utils'
 import { useGlobalStore } from '@/stores/global'
 import { useI18n } from 'vue-i18n'
@@ -41,6 +40,7 @@ import {
   notificationWarn
 } from '@/utils/notification'
 import { APIgetSwap, APIauthTradeSwap } from '@/api/coinWalletDetails'
+import { customMessage } from '@/utils/message'
 
 const props = defineProps({
   info: {
@@ -116,7 +116,10 @@ const handelOccupy = () => {
 
 const handelBuy = async () => {
   if (!parseFloat(props.amount)) {
-    ElMessage.error('请输入买入数量')
+    customMessage({
+      type: 'error',
+      title: '请输入买入数量'
+    })
     return false
   }
 
@@ -136,7 +139,10 @@ const handelBuy = async () => {
 
 const handleTrade = async (selectSellCoin: any, selectBuyCoin: any, type: any) => {
   if (selectSellCoin.balance == 0) {
-    ElMessage.error('余额不足')
+    customMessage({
+      type: 'error',
+      title: '余额不足'
+    })
     return
   }
   notificationInfo({
@@ -235,11 +241,17 @@ const handleTrade = async (selectSellCoin: any, selectBuyCoin: any, type: any) =
 
 const handelCustomTradeSwap = async (selectSellCoin: any, selectBuyCoin: any, type: any) => {
   if (selectSellCoin.chainCode !== customWalletInfo.value.chainCode) {
-    ElMessage.error(`请选择${selectSellCoin.chainCode}链钱包`)
+    customMessage({
+      type: 'error',
+      title: `请选择${selectSellCoin.chainCode}链钱包`
+    })
     return
   }
   if (selectSellCoin.balance == 0) {
-    ElMessage.error('余额不足')
+    customMessage({
+      type: 'error',
+      title: '余额不足'
+    })
     return
   }
 

@@ -1,8 +1,9 @@
 import { watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { ElMessageBox, ElMessage } from 'element-plus'
+import { ElMessageBox } from 'element-plus'
 import { useAppKitAccount, useAppKit, useDisconnect } from '@reown/appkit/vue'
 import { useGlobalStore } from '@/stores/global'
+import { customMessage } from '@/utils/message'
 
 export function useConnectWallet() {
   const i18n = useI18n()
@@ -22,7 +23,10 @@ export function useConnectWallet() {
       type: 'info'
     })
       .then(() => {
-        ElMessage.success(`账号退出成功`)
+        customMessage({
+          type: 'success',
+          title: '账号退出成功'
+        })
         disconnect()
       })
       .catch(() => {})

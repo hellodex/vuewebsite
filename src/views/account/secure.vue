@@ -86,7 +86,7 @@ import { useGlobalStore } from '@/stores/global'
 import type { FormInstance, FormRules } from 'element-plus'
 import { APIsendMessage, APImodifyPwd } from '@/api/login'
 import { isAllSpaces } from '@/utils'
-import { ElMessage } from 'element-plus'
+import { customMessage } from '@/utils/message'
 
 const router = useRouter()
 const globalStore = useGlobalStore()
@@ -238,7 +238,10 @@ const submitForm = async (formEl: FormInstance | undefined) => {
       console.log(res)
       loading.value = false
       if (res) {
-        ElMessage.success('密码修改成功')
+        customMessage({
+          type: 'success',
+          title: '密码修改成功'
+        })
         modifyPasswordDialogVisible.value = false
         localStorage.removeItem('accountInfo')
         localStorage.removeItem('customWalletIndex')

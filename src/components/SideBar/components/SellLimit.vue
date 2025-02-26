@@ -223,7 +223,6 @@
 import BigNumber from 'bignumber.js'
 import { ref, reactive, computed, watch, onMounted, onUnmounted } from 'vue'
 import type { CSSProperties } from 'vue'
-import { ElMessage } from 'element-plus'
 import {
   balanceFormat,
   resetAddress,
@@ -243,6 +242,7 @@ import { useI18n } from 'vue-i18n'
 import { mainNetworkCurrency, numberFormat, isAllSpaces } from '@/utils'
 import { useGlobalStore } from '@/stores/global'
 import AdvancedSetting from './AdvancedSetting.vue'
+import { customMessage } from '@/utils/message'
 
 const i18n = useI18n()
 const globalStore = useGlobalStore()
@@ -495,16 +495,25 @@ const handelMarketPriceInput = () => {
 
 const handelMarketSell = async () => {
   if (isAllSpaces(amount.value) || amount.value == '0') {
-    ElMessage.error(`请输入数量`)
+    customMessage({
+      type: 'error',
+      title: '请输入数量'
+    })
     return
   }
 
   if (sellInfo.value.chainCode !== customWalletInfo.value.chainCode) {
-    ElMessage.error(`请选择${sellInfo.value.chainCode}链钱包`)
+    customMessage({
+      type: 'error',
+      title: `请选择${sellInfo.value.chainCode}链钱包`
+    })
     return
   }
   if (sellInfo.value.balance == 0) {
-    ElMessage.error('余额不足')
+    customMessage({
+      type: 'error',
+      title: `余额不足`
+    })
     return
   }
 
@@ -516,7 +525,10 @@ const handelMarketSell = async () => {
     gasAmountMultiple * 300000 * Number(advancedSetting.value.gasObj.gwei) >=
     mainNetworkCurrencyAmount.value
   ) {
-    ElMessage.error('账户余额低于所付gas费用，请及时充值')
+    customMessage({
+      type: 'error',
+      title: `账户余额低于所付gas费用，请及时充值`
+    })
     return
   }
 
@@ -696,22 +708,34 @@ const handelLimitSell = async () => {
     isAllSpaces(targetMarketCap.value) &&
     isAllSpaces(targetPrice.value)
   ) {
-    ElMessage.error('请输入预期值')
+    customMessage({
+      type: 'error',
+      title: `请输入预期值`
+    })
     return
   }
 
   if (isAllSpaces(limitAmount.value)) {
-    ElMessage.error('请输入数量')
+    customMessage({
+      type: 'error',
+      title: `请输入数量`
+    })
     return
   }
 
   if (sellInfo.value.chainCode !== customWalletInfo.value.chainCode) {
-    ElMessage.error(`请选择${sellInfo.value.chainCode}链钱包`)
+    customMessage({
+      type: 'error',
+      title: `请选择${sellInfo.value.chainCode}链钱包`
+    })
     return
   }
 
   if (sellInfo.value.balance == 0) {
-    ElMessage.error('余额不足')
+    customMessage({
+      type: 'error',
+      title: `余额不足`
+    })
     return
   }
 

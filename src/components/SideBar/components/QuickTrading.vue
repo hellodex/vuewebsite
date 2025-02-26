@@ -163,9 +163,9 @@ import {
 import { useI18n } from 'vue-i18n'
 import { APIgetSwap, APIauthTradeSwap } from '@/api/coinWalletDetails'
 import { infinityAmount } from '@/types'
-import { ElMessage } from 'element-plus'
 import BigNumber from 'bignumber.js'
 import WalletConnect from '@/components/Wallet/WalletConnect.vue'
+import { customMessage } from '@/utils/message'
 
 const i18n = useI18n()
 
@@ -490,7 +490,10 @@ const handelSure = () => {
     buy4.value == 0 ||
     buy5.value == 0
   ) {
-    return ElMessage.error('请正确配置买入数值')
+    return customMessage({
+      type: 'error',
+      title: '请正确配置买入数值'
+    })
   }
   if (
     isAllSpaces(sell1.value) ||
@@ -504,7 +507,10 @@ const handelSure = () => {
     sell4.value == 0 ||
     sell5.value == 0
   ) {
-    return ElMessage.error('请正确配置卖出比例')
+    return customMessage({
+      type: 'error',
+      title: '请正确配置卖出比例'
+    })
   }
 
   emit('circulation', {

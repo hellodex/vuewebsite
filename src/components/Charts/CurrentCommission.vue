@@ -123,8 +123,9 @@
 import { numberFormat, formatDate } from '@/utils'
 import { APIcancelOrder } from '@/api'
 import { useGlobalStore } from '@/stores/global'
-import { ElMessageBox, ElMessage } from 'element-plus'
+import { ElMessageBox } from 'element-plus'
 import { useI18n } from 'vue-i18n'
+import { customMessage } from '@/utils/message'
 
 defineProps({
   list: {
@@ -154,7 +155,11 @@ const handelCancel = (row: any) => {
   })
     .then(async () => {
       const res = await APIcancelOrder({ orderNo: row.orderNo })
-      res && ElMessage.success('取消成功')
+      res &&
+        customMessage({
+          type: 'success',
+          title: '取消成功'
+        })
     })
     .catch(() => {})
 }

@@ -4,8 +4,8 @@
  * 接收参数：string类型/Ref<string>类型/Reactive<string>类型
  */
 import type { Directive, DirectiveBinding } from 'vue'
-import { ElMessage } from 'element-plus'
 import { useGlobalStore } from '@/stores/global'
+import { customMessage } from '@/utils/message'
 const lang: any = {
   zh: '复制成功',
   en: 'CopySuccessful'
@@ -44,9 +44,9 @@ async function handleClick(el: any) {
   } catch (err) {
     console.error('复制操作不被支持或失败: ', err)
   }
-  ElMessage({
+  customMessage({
     type: 'success',
-    message: el.copyText
+    title: el.copyText
   })
 }
 
