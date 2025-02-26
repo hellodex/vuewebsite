@@ -45,7 +45,7 @@
 
               <span class="tg-trade-subtitle">更快发现，秒级交易🚀 1 秒光速上链，点击即交易</span>
               <a
-                :href="`https://t.me/hellodextestbot?start=l_${new Date().getTime()}_P_Web`"
+                :href="`${tgUrl}?start=l_${new Date().getTime()}_P_Web`"
                 target="_blank"
                 class="form-btn"
               >
@@ -186,6 +186,8 @@ import { customMessage } from '@/utils/message'
 const minLength = /.{8,}/ // 至少8个字符
 const containsNumber = /[0-9]/ // 至少一个数字
 const containsUpperCase = /[A-Z]/ // 至少一个大写字母
+
+const tgUrl = ref(import.meta.env.VITE_TG_URL)
 
 const tabList = [
   {
