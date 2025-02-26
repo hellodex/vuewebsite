@@ -149,7 +149,7 @@ axiosInstance.interceptors.response.use(
         message = '验证失败'
         break
       default:
-        message = `连接出错(${status})!`
+        message = `连接出错`
     }
     //提示错误信息
     customMessage({

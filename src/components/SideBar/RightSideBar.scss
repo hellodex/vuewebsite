@@ -2,8 +2,8 @@
   display: none !important;
 }
 .right-layout {
-  width: 350px;
-  min-width: 350px;
+  width: 284px;
+  min-width: 284px;
   .publicize-main {
     width: 100%;
     position: relative;
@@ -17,7 +17,7 @@
       z-index: 2;
       .txt {
         font-size: 14px;
-        color: #f5f5f5;
+        color: #9aa0aa;
         font-family: 'PingFangSC-Heavy';
       }
       .arrow-down-info {
@@ -37,8 +37,8 @@
     }
   }
   .menu-box {
-    width: 90%;
-    padding: 4px 0;
+    width: 92%;
+    padding: 2px 0;
     height: 32px;
     border-radius: 6px;
     background: #222;
@@ -56,14 +56,15 @@
       padding: 0 9px;
       span {
         margin-left: 4px;
+        white-space: nowrap;
       }
     }
     .menu-item:nth-child(4) {
-      flex: 2;
+      flex: 5;
     }
     .menu-item:last-child {
       border: none;
-      flex: 2;
+      flex: 5;
     }
     .menu-icon {
       width: 14px;
@@ -76,8 +77,8 @@
       color: #848e9c;
     }
     .x-icon {
-      width: 10px;
-      height: 10px;
+      width: 11px;
+      height: 11px;
       color: #848e9c;
     }
     .update-icon {
@@ -112,10 +113,11 @@
     display: block;
     font-style: normal;
     margin: 0px 0 12px 0;
-    color: #f5f5f5;
+    color: #9aa0aa;
     padding-bottom: 8px;
     border-radius: 8px;
     background: rgba(23, 24, 27, 0.3);
+    overflow: hidden;
   }
   .pond-time {
     height: 58px;
@@ -168,7 +170,7 @@
     .coin-info {
       cursor: pointer;
       font-size: 14px;
-      color: #f5f5f5;
+      color: #9aa0aa;
       padding: 8px 10px;
       flex: 1;
       border-radius: 4px;
@@ -205,14 +207,14 @@
       justify-content: center;
       border-radius: 4px;
       background: rgba(58, 60, 64, 0.4);
-      color: #f5f5f5;
+      color: #9aa0aa;
       cursor: pointer;
       margin-left: 8px;
     }
   }
   .coin-hold {
     margin-bottom: 12px;
-    color: #f5f5f5;
+    color: #9aa0aa;
     font-family: 'PingFangSC-Medium';
     span {
       color: #5c6068;
@@ -377,7 +379,7 @@
       margin-bottom: 4px;
     }
     .snipe-num {
-      color: #f5f5f5 !important;
+      color: #9aa0aa !important;
     }
   }
 }

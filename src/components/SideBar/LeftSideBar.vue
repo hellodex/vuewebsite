@@ -509,9 +509,11 @@ onUnmounted(() => {
 
 <style scoped lang="scss">
 .left-layout {
-  width: 300px;
-  min-width: 300px;
+  width: 284px;
+  min-width: 284px;
+  padding-top: 10px;
   overflow: hidden;
+  margin-left: 12px;
   .coin-list {
     background: rgba(23, 24, 27, 0.3);
     border-radius: 12px;
