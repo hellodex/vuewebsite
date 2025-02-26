@@ -4,7 +4,7 @@
       <!-- 币信息 -->
       <section
         class="coinWalletDetails-section"
-        :style="{ width: `calc(100vw - 350px - ${switchLeftState ? '300px' : '0px'})` }"
+        :style="{ width: `calc(100vw - 296px - ${switchLeftState ? '296px' : '0px'})` }"
       >
         <BaseInfo
           :baseInfo="baseInfo"
@@ -669,6 +669,7 @@ onUnmounted(() => {
 <style lang="scss" scoped>
 .coinWalletDetails {
   height: calc(100vh - 135px);
+  padding-top: 10px;
   .resize-box {
     width: 99%;
     background-color: transparent;
@@ -726,7 +727,7 @@ onUnmounted(() => {
     width: 9px;
     height: 27px;
     position: absolute;
-    top: -15px;
+    top: 10px;
     display: flex;
     justify-content: center;
     align-items: center;

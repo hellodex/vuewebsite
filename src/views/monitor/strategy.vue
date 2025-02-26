@@ -149,7 +149,7 @@
       </el-skeleton>
     </div>
   </div>
-  <el-dialog v-model="dialogVisible" title="创建监控" width="600">
+  <el-dialog v-model="dialogVisible" title="创建监控" width="510">
     <div class="strategy-dialog-content">
       <div
         class="display-flex align-items-center justify-content-sp strategy-dialog-content-item"
@@ -919,15 +919,15 @@ onMounted(() => {
     opacity: 0;
     transform: translate(-50%, -50%); /* 居中 */
     transition:
-      width 1.5s,
-      height 1.5s; /* 平滑过渡 */
+      width 1s,
+      height 1s; /* 平滑过渡 */
     pointer-events: none; /* 防止影响点击 */
   }
 
   .strategy-dialog-content-item:hover::after {
     opacity: 1;
-    width: 200%; /* 宽度增加到原来的两倍 */
-    height: 200%; /* 高度增加到原来的两倍 */
+    width: 500px; /* 宽度增加到原来的两倍 */
+    height: 500px; /* 高度增加到原来的两倍 */
   }
 
   :deep(.el-popper) {
