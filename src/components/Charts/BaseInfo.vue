@@ -222,8 +222,8 @@ import Favorite from '@/components/Favorite.vue'
 import SecurityTest from '@/components/Charts/SecurityTest.vue'
 
 import { useI18n } from 'vue-i18n'
-import { ElMessage } from 'element-plus'
 import { MAIN_COIN } from '@/types'
+import { customMessage } from '@/utils/message'
 
 const i18n = useI18n()
 
@@ -277,7 +277,10 @@ const handleClose = (val: boolean) => {
 }
 
 const handelIcon = () => {
-  ElMessage.warning('代币未收录信息，请联系项目方在平台收录信息')
+  customMessage({
+    type: 'info',
+    title: '代币未收录信息，请联系项目方在平台收录信息'
+  })
 }
 </script>
 <style lang="scss">

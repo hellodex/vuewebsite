@@ -395,10 +395,9 @@ a,
 
 .socket-elMessage {
   position: relative;
+  border: 0 !important;
 }
-.socket-elMessage .el-message__icon {
-  display: none !important;
-}
+
 .socket-elMessage .el-message__closeBtn {
   display: block;
   position: absolute;
@@ -407,6 +406,58 @@ a,
   left: 0;
   top: 0;
   opacity: 0;
+}
+
+.socket-elMessage .sun-title {
+  padding-left: 29px;
+  margin-top: 4px;
+  font-size: 14px;
+  font-family: 'PingFangSC-Medium';
+}
+
+.socket-elMessage .sun-title span {
+  color: #9aa0aa;
+}
+
+.socket-elMessage .sun-title strong {
+  color: #f5f5f5;
+}
+
+.message_custom_class,
+.socket-elMessage {
+  min-width: 415px;
+  min-height: 60px;
+  padding: 12px 15px !important;
+  justify-content: space-between;
+  border-radius: 12px !important;
+  -webkit-border-radius: 12px !important;
+  -moz-border-radius: 12px !important;
+  -ms-border-radius: 12px !important;
+  -o-border-radius: 12px !important;
+}
+
+.message_custom_class .el-message__icon,
+.socket-elMessage .el-message__icon {
+  display: none !important;
+}
+
+.message_custom_class img,
+.socket-elMessage img {
+  margin-right: 4px;
+  width: 25px;
+  height: 25px;
+}
+
+.message_custom_class .title,
+.socket-elMessage .title {
+  font-size: 16px;
+  font-family: 'PingFangSC-Heavy';
+  color: #f5f5f5;
+}
+
+.message_custom_class .el-message__closeBtn {
+  font-size: 20px !important;
+  color: #aaaaaa !important;
 }
 
 @keyframes slide {

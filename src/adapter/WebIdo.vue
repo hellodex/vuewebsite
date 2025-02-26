@@ -125,7 +125,9 @@ import {
   notificationFailed,
   notificationWarn
 } from '@/utils/notification'
-import { ElMessage } from 'element-plus'
+
+import { customMessage } from '@/utils/message'
+
 import { APItransferTo, APIgetTokensByWalletAddr, APIgetidoInfo } from '@/api'
 
 import WalletConnect from '@/components/Wallet/WalletConnect.vue'
@@ -172,12 +174,18 @@ const timer = ref<any>(null)
 
 const handelPresale = () => {
   if (isAllSpaces(amount.value)) {
-    ElMessage.error('请输入参与预售数量')
+    customMessage({
+      type: 'error',
+      title: '请输入参与预售数量'
+    })
     return false
   }
 
   if (deductionInfo.value.balance == 0) {
-    ElMessage.error('账户余额为0，请先充值')
+    customMessage({
+      type: 'error',
+      title: '账户余额为0，请先充值'
+    })
     return false
   }
 
@@ -185,14 +193,20 @@ const handelPresale = () => {
     parseFloat(amount.value) >
     parseFloat(decimalsFormat(deductionInfo.value.balance, deductionInfo.value.decimals))
   ) {
-    ElMessage.error('输入金额不能大于钱包账户余额')
+    customMessage({
+      type: 'error',
+      title: '输入金额不能大于钱包账户余额'
+    })
     return false
   }
 
-  // if (parseFloat(amount.value) < 100) {
-  //   ElMessage.error('参与预售最低 100U')
-  //   return false
-  // }
+  if (parseFloat(amount.value) < 100) {
+    customMessage({
+      type: 'error',
+      title: '参与预售最低 100U'
+    })
+    return false
+  }
 
   if (walletType.value == 'Email') {
     customAccountTrade()

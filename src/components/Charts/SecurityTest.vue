@@ -199,8 +199,8 @@ import { numberFormat, shortifyAddress } from '@/utils'
 import { MAIN_COIN } from '@/types'
 import { useI18n } from 'vue-i18n'
 import { useSubscribeKChartInfo } from '@/stores/subscribeKChartInfo'
-import { ElMessage } from 'element-plus'
 import PercentageChange from '@/components/Percentage/PercentageChange.vue'
+import { customMessage } from '@/utils/message'
 
 const i18n = useI18n()
 
@@ -408,7 +408,10 @@ const isblackHole = (address: string) => {
 }
 
 const handelIcon = () => {
-  ElMessage.warning('代币未收录信息，请联系项目方在平台收录信息')
+  customMessage({
+    type: 'info',
+    title: '代币未收录信息，请联系项目方在平台收录信息'
+  })
 }
 
 onMounted(() => {})

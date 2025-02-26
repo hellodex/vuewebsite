@@ -185,7 +185,6 @@
 
 <script lang="ts" setup>
 import { ref, reactive, onMounted, watch, computed, onUnmounted } from 'vue'
-import { ElMessage } from 'element-plus'
 import type { CSSProperties } from 'vue'
 import { APISearchToken, APIgetTokensByWalletAddress } from '@/api'
 import { APIgetSwap, APIinitTokenData } from '@/api/coinWalletDetails'
@@ -226,6 +225,7 @@ import { useI18n } from 'vue-i18n'
 import { useGlobalStore } from '@/stores/global'
 
 import { useBaseInfo } from '@/hooks/useBaseInfo' // 头部 代币信息 hook
+import { customMessage } from '@/utils/message'
 
 const globalStore = useGlobalStore()
 const { chainLogoObj } = globalStore
@@ -572,10 +572,16 @@ const handleTrade = async () => {
     buyVal.value = ''
     positionVal.value = 0
     updateWalletInfo()
-    ElMessage.success(i18n.t('TransactionSuccessful'))
+    customMessage({
+      type: 'success',
+      title: i18n.t('TransactionSuccessful')
+    })
   } else {
     tradeLoading.value = false
-    ElMessage.error(i18n.t('TransactionFailed'))
+    customMessage({
+      type: 'error',
+      title: i18n.t('TransactionFailed')
+    })
   }
 }
 
@@ -660,9 +666,15 @@ watch(isConnected, (newValue) => {
   if (newValue) {
     updateWalletInfo()
     // onSignMessage()
-    ElMessage.success('钱包连接成功！')
+    customMessage({
+      type: 'success',
+      title: '钱包连接成功'
+    })
   } else {
-    ElMessage.error('钱包断开连接！')
+    customMessage({
+      type: 'error',
+      title: '钱包断开连接'
+    })
   }
 })
 
@@ -670,7 +682,10 @@ watch(isConnected, (newValue) => {
 watch([address, chainId], () => {
   updateWalletInfo()
   if (isConnected.value) {
-    ElMessage.success('钱包详细信息已更新！')
+    customMessage({
+      type: 'success',
+      title: '钱包详细信息已更新'
+    })
   }
 })
 

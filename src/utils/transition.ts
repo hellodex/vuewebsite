@@ -1,4 +1,3 @@
-import { ElMessage } from 'element-plus'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
 import { useGlobalStore } from '@/stores/global'
@@ -16,6 +15,7 @@ import { Token, TOKEN_PROGRAM_ID } from '@solana/spl-token'
 
 import bs58 from 'bs58'
 import { mainNetworkCurrency } from '@/utils'
+import { customMessage } from './message'
 
 const okCoin = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
 const sol = 'So11111111111111111111111111111111111111112'
@@ -184,7 +184,10 @@ export const handleEvmApprove = async (spenderAddress: any, tokenAddress: any, a
     return true
   } catch (error) {
     if (JSON.stringify(error).indexOf('JSON-RPC error') !== -1) {
-      ElMessage.error('钱包设置的公链RPC错误')
+      customMessage({
+        type: 'error',
+        title: '钱包设置的公链RPC错误'
+      })
     }
     console.error('Error approving tokens:', error)
     return false
@@ -279,11 +282,17 @@ export const getEvmGasPrice = async (rpc: any = '') => {
  */
 export const handelSwitchNetwork = (walletType: any, sellInfo: any) => {
   if (walletType == 'Solana' && sellInfo.chainCode !== 'SOLANA') {
-    ElMessage.error('请断开 Solana 钱包，连接 Evm 钱包')
+    customMessage({
+      type: 'error',
+      title: '请断开 Solana 钱包，连接 Evm 钱包'
+    })
     return false
   }
   if (walletType == 'Evm' && sellInfo.chainCode == 'SOLANA') {
-    ElMessage.error('请断开 Evm 钱包，连接 Solana 钱包')
+    customMessage({
+      type: 'error',
+      title: '请断开 Evm 钱包，连接 Solana 钱包'
+    })
     return false
   }
   const networkData = useAppKitNetwork()

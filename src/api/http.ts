@@ -3,8 +3,8 @@ import CryptoJS from 'crypto-js'
 import { useGlobalStore } from '@/stores/global'
 import type { InternalAxiosRequestConfig, AxiosInstance, AxiosResponse } from 'axios'
 import { useRouter, useRoute } from 'vue-router'
-import { ElMessage } from 'element-plus'
 import { isMobile } from '@/utils'
+import { customMessage } from '@/utils/message'
 
 const version = '1.0'
 
@@ -62,9 +62,9 @@ axiosInstance.interceptors.response.use(
       // sol goplus
       return response.data.result
     } else if (response.data.code == 4011) {
-      ElMessage({
+      customMessage({
         type: 'error',
-        message: '账户已退出'
+        title: '账户已退出'
       })
       const router = useRouter()
       const globalStore = useGlobalStore()
@@ -90,17 +90,17 @@ axiosInstance.interceptors.response.use(
         message: `${response.data.code} ${response.data.msg}  ${JSON.stringify(response.config.url)}`
       })
     } else if (response.config.url?.indexOf('/api/auth/tgToWebDologin') !== -1) {
-      ElMessage({
+      customMessage({
         type: 'error',
-        message: response.data.msg
+        title: response.data.msg
       })
       setTimeout(() => {
         window.location.href = '/'
       }, 1000)
     } else {
-      ElMessage({
+      customMessage({
         type: 'error',
-        message: response.data.msg
+        title: response.data.msg
       })
     }
   },
@@ -152,9 +152,9 @@ axiosInstance.interceptors.response.use(
         message = `连接出错(${status})!`
     }
     //提示错误信息
-    ElMessage({
+    customMessage({
       type: 'error',
-      message
+      title: message
     })
     return Promise.reject(error)
   }

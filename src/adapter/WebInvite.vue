@@ -84,7 +84,7 @@
 import { ref, onMounted, watch, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { ElMessage } from 'element-plus'
+import { customMessage } from '@/utils/message'
 import { APIinitPointsPage, APIbindInvitationCode } from '@/api'
 import { useGlobalStore } from '@/stores/global'
 import { shortifyAddress, isAllSpaces } from '@/utils'
@@ -124,7 +124,10 @@ const initPoints = async () => {
 
 const handelBind = async () => {
   if (isAllSpaces(code.value)) {
-    ElMessage.error('请填写邀请码')
+    customMessage({
+      type: 'error',
+      title: '请填写邀请码'
+    })
     return false
   }
   const res: any = await APIbindInvitationCode({
@@ -132,11 +135,17 @@ const handelBind = async () => {
     inviterCode: code.value
   })
   if (res.code == -1) {
-    ElMessage.error('绑定失败，请联系客服')
+    customMessage({
+      type: 'error',
+      title: '绑定失败，请联系客服'
+    })
     return false
   }
   if (res.code == 0) {
-    ElMessage.error('邀请码不存在')
+    customMessage({
+      type: 'error',
+      title: '邀请码不存在'
+    })
     return false
   }
   code.value = ''

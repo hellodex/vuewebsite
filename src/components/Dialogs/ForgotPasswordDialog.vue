@@ -89,8 +89,8 @@ import type { ComponentSize, FormInstance, FormRules } from 'element-plus'
 import { useGlobalStore } from '@/stores/global'
 import { APIsendMessage, APImodifyPwd } from '@/api/login'
 import { isAllSpaces } from '@/utils'
-import { ElMessage } from 'element-plus'
 import VerificationCodeInput from '@/components/VerificationCodeInput.vue'
+import { customMessage } from '@/utils/message'
 
 // 正则表达式
 const minLength = /.{8,}/ // 至少8个字符
@@ -276,7 +276,10 @@ const submitForm = async (formEl: FormInstance | undefined) => {
       })
       console.log(res)
       if (res) {
-        ElMessage.success('密码设置成功')
+        customMessage({
+          type: 'success',
+          title: '密码设置成功'
+        })
         setDialogVisible({
           registerDialogVisible: false,
           logOnDialogVisible: false,
