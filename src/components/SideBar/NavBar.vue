@@ -82,7 +82,7 @@
         <WalletDisconnected v-if="isConnected && walletType !== 'Email'" />
         <div v-if="!isConnected" class="login-regiter">
           <WalletConnect />
-          <div
+          <!-- <div
             class="login-btn"
             @click="
               globalStore.setDialogVisible({
@@ -94,7 +94,7 @@
             "
           >
             注册
-          </div>
+          </div> -->
         </div>
         <div class="invite-btn display-flex align-items-center">
           <img src="@/assets/img/invite.gif" alt="" class="icon-invite" />
@@ -270,17 +270,16 @@ onUnmounted(() => {
   }
   .login-regiter {
     border-radius: 4px;
-    border: 1px solid rgba(38, 40, 44, 0.3);
-    height: 34px;
+    height: 30px;
     display: flex;
     margin-left: 10px;
     .connect-wallet-btn {
       min-width: auto;
-      padding: 5px 10px;
+      width: 85px;
+      padding: 5px 0;
       border-radius: 4px;
       font-size: 14px;
-      background-color: transparent;
-      color: #f5f5f5;
+      background: #f5f5f5;
       margin: 0;
     }
   }
@@ -368,7 +367,7 @@ onUnmounted(() => {
   .invite-btn {
     padding: 5px 10px;
     border-radius: 4px;
-    height: 34px;
+    height: 30px;
     background: rgba(58, 60, 64, 0.4);
     color: #f5f5f5;
     font-size: 14px;
