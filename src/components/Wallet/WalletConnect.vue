@@ -1,6 +1,6 @@
 <template>
   <div class="connect-wallet-btn" v-bind="$attrs" @click.stop="handelConnect">
-    <slot>登录</slot>
+    <slot>连接</slot>
   </div>
 </template>
 <script lang="ts" setup>
