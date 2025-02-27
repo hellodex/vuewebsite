@@ -284,6 +284,9 @@ defineExpose({
   :deep(.el-collapse-item__wrap) {
     border: none;
   }
+  :deep(.el-collapse-item__content) {
+    padding-bottom: 0 !important;
+  }
   :deep(.el-collapse-item__arrow) {
     margin-right: 0;
   }
