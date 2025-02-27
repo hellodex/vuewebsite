@@ -1,6 +1,8 @@
-:deep(.el-scrollbar__bar.is-horizontal) {
+:deep(.el-scrollbar__bar.is-horizontal),
+:deep(.el-scrollbar__thumb) {
   display: none !important;
 }
+
 .right-layout {
   width: 284px;
   min-width: 284px;
@@ -17,7 +19,7 @@
       z-index: 2;
       .txt {
         font-size: 14px;
-        color: #9aa0aa;
+        color: #f5f5f5;
         font-family: 'PingFangSC-Heavy';
       }
       .arrow-down-info {
@@ -128,6 +130,9 @@
       span:first-child {
         color: #5c6068;
       }
+      span.color-1 {
+        color: #9aa0aa;
+      }
     }
   }
   .pond-info {
@@ -153,6 +158,10 @@
         color: #5c6068;
         white-space: nowrap;
         margin-bottom: 4px;
+      }
+      span.color-1 {
+        color: #9aa0aa;
+        margin-bottom: 0;
       }
     }
     .flex-1:first-child {
