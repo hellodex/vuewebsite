@@ -1,5 +1,5 @@
 <template>
-  <el-scrollbar height="calc(100vh - 136px)">
+  <el-scrollbar height="calc(100vh - 136px)" class="scrollbar-box">
     <aside class="right-layout">
       <el-skeleton style="width: 100%" :loading="props.loadRightSideBar" animated :rows="28">
         <div class="pond-main">
@@ -83,7 +83,7 @@
                 class="flex-1 display-flex align-items-center justify-content-sp"
                 style="padding: 0"
               >
-                <span>{{ baseInfo.tokenInfo?.baseSymbol }}</span>
+                <span class="color-1">{{ baseInfo.tokenInfo?.baseSymbol }}</span>
                 <strong
                   >{{ numberFormat(pairInfo.baseAmount || 0) }} ${{
                     numberFormat(pairInfo.basePrice)
@@ -94,7 +94,7 @@
                 class="flex-1 display-flex align-items-center justify-content-sp"
                 style="margin: 4px 0"
               >
-                <span>{{ baseInfo.tokenInfo?.quoteSymbol }}</span>
+                <span class="color-1">{{ baseInfo.tokenInfo?.quoteSymbol }}</span>
                 <strong
                   >{{ numberFormat(pairInfo.quoteAmount || 0) }} ${{
                     numberFormat(pairInfo.quotePrice)
@@ -105,26 +105,26 @@
                 class="flex-1 display-flex align-items-center justify-content-sp"
                 style="padding: 0"
               >
-                <span>开盘时间</span>
+                <span class="color-1">开盘时间</span>
                 <strong>{{ formatLineDate((pairInfo.startTime || 0) * 1000) }}</strong>
               </div>
             </div>
           </div>
           <div class="pond-time display-flex align-items-center justify-content-sp">
             <div class="flex-1 display-flex flex-direction-col align-items-center">
-              <span>5m</span>
+              <span class="color-1">5m</span>
               <PercentageNotbg :value="props.pairInfo.chg5m || 0" />
             </div>
             <div class="flex-1 display-flex flex-direction-col align-items-center">
-              <span>1h</span>
+              <span class="color-1">1h</span>
               <PercentageNotbg :value="props.pairInfo.chg1h || 0" />
             </div>
             <div class="flex-1 display-flex flex-direction-col align-items-center">
-              <span>4h</span>
+              <span class="color-1">4h</span>
               <PercentageNotbg :value="props.pairInfo.chg4h || 0" />
             </div>
             <div class="flex-1 display-flex flex-direction-col align-items-center">
-              <span>24h</span>
+              <span class="color-1">24h</span>
               <PercentageNotbg :value="props.pairInfo.chg1d || 0" />
             </div>
           </div>
