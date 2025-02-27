@@ -12,3 +12,8 @@ defineProps({
   }
 })
 </script>
+<style scoped>
+:deep(.el-empty__description) {
+  margin-top: 12px;
+}
+</style>
