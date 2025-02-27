@@ -15,13 +15,29 @@
     </van-sticky>
     <template v-if="modeTabIndex == 1">
       <div class="accout-box" v-if="!isConnected">
-        <img
-          src="@/assets/icons/account_login.svg"
-          class="account_login"
+        <div class="display-flex flex-direction-col align-items-center">
+          <div class="display-flex align-items-center">
+            <svg-icon name="logo" class="logo"></svg-icon>
+            <span class="title">HelloDex</span>
+          </div>
+          <p class="p-txt">开创和主导Web3变革，平台利润80%分给用户</p>
+        </div>
+        <img src="@/assets/icons/account_login.svg" class="account_login" />
+        <div
+          class="account-btn display-flex align-items-center justify-content-center"
           @click="router.push('/h5/signIn')"
-        />
-        <a href="https://hellodex.gitbook.io/hellodex/hellodex_cn/whitepaper" target="_blank">
-          <img src="@/assets/icons/account_ad.svg" class="account_ad" alt="" />
+        >
+          <svg-icon name="icon-google" class="icon-google"></svg-icon>
+          <span>注册/登录</span>
+        </div>
+
+        <a
+          :href="`${tgUrl}?start=l_${new Date().getTime()}_P_Web`"
+          target="_blank"
+          class="tg-btn display-flex align-items-center justify-content-center"
+        >
+          <svg-icon name="telegram-pump" class="icon-tg" style=""></svg-icon>
+          <span>TG BOT登录</span>
         </a>
       </div>
       <AccountWallet v-else />
@@ -44,6 +60,8 @@ import { useI18n } from 'vue-i18n'
 
 const i18n = useI18n()
 const router = useRouter()
+
+const tgUrl = ref(import.meta.env.VITE_TG_URL)
 
 const globalStore = useGlobalStore()
 
@@ -74,7 +92,7 @@ const handelModeTab = (item: any) => {
   padding: 0 0 var(--van-tabbar-height);
 }
 .mode-tab {
-  background-color: var(--font-color-default);
+  background-color: #fff;
   padding: 0.24rem 0;
 }
 .mode-box {
@@ -97,14 +115,75 @@ const handelModeTab = (item: any) => {
     cursor: pointer;
   }
   .active {
-    background-color: var(--font-color-default);
+    background-color: #fff;
   }
 }
 .accout-box {
-  .account_login,
+  padding-top: 0.8rem;
+  .logo {
+    width: 0.96rem;
+    height: 0.96rem;
+  }
+  .title {
+    color: #000;
+    font-size: 0.6933rem;
+    font-style: normal;
+    font-weight: 600;
+    margin-left: 0.24rem;
+  }
+  .p-txt {
+    color: #333;
+    text-align: center;
+    font-size: 0.4rem;
+    font-style: normal;
+    font-weight: 400;
+    margin-top: 0.2133rem;
+    line-height: normal;
+  }
+  .account_login {
+    width: 5.6rem;
+    display: block;
+    margin: 1.4933rem auto 1.92rem;
+  }
+  .account-btn {
+    width: 9.3333rem;
+    height: 1.28rem;
+    margin: 0 auto 0.5333rem;
+    color: #fff;
+    font-size: 0.4267rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px;
+    border-radius: 100px;
+    background: #000;
+    .icon-google {
+      width: 0.5333rem;
+      height: 0.5333rem;
+      margin-right: 0.1067rem;
+    }
+  }
+
+  .tg-btn {
+    width: 9.3333rem;
+    height: 1.28rem;
+    margin: 0 auto;
+    color: #333;
+    font-size: 0.4267rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px;
+    border-radius: 100px;
+    border: 1px solid #e5e5e5;
+    .icon-tg {
+      width: 0.5333rem;
+      height: 0.5333rem;
+      margin-right: 0.1067rem;
+      color: #29a0da;
+    }
+  }
+
   .account_ad {
     width: 100%;
-    display: block;
   }
 }
 </style>
