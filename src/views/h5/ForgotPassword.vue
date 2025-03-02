@@ -8,6 +8,7 @@
       </div>
     </van-sticky>
     <div class="forgotPassword-content">
+      <div class="forgotPassword-title">重置密码</div>
       <el-form
         ref="ruleFormRef"
         :model="ruleForm"
@@ -65,9 +66,9 @@
             <el-icon class="is-loading" :size="18">
               <Loading />
             </el-icon>
-            <span>确定</span>
+            <span>重置密码</span>
           </div>
-          <div class="form-btn" v-else @click="submitForm(ruleFormRef)">确定</div>
+          <div class="form-btn" v-else @click="submitForm(ruleFormRef)">重置密码</div>
         </el-form-item>
         <div
           class="display-flex align-items-center justify-content-sp"
@@ -298,25 +299,11 @@ const resetForm = (formEl: FormInstance | undefined) => {
       }
     }
     .forgotPassword-title {
-      margin: 20px 0 10px 0;
-      span {
-        font-size: 16px;
-        color: var(--bg-color);
-      }
-      i {
-        color: #2ebd85;
-        font-style: normal;
-      }
-      strong {
-        padding: 1px 8px;
-        border-radius: 6px;
-        background: var(--bg-color);
-        color: var(--font-color-default);
-        font-size: 12px;
-        font-style: normal;
-        margin-left: 15px;
-        font-weight: normal;
-      }
+      color: #000;
+      font-size: 0.8rem;
+      font-weight: 600;
+      line-height: normal;
+      margin: 0.4rem 0 0.8rem;
     }
     .forgotPassword-tip {
       font-size: 14px;

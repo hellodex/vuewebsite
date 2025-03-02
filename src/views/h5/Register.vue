@@ -4,19 +4,11 @@
       <div class="register-head display-flex align-items-center justify-content-sp">
         <svg-icon name="chevron-left" class="chevron-left" @click="router.back()"></svg-icon>
         <span>注册</span>
-        <div class="signin-btn" @click="router.push('/h5/signIn')">登录</div>
+        <div></div>
       </div>
     </van-sticky>
     <div class="register-content">
-      <div class="register-logo display-flex align-items-center">
-        <svg-icon name="logo" class="logo"></svg-icon>
-        <span>HelloDex</span>
-      </div>
-      <div class="register-title display-flex align-items-center">
-        <span class="display-flex align-items-center">利润<i>80%</i> 分给所有人的</span>
-        <strong>链上交易工具</strong>
-      </div>
-      <p class="register-tip">立即注册，加入我们，支持链上限价单，止盈止损，一键冲金狗</p>
+      <div class="register-title">欢迎使用HelloDex</div>
       <el-form
         ref="ruleFormRef"
         :model="ruleForm"
@@ -104,6 +96,11 @@
             <span>注册</span>
           </div>
           <div class="form-btn" v-else @click="submitForm(ruleFormRef)">注册</div>
+
+          <div class="login-txt display-flex align-items-center">
+            <span>已有账号？</span>
+            <strong @click="router.push('/h5/signIn')">去登录</strong>
+          </div>
         </el-form-item>
       </el-form>
     </div>
@@ -369,25 +366,11 @@ const submitForm = async (formEl: FormInstance | undefined) => {
       }
     }
     .register-title {
-      margin: 20px 0 10px 0;
-      span {
-        font-size: 16px;
-        color: var(--bg-color);
-      }
-      i {
-        color: #2ebd85;
-        font-style: normal;
-      }
-      strong {
-        padding: 1px 8px;
-        border-radius: 6px;
-        background: var(--bg-color);
-        color: var(--font-color-default);
-        font-size: 12px;
-        font-style: normal;
-        margin-left: 15px;
-        font-weight: normal;
-      }
+      color: #000;
+      font-size: 0.8rem;
+      font-weight: 600;
+      line-height: normal;
+      margin: 0.4rem 0 0.8rem;
     }
     .register-tip {
       font-size: 14px;
@@ -455,6 +438,16 @@ const submitForm = async (formEl: FormInstance | undefined) => {
     .icon {
       width: 18px;
       height: 18px;
+    }
+  }
+  .login-txt {
+    width: 100%;
+    color: #999;
+    font-size: 0.3733rem;
+    justify-content: center;
+    margin-top: 0.2667rem;
+    strong {
+      color: #000;
     }
   }
 }

@@ -4,19 +4,11 @@
       <div class="signIn-head display-flex align-items-center justify-content-sp">
         <svg-icon name="chevron-left" class="chevron-left" @click="router.back()"></svg-icon>
         <span>登录</span>
-        <div class="signin-btn" @click="router.replace('/h5/register')">立即注册</div>
+        <div></div>
       </div>
     </van-sticky>
     <div class="signIn-content">
-      <div class="signIn-logo display-flex align-items-center">
-        <svg-icon name="logo" class="logo"></svg-icon>
-        <span>HelloDex</span>
-      </div>
-      <div class="signIn-title display-flex align-items-center">
-        <span class="display-flex align-items-center">利润<i>80%</i> 分给所有人的</span>
-        <strong>链上交易工具</strong>
-      </div>
-      <p class="signIn-tip">立即注册，加入我们，支持链上限价单，止盈止损，一键冲金狗</p>
+      <div class="signIn-title">欢迎使用HelloDex</div>
       <el-form
         ref="ruleFormRef"
         :model="ruleForm"
@@ -38,6 +30,17 @@
             autocomplete="new-password"
           />
         </el-form-item>
+        <div
+          class="display-flex align-items-center justify-content-sp"
+          style="position: relative; top: -15px"
+        >
+          <span
+            style="color: var(--dex-color-4); text-decoration: underline"
+            @click="router.push('/h5/forgotPassword')"
+            >忘记密码？</span
+          >
+          <span></span>
+        </div>
         <el-form-item prop="captcha">
           <el-input v-model="ruleForm.captcha" placeholder="邮箱验证码" autocomplete="off">
             <template #suffix>
@@ -88,16 +91,19 @@
           </div>
           <div class="form-btn" v-else @click="submitForm(ruleFormRef)">登录</div>
         </el-form-item>
-        <div
-          class="display-flex align-items-center justify-content-sp"
-          style="position: relative; top: -15px"
-        >
-          <span></span>
-          <span style="color: var(--dex-color-4)" @click="router.push('/h5/forgotPassword')"
-            >忘记密码？</span
-          >
-        </div>
+        <el-form-item>
+          <div class="login-txt display-flex align-items-center">
+            <span>还没有账号？</span>
+            <strong @click="router.replace('/h5/register')">立即注册</strong>
+          </div>
+        </el-form-item>
       </el-form>
+      <div class="other-login">
+        <van-divider>其他登录方式</van-divider>
+        <a :href="`${tgUrl}?start=l_${new Date().getTime()}_P_Web`" target="_blank" class="img-tg">
+          <img src="@/assets/img/img-tg.png" alt="" />
+        </a>
+      </div>
     </div>
   </div>
 </template>
@@ -114,6 +120,9 @@ import { socketOffMonitor, socketOnMonitor } from '@/utils/socket'
 
 const route = useRoute()
 const router = useRouter()
+
+const tgUrl = ref(import.meta.env.VITE_TG_URL)
+
 // 正则表达式
 const minLength = /.{8,}/ // 至少8个字符
 const containsNumber = /[0-9]/ // 至少一个数字
@@ -329,25 +338,11 @@ const resetForm = (formEl: FormInstance | undefined) => {
       }
     }
     .signIn-title {
-      margin: 20px 0 10px 0;
-      span {
-        font-size: 16px;
-        color: var(--bg-color);
-      }
-      i {
-        color: #2ebd85;
-        font-style: normal;
-      }
-      strong {
-        padding: 1px 8px;
-        border-radius: 6px;
-        background: var(--bg-color);
-        color: var(--font-color-default);
-        font-size: 12px;
-        font-style: normal;
-        margin-left: 15px;
-        font-weight: normal;
-      }
+      color: #000;
+      font-size: 0.8rem;
+      font-weight: 600;
+      line-height: normal;
+      margin: 0.4rem 0 0.8rem;
     }
     .signIn-tip {
       font-size: 14px;
@@ -414,6 +409,34 @@ const resetForm = (formEl: FormInstance | undefined) => {
     .icon {
       width: 18px;
       height: 18px;
+    }
+  }
+  .login-txt {
+    width: 100%;
+    color: #999;
+    font-size: 0.3733rem;
+    justify-content: center;
+    strong {
+      color: #000;
+    }
+  }
+
+  .other-login {
+    margin-top: 1.0667rem;
+    .img-tg {
+      display: flex;
+      width: 1.1733rem;
+      height: 1.1733rem;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      border-radius: 50%;
+      border: 1px solid #e5e5e5;
+      margin: 0 auto;
+      img {
+        width: 0.4267rem;
+        height: 0.4267rem;
+      }
     }
   }
 }
