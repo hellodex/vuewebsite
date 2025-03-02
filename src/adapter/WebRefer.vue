@@ -1,12 +1,11 @@
 <template>
   <div class="web-refer-box">
     <div class="web-refer-left">
-      <div class="refer-logo-box display-flex align-items-center">
-        <svg-icon name="logo" class="logo"></svg-icon>
-        <span>HelloDex</span>
+      <img src="../assets/img/refer-bac.svg" alt="" class="refer-bac" />
+      <div class="txt display-flex flex-direction-col align-items-center">
+        <p class="title">一起建设Web3未来</p>
+        <p class="refer-tip">开创和主导Web3变革,平台利润<span>80%</span>分给用户</p>
       </div>
-      <p class="refer-tip">开创和主导Web3变革,平台利润80%分给用户</p>
-      <svg-icon name="refer-logo" class="refer-logo"></svg-icon>
     </div>
     <div class="web-refer-right">
       <div class="web-refer-form web-refer-main" v-if="captchaStatus == 1">
@@ -303,30 +302,32 @@ const submitForm = async (formEl: FormInstance | undefined) => {
   .web-refer-left {
     width: 48%;
     height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background-color: #0d0d0d;
-    .refer-logo-box {
-      font-size: 40px;
-      color: #f5f5f5;
+    position: relative;
+    .refer-bac {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: 50% 0%;
+      position: absolute;
+    }
+    .txt {
+      position: absolute;
+      width: 100%;
+      bottom: 50px;
+      left: 0;
       font-family: 'PingFangSC-Medium';
-      .logo {
-        width: 64px;
-        height: 64px;
-        margin-right: 16px;
+      line-height: 2;
+      .title {
+        font-size: 40px;
+        color: #fff;
       }
-    }
-    .refer-tip {
-      font-size: 24px;
-      color: #fff;
-      font-family: 'PingFangSC-Heavy';
-      margin: 15px 0 20px;
-    }
-    .refer-logo {
-      width: 445px;
-      height: 367px;
+      .refer-tip {
+        font-size: 24px;
+        color: #fff;
+        span {
+          color: #a1f25d;
+        }
+      }
     }
   }
   .web-refer-right {
