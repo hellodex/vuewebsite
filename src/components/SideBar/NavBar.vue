@@ -3,7 +3,7 @@
     <div class="activity display-flex align-items-center justify-content-sp" v-if="show">
       <span></span>
       <div class="display-flex align-items-center activity-content">
-        <span>🔥HelloDex：HelloDex：统一Web3交易、一起建设Web3未来！利润80%分给用户，平台币预售中</span>
+        <span>🔥HelloDex：统一Web3交易、一起建设Web3未来！利润80%分给用户，平台币预售中</span>
         <span
           @click="router.push('/Ido')"
           class="display-flex align-items-center"
