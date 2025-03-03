@@ -167,9 +167,9 @@
             <div class="display-flex align-items-center">
               <svg-icon
                 name="auth-check"
-                style="width: 14px; height: 14px; color: var(--down-color)"
+                style="width: 14px; height: 14px; color: var(--up-color); margin-right: 2px"
               ></svg-icon>
-              <span class="font-family-Heavy down-color">安全</span>
+              <span class="font-family-Heavy up-color">安全</span>
             </div>
           </div>
           <!-- <div class="display-flex align-items-center pond-audit">

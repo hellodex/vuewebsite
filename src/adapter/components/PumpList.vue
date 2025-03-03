@@ -16,7 +16,7 @@
             <span class="pause-txt" v-if="curNode == 3">⏸ 已暂停</span>
           </div>
         </div>
-        <el-scrollbar height="calc(100vh - 245px)">
+        <el-scrollbar height="calc(100vh - 213px)">
           <div
             class="pump-list-items"
             @mouseover="handleMouseOver(index)"

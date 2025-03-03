@@ -11,6 +11,26 @@
         <span>{{ i18n.t('AfterIDOpresale') }}</span>
       </div>
     </div>
+    <div class="activity display-flex align-items-center justify-content-sp">
+      <span></span>
+      <div class="display-flex align-items-center activity-content">
+        <span>🔥HelloDex：利润80%分给用户的链上交易工具，平台币预售中</span>
+        <span
+          @click="router.push('/Ido')"
+          class="display-flex align-items-center"
+          style="
+            color: #569cee;
+            border-bottom: 1px solid #569cee;
+            margin-left: 8px;
+            cursor: pointer;
+            line-height: 1;
+          "
+        >
+          {{ i18n.t('tabbar.advertNoticeOperate') }}<el-icon><Right /></el-icon
+        ></span>
+      </div>
+      <span></span>
+    </div>
     <div class="other-link">
       <a v-for="item in othersLink" :href="item.to" :key="item.to" target="_blank">
         <svg-icon :name="item.icon" class="link-icon"></svg-icon>
@@ -28,8 +48,10 @@
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
 
 const i18n = useI18n()
+const router = useRouter()
 
 const othersLink = ref<{ icon: string; to: string; txt: string }[]>([
   // 以后多个tg, 中文社区， 英文社区等， 可能需要确定一个或者先跳转去channel， 再去进入各种群
@@ -115,6 +137,25 @@ onMounted(() => {})
       width: 16px;
       height: 16px;
       border-radius: 50%;
+    }
+  }
+  .activity {
+    font-family: 'PingFangSC-Medium';
+    position: absolute;
+    width: 100%;
+    left: 0;
+    pointer-events: none;
+    .activity-content {
+      color: var(--font-color-default);
+      font-size: 12px;
+      pointer-events: auto;
+      a {
+        color: #569cee;
+        text-decoration: underline;
+        cursor: pointer;
+        font-style: inherit;
+        margin-left: 8px;
+      }
     }
   }
 }

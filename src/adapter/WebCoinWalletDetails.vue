@@ -750,7 +750,7 @@ onUnmounted(() => {
   }
   .coinWalletDetails-section-main {
     padding-right: 12px;
-    height: calc(100vh - 206px);
+    height: calc(100vh - 174px);
   }
   .coinWallet-tabs-box {
     // background-color: rgba(23, 24, 27, 0.3);

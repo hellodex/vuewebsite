@@ -2,7 +2,7 @@
   <div class="buy-limit">
     <div class="buy-limit-tab">
       <span>交易类型</span>
-      <el-select v-model="tabIndex" size="large" :teleported="false" style="width: 100%">
+      <el-select v-model="tabIndex" :teleported="false" style="width: 100%">
         <el-option
           v-for="item in tabList"
           :key="item.value"
@@ -17,7 +17,6 @@
         <div class="form-item margin-bottom-12">
           <el-input
             v-model="amount"
-            size="large"
             oninput="value=value.replace(/[^0-9.]/g,'')"
             style="width: 100%"
             placeholder="数量"
@@ -39,7 +38,6 @@
         <div class="form-item margin-bottom-12">
           <el-input
             v-model="marketExchangeAmount"
-            size="large"
             oninput="value=value.replace(/[^0-9.]/g,'')"
             style="width: 100%"
             placeholder="预估兑换"
@@ -54,7 +52,6 @@
         <div class="form-item margin-bottom-12">
           <el-input
             v-model="marketPrice"
-            size="large"
             oninput="value=value.replace(/[^0-9.]/g,'')"
             style="width: 100%"
             placeholder="金额"
@@ -90,7 +87,6 @@
             v-model="entrustmentOptions"
             :teleported="false"
             placeholder="Select"
-            size="large"
             style="width: 100%"
             @change="handelEntrustmentChange"
           >
@@ -105,7 +101,6 @@
         <div class="form-item margin-bottom-12">
           <el-input
             v-model="targetPoolMarketCap"
-            size="large"
             oninput="value=value.replace(/[^0-9.]/g,'')"
             style="width: 100%"
             placeholder="市值跌至预期值将买入"
@@ -117,7 +112,6 @@
           </el-input>
           <el-input
             v-model="targetMarketCap"
-            size="large"
             oninput="value=value.replace(/[^0-9.]/g,'')"
             style="width: 100%"
             placeholder="市值跌至预期值将买入"
@@ -129,7 +123,6 @@
           </el-input>
           <el-input
             v-model="amount"
-            size="large"
             oninput="value=value.replace(/[^0-9.]/g,'')"
             style="width: 100%"
             placeholder="价格跌至预期值将买入"
@@ -141,7 +134,6 @@
           </el-input>
           <el-input
             v-model="targetPrice"
-            size="large"
             oninput="value=value.replace(/[^0-9.]/g,'')"
             style="width: 100%"
             placeholder="价格跌至预期值将买入"
@@ -163,7 +155,6 @@
         <div class="form-item margin-bottom-12">
           <el-input
             v-model="limitAmount"
-            size="large"
             oninput="value=value.replace(/[^0-9.]/g,'')"
             style="width: 100%"
             placeholder="数量"
@@ -181,7 +172,6 @@
         <div class="form-item margin-bottom-12">
           <el-input
             v-model="limitExchangeAmount"
-            size="large"
             oninput="value=value.replace(/[^0-9.]/g,'')"
             style="width: 100%"
             placeholder="预估兑换"
@@ -865,10 +855,10 @@ defineExpose({
     .market-price-btn {
       cursor: not-allowed;
       border-radius: 6px;
-      height: 42px;
+      height: 29px;
       text-align: center;
-      line-height: 42px;
-      font-size: 14px;
+      line-height: 29px;
+      font-size: 12px;
       background-color: var(--hover-bg-color);
       color: var(--dex-color-4);
     }
@@ -919,14 +909,14 @@ defineExpose({
     }
     .submit-btn {
       border-radius: 6px;
-      height: 42px;
-      line-height: 42px;
+      height: 29px;
+      line-height: 29px;
       background: var(--up-color);
       display: flex;
       align-items: center;
       justify-content: center;
       color: var(--font-color-default);
-      font-size: 14px;
+      font-size: 12px;
       cursor: pointer;
     }
   }
