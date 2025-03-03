@@ -116,7 +116,7 @@ const handleClose = () => {
       padding: 2px;
       background-color: var(--bg-color);
       .trading-tab-item {
-        height: 35px;
+        height: 29px;
         flex: 1;
         display: flex;
         flex-direction: column;

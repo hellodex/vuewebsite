@@ -284,6 +284,10 @@ defineExpose({
   :deep(.el-collapse-item__wrap) {
     border: none;
   }
+  :deep(.el-collapse-item__header) {
+    height: 32px;
+    line-height: 32px;
+  }
   :deep(.el-collapse-item__content) {
     padding-bottom: 0 !important;
   }
@@ -334,7 +338,7 @@ defineExpose({
   .gas-box {
     margin-top: 6px;
     .gas-type-item {
-      width: 95px;
+      width: 82px;
       height: 60px;
       padding: 7px;
       display: flex;
@@ -359,7 +363,7 @@ defineExpose({
     }
   }
   .icon-ele {
-    margin: 0 8px 0 auto;
+    margin: 0 0 0 auto;
   }
 }
 </style>

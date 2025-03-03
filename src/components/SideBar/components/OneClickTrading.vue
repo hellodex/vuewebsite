@@ -628,7 +628,7 @@ defineExpose({
 
 <style lang="scss" scoped>
 .one-click-trading {
-  padding: 8px 2px;
+  padding: 0px 2px;
   position: relative;
   :deep(.mask) {
     width: 100%;
@@ -653,7 +653,7 @@ defineExpose({
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 50px;
+      width: 40px;
       height: 25px;
       background: transparent;
       border-radius: 4px;
@@ -671,7 +671,7 @@ defineExpose({
     }
   }
   .input-box {
-    width: 100px;
+    width: 80px;
 
     :deep(.el-input__wrapper) {
       box-shadow: 0 0 0 1px #26282c !important;
@@ -696,7 +696,7 @@ defineExpose({
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 60px;
+      width: 48px;
       height: 25px;
       border-radius: 4px;
       border: 1px solid #26282c;
@@ -759,12 +759,12 @@ defineExpose({
   }
   .btn {
     border-radius: 4px;
-    height: 36px;
-    line-height: 36px;
+    height: 29px;
+    line-height: 29px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 14px;
+    font-size: 12px;
     cursor: pointer;
     margin: 14px 0;
     font-family: 'PingFangSC-Heavy';

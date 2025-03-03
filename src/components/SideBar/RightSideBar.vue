@@ -1,5 +1,5 @@
 <template>
-  <el-scrollbar height="calc(100vh - 136px)" class="scrollbar-box">
+  <el-scrollbar height="calc(100vh - 104px)" class="scrollbar-box">
     <aside class="right-layout">
       <el-skeleton style="width: 100%" :loading="props.loadRightSideBar" animated :rows="28">
         <div class="pond-main">
@@ -78,7 +78,7 @@
             </div>
           </div>
           <div class="pond-info">
-            <div class="pond-info-item display-flex flex-direction-col" style="padding: 10px">
+            <div class="pond-info-item display-flex flex-direction-col" style="padding: 6px 10px">
               <div
                 class="flex-1 display-flex align-items-center justify-content-sp"
                 style="padding: 0"
@@ -128,129 +128,127 @@
               <PercentageNotbg :value="props.pairInfo.chg1d || 0" />
             </div>
           </div>
-        </div>
-        <div class="transaction-box">
-          <template v-if="walletType == 'Email'">
-            <div class="display-flex align-items-center justify-content-sp coin-info-main">
-              <div class="display-flex align-items-center justify-content-sp coin-info">
-                <div class="display-flex align-items-center">
-                  <el-image :src="props.baseInfo.tokenInfo?.logo" alt="" class="coin-icon">
-                    <template #error>
-                      <svg-icon name="logo1" class="coin-icon"></svg-icon>
-                    </template>
-                  </el-image>
-                  <span>{{ shortifyAddress(props.baseInfo.tokenInfo?.baseAddress) }}</span>
+          <div class="transaction-box">
+            <template v-if="walletType == 'Email'">
+              <div class="display-flex align-items-center justify-content-sp coin-info-main">
+                <div class="display-flex align-items-center justify-content-sp coin-info">
+                  <div class="display-flex align-items-center">
+                    <el-image :src="props.baseInfo.tokenInfo?.logo" alt="" class="coin-icon">
+                      <template #error>
+                        <svg-icon name="logo1" class="coin-icon"></svg-icon>
+                      </template>
+                    </el-image>
+                    <span>{{ shortifyAddress(props.baseInfo.tokenInfo?.baseAddress) }}</span>
+                  </div>
+                  <div class="display-flex align-items-center">
+                    <el-image :src="props.baseInfo.tokenInfo?.quoteLogo" alt="" class="chainCode">
+                      <template #error>
+                        <svg-icon name="logo1" class="chainCode"></svg-icon>
+                      </template>
+                    </el-image>
+                    <span class="price-txt">{{
+                      childrenRef && numberFormat(balanceFormat(childrenRef.buyInfo))
+                    }}</span>
+                  </div>
                 </div>
-                <div class="display-flex align-items-center">
-                  <el-image :src="props.baseInfo.tokenInfo?.quoteLogo" alt="" class="chainCode">
-                    <template #error>
-                      <svg-icon name="logo1" class="chainCode"></svg-icon>
-                    </template>
-                  </el-image>
-                  <span class="price-txt">{{
-                    childrenRef && numberFormat(balanceFormat(childrenRef.buyInfo))
-                  }}</span>
+                <a target="_blank" href="https://t.me/HelloDex_cn" class="icon-add">
+                  <el-icon :size="16"><Plus /></el-icon>
+                </a>
+              </div>
+              <div class="display-flex align-items-center justify-content-sp coin-hold">
+                <div class="display-flex flex-direction-col">
+                  <span>{{ props.baseInfo.tokenInfo?.baseSymbol }} 余额</span>
+                  <strong
+                    >${{ numberFormat(props.currentTokenHoldInfo?.volume) }}({{
+                      numberFormat(props.currentTokenHoldInfo?.amount)
+                    }})</strong
+                  >
+                </div>
+                <div class="display-flex flex-direction-col align-items-center">
+                  <span>总买入</span>
+                  <strong>${{ numberFormat(props.currentTokenHoldInfo?.totalBuyVolume) }}</strong>
+                </div>
+                <div class="display-flex flex-direction-col align-items-fd">
+                  <span>未实现利润</span>
+                  <strong
+                    :class="
+                      props.currentTokenHoldInfo?.totalEarnRate?.[0] === '-'
+                        ? 'down-color'
+                        : 'up-color'
+                    "
+                    >${{ numberFormat(props.currentTokenHoldInfo?.totalEarn) }}(
+                    <PercentageNotbg :value="props.currentTokenHoldInfo?.totalEarnRate || 0" />
+                    )</strong
+                  >
                 </div>
               </div>
-              <a target="_blank" href="https://t.me/HelloDex_cn" class="icon-add">
-                <el-icon :size="20"><Plus /></el-icon>
-              </a>
-            </div>
-            <div class="display-flex align-items-center justify-content-sp coin-hold">
-              <div class="display-flex flex-direction-col">
-                <span>{{ props.baseInfo.tokenInfo?.baseSymbol }} 余额</span>
-                <strong
-                  >${{ numberFormat(props.currentTokenHoldInfo?.volume) }}({{
-                    numberFormat(props.currentTokenHoldInfo?.amount)
-                  }})</strong
-                >
-              </div>
-              <div class="display-flex flex-direction-col align-items-center">
-                <span>总买入</span>
-                <strong>${{ numberFormat(props.currentTokenHoldInfo?.totalBuyVolume) }}</strong>
-              </div>
-              <div class="display-flex flex-direction-col align-items-fd">
-                <span>未实现利润</span>
-                <strong
-                  :class="
-                    props.currentTokenHoldInfo?.totalEarnRate?.[0] === '-'
-                      ? 'down-color'
-                      : 'up-color'
-                  "
-                  >${{ numberFormat(props.currentTokenHoldInfo?.totalEarn) }}(
-                  <PercentageNotbg :value="props.currentTokenHoldInfo?.totalEarnRate || 0" />
-                  )</strong
-                >
+            </template>
+            <div class="trading-tab display-flex align-items-center">
+              <div
+                v-for="item in tradingAreaTabList"
+                :key="item.id"
+                :class="
+                  tradingAreaTabIndex == item.id
+                    ? `active trading-tab-item cur${item.id}`
+                    : 'trading-tab-item'
+                "
+                @click="handelTradingAreaTab(item)"
+              >
+                <span>{{ item.name }}</span>
               </div>
             </div>
-          </template>
-          <div class="trading-tab display-flex align-items-center">
-            <div
-              v-for="item in tradingAreaTabList"
-              :key="item.id"
-              :class="
-                tradingAreaTabIndex == item.id
-                  ? `active trading-tab-item cur${item.id}`
-                  : 'trading-tab-item'
+
+            <OneClickTrading
+              ref="childrenRef"
+              v-if="tradingAreaTabIndex == 1"
+              :coinInfo="
+                handleCoinPairInfo({
+                  ...props.baseInfo.tokenInfo,
+                  chainCode: props.baseInfo.chainInfo?.chainCode
+                })
               "
-              @click="handelTradingAreaTab(item)"
-            >
-              <span>{{ item.name }}</span>
-            </div>
+              :pairInfo="{ ...props.pairInfo, price }"
+            />
+            <template v-if="tradingAreaTabIndex == 2">
+              <div class="tab-main display-flex align-items-center">
+                <div
+                  v-for="item in exchangeTabList"
+                  :key="item.id"
+                  :class="exchangeTabIndex == item.id ? 'cur tab-main-item' : 'tab-main-item'"
+                  @click="handelExchangeTab(item)"
+                >
+                  {{ item.name }}
+                </div>
+              </div>
+              <Transaction
+                :baseInfo="props.baseInfo"
+                v-if="exchangeTabIndex !== 3 && !props.loadRightSideBar"
+              />
+            </template>
+            <BuyLimit
+              v-if="tradingAreaTabIndex == 3"
+              ref="childrenRef"
+              :coinInfo="
+                handleCoinPairInfo({
+                  ...props.baseInfo.tokenInfo,
+                  chainCode: props.baseInfo.chainInfo?.chainCode
+                })
+              "
+              :pairInfo="{ ...props.pairInfo, price }"
+            />
+            <SellLimit
+              v-if="tradingAreaTabIndex == 4"
+              ref="childrenRef"
+              :coinInfo="
+                handleCoinPairInfo({
+                  ...props.baseInfo.tokenInfo,
+                  chainCode: props.baseInfo.chainInfo?.chainCode
+                })
+              "
+              :pairInfo="{ ...props.pairInfo, price }"
+            />
           </div>
 
-          <OneClickTrading
-            ref="childrenRef"
-            v-if="tradingAreaTabIndex == 1"
-            :coinInfo="
-              handleCoinPairInfo({
-                ...props.baseInfo.tokenInfo,
-                chainCode: props.baseInfo.chainInfo?.chainCode
-              })
-            "
-            :pairInfo="{ ...props.pairInfo, price }"
-          />
-          <template v-if="tradingAreaTabIndex == 2">
-            <div class="tab-main display-flex align-items-center">
-              <div
-                v-for="item in exchangeTabList"
-                :key="item.id"
-                :class="exchangeTabIndex == item.id ? 'cur tab-main-item' : 'tab-main-item'"
-                @click="handelExchangeTab(item)"
-              >
-                {{ item.name }}
-              </div>
-            </div>
-            <Transaction
-              :baseInfo="props.baseInfo"
-              v-if="exchangeTabIndex !== 3 && !props.loadRightSideBar"
-            />
-          </template>
-          <BuyLimit
-            v-if="tradingAreaTabIndex == 3"
-            ref="childrenRef"
-            :coinInfo="
-              handleCoinPairInfo({
-                ...props.baseInfo.tokenInfo,
-                chainCode: props.baseInfo.chainInfo?.chainCode
-              })
-            "
-            :pairInfo="{ ...props.pairInfo, price }"
-          />
-          <SellLimit
-            v-if="tradingAreaTabIndex == 4"
-            ref="childrenRef"
-            :coinInfo="
-              handleCoinPairInfo({
-                ...props.baseInfo.tokenInfo,
-                chainCode: props.baseInfo.chainInfo?.chainCode
-              })
-            "
-            :pairInfo="{ ...props.pairInfo, price }"
-          />
-        </div>
-
-        <div class="pond-main">
           <div class="pond-info">
             <!-- <div class="pond-info-item display-flex align-items-center justify-content-sp">
               <div class="flex-1 display-flex flex-direction-col align-items-center">
@@ -284,7 +282,10 @@
                 <strong>{{ numberFormat(props.pairInfo?.low1d || 0) }}</strong>
               </div>
             </div>
-            <div class="pond-info-item display-flex align-items-center justify-content-sp">
+            <div
+              class="pond-info-item display-flex align-items-center justify-content-sp"
+              style="border: none"
+            >
               <div class="flex-1 display-flex flex-direction-col align-items-center">
                 <span>交易量</span>
                 <strong>{{ numberFormat(props.pairInfo?.tradeAmount) }}</strong>
