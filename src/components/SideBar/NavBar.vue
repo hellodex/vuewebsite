@@ -1,25 +1,5 @@
 <template>
   <nav class="nav-box">
-    <div class="activity display-flex align-items-center justify-content-sp" v-if="show">
-      <span></span>
-      <div class="display-flex align-items-center activity-content">
-        <span>🔥HelloDex：统一Web3交易、一起建设Web3未来！利润80%分给用户，平台币预售中</span>
-        <span
-          @click="router.push('/Ido')"
-          class="display-flex align-items-center"
-          style="
-            color: #569cee;
-            border-bottom: 1px solid #569cee;
-            margin-left: 8px;
-            cursor: pointer;
-            line-height: 1;
-          "
-        >
-          {{ i18n.t('tabbar.advertNoticeOperate') }}<el-icon><Right /></el-icon
-        ></span>
-      </div>
-      <span></span>
-    </div>
     <div class="layout-nav display-flex align-items-center justify-content-sp">
       <div class="display-flex align-items-center justify-content-sp">
         <!-- LOGO!!! -->
@@ -140,8 +120,6 @@ const router = useRouter()
 const route = useRoute()
 const i18n = useI18n()
 
-const show = ref<boolean>(true)
-
 const searchDialogVisible = ref<boolean>(false)
 const search = ref<string>('')
 const tokenList = ref<any>([])
@@ -229,27 +207,7 @@ onUnmounted(() => {
   position: sticky;
   z-index: 10;
 }
-.activity {
-  background: #17181b;
-  padding: 6px 10px;
-  height: 32px;
-  font-family: 'PingFangSC-Medium';
-  .activity-content {
-    color: var(--font-color-default);
-    font-size: 12px;
-    a {
-      color: #569cee;
-      text-decoration: underline;
-      cursor: pointer;
-      font-style: inherit;
-      margin-left: 8px;
-    }
-  }
-  .chose {
-    font-size: 20px;
-    cursor: pointer;
-  }
-}
+
 .layout-nav {
   padding: 10px 20px;
   background-color: var(--bg-color);
@@ -287,7 +245,7 @@ onUnmounted(() => {
     color: var(--font-color-default);
     font-size: 20px;
     font-style: normal;
-    font-family: 'PingFangSC-Medium';
+    font-family: 'PingFangSC-Heavy';
   }
   .logo {
     width: 32px;
@@ -304,7 +262,7 @@ onUnmounted(() => {
     a .link {
       margin-left: 20px;
       color: #aaa;
-      font-size: 16px;
+      font-size: 14px;
       font-style: normal;
       font-family: 'PingFangSC-Medium';
     }
@@ -321,13 +279,13 @@ onUnmounted(() => {
     }
   }
   .seach-block {
-    width: 450px;
+    width: 380px;
     border-radius: 4px;
     background: #17181b;
     color: #5c6068;
     position: absolute;
     top: 9px;
-    left: calc(50% - 225px);
+    left: calc(50% - 190px);
     .search-suffix,
     .search-prefix {
       width: 14px;
