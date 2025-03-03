@@ -42,10 +42,10 @@
             </div>
             <div class="form-btn" v-else @click="handelCaptcha(ruleFormRef)">注册</div>
           </el-form-item>
-          <div class="home-route display-flex align-items-center" @click="router.replace('/')">
+          <!-- <div class="home-route display-flex align-items-center" @click="router.replace('/')">
             <span>跳过并直接进入网站</span>
             <svg-icon name="arrow-up" class="arrow-up"></svg-icon>
-          </div>
+          </div> -->
         </el-form>
       </div>
       <div class="web-refer-code web-refer-main" v-else>

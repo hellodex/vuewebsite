@@ -1,6 +1,6 @@
 <template>
   <TonConnectUIProvider :options="options">
-    <div v-show="windowWidth > 700 && route.name !== 'Refer'">
+    <div v-show="windowWidth > 700 && !isReferUrl">
       <NavBar />
     </div>
     <main class="display-flex flex-direction-col main">
@@ -20,7 +20,7 @@
           <component :is="Component" v-if="!route.meta.keepAlive" :key="route.path" />
         </router-view>
       </section>
-      <FooterBar v-if="windowWidth > 700 && route.name !== 'Refer'" />
+      <FooterBar v-if="windowWidth > 700 && !isReferUrl" />
     </main>
     <Loading v-if="tgWebAppData && isTradeUrl"></Loading>
     <vue-danmaku
@@ -120,6 +120,10 @@ const accountInfo = computed(() => globalStore.accountInfo)
 
 const isTradeUrl = computed(() => {
   return window.location.href.indexOf('/trade/') !== -1
+})
+
+const isReferUrl = computed(() => {
+  return window.location.href.indexOf('/Refer') !== -1
 })
 // init theme
 const { initTheme } = useTheme()
