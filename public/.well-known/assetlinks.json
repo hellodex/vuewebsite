@@ -1,9 +1,14 @@
-[{
-  "relation": ["delegate_permission/common.handle_all_urls"],
-  "target": {
-    "namespace": "io.hellodex.dexpro",
-    "package_name": "io.hellodex.dexpro",
-    "sha256_cert_fingerprints":
-    ["4B:52:5D:D9:46:FE:CE:B8:5A:DB:3E:C6:D6:57:63:9A:60:C5:3C:7E:B5:4E:3F:5B:3F:D0:AB:21:C3:AA:71:09"]
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "io.hellodex.dexpro",
+      "sha256_cert_fingerprints": [
+        "4B:52:5D:D9:46:FE:CE:B8:5A:DB:3E:C6:D6:57:63:9A:60:C5:3C:7E:B5:4E:3F:5B:3F:D0:AB:21:C3:AA:71:09"
+      ]
+    }
   }
-}]
+]
