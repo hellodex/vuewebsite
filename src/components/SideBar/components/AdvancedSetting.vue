@@ -240,14 +240,6 @@ const handelGasType = (item: { id: number }) => {
   localStorage.setItem('advancedSetting', JSON.stringify(advancedSetting))
 }
 
-const increaseSet = ref<string>(localStorage.getItem('increaseSet') || '100')
-localStorage.setItem('increaseSet', increaseSet.value)
-
-const handelIncreaseSetInput = (val: any) => {
-  console.log(val)
-  localStorage.setItem('increaseSet', val)
-}
-
 onMounted(async () => {
   if (sellInfo.value.chainCode != 'SOLANA') {
     gasObj.value = await getEvmGasGwei(mainNetworkCurrency(sellInfo.value.chainCode).rpc)

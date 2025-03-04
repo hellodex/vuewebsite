@@ -260,7 +260,7 @@ onUnmounted(() => {
   }
   .link-block {
     a .link {
-      margin-left: 20px;
+      margin-left: 15px;
       color: #aaa;
       font-size: 14px;
       font-style: normal;
@@ -275,17 +275,17 @@ onUnmounted(() => {
       background: rgba(58, 60, 64, 0.4);
       font-size: 14px;
       color: #f5f5f5;
-      margin-left: 24px;
+      margin-left: 20px;
     }
   }
   .seach-block {
-    width: 380px;
+    width: 350px;
     border-radius: 4px;
     background: #17181b;
     color: #5c6068;
     position: absolute;
     top: 9px;
-    left: calc(50% - 190px);
+    left: calc(50% - 175px);
     .search-suffix,
     .search-prefix {
       width: 14px;

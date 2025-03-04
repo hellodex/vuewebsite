@@ -25,6 +25,7 @@
                 <p class="display-flex align-items-center">
                   <span class="base-symbol font-family-Medium">{{ scope.row.symbol || '-' }}</span>
                 </p>
+                <svg-icon name="copy" class="copy" v-copy="scope.row.tokenAddress"></svg-icon>
               </div>
             </template>
           </el-table-column>
@@ -325,6 +326,13 @@ const handelTableRow = (row: any) => {
     // .base-symbol {
     //   color: #f5f5f5;
     // }
+  }
+  .copy {
+    width: 12px;
+    min-width: 12px;
+    height: 12px;
+    margin-left: 6px;
+    cursor: pointer;
   }
 }
 </style>
