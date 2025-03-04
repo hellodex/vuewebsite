@@ -256,7 +256,8 @@ export const TRANSFER_TYPE: any = {
   M: '市价单',
   F: '一键交易',
   L: '限价单',
-  S: '止盈止损'
+  S: '止盈止损',
+  H: '一键回本'
 }
 
 export const LIMIT_ORDER_TYPE: any = {

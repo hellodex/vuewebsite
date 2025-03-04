@@ -139,16 +139,29 @@
         </el-skeleton>
       </div>
       <div class="card-box">
-        <div class="entrustTab display-flex align-items-center">
-          <span
-            v-for="(item, index) in entrustTabList"
-            :key="index"
-            :class="entrustTabIdex == item.value ? 'active' : ''"
-            @click="handelEntrustTab(item)"
-            >{{ item.label }}</span
-          >
-          <!-- <RefreshHold v-if="entrustTabIdex == 1" /> -->
+        <div class="entrustTab display-flex align-items-center justify-content-sp">
+          <div class="display-flex align-items-center">
+            <span
+              v-for="(item, index) in entrustTabList"
+              :key="index"
+              :class="entrustTabIdex == item.value ? 'active' : ''"
+              @click="handelEntrustTab(item)"
+              >{{ item.label }}</span
+            >
+          </div>
+          <div class="data-items display-flex align-items-center" v-if="entrustTabIdex == 1">
+            <span style="margin-right: 4px">隐藏小金额</span>
+            <el-switch
+              v-model="hidePosition"
+              @change="handelHidePosition"
+              size="small"
+              :active-value="1"
+              :inactive-value="0"
+              style="--el-switch-on-color: #13ce66; --el-switch-off-color: #26282c"
+            />
+          </div>
         </div>
+
         <template v-if="entrustTabIdex == 1">
           <MyHold :list="initLimitedOrders.positions" :skeleton="skeleton" />
         </template>
@@ -308,6 +321,9 @@ const transfeOutInfo = ref<any>({})
 const skeleton = ref<boolean>(false)
 const initLimitedOrders = ref<any>({})
 const total = ref<number>(0)
+
+const hidePosition = ref(Number(localStorage.getItem('hidePosition')))
+
 interface RuleForm {
   to: string
   amount: string
@@ -505,7 +521,8 @@ const handelEntrustTab = (item: any) => {
 const getData = async () => {
   const res = await initLimitedOrderPage({
     walletId: parseFloat(customWalletInfo.value.walletInfo?.walletId),
-    walletKey: customWalletInfo.value.walletInfo?.walletKey
+    walletKey: customWalletInfo.value.walletInfo?.walletKey,
+    hidePosition: hidePosition.value
   })
   skeleton.value = false
 
@@ -523,6 +540,11 @@ const restart = () => {
 
 const handelTableRow = (row: any) => {
   window.open(`/k/${row.pairAddress}?chainCode=${row.chainCode}&timeType=15m`)
+}
+
+const handelHidePosition = (val: string) => {
+  localStorage.setItem('hidePosition', val)
+  getData()
 }
 
 onMounted(() => {

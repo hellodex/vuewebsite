@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <el-scrollbar height="calc(100vh - 1.92rem)" class="app-invite">
     <section class="app-invite">
       <van-sticky>
@@ -96,7 +96,6 @@
             i18n.t('connect')
           }}</el-button>
           <H5WalletConnect v-else />
-          <!-- <TonConnectButton className="custom-class"> </TonConnectButton> -->
         </div>
         <div
           class="card-box invite-card display-flex flex-direction-col justify-content-sp"
@@ -831,4 +830,4 @@ onMounted(() => {
     }
   }
 }
-</style>
+</style> -->
