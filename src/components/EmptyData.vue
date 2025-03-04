@@ -12,8 +12,11 @@ defineProps({
   }
 })
 </script>
-<style scoped>
+<style lang="scss" scoped>
 :deep(.el-empty__description) {
   margin-top: 12px;
+  p {
+    font-size: 12px;
+  }
 }
 </style>

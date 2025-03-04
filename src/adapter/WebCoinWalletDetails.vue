@@ -56,19 +56,6 @@
                     style="--el-switch-on-color: #13ce66; --el-switch-off-color: #26282c"
                   />
                 </div>
-                <div
-                  class="data-items display-flex align-items-center"
-                  v-if="activeName == 'fourth'"
-                >
-                  <div
-                    :class="topIndex == item.topNum ? 'item item-active' : 'item'"
-                    v-for="item in topData"
-                    :key="item.id"
-                    @click="handelTopSelect(item)"
-                  >
-                    {{ item.topName }}
-                  </div>
-                </div>
                 <div class="data-items display-flex align-items-center" v-if="activeName == 'five'">
                   <div
                     :class="fundIndex == item.id ? 'item item-active' : 'item'"
@@ -94,6 +81,7 @@
                 /> -->
                 <HoldingCoinsTab
                   v-else-if="activeName == 'fourth'"
+                  @topSelect="handelTopSelect"
                   :holdingCoinsTabInfo="holdingCoinsTabInfo"
                 />
                 <FundTab
@@ -428,33 +416,7 @@ const handleTabClick = (item: { code: string }) => {
   localStorage.setItem('kchart_tab', activeName.value)
 }
 
-const topData = [
-  {
-    topName: 'Top 10',
-    topNum: 10,
-    id: 1
-  },
-  {
-    topName: 'Top 20',
-    topNum: 20,
-    id: 2
-  },
-  {
-    topName: 'Top 50',
-    topNum: 50,
-    id: 3
-  },
-  {
-    topName: 'Top 100',
-    topNum: 100,
-    id: 4
-  }
-]
-
-const topIndex = ref(10)
-
 const handelTopSelect = (item: { topNum: number; topName: string }) => {
-  topIndex.value = item.topNum
   holdingCoinsTabInfo.value = useHoldingCoinsTab(item.topNum, item.topName)
 }
 

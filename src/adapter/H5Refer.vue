@@ -6,7 +6,7 @@
         <span>HelloDex</span>
       </div>
       <p class="refer-tip">开创和主导Web3变革,平台利润80%分给用户</p>
-      <svg-icon name="refer-h5-logo" class="refer-logo"></svg-icon>
+      <img src="@/assets/icons/account_login.svg" class="refer-logo" />
       <div class="web-refer-form web-refer-main" v-if="captchaStatus == 1">
         <h3>欢迎您加入HelloDex</h3>
         <h6>{{ route.query.invitationCode }} 邀请您加入HelloDex一起捕获链上Alpha收益</h6>
@@ -321,7 +321,6 @@ const submitForm = async (formEl: FormInstance | undefined) => {
     }
     .refer-logo {
       width: 6.2987rem;
-      height: 6.5187rem;
       margin-bottom: 1.0667rem;
     }
     .web-refer-main {

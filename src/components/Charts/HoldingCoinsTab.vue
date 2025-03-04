@@ -3,25 +3,21 @@
     <div class="display-flex flex-direction-col holdingCoinsTab">
       <span class="holdingCoinsTab-label">{{ i18n.t('kChart.HolderDist') }}</span>
       <div id="holdingCoins-echarts" ref="echartContainer"></div>
-      <div class="holdingCoins-info">
-        <p class="display-flex align-items-center">
-          <i></i>
-          <span
-            >币总数：{{ numberFormat(props.holdingCoinsTabInfo?.topHolders?.totalSupply) }}</span
-          >
-        </p>
-        <p class="display-flex align-items-center">
-          <i></i>
-          <span
-            >{{ props.holdingCoinsTabInfo?.name }}：{{
-              parseFloat(props.holdingCoinsTabInfo?.topHolders?.topProPortion || 0).toFixed(2)
-            }}%</span
-          >
-        </p>
-      </div>
     </div>
     <div class="display-flex flex-direction-col holdingCoinsTab-tabel">
-      <span class="holdingCoinsTab-label">{{ i18n.t('kChart.TopHolders') }}</span>
+      <div class="display-flex align-items-center justify-content-sp" style="margin-bottom: 12px">
+        <span class="holdingCoinsTab-label">{{ i18n.t('kChart.TopHolders') }}</span>
+        <div class="holdingCoinsTab-items display-flex align-items-center">
+          <div
+            :class="topIndex == item.topNum ? 'item item-active' : 'item'"
+            v-for="item in topData"
+            :key="item.id"
+            @click="handelTopSelect(item)"
+          >
+            {{ item.topName }}
+          </div>
+        </div>
+      </div>
       <el-skeleton style="width: 100%" :loading="props.holdingCoinsTabInfo.loading" animated>
         <template #template>
           <el-skeleton-item
@@ -54,11 +50,13 @@
                 <span class="text-color">{{ numberFormat(scope.row.amount) }}</span>
               </template>
             </el-table-column>
-            <el-table-column prop="walletAddress" :label="i18n.t('kChart.Address')">
+            <el-table-column prop="walletAddress" :label="i18n.t('kChart.Address')" width="150">
               <template #default="scope">
-                <div class="display-flex align-items-center text-color">
+                <div class="display-flex align-items-center text-color" style="margin-bottom: 4px">
                   {{ shortifyAddress(scope.row.walletAddress) }}
+                  <svg-icon name="copy" class="copy" v-copy="scope.row.walletAddress"></svg-icon>
                 </div>
+                <el-progress :percentage="parseFloat(scope.row.per)" color="#D9D9D9"></el-progress>
               </template>
             </el-table-column>
             <template #empty>
@@ -74,9 +72,40 @@
 import { ref, inject, onMounted, watch, nextTick, computed } from 'vue'
 import { numberFormat, shortifyAddress } from '@/utils'
 import { useI18n } from 'vue-i18n'
-import { formatter } from 'element-plus'
+import { color } from 'echarts/core'
 
 const i18n = useI18n()
+const emit = defineEmits(['topSelect'])
+
+const topData = [
+  {
+    topName: 'Top 10',
+    topNum: 10,
+    id: 1
+  },
+  {
+    topName: 'Top 20',
+    topNum: 20,
+    id: 2
+  },
+  {
+    topName: 'Top 50',
+    topNum: 50,
+    id: 3
+  },
+  {
+    topName: 'Top 100',
+    topNum: 100,
+    id: 4
+  }
+]
+
+const topIndex = ref(10)
+
+const handelTopSelect = (item: { topNum: number; topName: string }) => {
+  topIndex.value = item.topNum
+  emit('topSelect', item)
+}
 
 const props = defineProps({
   holdingCoinsTabInfo: {
@@ -93,71 +122,149 @@ const holdingCoinsChart = ref<any>(null)
 // 通过 inject 接收 Echarts
 const Echarts = inject('$echarts')
 
-const data = computed(() => {
-  return [
-    {
-      value: parseFloat(props.holdingCoinsTabInfo?.topHolders?.topHold),
-      name: props.holdingCoinsTabInfo.name + '总数'
-    },
-    {
-      value:
-        parseFloat(props.holdingCoinsTabInfo?.topHolders?.totalSupply) -
-        parseFloat(props.holdingCoinsTabInfo?.topHolders?.topHold),
-      name: i18n.t('kChart.other')
-    }
-  ]
+const lineData = computed(() => {
+  return props.holdingCoinsTabInfo?.topHolders?.vos?.map((item: any) => item.per) || []
 })
 // echarts初始化
 const initEcharts = () => {
   holdingCoinsChart.value = (Echarts as any).init(echartContainer.value)
   const option = {
-    // 自定义echarts图标相关配置
+    color: ['#8979FF', '#FF928A', '#3CC3DF', '#FFAE4C'],
     tooltip: {
-      trigger: 'item',
-      formatter: function (params: any) {
-        return `
-          <div>
-            <p>${params.seriesName}</p>
-            <p>
-              ${params.marker}
-              <span>${params.name} ${numberFormat(params.value || 0)}</span>
-            </p>
-          </div>
-        `
-      }
-    },
-    color: ['#2EBD85', '#EFEFEF'],
-    legend: {
-      itemWidth: 8,
-      itemHeight: 8,
-      icon: 'circle',
-      align: 'left',
-      top: '20%',
-      left: '0',
-      orient: 'vertical',
-      textStyle: {
-        color: '#828282'
-      },
-      formatter(name: string) {
-        const target = data.value.find((item) => item.name === name)
-        return `${name} ${numberFormat(target?.value || 0)}`
-      }
-    },
-    series: [
-      {
-        name: i18n.t('kChart.HolderDist'),
-        type: 'pie',
-        radius: ['50%', '90%'],
-        center: ['60%', '50%'],
-        avoidLabelOverlap: false,
+      trigger: 'axis',
+      axisPointer: {
+        type: 'cross',
         label: {
-          show: false,
-          position: 'center'
+          backgroundColor: '#6a7985'
+        }
+      }
+    },
+    legend: {
+      data: ['Top10', 'Top20', 'Top50', 'Top100'],
+      bottom: '0',
+      textStyle: {
+        color: 'rgba(255, 255, 255, 0.7)'
+      }
+    },
+    grid: {
+      left: '3%',
+      right: '4%',
+      top: '3%',
+      containLabel: true
+    },
+    xAxis: [
+      {
+        type: 'category',
+        boundaryGap: false,
+        axisLine: {
+          show: true,
+          lineStyle: {
+            color: 'rgba(255, 255, 255, 0.3)'
+          }
         },
-        labelLine: {
+        axisLabel: {
           show: false
         },
-        data: data.value
+        axisTick: {
+          show: false
+        },
+        splitLine: {
+          show: false
+        }
+      }
+    ],
+    yAxis: [
+      {
+        type: 'value',
+        splitLine: {
+          show: false
+        }
+      }
+    ],
+    series: [
+      {
+        name: 'Top10',
+        type: 'line',
+        areaStyle: {
+          color: (Echarts as any).graphic.LinearGradient(0, 0, 0, 1, [
+            {
+              offset: 0,
+              color: 'rgba(137, 121, 255, 0.3)' // 起始颜色
+            },
+            {
+              offset: 1,
+              color: 'rgba(137, 121, 255, 0.05)' // 结束颜色
+            }
+          ])
+        },
+        smooth: true,
+        emphasis: {
+          focus: 'series'
+        },
+        data: lineData.value?.filter((item: any, index: number) => index < 10)
+      },
+      {
+        name: 'Top20',
+        type: 'line',
+        smooth: true,
+        areaStyle: {
+          color: (Echarts as any).graphic.LinearGradient(0, 0, 0, 1, [
+            {
+              offset: 0,
+              color: 'rgba(255, 146, 138, 0.3)' // 起始颜色
+            },
+            {
+              offset: 1,
+              color: 'rgba(255, 146, 138, 0.05)' // 结束颜色
+            }
+          ])
+        },
+        emphasis: {
+          focus: 'series'
+        },
+        data: lineData.value?.filter((item: any, index: number) => index < 20)
+      },
+      {
+        name: 'Top50',
+        type: 'line',
+        areaStyle: {
+          color: (Echarts as any).graphic.LinearGradient(0, 0, 0, 1, [
+            {
+              offset: 0,
+              color: 'rgba(60, 195, 223, 0.3)' // 起始颜色
+            },
+            {
+              offset: 1,
+              color: 'rgba(60, 195, 223, 0.05)' // 结束颜色
+            }
+          ])
+        },
+        smooth: true,
+        emphasis: {
+          focus: 'series'
+        },
+        data: lineData.value?.filter((item: any, index: number) => index < 50)
+      },
+      {
+        name: 'Top100',
+        type: 'line',
+        smooth: true,
+        areaStyle: {
+          color: (Echarts as any).graphic.LinearGradient(0, 0, 0, 1, [
+            {
+              offset: 0,
+              color: 'rgba(255, 174, 76, 0.3)' // 起始颜色
+            },
+            {
+              offset: 1,
+              color: 'rgba(255, 174, 76, 0.05)' // 结束颜色
+            }
+          ])
+        },
+        emphasis: {
+          focus: 'series'
+        },
+        data: lineData.value?.filter((item: any, index: number) => index < 100)
       }
     ]
   }
@@ -180,16 +287,38 @@ onMounted(() => {
 </script>
 <style lang="scss" scoped>
 .holdingCoinsTab-tab-content {
+  .holdingCoinsTab-items {
+    padding: 2px;
+    background: var(--bg-color);
+    border-radius: 4px;
+    border: 1px solid rgba(38, 40, 44, 0.3);
+    .item {
+      padding: 4px 8px;
+      border-radius: 4px;
+      background-color: transparent;
+      color: #848e9c;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .item-active {
+      color: var(--font-color-default);
+      background: var(--tab-bg-color);
+    }
+  }
   .holdingCoinsTab-label {
     font-size: 14px;
     color: var(--font-color-default);
-    margin-bottom: 12px;
-
     font-style: normal;
+    line-height: 32px;
   }
   #holdingCoins-echarts {
-    width: 450px;
-    height: 175px;
+    width: 550px;
+    height: 450px;
+    border-radius: 8px;
+    background: rgba(23, 24, 27, 0.3);
+    padding: 32px 16px 16px 16px;
+    margin-top: 12px;
   }
   .holdingCoinsTab-tabel {
     width: 60%;
@@ -209,6 +338,20 @@ onMounted(() => {
       background-color: #e89f13;
       margin-right: 8px;
     }
+  }
+  .copy {
+    width: 12px;
+    min-width: 12px;
+    height: 12px;
+    margin-left: 6px;
+    cursor: pointer;
+  }
+
+  :deep(.el-progress__text) {
+    display: none;
+  }
+  :deep(.el-progress-bar__outer) {
+    background-color: rgba(58, 60, 64, 0.4);
   }
 }
 </style>

@@ -1,16 +1,6 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <footer class="web-footer display-flex align-items-center justify-content-sp">
-    <div class="display-flex align-items-center">
-      <div class="footer-item">
-        <span>{{ i18n.t('TotalDividend') }}：</span>
-        <span>{{ i18n.t('AfterIDOpresale') }}</span>
-      </div>
-      <div class="footer-item">
-        <span>HelloDex：</span>
-        <span>{{ i18n.t('AfterIDOpresale') }}</span>
-      </div>
-    </div>
     <div class="activity display-flex align-items-center justify-content-sp">
       <span></span>
       <div class="display-flex align-items-center activity-content">
@@ -94,23 +84,6 @@ onMounted(() => {})
   bottom: 0;
   left: 0;
   z-index: 9;
-  .footer-item {
-    text-align: center;
-    line-height: 31px;
-    margin-right: 64px;
-    span:first-child {
-      color: #aaa;
-    }
-    span:last-child {
-      color: #616161;
-    }
-  }
-  .footer-item:last-child {
-    text-align: left;
-  }
-  .footer-item:first-child {
-    text-align: right;
-  }
   .other-link {
     display: flex;
     align-items: center;
@@ -141,14 +114,9 @@ onMounted(() => {})
   }
   .activity {
     font-family: 'PingFangSC-Medium';
-    position: absolute;
-    width: 100%;
-    left: 0;
-    pointer-events: none;
     .activity-content {
       color: var(--font-color-default);
       font-size: 12px;
-      pointer-events: auto;
       a {
         color: #569cee;
         text-decoration: underline;
