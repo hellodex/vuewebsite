@@ -103,6 +103,7 @@
           <div class="sell-btn buy-sell-btn">
             <span v-for="(item, index) in config.sellAmount" :key="index">{{ item }}%</span>
           </div>
+          <div class="one-click-recovery">回本</div>
         </div>
       </WalletConnect>
       <template v-else>
@@ -131,6 +132,7 @@
               >{{ item }}%</span
             >
           </div>
+          <div class="one-click-recovery" @click="handelRecovery">回本</div>
         </div>
       </template>
     </template>
@@ -161,7 +163,7 @@ import {
   notificationWarn
 } from '@/utils/notification'
 import { useI18n } from 'vue-i18n'
-import { APIgetSwap, APIauthTradeSwap } from '@/api/coinWalletDetails'
+import { APIgetSwap, APIauthTradeSwap, APIauthRecoverTradeCost } from '@/api/coinWalletDetails'
 import { infinityAmount } from '@/types'
 import BigNumber from 'bignumber.js'
 import WalletConnect from '@/components/Wallet/WalletConnect.vue'
@@ -197,6 +199,12 @@ const props = defineProps({
     type: Object,
     default: () => {
       return {}
+    }
+  },
+  positions: {
+    type: Array,
+    default: () => {
+      return []
     }
   }
 })
@@ -477,6 +485,49 @@ const handelCustomTradeSwap = async (selectSellCoin: any, selectBuyCoin: any, ty
   }
 }
 
+const handelRecovery = async () => {
+  const find = props.positions?.find((item: any) => item.tokenAddress == sellInfo.value.baseAddress)
+  if (!find) {
+    customMessage({
+      type: 'error',
+      title: '买入代币数量：0，无法一键回本'
+    })
+    return false
+  }
+  notificationInfo({
+    title: `${sellInfo.value.baseSymbol}：正在发起一键回本`,
+    message: `<div class="display-flex align-items-center">
+                  <p class="notification_loader"></p>
+                  <span>正在发起</span>
+                </div>
+                <div class='notification-step-line-up'></div>
+                `
+  })
+
+  const params = {
+    chain: chainConfigs.find((item: any) => item.chainCode == sellInfo.value.chainCode)?.chain,
+    walletId: customWalletInfo.value.walletInfo?.walletId,
+    walletKey: customWalletInfo.value.walletInfo?.walletKey,
+    walletAddress: customWalletInfo.value.walletInfo?.wallet,
+    price: props.pairInfo.price,
+    address: sellInfo.value.baseAddress,
+    decimals: sellInfo.value.baseTokenDecimals
+  }
+  const res = await APIauthRecoverTradeCost({ ...params })
+
+  if (res) {
+    notificationSuccessful({
+      title: `${sellInfo.value.baseSymbol}：一键回本`,
+      message: `${i18n.t('TransactionSuccessful')}`
+    })
+  } else {
+    notificationFailed({
+      title: `${sellInfo.value.baseSymbol}：一键回本`,
+      message: `${i18n.t('TransactionFailed')}`
+    })
+  }
+}
+
 const handelSure = () => {
   if (
     isAllSpaces(buy1.value) ||
@@ -628,6 +679,16 @@ onUnmounted(() => {
   }
   .close {
     cursor: pointer;
+  }
+  .one-click-recovery {
+    text-align: center;
+    border-radius: 6px;
+    padding: 4px;
+    border: 1px solid #26282c;
+    margin-top: 12px;
+    color: #5c6068;
+    cursor: pointer;
+    font-size: 12px;
   }
 }
 </style>

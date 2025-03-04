@@ -402,7 +402,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
         const userInfo: any = await APIuserInfo()
         customMessage({
           type: 'success',
-          title: '账户登陆成功'
+          title: '账户登录成功'
         })
         const obj = Object.assign({}, res, userInfo)
         localStorage.setItem('accountInfo', JSON.stringify(obj))

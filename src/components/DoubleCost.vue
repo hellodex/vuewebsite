@@ -42,7 +42,9 @@ increaseSwitch.value && localStorage.setItem('increaseSet', increaseSet.value)
 
 const handelIncreaseSetInput = (val: any) => {
   console.log(val)
-  localStorage.setItem('increaseSet', val)
+  if (increaseSwitch.value) {
+    localStorage.setItem('increaseSet', val)
+  }
 }
 
 const handelSwitch = (val: any) => {

@@ -47,6 +47,34 @@
                   <RefreshHold v-if="activeName == 'seven'" />
                 </div> -->
                 <span class="transaction-tab-pause-txt" v-if="pauseType == 1">⏸ 已暂停</span>
+                <div
+                  class="data-items display-flex align-items-center"
+                  v-if="activeName == 'seven'"
+                >
+                  <span style="margin-right: 4px">只显示k线币仓位</span>
+                  <el-switch
+                    v-model="onlyKlinePosition"
+                    @change="handelOnlyKlinePosition"
+                    size="small"
+                    :active-value="1"
+                    :inactive-value="0"
+                    style="--el-switch-on-color: #13ce66; --el-switch-off-color: #26282c"
+                  />
+                </div>
+                <div
+                  class="data-items display-flex align-items-center"
+                  v-if="activeName == 'seven'"
+                >
+                  <span style="margin-right: 4px">隐藏小金额</span>
+                  <el-switch
+                    v-model="hidePosition"
+                    @change="handelHidePosition"
+                    size="small"
+                    :active-value="1"
+                    :inactive-value="0"
+                    style="--el-switch-on-color: #13ce66; --el-switch-off-color: #26282c"
+                  />
+                </div>
                 <div class="data-items display-flex align-items-center">
                   <span style="margin-right: 4px">快捷交易</span>
                   <el-switch
@@ -157,6 +185,7 @@
         v-if="config.switch"
         :config="config"
         :coinInfo="coinInfo"
+        :positions="initLimitedOrders.positions"
         :pairInfo="{ ...rightSideBarInfo.pairInfo, price: priceIncrease.price }"
         @circulation="handelCirculation"
         @close="handelClose"
@@ -337,6 +366,9 @@ const handelPauseAndPlay = (val: number) => {
   pauseType.value = val
 }
 
+const hidePosition = ref(Number(localStorage.getItem('hidePosition')))
+const onlyKlinePosition = ref(Number(localStorage.getItem('onlyKlinePosition')))
+
 useChainInfo.createChainInfo({
   chainCode: route.query.chainCode, // 币ID
   pairAddress: route.params.pairAddress, // 币 pairAddress
@@ -373,7 +405,8 @@ async function initTokenData() {
 const getData = async () => {
   const res = await initLimitedOrderPage({
     walletId: parseFloat(customWalletInfo.value.walletInfo?.walletId),
-    walletKey: customWalletInfo.value.walletInfo?.walletKey
+    walletKey: customWalletInfo.value.walletInfo?.walletKey,
+    hidePosition: hidePosition.value
   })
 
   if (res) {
@@ -384,6 +417,11 @@ const getData = async () => {
         (item: any) =>
           item.tokenAddress.toLowerCase() == baseInfo.value.tokenInfo?.baseAddress?.toLowerCase()
       ) || {}
+    if (onlyKlinePosition.value) {
+      initLimitedOrders.value.positions = initLimitedOrders.value.positions.filter(
+        (item: any) => item.tokenAddress == baseInfo.value.tokenInfo?.baseAddress
+      )
+    }
   }
 }
 
@@ -621,6 +659,16 @@ const handelClose = (val: boolean) => {
   })
   localStorage.setItem('quick_trade_config', JSON.stringify(obj))
   config.value = obj
+}
+
+const handelHidePosition = (val: string) => {
+  localStorage.setItem('hidePosition', val)
+  localStorage.getItem('accountInfo') && getData()
+}
+
+const handelOnlyKlinePosition = (val: string) => {
+  localStorage.setItem('onlyKlinePosition', val)
+  localStorage.getItem('accountInfo') && getData()
 }
 
 onUnmounted(() => {

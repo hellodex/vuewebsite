@@ -20,7 +20,7 @@ export function APIsendMessage(data: object) {
 }
 
 /**
- * @description 登陆/注册
+ * @description 登录/注册
  * @param data
  * @returns
  */
@@ -33,7 +33,7 @@ export function APIdologin(data: object) {
 }
 
 /**
- * @description 登出/退出登陆
+ * @description 登出/退出登录
  * @returns
  */
 export function APIlogout() {
@@ -77,7 +77,7 @@ export function APIuserInfo(data = {}) {
 }
 
 /**
- * @description TG to WEB 登陆
+ * @description TG to WEB 登录
  * @param data
  * @returns
  */
