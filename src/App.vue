@@ -1,74 +1,72 @@
 <template>
-  <TonConnectUIProvider :options="options">
-    <div v-show="windowWidth > 700 && !isReferUrl">
-      <NavBar />
-    </div>
-    <main class="display-flex flex-direction-col main">
-      <section
-        :class="
-          route.fullPath.indexOf('/k/') !== -1 && windowWidth > 700
-            ? 'content-app display-flex align-items-fs'
-            : 'content-app'
-        "
-        v-if="routerState"
-      >
-        <LeftSideBar v-if="route.fullPath.indexOf('/k/') !== -1 && windowWidth > 700" />
-        <router-view v-slot="{ Component }">
-          <keep-alive>
-            <component :is="Component" v-if="route.meta.keepAlive" :key="route.path" />
-          </keep-alive>
-          <component :is="Component" v-if="!route.meta.keepAlive" :key="route.path" />
-        </router-view>
-      </section>
-      <FooterBar v-if="windowWidth > 700 && !isReferUrl" />
-    </main>
-    <Loading v-if="tgWebAppData && isTradeUrl"></Loading>
-    <vue-danmaku
-      ref="danmaku"
-      v-model:danmus="danmus"
-      useSlot
-      isSuspend
-      randomChannel
-      :speeds="80"
-      :channels="5"
-      class="danmaku-box"
-      style="pointer-events: none"
+  <div v-show="windowWidth > 700 && !isReferUrl">
+    <NavBar />
+  </div>
+  <main class="display-flex flex-direction-col main">
+    <section
+      :class="
+        route.fullPath.indexOf('/k/') !== -1 && windowWidth > 700
+          ? 'content-app display-flex align-items-fs'
+          : 'content-app'
+      "
+      v-if="routerState"
     >
-      <template v-slot:dm="{ index, danmu }">
-        <div class="danmaku-item display-flex align-items-center">
-          <a
-            :href="`https://x.com/${danmu.smartWallet.twitterUsername}`"
-            class="display-flex align-items-center"
-            target="_blank"
-          >
-            <el-image :src="danmu.smartWallet.avatar" alt="" class="danmaku-avatar">
-              <template #error>
-                <img src="@/assets/icons/logo1.svg" alt="" class="danmaku-avatar" />
-              </template>
-            </el-image>
-            <span class="twitterName">{{ danmu.smartWallet.twitterName }}</span>
-          </a>
-          <img
-            src="@/assets/icons/copy.svg"
-            alt=""
-            class="copy"
-            v-copy="[danmu.smartWallet.walletAddress, '钱包地址已复制']"
-          />
-          <span @click="handelRoute(danmu)"
-            >&nbsp;{{ danmu.transaction.flag ? '卖出' : '买入' }}&nbsp;<i
-              :class="danmu.transaction.flag ? 'down-color num-txt' : 'up-color num-txt'"
-              >{{ numberFormat(danmu.transaction.amount || 0) }} &nbsp;{{
-                danmu.transaction.symbol
-              }}</i
-            >，交易额&nbsp;<i
-              :class="danmu.transaction.flag ? 'down-color num-txt' : 'up-color num-txt'"
-              >${{ numberFormat(danmu.transaction.volume || 0) }}</i
-            ></span
-          >
-        </div>
-      </template>
-    </vue-danmaku>
-  </TonConnectUIProvider>
+      <LeftSideBar v-if="route.fullPath.indexOf('/k/') !== -1 && windowWidth > 700" />
+      <router-view v-slot="{ Component }">
+        <keep-alive>
+          <component :is="Component" v-if="route.meta.keepAlive" :key="route.path" />
+        </keep-alive>
+        <component :is="Component" v-if="!route.meta.keepAlive" :key="route.path" />
+      </router-view>
+    </section>
+    <FooterBar v-if="windowWidth > 700 && !isReferUrl" />
+  </main>
+  <Loading v-if="tgWebAppData && isTradeUrl"></Loading>
+  <vue-danmaku
+    ref="danmaku"
+    v-model:danmus="danmus"
+    useSlot
+    isSuspend
+    randomChannel
+    :speeds="80"
+    :channels="5"
+    class="danmaku-box"
+    style="pointer-events: none"
+  >
+    <template v-slot:dm="{ danmu }">
+      <div class="danmaku-item display-flex align-items-center">
+        <a
+          :href="`https://x.com/${danmu.smartWallet.twitterUsername}`"
+          class="display-flex align-items-center"
+          target="_blank"
+        >
+          <el-image :src="danmu.smartWallet.avatar" alt="" class="danmaku-avatar">
+            <template #error>
+              <img src="@/assets/icons/logo1.svg" alt="" class="danmaku-avatar" />
+            </template>
+          </el-image>
+          <span class="twitterName">{{ danmu.smartWallet.twitterName }}</span>
+        </a>
+        <img
+          src="@/assets/icons/copy.svg"
+          alt=""
+          class="copy"
+          v-copy="[danmu.smartWallet.walletAddress, '钱包地址已复制']"
+        />
+        <span @click="handelRoute(danmu)"
+          >&nbsp;{{ danmu.transaction.flag ? '卖出' : '买入' }}&nbsp;<i
+            :class="danmu.transaction.flag ? 'down-color num-txt' : 'up-color num-txt'"
+            >{{ numberFormat(danmu.transaction.amount || 0) }} &nbsp;{{
+              danmu.transaction.symbol
+            }}</i
+          >，交易额&nbsp;<i
+            :class="danmu.transaction.flag ? 'down-color num-txt' : 'up-color num-txt'"
+            >${{ numberFormat(danmu.transaction.volume || 0) }}</i
+          ></span
+        >
+      </div>
+    </template>
+  </vue-danmaku>
 </template>
 <script setup>
 import { ref, onMounted, provide, nextTick, computed, watch } from 'vue'
@@ -76,14 +74,13 @@ import { RouterView, useRoute, useRouter } from 'vue-router'
 import { useTheme } from '@/hooks/useTheme'
 import { useI18n } from 'vue-i18n'
 import { browserLang, numberFormat } from '@/utils'
-import { CHAIN_SYMBOL, QUICK_TRADE_CONFIG } from '@/types'
+import { QUICK_TRADE_CONFIG } from '@/types'
 
 import { socket } from '@/utils/socket'
 import Loading from '@/components/Loading/index.vue'
 import NavBar from '@/components/SideBar/NavBar.vue'
 import FooterBar from '@/components/SideBar/FooterBar.vue'
 import LeftSideBar from '@/components/SideBar/LeftSideBar.vue'
-import { TonConnectUIProvider, THEME } from '@townsquarelabs/ui-vue'
 import { useGlobalStore } from '@/stores/global'
 import { useWindowWidth } from '@/hooks/useWindowWidth'
 import vueDanmaku from 'vue3-danmaku'
@@ -103,14 +100,6 @@ const danmus = ref([])
 
 const telegram__initParams = sessionStorage.getItem('__telegram__initParams')
 const tgWebAppData = (telegram__initParams && JSON.parse(telegram__initParams)?.tgWebAppData) || ''
-
-const options = {
-  manifestUrl: 'https://hellodex.io/tonconnect-manifest.json',
-  uiPreferences: { theme: THEME.DARK },
-  actionsConfiguration: {
-    twaReturnUrl: 'https://t.me/hellodex_bot' // 钱包连接后将用户重定向到Telegram Mini App
-  }
-}
 
 const route = useRoute()
 const router = useRouter()

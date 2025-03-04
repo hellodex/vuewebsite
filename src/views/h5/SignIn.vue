@@ -268,7 +268,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
       if (res) {
         localStorage.setItem('accountInfo', JSON.stringify(res))
         const userInfo: any = await APIuserInfo()
-        showSuccessToast('账户登陆成功')
+        showSuccessToast('账户登录成功')
         const obj = Object.assign({}, res, userInfo)
         localStorage.setItem('accountInfo', JSON.stringify(obj))
 

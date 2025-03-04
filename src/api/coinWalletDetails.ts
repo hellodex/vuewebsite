@@ -341,6 +341,23 @@ export function initLimitedOrderPage(data: object) {
 }
 
 /**
+ * @description 一键回本
+ * @param data
+ * @returns
+ */
+export function APIauthRecoverTradeCost(data: object) {
+  const account: any = localStorage.getItem('accountInfo')
+  return http({
+    url: WEB_URL + '/api/auth/trade/recoverTradeCost',
+    method: 'POST',
+    data,
+    headers: {
+      [`${JSON.parse(account)?.tokenInfo.tokenName}`]: `Bearer ${JSON.parse(account)?.tokenInfo.tokenValue}`
+    }
+  })
+}
+
+/**
  * @description 收藏
  * @param data
  * @returns
