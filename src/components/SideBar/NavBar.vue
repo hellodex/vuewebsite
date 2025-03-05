@@ -149,7 +149,7 @@ const getTokenList = async () => {
   const tokens = await APISearchToken({
     query: search.value
   })
-  tokenList.value = tokens
+  tokenList.value = tokens || []
   searchLoading.value = false
 }
 
