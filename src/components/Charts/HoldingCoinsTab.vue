@@ -149,7 +149,7 @@ const initEcharts = () => {
     grid: {
       left: '3%',
       right: '4%',
-      top: '3%',
+      top: '1%',
       containLabel: true
     },
     xAxis: [
@@ -345,12 +345,13 @@ onMounted(() => {
     line-height: 32px;
   }
   #holdingCoins-echarts {
-    width: 550px;
+    width: 500px;
     height: 450px;
     border-radius: 8px;
     background: rgba(23, 24, 27, 0.3);
     padding: 32px 16px 16px 16px;
     margin-top: 12px;
+    margin-right: 12px;
   }
   .holdingCoinsTab-tabel {
     width: 60%;
