@@ -589,9 +589,9 @@ const handelAdd = (formEl: FormInstance | undefined) => {
 }
 
 const handelSelectBaseAddress = (val: any) => {
-  ruleForm.symbol = options.value.find((item: any) => item.address == val).symbol
-  ruleForm.startPrice = options.value.find((item: any) => item.address == val).price
-  ruleForm.logo = options.value.find((item: any) => item.address == val).logo
+  ruleForm.symbol = options.value.find((item: any) => item.address == val)?.symbol || ''
+  ruleForm.startPrice = options.value.find((item: any) => item.address == val)?.price || ''
+  ruleForm.logo = options.value.find((item: any) => item.address == val)?.logo || ''
 }
 
 const deleteForm = async (formEl: FormInstance | undefined) => {
