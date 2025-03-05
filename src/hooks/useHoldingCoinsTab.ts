@@ -21,9 +21,12 @@ export function useHoldingCoinsTab(num: any, name: string) {
   async function getTransaction() {
     const res: any = await APIgetTopHold({
       ...params,
-      topN: num
+      topN: 100
     })
-    topHolders.value = res
+    topHolders.value = {
+      ...res,
+      tableData: res.vos?.filter((item: any, index: number) => index < num)
+    }
     loading.value = false
   }
 
@@ -50,6 +53,13 @@ export function useHoldingCoinsTab(num: any, name: string) {
         totalSupply: data.total_supply,
         topProPortion,
         vos: data.holders?.map((item: any) => {
+          return {
+            amount: item.balance,
+            per: item.percent * 100,
+            walletAddress: item.address
+          }
+        }),
+        tableData: data.holders?.map((item: any) => {
           return {
             amount: item.balance,
             per: item.percent * 100,
