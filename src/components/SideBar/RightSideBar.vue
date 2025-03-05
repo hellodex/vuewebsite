@@ -86,7 +86,7 @@
                 <span class="color-1">{{ baseInfo.tokenInfo?.baseSymbol }}</span>
                 <strong
                   >{{ numberFormat(pairInfo.baseAmount || 0) }} ${{
-                    numberFormat(pairInfo.basePrice)
+                    numberFormat((pairInfo.baseAmount || 0) * (pairInfo.basePrice || 0))
                   }}</strong
                 >
               </div>
@@ -97,7 +97,7 @@
                 <span class="color-1">{{ baseInfo.tokenInfo?.quoteSymbol }}</span>
                 <strong
                   >{{ numberFormat(pairInfo.quoteAmount || 0) }} ${{
-                    numberFormat(pairInfo.quotePrice)
+                    numberFormat((pairInfo.quoteAmount || 0) * (pairInfo.quotePrice || 0))
                   }}</strong
                 >
               </div>
