@@ -2,21 +2,36 @@ import { useChainInfoStore } from '@/stores/chainInfo'
 import { useTokenInfoStore } from '@/stores/tokenInfo'
 import { useGlobalStore } from '@/stores/global'
 import { io } from 'socket.io-client'
-import { ElMessage } from 'element-plus'
+import { ElNotification } from 'element-plus'
 import { numberFormat } from '@/utils'
 import CryptoJS from 'crypto-js'
 import { customMessage } from './message'
 import BuyImg from '@/assets/img/buy-img.png'
 import SellImg from '@/assets/img/sell-img.png'
 
+// const data = {
+//   baseAddress: '6LjccmR327LvnfbabH44xnKUBpDbErzMnbMovL8Kpump',
+//   chainCode: 'SOLANA',
+//   pairAddress: 'Drya4jMXfmGjh3LPg7JnkxAqiSpaPUDzyPWA85s7xhEg',
+//   symbol: 'TRUMP',
+//   price: '0.000447070755860641864914488145',
+//   volume: '32.911237090021688249023105436791365885',
+//   chg: '44.6531'
+// }
+
+// sendMessage('价格监控', data)
+
 function sendMessage(title: string, data: any) {
   const startTime = new Date().getTime() // 记录开始时间
   const tokenInfo = useTokenInfoStore().tokenInfo
-  ElMessage({
-    type: data.flag == 0 ? 'success' : 'error',
+  const notification = ElNotification({
     dangerouslyUseHTMLString: true,
     duration: 3000,
-    customClass: 'socket-elMessage',
+    position: 'bottom-right',
+    customClass:
+      data.flag == 0
+        ? 'socket-elMessage socket-elMessage_success'
+        : 'socket-elMessage socket-elMessage_error',
     message: `<div class='display-flex flex-direction-col'>
                 <div class='display-flex align-items-center'>
                   ${(() => {
@@ -44,23 +59,12 @@ function sendMessage(title: string, data: any) {
                 </div>
               </div>`,
     showClose: true,
-    onClose: () => {
-      const endTime = new Date().getTime() // 记录关闭时间
-      const duration = endTime - startTime // 计算持续时间
-
-      if (duration >= 5000) {
-        console.info('消息是自动关闭的')
-      } else {
-        console.info('消息是手动关闭的', data)
-        if (
-          window.location.href.indexOf('/k/') >= 0 &&
-          data.baseAddress == tokenInfo?.baseAddress
-        ) {
-          console.info('消息是手动关闭的', data.pairAddress)
-          return false
-        }
-        window.open(`/k/${data.pairAddress}?chainCode=${data.chainCode}&timeType=15m`)
+    onClick: () => {
+      notification.close()
+      if (window.location.href.indexOf('/k/') >= 0 && data.baseAddress == tokenInfo?.baseAddress) {
+        return false
       }
+      window.open(`/k/${data.pairAddress}?chainCode=${data.chainCode}&timeType=15m`)
     }
   })
 }
