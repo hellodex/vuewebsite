@@ -351,6 +351,7 @@ onMounted(() => {
     background: rgba(23, 24, 27, 0.3);
     padding: 32px 16px 16px 16px;
     margin-top: 12px;
+    margin-right: 12px;
   }
   .holdingCoinsTab-tabel {
     width: 60%;
