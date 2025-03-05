@@ -29,7 +29,7 @@
         </template>
         <template #default>
           <el-table
-            :data="props.holdingCoinsTabInfo?.topHolders?.vos || []"
+            :data="props.holdingCoinsTabInfo?.topHolders?.tableData || []"
             :header-cell-style="{ background: '#f9f9f9' }"
             max-height="890px"
           >
@@ -186,16 +186,24 @@ const initEcharts = () => {
         name: 'Top10',
         type: 'line',
         areaStyle: {
-          color: (Echarts as any).graphic.LinearGradient(0, 0, 0, 1, [
-            {
-              offset: 0,
-              color: 'rgba(137, 121, 255, 0.3)' // 起始颜色
-            },
-            {
-              offset: 1,
-              color: 'rgba(137, 121, 255, 0.05)' // 结束颜色
-            }
-          ])
+          color: {
+            type: 'linear',
+            x: 0,
+            y: 0,
+            x2: 0,
+            y2: 1,
+            colorStops: [
+              {
+                offset: 0,
+                color: 'rgba(137, 121, 255, 0.9)' // 0% 处的颜色
+              },
+              {
+                offset: 1,
+                color: 'rgba(137, 121, 255, 0.1)' // 100% 处的颜色
+              }
+            ],
+            global: false // 缺省为 false
+          }
         },
         smooth: true,
         emphasis: {
@@ -208,16 +216,24 @@ const initEcharts = () => {
         type: 'line',
         smooth: true,
         areaStyle: {
-          color: (Echarts as any).graphic.LinearGradient(0, 0, 0, 1, [
-            {
-              offset: 0,
-              color: 'rgba(255, 146, 138, 0.3)' // 起始颜色
-            },
-            {
-              offset: 1,
-              color: 'rgba(255, 146, 138, 0.05)' // 结束颜色
-            }
-          ])
+          color: {
+            type: 'linear',
+            x: 0,
+            y: 0,
+            x2: 0,
+            y2: 1,
+            colorStops: [
+              {
+                offset: 0,
+                color: 'rgba(255, 146, 138, 0.9)' // 0% 处的颜色
+              },
+              {
+                offset: 1,
+                color: 'rgba(255, 146, 138, 0.1)' // 100% 处的颜色
+              }
+            ],
+            global: false // 缺省为 false
+          }
         },
         emphasis: {
           focus: 'series'
@@ -228,16 +244,24 @@ const initEcharts = () => {
         name: 'Top50',
         type: 'line',
         areaStyle: {
-          color: (Echarts as any).graphic.LinearGradient(0, 0, 0, 1, [
-            {
-              offset: 0,
-              color: 'rgba(60, 195, 223, 0.3)' // 起始颜色
-            },
-            {
-              offset: 1,
-              color: 'rgba(60, 195, 223, 0.05)' // 结束颜色
-            }
-          ])
+          color: {
+            type: 'linear',
+            x: 0,
+            y: 0,
+            x2: 0,
+            y2: 1,
+            colorStops: [
+              {
+                offset: 0,
+                color: 'rgba(60, 195, 223, 0.9)' // 0% 处的颜色
+              },
+              {
+                offset: 1,
+                color: 'rgba(60, 195, 223, 0.1)' // 100% 处的颜色
+              }
+            ],
+            global: false // 缺省为 false
+          }
         },
         smooth: true,
         emphasis: {
@@ -250,16 +274,24 @@ const initEcharts = () => {
         type: 'line',
         smooth: true,
         areaStyle: {
-          color: (Echarts as any).graphic.LinearGradient(0, 0, 0, 1, [
-            {
-              offset: 0,
-              color: 'rgba(255, 174, 76, 0.3)' // 起始颜色
-            },
-            {
-              offset: 1,
-              color: 'rgba(255, 174, 76, 0.05)' // 结束颜色
-            }
-          ])
+          color: {
+            type: 'linear',
+            x: 0,
+            y: 0,
+            x2: 0,
+            y2: 1,
+            colorStops: [
+              {
+                offset: 0,
+                color: 'rgba(255, 174, 76, 0.9)' // 0% 处的颜色
+              },
+              {
+                offset: 1,
+                color: 'rgba(255, 174, 76, 0.1)' // 100% 处的颜色
+              }
+            ],
+            global: false // 缺省为 false
+          }
         },
         emphasis: {
           focus: 'series'
