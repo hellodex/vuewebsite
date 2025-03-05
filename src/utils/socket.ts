@@ -15,7 +15,7 @@ function sendMessage(title: string, data: any) {
   ElMessage({
     type: data.flag == 0 ? 'success' : 'error',
     dangerouslyUseHTMLString: true,
-    duration: 5000,
+    duration: 3000,
     customClass: 'socket-elMessage',
     message: `<div class='display-flex flex-direction-col'>
                 <div class='display-flex align-items-center'>
@@ -31,11 +31,11 @@ function sendMessage(title: string, data: any) {
                 <div class='sun-title display-flex align-items-center'>
                   <div>
                     <span>价格已到:</span>
-                    <strong>${numberFormat(data.price)}</strong>
+                    <strong>${'$' + numberFormat(data.price)}</strong>
                   </div>
                   <div style='margin:0 14px;'>
                     <span>交易额:</span>
-                    <strong>${numberFormat(data.volume)}</strong>
+                    <strong>${'$' + numberFormat(data.volume)}</strong>
                   </div>
                   <div>
                     <span>方向:</span>
@@ -66,10 +66,10 @@ function sendMessage(title: string, data: any) {
 }
 
 const version = '1.0'
-let channel = import.meta.env.VITE_NOT_TG_CHANNEL
-let key = import.meta.env.VITE_NOT_TG_KEY
-let ts = String(new Date().getTime())
-let sign = CryptoJS.SHA256(channel + ts + version + key).toString()
+const channel = import.meta.env.VITE_NOT_TG_CHANNEL
+const key = import.meta.env.VITE_NOT_TG_KEY
+const ts = String(new Date().getTime())
+const sign = CryptoJS.SHA256(channel + ts + version + key).toString()
 
 const URL = `https://wss.apihellodex.lol`
 
