@@ -393,15 +393,27 @@ a,
   animation: slide 1s linear infinite;
 }
 
-.socket-elMessage.right {
-  right: 50% !important;
-  transform: translateX(50%);
-  -webkit-transform: translateX(50%);
-  -moz-transform: translateX(50%);
-  -ms-transform: translateX(50%);
-  -o-transform: translateX(50%);
+.socket-elMessage {
+  animation: slideInFromBottom 0.5s ease-out;
   cursor: pointer;
 }
+
+@keyframes slideInFromBottom {
+  0% {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.socket-elMessage.right {
+  width: 420px !important;
+  right: calc(50% - 210px) !important;
+}
+
 .socket-elMessage_error {
   background: #362626 !important;
 }
