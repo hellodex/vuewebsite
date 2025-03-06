@@ -129,19 +129,19 @@
         <div class="display-flex align-items-center">
           <template v-if="baseInfo?.chainInfo?.chainCode != 'SOLANA'">
             <div class="display-flex align-items-center pond-start">
-              <div class="display-flex flex-direction-col">
+              <div class="display-flex flex-direction-col align-items-center">
                 <span>合约开源</span>
                 <span>{{ baseInfo?.coinGoPlusInfo?.is_open_source == 1 ? '是' : '否' }}</span>
               </div>
-              <div class="display-flex flex-direction-col">
+              <div class="display-flex flex-direction-col align-items-center">
                 <span>合约未放弃</span>
                 <span>{{ isContract ? '是' : '否' }}</span>
               </div>
-              <div class="display-flex flex-direction-col">
+              <div class="display-flex flex-direction-col align-items-center">
                 <span>流动性锁定</span>
                 <span>{{ isLocked ? '是' : '否' }}</span>
               </div>
-              <div class="display-flex flex-direction-col">
+              <div class="display-flex flex-direction-col align-items-center">
                 <span>非蜜罐</span>
                 <span>{{ baseInfo?.coinGoPlusInfo?.is_honeypot == 0 ? '是' : '否' }}</span>
               </div>
@@ -149,22 +149,22 @@
           </template>
           <template v-if="baseInfo?.chainInfo?.chainCode == 'SOLANA'">
             <div class="display-flex align-items-center pond-start">
-              <div class="display-flex flex-direction-col">
+              <div class="display-flex flex-direction-col align-items-center">
                 <span>不可冻币</span>
                 <span>{{ baseInfo?.coinGoPlusInfo?.freezable?.status == 0 ? '是' : '否' }}</span>
               </div>
-              <div class="display-flex flex-direction-col">
+              <div class="display-flex flex-direction-col align-items-center">
                 <span>不可增发</span>
                 <span>{{ baseInfo?.coinGoPlusInfo?.freezable?.status == 0 ? '是' : '否' }}</span>
               </div>
 
-              <div class="display-flex flex-direction-col">
+              <div class="display-flex flex-direction-col align-items-center">
                 <span>无外部合约</span>
                 <span>{{
                   baseInfo?.coinGoPlusInfo?.transfer_hook?.length == 0 ? '是' : '否'
                 }}</span>
               </div>
-              <div class="display-flex flex-direction-col">
+              <div class="display-flex flex-direction-col align-items-center">
                 <span>Top 10</span>
                 <span style="color: var(--down-color)"
                   >{{
@@ -175,7 +175,7 @@
             </div>
           </template>
           <div
-            class="display-flex flex-direction-col snipe-text"
+            class="display-flex flex-direction-col align-items-center snipe-text"
             @click="securityTestDrawer = true"
           >
             <div class="display-flex align-items-center margin-element">
@@ -412,9 +412,11 @@ const handelRouter = (url: string) => {
   .pond-start {
     margin-left: 19px;
     white-space: nowrap;
+    div {
+      margin-left: 10px;
+    }
     span {
       font-size: 12px;
-      margin-left: 10px;
       color: #9aa0aa;
     }
     span:last-child {
@@ -450,7 +452,7 @@ const handelRouter = (url: string) => {
   }
   .snipe-text {
     color: #959a9f;
-    margin-left: 25px;
+    margin-left: 20px;
     cursor: pointer;
     .snipe-icon {
       width: 12px;
