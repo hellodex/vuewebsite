@@ -391,11 +391,18 @@ a,
   box-shadow: 0 0 4px #0000004d;
   border-radius: 2px;
   animation: slide 1s linear infinite;
+  -webkit-animation: slide 1s linear infinite;
 }
 
 .socket-elMessage {
   animation: slideInFromBottom 0.5s ease-out;
+  -webkit-animation: slideInFromBottom 0.5s ease-out;
   cursor: pointer;
+  transition: none !important;
+  -webkit-transition: none !important;
+  -moz-transition: none !important;
+  -ms-transition: none !important;
+  -o-transition: none !important;
 }
 
 @keyframes slideInFromBottom {

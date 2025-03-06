@@ -1,5 +1,5 @@
 <template>
-  <div v-show="windowWidth > 700 && !isReferUrl">
+  <div v-show="windowWidth > 700 && !isNoHeaderAndFooterUrl">
     <NavBar />
   </div>
   <main class="display-flex flex-direction-col main">
@@ -19,7 +19,7 @@
         <component :is="Component" v-if="!route.meta.keepAlive" :key="route.path" />
       </router-view>
     </section>
-    <FooterBar v-if="windowWidth > 700 && !isReferUrl" />
+    <FooterBar v-if="windowWidth > 700 && !isNoHeaderAndFooterUrl" />
   </main>
   <Loading v-if="tgWebAppData && isTradeUrl"></Loading>
   <vue-danmaku
@@ -111,8 +111,10 @@ const isTradeUrl = computed(() => {
   return window.location.href.indexOf('/trade/') !== -1
 })
 
-const isReferUrl = computed(() => {
-  return window.location.href.indexOf('/Refer') !== -1
+const isNoHeaderAndFooterUrl = computed(() => {
+  return (
+    window.location.href.indexOf('/Refer') !== -1 || window.location.href.indexOf('/kline/') !== -1
+  )
 })
 // init theme
 const { initTheme } = useTheme()
