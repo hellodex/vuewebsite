@@ -13,17 +13,17 @@
               </a>
             </div>
             <div class="menu-box display-flex">
-              <div class="menu-item">
+              <div class="menu-item" @click.stop="handelRouter(baseInfo?.tokenInfo?.twitter)">
                 <svg-icon name="x" class="x-icon menu-icon"></svg-icon>
               </div>
-              <div class="menu-item">
+              <div class="menu-item" @click.stop="handelRouter(baseInfo?.tokenInfo?.website)">
                 <svg-icon name="website-pump" class="website-pump menu-icon"></svg-icon>
               </div>
-              <div class="menu-item">
+              <div class="menu-item" @click.stop="handelRouter(baseInfo?.tokenInfo?.telegram)">
                 <svg-icon name="tg-app" class="menu-icon"></svg-icon>
               </div>
               <a
-                :href="`https://x.com/search?q=${props.baseInfo.tokenInfo?.baseSymbol}`"
+                :href="`https://x.com/search?q=${baseInfo.tokenInfo?.baseSymbol}`"
                 target="_blank"
                 class="menu-item"
               >
@@ -470,6 +470,11 @@ const handelExchangeTab = (item: any) => {
 
 const handleClose = (val: boolean) => {
   sniperDialogVisible.value = val
+}
+
+const handelRouter = (url: string) => {
+  console.log(url)
+  url && window.open(url)
 }
 </script>
 <style scoped lang="scss">
