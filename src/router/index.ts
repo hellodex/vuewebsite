@@ -25,6 +25,11 @@ const router = createRouter({
       component: () => import('@/views/coinWalletDetails.vue')
     },
     {
+      path: '/kline/:chainCode/:pairAddress',
+      name: 'kline',
+      component: () => import('@/views/kline.vue')
+    },
+    {
       path: '/Staking',
       name: 'Staking',
       component: () => import('@/views/stakingView.vue')
