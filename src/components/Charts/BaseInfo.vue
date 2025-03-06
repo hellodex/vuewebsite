@@ -49,9 +49,27 @@
                 <span class="coin-sub-txt">/{{ baseInfo?.tokenInfo?.quoteSymbol || '-' }}</span>
               </div>
               <div class="display-flex align-items-center">
-                <svg-icon name="icon-pc" class="icon-pc"></svg-icon>
-                <svg-icon name="twitter-pump" class="icon-chat" @click="handelIcon"></svg-icon>
-                <svg-icon name="telegram-pump" class="icon-chat" @click="handelIcon"></svg-icon>
+                <svg-icon
+                  name="twitter-pump"
+                  class="twitter-pump icon-chat"
+                  @click.stop="handelRouter(baseInfo?.tokenInfo?.twitter)"
+                  v-if="baseInfo?.tokenInfo?.twitter"
+                ></svg-icon>
+
+                <svg-icon
+                  name="telegram-pump"
+                  class="icon-chat telegram-pump"
+                  @click.stop="handelRouter(baseInfo?.tokenInfo?.telegram)"
+                  v-if="baseInfo?.tokenInfo?.telegram"
+                ></svg-icon>
+
+                <svg-icon
+                  name="website-pump"
+                  class="icon-chat"
+                  @click.stop="handelRouter(baseInfo?.tokenInfo?.website)"
+                  v-if="baseInfo?.tokenInfo?.website"
+                ></svg-icon>
+
                 <a
                   :href="`https://x.com/search?q=${baseInfo?.tokenInfo?.baseAddress}`"
                   target="_blank"
@@ -282,6 +300,11 @@ const handelIcon = () => {
     title: '代币未收录信息，请联系项目方在平台收录信息'
   })
 }
+
+const handelRouter = (url: string) => {
+  console.log(url)
+  window.open(url)
+}
 </script>
 <style lang="scss">
 .base-info {
@@ -325,6 +348,14 @@ const handelIcon = () => {
     height: 16px;
     margin-right: 6px;
     color: #959a9f;
+  }
+  .twitter-pump {
+    width: 14px;
+    height: 14px;
+  }
+  .telegram-pump {
+    width: 17px;
+    height: 17px;
   }
   .icon-pc {
     width: 24px;
