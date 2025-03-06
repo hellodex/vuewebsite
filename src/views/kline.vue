@@ -16,8 +16,9 @@ import { useRoute } from 'vue-router'
 // store 缓存
 import { useChainInfoStore } from '@/stores/chainInfo'
 import { useTokenInfoStore } from '@/stores/tokenInfo'
+import { useGlobalStore } from '@/stores/global'
 import { useBaseInfo } from '@/hooks/useBaseInfo' // 头部 代币信息 hook
-import { APIinitTokenData } from '@/api/coinWalletDetails'
+import { APIinitTokenData, APIgetMaxPool } from '@/api/coinWalletDetails'
 
 import TradingView from '@/components/Charts/TradingView.vue'
 
@@ -27,19 +28,29 @@ const useChainInfo = useChainInfoStore()
 //获取token数据
 const useTokenInfo = useTokenInfoStore()
 
+const globalStore = useGlobalStore()
+
 // 代币信息
 const baseInfo = ref<any>({
   tradingLoading: true
 })
 
-useChainInfo.createChainInfo({
-  chainCode: route.params.chainCode, // 币ID
-  pairAddress: route.params.pairAddress, // 币 pairAddress
-  timeType: route.query.timeType // 时间类型
-})
+globalStore.setLanguage(route.params.language)
 
-async function initTokenData() {
+async function initData() {
+  const token: any = await APIgetMaxPool({
+    baseAddress: route.params.baseAddress,
+    chainCode: route.params.chainCode
+  })
+  console.log(token)
+  useChainInfo.createChainInfo({
+    chainCode: route.params.chainCode, // 币ID
+    pairAddress: token?.pairAddress, // 币 pairAddress
+    timeType: route.query.timeType // 时间类型
+  })
+
   const chainInfo = useChainInfo.chainInfo
+
   const res = await APIinitTokenData({
     pairAddress: chainInfo?.pairAddress,
     chainCode: chainInfo?.chainCode
@@ -54,7 +65,7 @@ const handelJump = () => {
 }
 
 onMounted(() => {
-  initTokenData()
+  initData()
 })
 </script>
 <style scoped lang="scss">

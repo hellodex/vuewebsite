@@ -176,6 +176,19 @@ export function APIinitTokenData(data: object) {
 }
 
 /**
+ * @description 通过base获取token信息
+ * @param data
+ * @returns
+ */
+export function APIgetMaxPool(data: object) {
+  return http({
+    url: WEB_URL + '/api/webv2/token/getMaxPool',
+    method: 'POST',
+    data
+  })
+}
+
+/**
  * @description 获取pair信息
  * @param data
  * @returns
