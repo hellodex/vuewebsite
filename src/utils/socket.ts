@@ -22,7 +22,6 @@ import SellImg from '@/assets/img/sell-img.png'
 // sendMessage('价格监控', data)
 
 function sendMessage(title: string, data: any) {
-  const startTime = new Date().getTime() // 记录开始时间
   const tokenInfo = useTokenInfoStore().tokenInfo
   const notification = ElNotification({
     dangerouslyUseHTMLString: true,
