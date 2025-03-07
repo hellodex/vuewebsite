@@ -434,6 +434,7 @@ a,
   margin-top: 4px;
   font-size: 14px;
   font-family: 'PingFangSC-Medium';
+  white-space: nowrap;
 }
 
 .socket-elMessage .sun-title span {
