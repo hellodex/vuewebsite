@@ -234,9 +234,7 @@ createAppKit({
 })
 
 const handelRoute = (danmu) => {
-  window.open(
-    `/k/${danmu.transaction.pairAddress}?chainCode=${danmu.transaction.chainCode}&timeType=15m`
-  )
+  window.open(`/k/${danmu.transaction.pairAddress}?chainCode=${danmu.transaction.chainCode}`)
 }
 </script>
 <style lang="scss">

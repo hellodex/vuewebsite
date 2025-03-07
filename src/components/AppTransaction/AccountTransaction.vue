@@ -910,7 +910,7 @@ const handelShare = async (params: any) => {
     forbidClick: true
   })
   shareCoinInfo.value = params
-  const url = `${origin}/k/${params.pairAddress}?chainCode=${params.chainCode}&timeType=15m`
+  const url = `${origin}/k/${params.pairAddress}?chainCode=${params.chainCode}`
   console.log(url)
   qrcodeUrl.value = await QRCode.toDataURL(url, {
     errorCorrectionLevel: 'H'
@@ -967,7 +967,7 @@ const handelSaveImage = async () => {
 /*********** 分享 end ***********/
 
 const handelJump = () => {
-  router.push(`/k/${route.params.pairAddress}?chainCode=${route.query.chainCode}&timeType=15m`)
+  router.push(`/k/${route.params.pairAddress}?chainCode=${route.query.chainCode}`)
 }
 
 onMounted(() => {

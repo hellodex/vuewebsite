@@ -486,7 +486,7 @@ watch(
 )
 
 const handelJump = (param: any) => {
-  router.push(`/k/${param.pairAddress}?chainCode=${param.chainCode}&timeType=15m`)
+  router.push(`/k/${param.pairAddress}?chainCode=${param.chainCode}`)
 }
 
 const handelRouter = (url: string) => {
