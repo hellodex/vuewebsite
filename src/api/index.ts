@@ -760,6 +760,19 @@ export function APItokenPriceByBaseAddress(data: object) {
 }
 
 /**
+ * @description 估计gas费
+ * @param data
+ * @returns
+ */
+export function APItokenEstimateGas(data: object) {
+  return http({
+    url: WEB_URL + '/api/webv2/token/estimateGas',
+    method: 'POST',
+    data
+  })
+}
+
+/**
  * @description 创建或更新用户token订阅
  * @param data
  * @returns

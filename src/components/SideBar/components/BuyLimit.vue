@@ -514,21 +514,6 @@ const handelMarketBuy = async () => {
     return
   }
 
-  const gasAmountMultiple =
-    advancedSetting.value.gasType.find((item: any) => item.id == advancedSetting.value.gasTypeIndex)
-      ?.multiple || 1.1
-
-  if (
-    gasAmountMultiple * 300000 * Number(advancedSetting.value.gasObj.gwei) >=
-    mainNetworkCurrencyAmount.value
-  ) {
-    customMessage({
-      type: 'error',
-      title: `账户余额低于所付gas费用，请及时充值`
-    })
-    return
-  }
-
   notificationInfo({
     title: `${sellInfo.value.baseSymbol}：买入处理中`,
     message: `<div class='display-flex align-items-center notification-box'>

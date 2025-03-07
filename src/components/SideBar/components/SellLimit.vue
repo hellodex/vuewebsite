@@ -499,25 +499,11 @@ const handelMarketSell = async () => {
     })
     return
   }
+
   if (sellInfo.value.balance == 0) {
     customMessage({
       type: 'error',
       title: `余额不足`
-    })
-    return
-  }
-
-  const gasAmountMultiple =
-    advancedSetting.value.gasType.find((item: any) => item.id == advancedSetting.value.gasTypeIndex)
-      ?.multiple || 1.1
-
-  if (
-    gasAmountMultiple * 300000 * Number(advancedSetting.value.gasObj.gwei) >=
-    mainNetworkCurrencyAmount.value
-  ) {
-    customMessage({
-      type: 'error',
-      title: `账户余额低于所付gas费用，请及时充值`
     })
     return
   }
