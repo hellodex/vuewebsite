@@ -657,7 +657,7 @@ const chainConfigs = computed(() => chain.chainConfigs)
 useChainInfo.createChainInfo({
   chainCode: route.query.chainCode, // 币ID
   pairAddress: route.params.pairAddress, // 币 pairAddress
-  timeType: '15m' // 时间类型
+  timeType: route.query.timeType // 时间类型
 })
 
 const baseInfo = ref<any>({
