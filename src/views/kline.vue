@@ -3,10 +3,14 @@
     <div class="kline-content">
       <TradingView v-if="!baseInfo.tradingLoading" />
     </div>
-    <div class="kline-foot" @click="handelJump">
+    <a
+      :href="`/k/${useChainInfo.chainInfo.pairAddress}?chainCode=${route.params.chainCode}`"
+      target="_blank"
+      class="kline-foot"
+    >
       <svg-icon name="logo" class="logo"></svg-icon>
       <span>HelloDex</span>
-    </div>
+    </a>
   </div>
 </template>
 <script setup lang="ts">
@@ -58,10 +62,6 @@ async function initData() {
   useTokenInfo.createTokenInfo(res)
   baseInfo.value = await useBaseInfo()
   document.title = `HelloDex.io-利润80%分给所有人的去中心化交易所`
-}
-
-const handelJump = () => {
-  window.open(`/k/${route.params.pairAddress}?chainCode=${route.params.chainCode}`)
 }
 
 onMounted(() => {
