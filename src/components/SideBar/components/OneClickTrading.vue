@@ -122,6 +122,7 @@ import {
   notificationWarn
 } from '@/utils/notification'
 import { useI18n } from 'vue-i18n'
+import { APItokenEstimateGas } from '@/api'
 import { APIgetSwap, APIauthTradeSwap } from '@/api/coinWalletDetails'
 import { useChainConfigsStore } from '@/stores/chainConfigs'
 import { useGlobalStore } from '@/stores/global'
@@ -152,7 +153,7 @@ const coinAmount = ref<any>('')
 const buyIndex = ref<number>(0)
 const sellIndex = ref<number>(0)
 const tradeType = ref<string>('buy')
-const gasTip = ref<boolean>(false)
+const gasTip = ref<any>(false)
 const loading = ref<boolean>(false)
 const inputFocusType = ref<boolean>(false)
 
@@ -250,35 +251,36 @@ const updateTradingInfo = async () => {
   }
 }
 
-const handelBuy = (item: any) => {
+const handelBuy = async (item: any) => {
   buyIndex.value = item.value
   sellIndex.value = 0
-  inputFocusType.value = false
-  gasTip.value = gasTipFun()
   tradeType.value = 'buy'
+  inputFocusType.value = false
+  gasTip.value = await getGas()
 }
 
-const handelSell = (item: any) => {
+const handelSell = async (item: any) => {
   sellIndex.value = item.value
   buyIndex.value = 0
-  inputFocusType.value = false
-  gasTip.value = gasTipFun()
   tradeType.value = 'sell'
+  inputFocusType.value = false
+  gasTip.value = await getGas()
 }
 
-const handelCoinAmount = () => {
-  buyIndex.value = 0
-  sellIndex.value = 0
-  inputFocusType.value = true
-  gasTip.value = gasTipFun()
-  tradeType.value = 'buy'
-}
-
-const handeCoinFocus = () => {
-  inputFocusType.value = true
+const handelCoinAmount = async () => {
   buyIndex.value = 0
   sellIndex.value = 0
   tradeType.value = 'buy'
+  inputFocusType.value = true
+  gasTip.value = await getGas()
+}
+
+const handeCoinFocus = async () => {
+  inputFocusType.value = true
+  buyIndex.value = 0
+  sellIndex.value = 0
+  tradeType.value = 'buy'
+  gasTip.value = await getGas()
 }
 
 const handelCoinBlur = () => {
@@ -287,20 +289,33 @@ const handelCoinBlur = () => {
   }
 }
 
-const gasTipFun = () => {
-  const gasAmountMultiple =
-    advancedSetting.value?.gasType.find(
-      (item: any) => item.id == advancedSetting.value?.gasTypeIndex
-    )?.multiple || 1.1
-
-  if (
-    gasAmountMultiple * 300000 * Number(advancedSetting.value?.gasObj.gwei) >=
-    mainNetworkCurrencyAmount.value
-  ) {
-    return true
+const getGas = async () => {
+  let type = false
+  let spendAmount: any = 0
+  if (tradeType.value == 'buy') {
+    const num = 10 ** Number(buyInfo.value.baseTokenDecimals)
+    spendAmount = new BigNumber(buyIndex.value || coinAmount.value)
+      .times(num)
+      .integerValue(BigNumber.ROUND_DOWN)
+  } else {
+    spendAmount =
+      sellIndex.value === 1
+        ? sellInfo.value.balance
+        : Math.floor(sellInfo.value.balance * sellIndex.value)
   }
 
-  return false
+  const res = await APItokenEstimateGas({
+    amount: spendAmount,
+    walletAddress:
+      walletType.value == 'Email' ? customWalletInfo.value.walletInfo?.wallet : address.value,
+    toAddress: tradeType.value == 'buy' ? buyInfo.value.baseAddress : sellInfo.value.baseAddress,
+    chainCode: sellInfo.value.chainCode,
+    contractAddress: sellInfo.value.baseAddress
+  })
+
+  type = res ? false : true
+
+  return type
 }
 
 const buySellType = computed(() => {
@@ -321,17 +336,11 @@ const buySellType = computed(() => {
   if (coinInfo.balance == 0) {
     return true
   }
-  const gasAmountMultiple =
-    advancedSetting.value?.gasType.find(
-      (item: any) => item.id == advancedSetting.value?.gasTypeIndex
-    )?.multiple || 1.1
 
-  if (
-    gasAmountMultiple * 300000 * Number(advancedSetting.value?.gasObj.gwei) >=
-    mainNetworkCurrencyAmount.value
-  ) {
+  if (gasTip.value) {
     return true
   }
+
   if (tradeType.value == 'buy') {
     if (buyIndex.value == 0 && parseFloat(coinAmount.value || 0) == 0) return true
     const num = 10 ** Number(buyInfo.value.baseTokenDecimals)
