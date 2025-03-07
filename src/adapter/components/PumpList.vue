@@ -315,7 +315,7 @@ const handelTableRow = (row: any) => {
   handelJump(row)
 }
 const handelJump = (item: any) => {
-  window.open(`/k/${item.pairAddress}?chainCode=${item.baseToken.chainCode}&timeType=15m`)
+  window.open(`/k/${item.pairAddress}?chainCode=${item.baseToken.chainCode}`)
 }
 
 const handelRouter = (url: string) => {

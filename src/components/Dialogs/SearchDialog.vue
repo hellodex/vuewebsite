@@ -145,9 +145,9 @@ const handelTableRow = (row: any) => {
   }
 
   if (window.location.href.indexOf('/k/') !== -1) {
-    router.push(`/k/${token.pairAddress}?chainCode=${token.chainCode}&timeType=15m`)
+    router.push(`/k/${token.pairAddress}?chainCode=${token.chainCode}`)
   } else {
-    window.open(`/k/${row.pairAddress}?chainCode=${row.chainCode}&timeType=15m`)
+    window.open(`/k/${row.pairAddress}?chainCode=${row.chainCode}`)
   }
   handelClose()
 }
@@ -158,9 +158,9 @@ const handelDelHistory = () => {
 
 function handleHistory(token: any) {
   if (window.location.href.indexOf('/k/') !== -1) {
-    router.push(`/k/${token.pairAddress}?chainCode=${token.chainCode}&timeType=15m`)
+    router.push(`/k/${token.pairAddress}?chainCode=${token.chainCode}`)
   } else {
-    window.open(`/k/${token.pairAddress}?chainCode=${token.chainCode}&timeType=15m`)
+    window.open(`/k/${token.pairAddress}?chainCode=${token.chainCode}`)
   }
 
   handelClose()

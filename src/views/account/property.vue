@@ -539,7 +539,7 @@ const restart = () => {
 }
 
 const handelTableRow = (row: any) => {
-  window.open(`/k/${row.pairAddress}?chainCode=${row.chainCode}&timeType=15m`)
+  window.open(`/k/${row.pairAddress}?chainCode=${row.chainCode}`)
 }
 
 const handelHidePosition = (val: string) => {

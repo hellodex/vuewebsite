@@ -469,7 +469,7 @@ const handelTableRow = (row: any) => {
   handelJump(row)
 }
 const handelJump = (item: any) => {
-  window.open(`/k/${item.pairAddress}?chainCode=${item.chainCode}&timeType=15m`)
+  window.open(`/k/${item.pairAddress}?chainCode=${item.chainCode}`)
 }
 
 const handelTrade = (row: any) => {

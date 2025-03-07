@@ -657,7 +657,7 @@ const chainConfigs = computed(() => chain.chainConfigs)
 useChainInfo.createChainInfo({
   chainCode: route.query.chainCode, // 币ID
   pairAddress: route.params.pairAddress, // 币 pairAddress
-  timeType: '15m' // 时间类型
+  timeType: route.query.timeType // 时间类型
 })
 
 const baseInfo = ref<any>({
@@ -910,7 +910,7 @@ const handelShare = async (params: any) => {
     forbidClick: true
   })
   shareCoinInfo.value = params
-  const url = `${origin}/k/${params.pairAddress}?chainCode=${params.chainCode}&timeType=15m`
+  const url = `${origin}/k/${params.pairAddress}?chainCode=${params.chainCode}`
   console.log(url)
   qrcodeUrl.value = await QRCode.toDataURL(url, {
     errorCorrectionLevel: 'H'
@@ -967,7 +967,7 @@ const handelSaveImage = async () => {
 /*********** 分享 end ***********/
 
 const handelJump = () => {
-  router.push(`/k/${route.params.pairAddress}?chainCode=${route.query.chainCode}&timeType=15m`)
+  router.push(`/k/${route.params.pairAddress}?chainCode=${route.query.chainCode}`)
 }
 
 onMounted(() => {
