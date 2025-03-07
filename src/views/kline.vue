@@ -61,7 +61,7 @@ async function initData() {
 }
 
 const handelJump = () => {
-  window.open(`/k/${route.params.pairAddress}?chainCode=${route.params.chainCode}&timeType=15m`)
+  window.open(`/k/${route.params.pairAddress}?chainCode=${route.params.chainCode}`)
 }
 
 onMounted(() => {

@@ -106,7 +106,7 @@ const handelItem = (params: any) => {
 }
 
 const handelJump = (item: any) => {
-  router.push(`/k/${item.pairAddress}?chainCode=${item.chainCode}&timeType=15m`)
+  router.push(`/k/${item.pairAddress}?chainCode=${item.chainCode}`)
 }
 
 const handelDelHistory = () => {

@@ -104,7 +104,7 @@ const handelItem = (params: any) => {
 
 const handelJump = (item: any) => {
   if (props.type == 'detail') {
-    router.push(`/k/${item.pairAddress}?chainCode=${item.chainCode}&timeType=15m`)
+    router.push(`/k/${item.pairAddress}?chainCode=${item.chainCode}`)
   } else {
     router.push(`/trade/${item.pairAddress}?chainCode=${item.chainCode}`)
   }

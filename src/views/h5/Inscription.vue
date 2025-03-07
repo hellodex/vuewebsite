@@ -508,7 +508,7 @@ const handelRouter = (url: string) => {
 }
 
 const handelTrade = (item: any) => {
-  router.push(`/k/${item.pairAddress}?chainCode=${item.baseToken.chainCode}&timeType=15m`)
+  router.push(`/k/${item.pairAddress}?chainCode=${item.baseToken.chainCode}`)
 }
 /***************** Pump end ******************/
 

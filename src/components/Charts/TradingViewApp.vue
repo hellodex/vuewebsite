@@ -159,7 +159,7 @@ const getBars = async () => {
   const res = await APIappGetChart({
     chainCode: chainInfo.value?.chainCode,
     pairAddress: chainInfo.value?.pairAddress,
-    timeType: chainInfo.value?.timeType
+    timeType: chainInfo.value?.timeType || '15m'
   })
   const info = res.reverse()
 
@@ -189,7 +189,7 @@ const subscribeBars = async () => {
   const res = await APIappSubscribeKChartAndSwap({
     chainCode: chainInfo.value?.chainCode,
     pairAddress: chainInfo.value?.pairAddress,
-    timeType: chainInfo.value?.timeType,
+    timeType: chainInfo.value?.timeType || '15m',
     startTime: startTime.value
   })
   const useSubscribeKChart = useSubscribeKChartInfo()

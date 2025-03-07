@@ -63,7 +63,7 @@ function sendMessage(title: string, data: any) {
       if (window.location.href.indexOf('/k/') >= 0 && data.baseAddress == tokenInfo?.baseAddress) {
         return false
       }
-      window.open(`/k/${data.pairAddress}?chainCode=${data.chainCode}&timeType=15m`)
+      window.open(`/k/${data.pairAddress}?chainCode=${data.chainCode}`)
     }
   })
 }

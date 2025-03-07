@@ -25,7 +25,7 @@ function initOnReady() {
     fullscreen: true, // 图表是否应使用窗口中的所有可用空间
     symbol: tokenInfo?.baseSymbol,
     interval:
-      localStorage.getItem('kchart_tradingTime') || chainInfo?.timeType?.replace(/m/g, '') || '15',
+      chainInfo?.timeType?.replace(/m/g, '') || localStorage.getItem('kchart_tradingTime') || '1',
     container: 'tv_chart_container',
     //	BEWARE: no trailing slash is expected in feed URL
     datafeed: new CustomDataFeed(),
