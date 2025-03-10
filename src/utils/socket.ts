@@ -232,7 +232,7 @@ socket.on('connect', () => {
       socketOffMonitor(globalStore.accountInfo.uuid, globalStore.accountInfo.tokenInfo.tokenValue)
       socketOnMonitor(globalStore.accountInfo.uuid, globalStore.accountInfo.tokenInfo.tokenValue)
     }
-  }, 2500)
+  }, 3000)
 
   console.log('socket connect 🔥🔥🔥🔥🔥🔥')
 })
