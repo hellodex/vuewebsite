@@ -159,7 +159,6 @@ onMounted(async () => {
   const language = globalStore.language ?? browserLang()
   i18n.locale.value = language
   globalStore.setLanguage(language)
-  sessionStorage.setItem('language', language)
   if (accountInfo.value) {
     globalStore.setWalletInfo({
       address: null,
