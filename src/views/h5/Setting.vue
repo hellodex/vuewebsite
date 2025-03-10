@@ -86,7 +86,6 @@ const onSelect = (item: any) => {
   // 可以通过 close-on-click-action 属性开启自动收起
   i18n.locale.value = item.code
   globalStore.setLanguage(item.code)
-  sessionStorage.setItem('language', item.code)
   reload()
   console.log(item)
   show.value = false
