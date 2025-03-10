@@ -15,7 +15,11 @@ export const useGlobalStore = defineStore('global', () => {
   const language = ref<string | null>(null)
 
   // 弹幕
-  const danmaku = ref<number>(Number(localStorage.getItem('danmaku')))
+  const danmaku = ref<number>(
+    localStorage.getItem('danmaku') == undefined || localStorage.getItem('danmaku') == null
+      ? 1
+      : Number(localStorage.getItem('danmaku'))
+  )
 
   // 全局注册登录弹框控制
   const dialogVisible = ref<any>({
@@ -67,6 +71,7 @@ export const useGlobalStore = defineStore('global', () => {
   // 弹幕开关
   function setDanmaku(val: any): void {
     danmaku.value = val
+    localStorage.setItem('danmaku', val)
   }
 
   // 修改邀请

@@ -265,7 +265,11 @@ const globalStore = useGlobalStore()
 const walletType = computed(() => globalStore.walletInfo.walletType)
 const isConnected = computed(() => globalStore.walletInfo.isConnected)
 const customWalletInfo = computed(() => globalStore.customWalletInfo)
-const danmaku = ref(Number(localStorage.getItem('danmaku')))
+const danmaku = ref(
+  localStorage.getItem('danmaku') == undefined || localStorage.getItem('danmaku') == null
+    ? 1
+    : Number(localStorage.getItem('danmaku'))
+)
 
 const skeleton = ref<boolean>(false)
 const initLimitedOrders = ref<any>({})
@@ -685,7 +689,6 @@ const handelOnlyKlinePosition = (val: string) => {
 
 const handelSwitchDanmaku = (val: string) => {
   globalStore.setDanmaku(val)
-  localStorage.setItem('danmaku', val)
 }
 
 onUnmounted(() => {

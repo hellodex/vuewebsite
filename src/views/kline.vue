@@ -41,6 +41,8 @@ const baseInfo = ref<any>({
 
 globalStore.setLanguage(route.params.language)
 
+globalStore.setDanmaku(route.query.danmaku ?? 0)
+
 async function initData() {
   const token: any = await APIgetMaxPool({
     baseAddress: route.params.baseAddress,
