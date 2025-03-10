@@ -106,6 +106,7 @@ const router = useRouter()
 
 const globalStore = useGlobalStore()
 const accountInfo = computed(() => globalStore.accountInfo)
+const danmaku = computed(() => globalStore.danmaku)
 
 const isTradeUrl = computed(() => {
   return window.location.href.indexOf('/trade/') !== -1
@@ -123,13 +124,23 @@ initTheme()
 // init language
 const i18n = useI18n()
 const routerState = ref(true)
+const danmakuFun = () => {
+  if (danmaku.value) {
+    socket.off('smartWalletDanmaku')
+    socket.on('smartWalletDanmaku', (message) => {
+      const data = JSON.parse(message)
+      console.log(`socket-danmaku:`, data)
+      danmus.value.push(data)
+    })
+  } else {
+    socket.off('smartWalletDanmaku')
+  }
+}
 
-socket.off('smartWalletDanmaku')
+danmakuFun()
 
-socket.on('smartWalletDanmaku', (message) => {
-  const data = JSON.parse(message)
-  console.log(`socket-danmaku:`, data)
-  danmus.value.push(data)
+watch(danmaku, () => {
+  danmakuFun()
 })
 
 watch(accountInfo, (newValue) => {

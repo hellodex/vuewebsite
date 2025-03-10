@@ -14,6 +14,9 @@ export const useGlobalStore = defineStore('global', () => {
   // 当前系统语言
   const language = ref<string | null>(null)
 
+  // 弹幕
+  const danmaku = ref<number>(Number(localStorage.getItem('danmaku')))
+
   // 全局注册登录弹框控制
   const dialogVisible = ref<any>({
     registerDialogVisible: false,
@@ -59,6 +62,11 @@ export const useGlobalStore = defineStore('global', () => {
   // 修改语言
   function setLanguage(val: any): void {
     language.value = val
+  }
+
+  // 弹幕开关
+  function setDanmaku(val: any): void {
+    danmaku.value = val
   }
 
   // 修改邀请
@@ -109,6 +117,7 @@ export const useGlobalStore = defineStore('global', () => {
   return {
     theme,
     language,
+    danmaku,
     dialogVisible,
     invite,
     chainList,
@@ -118,6 +127,7 @@ export const useGlobalStore = defineStore('global', () => {
     customWalletInfo,
     favoriteData,
     socketKchartConnectType,
+    setDanmaku,
     setTheme,
     setLanguage,
     setDialogVisible,
