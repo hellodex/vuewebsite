@@ -76,6 +76,17 @@
                   />
                 </div>
                 <div class="data-items display-flex align-items-center">
+                  <span style="margin-right: 4px">弹幕</span>
+                  <el-switch
+                    v-model="danmaku"
+                    @change="handelSwitchDanmaku"
+                    :active-value="1"
+                    :inactive-value="0"
+                    size="small"
+                    style="--el-switch-on-color: #13ce66; --el-switch-off-color: #26282c"
+                  />
+                </div>
+                <div class="data-items display-flex align-items-center">
                   <span style="margin-right: 4px">快捷交易</span>
                   <el-switch
                     v-model="config.switch"
@@ -254,6 +265,7 @@ const globalStore = useGlobalStore()
 const walletType = computed(() => globalStore.walletInfo.walletType)
 const isConnected = computed(() => globalStore.walletInfo.isConnected)
 const customWalletInfo = computed(() => globalStore.customWalletInfo)
+const danmaku = ref(Number(localStorage.getItem('danmaku')))
 
 const skeleton = ref<boolean>(false)
 const initLimitedOrders = ref<any>({})
@@ -669,6 +681,11 @@ const handelHidePosition = (val: string) => {
 const handelOnlyKlinePosition = (val: string) => {
   localStorage.setItem('onlyKlinePosition', val)
   localStorage.getItem('accountInfo') && getData()
+}
+
+const handelSwitchDanmaku = (val: string) => {
+  globalStore.setDanmaku(val)
+  localStorage.setItem('danmaku', val)
 }
 
 onUnmounted(() => {
