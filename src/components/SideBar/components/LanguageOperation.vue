@@ -46,7 +46,6 @@ const handelLanguage = (lang: string) => {
   i18n.locale.value = lang
   globalStore.setLanguage(lang)
   reload()
-  sessionStorage.setItem('language', lang)
 }
 </script>
 

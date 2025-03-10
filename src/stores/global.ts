@@ -66,6 +66,7 @@ export const useGlobalStore = defineStore('global', () => {
   // 修改语言
   function setLanguage(val: any): void {
     language.value = val
+    sessionStorage.setItem('language', val)
   }
 
   // 弹幕开关
