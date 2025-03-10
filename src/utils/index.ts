@@ -402,7 +402,7 @@ export function dataAssembly(arr1: any[] = [], arr2: any[] = []): any[] {
  */
 export function browserLang() {
   const sessionLanguage = sessionStorage.getItem('language')
-  const browserLang = sessionLanguage || navigator.language || 'en'
+  const browserLang = sessionLanguage || navigator.language || 'zh'
   let defaultBrowserLang = ''
   if (['cn', 'zh', 'zh-cn'].includes(browserLang.toLowerCase())) {
     defaultBrowserLang = 'zh'
