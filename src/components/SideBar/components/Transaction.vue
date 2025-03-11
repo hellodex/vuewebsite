@@ -597,9 +597,9 @@ onUnmounted(() => {
     .transaction-coin-item {
       padding: 12px 12px 16px;
       border-radius: 8px;
-      background-color: var(--tab-bg-color);
+      background-color: rgba(58, 60, 64, 0.2);
       font-size: 14px;
-      color: var(--dex-color-4);
+      color: #848e9c;
       line-height: 1.2;
       .transaction-coin-item-p {
         font-size: 12px;
@@ -632,7 +632,7 @@ onUnmounted(() => {
         color: var(--dex-color-4);
       }
       :deep(.el-input__wrapper) {
-        box-shadow: 0 0 0 1px var(--tab-bg-color) !important;
+        box-shadow: 0 0 0 1px transparent !important;
       }
       :deep(.el-input__inner) {
         text-align: right;
@@ -729,10 +729,9 @@ onUnmounted(() => {
     }
     :deep(.transaction-btn) {
       width: 100%;
-      height: 40px;
-      margin-top: 8px;
-      // background-color: var(--font-color-default);
-      // color: var(--bg-color);
+      height: 29px;
+      margin: 14px 0;
+      border-radius: 4px !important;
       font-weight: normal;
     }
     :deep(.el-input__inner) {
@@ -740,8 +739,9 @@ onUnmounted(() => {
     }
 
     :deep(.connect-wallet-btn) {
-      margin-top: 8px;
-      padding: 10px 15px;
+      margin: 14px 0;
+      height: 29px;
+      border-radius: 4px;
     }
   }
   :deep(.wallet-conn-btn) {
@@ -755,7 +755,7 @@ onUnmounted(() => {
   }
   :deep(.el-input__wrapper) {
     box-shadow: none;
-    background-color: var(--tab-bg-color);
+    background-color: transparent;
   }
 }
 
