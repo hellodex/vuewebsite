@@ -256,7 +256,7 @@ function lastComparedToCurrent(currentData: any[] = [], lastData: any[] = []): a
 
 async function getInitTokenInfo() {
   const tokenInfoByChainData: any = await APIinitTokenInfo()
-  btcFearAndGreed.value = tokenInfoByChainData.btcFearAndGreed
+  btcFearAndGreed.value = tokenInfoByChainData?.btcFearAndGreed || {}
 
   nounScreenList.value =
     [

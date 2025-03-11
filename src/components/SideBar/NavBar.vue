@@ -302,7 +302,7 @@ onUnmounted(() => {
   .SearchDialog-box {
     width: 710px;
     position: absolute;
-    left: -130px;
+    left: -180px;
   }
   .theme-switch {
     cursor: pointer;
