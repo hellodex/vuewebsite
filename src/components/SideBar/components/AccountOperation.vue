@@ -47,7 +47,7 @@
           <div class="operate-box">
             <div
               class="user-item display-flex align-items-center justify-content-sp"
-              @click="router.push('/Account/Property')"
+              @click="handelJump('/Account/Property')"
             >
               <div class="display-flex align-items-center">
                 <svg-icon name="icon-property" class="icon-user-item"></svg-icon>
@@ -57,7 +57,7 @@
             </div>
             <div
               class="user-item display-flex align-items-center justify-content-sp"
-              @click="router.push('/Account/WalletConfig')"
+              @click="handelJump('/Account/WalletConfig')"
             >
               <div class="display-flex align-items-center">
                 <svg-icon name="icon-wallet" class="icon-user-item"></svg-icon>
@@ -67,7 +67,7 @@
             </div>
             <div
               class="user-item display-flex align-items-center justify-content-sp"
-              @click="router.push('/Account/Rebate')"
+              @click="handelJump('/Account/Rebate')"
             >
               <div class="display-flex align-items-center">
                 <svg-icon name="icon-rebate" class="icon-user-item"></svg-icon>
@@ -77,7 +77,7 @@
             </div>
             <div
               class="user-item display-flex align-items-center justify-content-sp"
-              @click="router.push('/Account/Secure')"
+              @click="handelJump('/Account/Secure')"
             >
               <div class="display-flex align-items-center">
                 <svg-icon name="icon-secure" class="icon-user-item"></svg-icon>
@@ -140,6 +140,10 @@ getProperty(customWalletInfo.value.chainCode, customWalletInfo.value.walletInfo?
 watch(customWalletInfo, (newValue) => {
   getProperty(newValue.chainCode, newValue.walletInfo.wallet)
 })
+
+const handelJump = (url: string) => {
+  router.push(url)
+}
 
 const handelLogon = async () => {
   ElMessageBox.confirm('是否退出登录？', i18n.t('Tips'), {

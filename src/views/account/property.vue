@@ -524,11 +524,11 @@ const getData = async () => {
     walletKey: customWalletInfo.value.walletInfo?.walletKey,
     hidePosition: hidePosition.value
   })
-  skeleton.value = false
 
   if (res) {
     initLimitedOrders.value = res
   }
+  skeleton.value = false
 }
 
 const restart = () => {
