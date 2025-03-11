@@ -43,7 +43,7 @@
               <PercentageNotbg :value="scope.row.chg1d" />
             </template>
           </el-table-column>
-          <el-table-column label="平均买入价格">
+          <el-table-column label="平均买入价格" min-width="120">
             <template #default="scope">
               <span class="text-color font-family-Medium"
                 >${{ numberFormat(scope.row.averagePrice) || '-' }}</span
