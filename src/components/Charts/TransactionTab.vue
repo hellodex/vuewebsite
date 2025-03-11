@@ -3,8 +3,8 @@
     <el-table :data="subscribeSwap" max-height="890px">
       <el-table-column>
         <template #header>
-          <div class="display-flex align-items-center">
-            <span>{{ i18n.t('kChart.Time') }}</span>
+          <div class="display-flex align-items-center flex-nowrap">
+            <span class="table-head-txt">{{ i18n.t('kChart.Time') }}</span>
             <svg-icon name="calendar-date" class="transaction-tab-icon"></svg-icon>
           </div>
         </template>
@@ -16,8 +16,8 @@
       </el-table-column>
       <el-table-column prop="flag">
         <template #header>
-          <div class="display-flex align-items-center">
-            <span>{{ i18n.t('kChart.Type1') }}</span>
+          <div class="display-flex align-items-center flex-nowrap">
+            <span class="table-head-txt">{{ i18n.t('kChart.Type1') }}</span>
             <svg-icon name="filter-funnel-01" class="transaction-tab-icon"></svg-icon>
           </div>
         </template>
@@ -30,8 +30,8 @@
       </el-table-column>
       <el-table-column prop="price">
         <template #header>
-          <div class="display-flex align-items-center">
-            <span>{{ i18n.t('home.price') }}($)</span>
+          <div class="display-flex align-items-center flex-nowrap">
+            <span class="table-head-txt">{{ i18n.t('home.price') }}($)</span>
             <svg-icon name="filter-funnel-01" class="transaction-tab-icon"></svg-icon>
           </div>
         </template>
@@ -43,8 +43,10 @@
       </el-table-column>
       <el-table-column prop="amount">
         <template #header>
-          <div class="display-flex align-items-center">
-            <span>{{ i18n.t('kChart.Amount') }}({{ baseInfo.tokenInfo?.baseSymbol }})</span>
+          <div class="display-flex align-items-center flex-nowrap">
+            <span class="table-head-txt"
+              >{{ i18n.t('kChart.Amount') }}({{ baseInfo.tokenInfo?.baseSymbol }})</span
+            >
             <svg-icon name="filter-funnel-01" class="transaction-tab-icon"></svg-icon>
           </div>
         </template>
@@ -56,8 +58,8 @@
       </el-table-column>
       <el-table-column prop="orderAmount">
         <template #header>
-          <div class="display-flex align-items-center">
-            <span>{{ i18n.t('kChart.Volume') }}($)</span>
+          <div class="display-flex align-items-center flex-nowrap">
+            <span class="table-head-txt">{{ i18n.t('kChart.Volume') }}($)</span>
             <svg-icon name="filter-funnel-01" class="transaction-tab-icon"></svg-icon>
           </div>
         </template>
@@ -69,8 +71,8 @@
       </el-table-column>
       <el-table-column prop="to">
         <template #header>
-          <div class="display-flex align-items-center">
-            <span>钱包</span>
+          <div class="display-flex align-items-center flex-nowrap">
+            <span class="table-head-txt">钱包</span>
             <svg-icon name="filter-funnel-01" class="transaction-tab-icon"></svg-icon>
           </div>
         </template>
@@ -186,6 +188,9 @@ onUnmounted(() => {
   .num-text {
     color: #2e90fa;
     margin: 0 4px;
+  }
+  .table-head-txt {
+    white-space: nowrap;
   }
 }
 </style>

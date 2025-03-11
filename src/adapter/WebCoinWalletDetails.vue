@@ -810,6 +810,7 @@ onUnmounted(() => {
       background-color: transparent;
       border-radius: 4px;
       cursor: pointer;
+      white-space: nowrap;
     }
     span:last-child {
       margin-right: 0;

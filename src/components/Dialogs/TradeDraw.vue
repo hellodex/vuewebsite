@@ -4,7 +4,7 @@
     :before-close="handleClose"
     title="挂单交易"
     direction="rtl"
-    size="360"
+    size="300"
     class="draw-box"
   >
     <div class="draw-content">
