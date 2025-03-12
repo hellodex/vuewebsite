@@ -109,7 +109,7 @@
                 <span v-if="scope.row.type == 'price'"
                   >${{ numberFormat(scope.row.targetPrice || 0) }}</span
                 >
-                <span v-if="scope.row.type == 'chg'">{{ scope.row.data * 100 }}%</span>
+                <span v-if="scope.row.type == 'chg'">{{ parseFloat(scope.row.data) * 100 }}%</span>
                 <span v-if="scope.row.type == 'buy'">${{ numberFormat(scope.row.data) }}</span>
                 <span v-if="scope.row.type == 'sell'">${{ numberFormat(scope.row.data) }}</span>
               </template>
@@ -148,214 +148,216 @@
         </template>
       </el-skeleton>
     </div>
-  </div>
-  <el-dialog v-model="dialogVisible" title="创建监控" width="510">
-    <div class="strategy-dialog-content">
-      <div
-        class="display-flex align-items-center justify-content-sp strategy-dialog-content-item"
-        @click="handelDialog('price', ruleFormRef)"
-      >
-        <div class="display-flex align-items-center title-txt">
-          <svg-icon name="price-monitor" class="price-monitor icon"></svg-icon>
-          <div>
-            <span>价格监控</span>
-            <p class="description-txt">设置代币到达指定价格时通知。</p>
+    <el-dialog v-model="dialogVisible" title="创建监控" width="510">
+      <div class="strategy-dialog-content">
+        <div
+          class="display-flex align-items-center justify-content-sp strategy-dialog-content-item"
+          @click="handelDialog('price', ruleFormRef)"
+        >
+          <div class="display-flex align-items-center title-txt">
+            <svg-icon name="price-monitor" class="price-monitor icon"></svg-icon>
+            <div>
+              <span>价格监控</span>
+              <p class="description-txt">设置代币到达指定价格时通知。</p>
+            </div>
           </div>
+          <svg-icon name="chevron-right" class="chevron-right"></svg-icon>
         </div>
-        <svg-icon name="chevron-right" class="chevron-right"></svg-icon>
-      </div>
-      <div
-        class="display-flex align-items-center justify-content-sp strategy-dialog-content-item"
-        @click="handelDialog('chg', ruleFormRef)"
-      >
-        <div class="display-flex align-items-center title-txt">
-          <svg-icon name="chg-monitor" class="chg-monitor icon"></svg-icon>
-          <div>
-            <span>涨跌幅监控</span>
-            <p class="description-txt">设置代币到达指定涨跌幅知。</p>
+        <div
+          class="display-flex align-items-center justify-content-sp strategy-dialog-content-item"
+          @click="handelDialog('chg', ruleFormRef)"
+        >
+          <div class="display-flex align-items-center title-txt">
+            <svg-icon name="chg-monitor" class="chg-monitor icon"></svg-icon>
+            <div>
+              <span>涨跌幅监控</span>
+              <p class="description-txt">设置代币到达指定涨跌幅知。</p>
+            </div>
           </div>
+          <svg-icon name="chevron-right" class="chevron-right"></svg-icon>
         </div>
-        <svg-icon name="chevron-right" class="chevron-right"></svg-icon>
-      </div>
-      <div
-        class="display-flex align-items-center justify-content-sp strategy-dialog-content-item"
-        @click="handelDialog('buy', ruleFormRef)"
-      >
-        <div class="display-flex align-items-center title-txt">
-          <svg-icon name="buy-monitor" class="icon buy-monitor"></svg-icon>
-          <div>
-            <span>大单买入监控</span>
-            <p class="description-txt">设置代币每笔买入交易额通知。</p>
+        <div
+          class="display-flex align-items-center justify-content-sp strategy-dialog-content-item"
+          @click="handelDialog('buy', ruleFormRef)"
+        >
+          <div class="display-flex align-items-center title-txt">
+            <svg-icon name="buy-monitor" class="icon buy-monitor"></svg-icon>
+            <div>
+              <span>大单买入监控</span>
+              <p class="description-txt">设置代币每笔买入交易额通知。</p>
+            </div>
           </div>
+          <svg-icon name="chevron-right" class="chevron-right"></svg-icon>
         </div>
-        <svg-icon name="chevron-right" class="chevron-right"></svg-icon>
-      </div>
-      <div
-        class="display-flex align-items-center justify-content-sp strategy-dialog-content-item"
-        @click="handelDialog('sell', ruleFormRef)"
-      >
-        <div class="display-flex align-items-center title-txt">
-          <svg-icon name="sell-monitor" class="icon sell-monitor"></svg-icon>
-          <div>
-            <span>大单卖出监控</span>
-            <p class="description-txt">设置代币每笔卖出交易额通知。</p>
+        <div
+          class="display-flex align-items-center justify-content-sp strategy-dialog-content-item"
+          @click="handelDialog('sell', ruleFormRef)"
+        >
+          <div class="display-flex align-items-center title-txt">
+            <svg-icon name="sell-monitor" class="icon sell-monitor"></svg-icon>
+            <div>
+              <span>大单卖出监控</span>
+              <p class="description-txt">设置代币每笔卖出交易额通知。</p>
+            </div>
           </div>
+          <svg-icon name="chevron-right" class="chevron-right"></svg-icon>
         </div>
-        <svg-icon name="chevron-right" class="chevron-right"></svg-icon>
       </div>
-    </div>
-  </el-dialog>
+    </el-dialog>
 
-  <el-dialog v-model="dialogFormVisible" title="创建监控" width="600">
-    <div class="strategy-dialog-content">
-      <el-form
-        ref="ruleFormRef"
-        :model="ruleForm"
-        :rules="rules"
-        :size="formSize"
-        label-position="top"
-        :hide-required-asterisk="true"
-      >
-        <el-form-item label="监控类型" prop="type">
-          <el-select v-model="ruleForm.type" :teleported="false" disabled>
-            <el-option
-              v-for="item in typeList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
-          </el-select>
-        </el-form-item>
-        <div class="display-flex align-items-center justify-content-sp">
-          <el-form-item label="监控对象" style="width: 48%">
-            <el-select v-model="ruleForm.coin" :teleported="false" disabled>
-              <el-option label="代币" value="Single" />
+    <el-dialog v-model="dialogFormVisible" title="创建监控" width="600">
+      <div class="strategy-dialog-content">
+        <el-form
+          ref="ruleFormRef"
+          :model="ruleForm"
+          :rules="rules"
+          :size="formSize"
+          label-position="top"
+          :hide-required-asterisk="true"
+        >
+          <el-form-item label="监控类型" prop="type">
+            <el-select v-model="ruleForm.type" :teleported="false" disabled>
+              <el-option
+                v-for="item in typeList"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
             </el-select>
           </el-form-item>
-          <el-form-item label="链" style="width: 48%">
-            <el-select v-model="ruleForm.chainCode" :teleported="false">
-              <template #prefix>
-                <img
-                  :src="chainData.find((item: any) => item.chainCode == ruleForm.chainCode)?.logo"
-                  alt=""
-                  class="icon-svg"
-                />
-              </template>
-              <el-option
-                v-for="(item, index) in chainData"
-                :key="index"
-                :value="item.chainCode"
-                :label="item.chainName"
-              >
+          <div class="display-flex align-items-center justify-content-sp">
+            <el-form-item label="监控对象" style="width: 48%">
+              <el-select v-model="ruleForm.coin" :teleported="false" disabled>
+                <el-option label="代币" value="Single" />
+              </el-select>
+            </el-form-item>
+            <el-form-item label="链" style="width: 48%">
+              <el-select v-model="ruleForm.chainCode" :teleported="false">
+                <template #prefix>
+                  <img
+                    :src="chainData.find((item: any) => item.chainCode == ruleForm.chainCode)?.logo"
+                    alt=""
+                    class="icon-svg"
+                  />
+                </template>
+                <el-option
+                  v-for="(item, index) in chainData"
+                  :key="index"
+                  :value="item.chainCode"
+                  :label="item.chainName"
+                >
+                  <div class="display-flex align-items-center">
+                    <img v-if="item.logo" :src="item.logo" alt="" class="icon-svg" />
+                    <img src="@/assets/icons/coinDEX.svg" alt="" class="icon-svg" v-else />
+                    <span class="span-txt">{{ item.chainName }}</span>
+                  </div>
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </div>
+          <el-form-item prop="baseAddress" label="合约地址">
+            <el-select
+              v-model="ruleForm.baseAddress"
+              :teleported="false"
+              placeholder="请先输入代币合约地址"
+              remote-show-suffix
+              remote
+              :remote-method="remoteMethod"
+              :loading="loading"
+              filterable
+              clearable
+              :disabled="dialogType == 'edit'"
+              @change="handelSelectBaseAddress"
+            >
+              <el-option v-for="item in options" :key="item.value" :value="item.value">
                 <div class="display-flex align-items-center">
-                  <img v-if="item.logo" :src="item.logo" alt="" class="icon-svg" />
-                  <img src="@/assets/icons/coinDEX.svg" alt="" class="icon-svg" v-else />
-                  <span class="span-txt">{{ item.chainName }}</span>
+                  <el-image :src="item.logo" alt="" class="icon-svg">
+                    <template #error>
+                      <svg-icon name="logo1" class="icon-svg"></svg-icon>
+                    </template>
+                  </el-image>
+                  <span class="span-txt">{{ item.label }}</span>
+                  <span class="span-txt">{{ numberFormat(item.price) }}</span>
+                  <span class="span-txt">{{ item.chg }}%</span>
                 </div>
               </el-option>
             </el-select>
           </el-form-item>
-        </div>
-        <el-form-item prop="baseAddress" label="合约地址">
-          <el-select
-            v-model="ruleForm.baseAddress"
-            :teleported="false"
-            placeholder="请先输入代币合约地址"
-            remote-show-suffix
-            remote
-            :remote-method="remoteMethod"
-            :loading="loading"
-            filterable
-            clearable
-            :disabled="dialogType == 'edit'"
-            @change="handelSelectBaseAddress"
+          <div
+            class="display-flex align-items-center justify-content-sp"
+            v-if="ruleForm.type == 'price'"
+            style="width: 100%"
           >
-            <el-option v-for="item in options" :key="item.value" :value="item.value">
-              <div class="display-flex align-items-center">
-                <el-image :src="item.logo" alt="" class="icon-svg">
+            <el-form-item label="当前价格" style="width: 48%" prop="startPrice">
+              <div class="startPrice display-flex align-items-center">
+                <el-image :src="ruleForm.logo" alt="" class="icon-svg" v-if="ruleForm.logo">
                   <template #error>
                     <svg-icon name="logo1" class="icon-svg"></svg-icon>
                   </template>
                 </el-image>
-                <span class="span-txt">{{ item.label }}</span>
-                <span class="span-txt">{{ numberFormat(item.price) }}</span>
-                <span class="span-txt">{{ item.chg }}%</span>
+                <span v-if="ruleForm.symbol" style="margin-left: 2px">{{ ruleForm.symbol }}</span>
+                <span style="margin-left: 4px">$</span>
+                <span style="margin-left: 2px" v-if="ruleForm.startPrice">{{
+                  numberFormat(ruleForm.startPrice)
+                }}</span>
               </div>
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <div
-          class="display-flex align-items-center justify-content-sp"
-          v-if="ruleForm.type == 'price'"
-          style="width: 100%"
-        >
-          <el-form-item label="当前价格" style="width: 48%" prop="startPrice">
-            <div class="startPrice display-flex align-items-center">
-              <el-image :src="ruleForm.logo" alt="" class="icon-svg" v-if="ruleForm.logo">
-                <template #error>
-                  <svg-icon name="logo1" class="icon-svg"></svg-icon>
-                </template>
-              </el-image>
-              <span v-if="ruleForm.symbol" style="margin-left: 1px">{{ ruleForm.symbol }}</span>
-              <span style="margin-left: 4px">$</span>
-              <span style="margin-left: 2px" v-if="ruleForm.startPrice">{{
-                numberFormat(ruleForm.startPrice)
-              }}</span>
-            </div>
+            </el-form-item>
+            <el-form-item label="目标价格" style="width: 48%" prop="targetPrice">
+              <el-input v-model="ruleForm.targetPrice" placeholder="请输入目标价格">
+                <template #prefix>$</template>
+              </el-input>
+            </el-form-item>
+          </div>
+          <el-form-item
+            label="触发条件"
+            prop="data"
+            v-else-if="ruleForm.type == 'chg'"
+            :rules="[
+              {
+                validator: validateChgData,
+                trigger: ['blur', 'change']
+              }
+            ]"
+          >
+            <el-input v-model="ruleForm.data" placeholder="设置当天涨跌幅">
+              <template #suffix>%</template>
+            </el-input>
           </el-form-item>
-          <el-form-item label="目标价格" style="width: 48%" prop="targetPrice">
-            <el-input v-model="ruleForm.targetPrice" placeholder="请输入目标价格">
+          <el-form-item
+            label="触发条件"
+            prop="data"
+            :rules="[
+              {
+                validator: validateBuySellData,
+                trigger: ['blur', 'change']
+              }
+            ]"
+            v-else
+          >
+            <el-input v-model="ruleForm.data" placeholder="请输入每笔交易总金额">
               <template #prefix>$</template>
             </el-input>
           </el-form-item>
-        </div>
-        <el-form-item
-          label="触发条件"
-          prop="data"
-          v-else-if="ruleForm.type == 'chg'"
-          :rules="[
-            {
-              validator: validateChgData,
-              trigger: ['blur', 'change']
-            }
-          ]"
-        >
-          <el-input v-model="ruleForm.data" placeholder="设置当天涨跌幅">
-            <template #suffix>%</template>
-          </el-input>
-        </el-form-item>
-        <el-form-item
-          label="触发条件"
-          prop="data"
-          :rules="[
-            {
-              validator: validateBuySellData,
-              trigger: ['blur', 'change']
-            }
-          ]"
-          v-else
-        >
-          <el-input v-model="ruleForm.data" placeholder="请输入每笔交易总金额">
-            <template #prefix>$</template>
-          </el-input>
-        </el-form-item>
-        <el-form-item label="通知频率" prop="noticeType">
-          <el-select v-model="ruleForm.noticeType" :teleported="false">
-            <el-option
-              v-for="item in noticeTypeList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
-          </el-select>
-        </el-form-item>
-        <div class="display-flex align-items-center justify-content-fd btn">
-          <span class="delete" @click="deleteForm(ruleFormRef)">删除监控</span>
-          <span class="submit" @click="submitForm(ruleFormRef)">保存监控</span>
-        </div>
-      </el-form>
-    </div>
-  </el-dialog>
+          <el-form-item label="通知频率" prop="noticeType" class="checkbox-notice">
+            <el-checkbox-group v-model="ruleForm.noticeType" @change="handleChange">
+              <el-checkbox
+                v-for="item in noticeTypeList"
+                :value="item.value"
+                :label="item.label"
+                :key="item.value"
+                >{{ item.label }}</el-checkbox
+              >
+            </el-checkbox-group>
+          </el-form-item>
+
+          <div class="display-flex align-items-center justify-content-fd btn">
+            <span class="delete" @click="deleteForm(ruleFormRef)">删除监控</span>
+            <span class="submit" @click="submitForm(ruleFormRef)">保存监控</span>
+          </div>
+        </el-form>
+      </div>
+    </el-dialog>
+  </div>
 </template>
 <script setup lang="ts">
 import { reactive, ref, onMounted, computed, watch } from 'vue'
@@ -491,14 +493,14 @@ const validateChgData = (rule: any, value: any, callback: any) => {
 const dialogType = ref<string>('add')
 const ruleFormRef = ref<FormInstance>()
 const formSize = ref<ComponentSize>('large')
-const ruleForm = reactive<any>({
+const ruleForm = ref<any>({
   type: 'price',
   coin: 'Single',
   chainCode: 'SOLANA',
   baseAddress: '',
   symbol: '',
   data: '',
-  noticeType: 1,
+  noticeType: [1],
   startPrice: '',
   targetPrice: '',
   status: 1,
@@ -545,7 +547,7 @@ const remoteMethod = async (query: string) => {
     loading.value = true
     const res: any = await APIgetTokenMata({
       baseAddress: query,
-      chainCode: ruleForm.chainCode
+      chainCode: ruleForm.value.chainCode
     })
     const arr: any = res ? [{ ...res }] : []
     options.value = arr.map((item: any) => {
@@ -569,35 +571,45 @@ const handelAdd = () => {
 const handelDialog = (type: string, formEl: FormInstance | undefined) => {
   dialogVisible.value = false
   dialogFormVisible.value = true
-  ruleForm.type = type
-  ruleForm.logo = ''
-  ruleForm.symbol = ''
-  ruleForm.baseAddress = ''
-  ruleForm.data = ''
-  ruleForm.startPrice = ''
-  ruleForm.targetPrice = ''
+  ruleForm.value.type = type
+  ruleForm.value.logo = ''
+  ruleForm.value.symbol = ''
+  ruleForm.value.baseAddress = ''
+  ruleForm.value.data = ''
+  ruleForm.value.startPrice = ''
+  ruleForm.value.targetPrice = ''
   formEl?.resetFields()
 }
 
 const handelSelectBaseAddress = (val: any) => {
-  ruleForm.symbol = options.value.find((item: any) => item.address == val)?.symbol || ''
-  ruleForm.startPrice = options.value.find((item: any) => item.address == val)?.price || ''
-  ruleForm.logo = options.value.find((item: any) => item.address == val)?.logo || ''
+  ruleForm.value.symbol = options.value.find((item: any) => item.address == val)?.symbol || ''
+  ruleForm.value.startPrice = options.value.find((item: any) => item.address == val)?.price || ''
+  ruleForm.value.logo = options.value.find((item: any) => item.address == val)?.logo || ''
+}
+
+const handleChange = (value: any) => {
+  // 只允许选择一个选项，因此每次选择后清除之前的选中项（如果有的话）
+  if (value && value.length > 1) {
+    ruleForm.value.noticeType = [value[value.length - 1]] // 只保留最后一个选中的值
+  } else {
+    ruleForm.value.noticeType = value // 更新为当前选中的值
+  }
 }
 
 const deleteForm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return
   await formEl.validate(async (valid, fields) => {
     if (valid) {
-      ruleForm.status = 0
-      console.log(ruleForm)
+      ruleForm.value.status = 0
+      console.log(ruleForm.value)
       await APIupdateCommonSubscribe({
-        ...ruleForm
+        ...ruleForm.value,
+        noticeType: ruleForm.value.noticeType.join()
       })
       getTableData()
       customMessage({
         type: 'success',
-        title: `${typeList.find((item) => item.value == ruleForm.type)?.label}删除成功`
+        title: `${typeList.find((item) => item.value == ruleForm.value.type)?.label}删除成功`
       })
       dialogFormVisible.value = false
     } else {
@@ -610,17 +622,17 @@ const submitForm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return
   await formEl.validate(async (valid, fields) => {
     if (valid) {
-      console.log(ruleForm)
-      if (ruleForm.type == 'chg') {
-        ruleForm.data = ruleForm.data / 100
-      }
+      console.log(ruleForm.value)
+
       await APIupdateCommonSubscribe({
-        ...ruleForm
+        ...ruleForm.value,
+        data: ruleForm.value.type == 'chg' ? ruleForm.value.data / 100 : ruleForm.value.data,
+        noticeType: ruleForm.value.noticeType.join()
       })
       getTableData()
       customMessage({
         type: 'success',
-        title: `${typeList.find((item) => item.value == ruleForm.type)?.label}创建成功`
+        title: `${typeList.find((item) => item.value == ruleForm.value.type)?.label}创建成功`
       })
       dialogFormVisible.value = false
     } else {
@@ -642,16 +654,17 @@ const getTableData = async () => {
 
 const handelEdit = (row: any) => {
   dialogType.value = 'edit'
-  for (const key in ruleForm) {
-    if (Object.prototype.hasOwnProperty.call(ruleForm, key)) {
-      ruleForm[key] = row[key]
+  for (const key in ruleForm.value) {
+    if (Object.prototype.hasOwnProperty.call(ruleForm.value, key)) {
+      ruleForm.value[key] = row[key]
     }
   }
-  if (ruleForm.type == 'chg') {
-    ruleForm.data = ruleForm.data * 100
+  if (ruleForm.value.type == 'chg') {
+    ruleForm.value.data = ruleForm.value.data * 100
   }
 
-  ruleForm.coin = 'Single'
+  ruleForm.value.noticeType = [ruleForm.value.noticeType]
+  ruleForm.value.coin = 'Single'
   dialogFormVisible.value = true
 }
 
@@ -742,24 +755,25 @@ onMounted(() => {
   height: 100%;
   .checkout-box {
     margin-left: 12px;
-
-    :deep(.el-checkbox) {
-      margin-right: 15px;
-    }
-    :deep(.el-checkbox__label) {
-      font-size: 12px;
-    }
-    :deep(.el-checkbox__input.is-checked + .el-checkbox__label) {
-      color: var(--font-color-default);
-    }
-    :deep(.el-checkbox__input.is-checked .el-checkbox__inner) {
-      background-color: var(--font-color-default);
-      border-color: var(--font-color-default);
-    }
-    :deep(.el-checkbox__input.is-checked .el-checkbox__inner:after) {
-      border-color: var(--bg-color);
-    }
   }
+
+  :deep(.el-checkbox) {
+    margin-right: 15px;
+  }
+  :deep(.el-checkbox__label) {
+    font-size: 12px;
+  }
+  :deep(.el-checkbox__input.is-checked + .el-checkbox__label) {
+    color: var(--font-color-default);
+  }
+  :deep(.el-checkbox__input.is-checked .el-checkbox__inner) {
+    background-color: #2ebd85;
+    border-color: #2ebd85;
+  }
+  :deep(.el-checkbox__input.is-checked .el-checkbox__inner:after) {
+    border-color: var(--font-color-default);
+  }
+
   .tab-content {
     padding: 7px 12px;
     font-size: 12px;
@@ -977,6 +991,7 @@ onMounted(() => {
   width: 20px;
   height: 20px;
   display: block;
+  border-radius: 50%;
 }
 .span-txt {
   margin-left: 6px;
