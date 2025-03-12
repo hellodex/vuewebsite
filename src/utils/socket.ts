@@ -3,7 +3,6 @@ import { useTokenInfoStore } from '@/stores/tokenInfo'
 import { useGlobalStore } from '@/stores/global'
 import { io } from 'socket.io-client'
 import { ElNotification } from 'element-plus'
-import { numberFormat } from '@/utils'
 import CryptoJS from 'crypto-js'
 import { customMessage } from './message'
 import BuyImg from '@/assets/img/buy-img.png'
@@ -51,16 +50,16 @@ function sendMessage(title: string, data: any) {
                               </div>
                               <div style='margin:0 14px;'>
                                 <span>价格:</span>
-                                <strong>${'$' + numberFormat(data.payload.price)}</strong>
+                                <strong>${'$' + data.payload.price}</strong>
                               </div>`
                     } else {
                       return `<div>
                                 <span>价格已到:</span>
-                                <strong>${'$' + numberFormat(data.payload.price)}</strong>
+                                <strong>${'$' + data.payload.price}</strong>
                               </div>
                               <div style='margin:0 14px;'>
                                 <span>交易额:</span>
-                                <strong>${'$' + numberFormat(data.payload.volume)}</strong>
+                                <strong>${'$' + data.payload.volume}</strong>
                               </div>`
                     }
                   })()}

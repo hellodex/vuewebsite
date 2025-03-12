@@ -5,6 +5,7 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
+import terser from '@rollup/plugin-terser'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -18,6 +19,15 @@ export default defineConfig({
   plugins: [
     vue(),
     vueJsx(),
+    terser({
+      compress: {
+        drop_console: true, // 去除所有 console 方法
+        pure_funcs: ['console.error', 'console.warn'] // 保留 console.error
+      },
+      output: {
+        comments: false // 去除注释
+      }
+    }),
     createSvgIconsPlugin({
       // 指定需要缓存的图标文件夹
       iconDirs: [path.resolve(process.cwd(), 'src/assets/icons')],
