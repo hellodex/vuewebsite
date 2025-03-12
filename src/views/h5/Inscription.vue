@@ -491,7 +491,10 @@ const handelTab = async (item: any) => {
 }
 
 const getToken = async () => {
-  const res: any = await getTokenList('SOLANA', customWalletInfo.value.walletInfo?.wallet)
+  const res: any = await getTokenList(
+    customWalletInfo.value.chainCode,
+    customWalletInfo.value.walletInfo?.wallet
+  )
   tokenList.value = res || []
 }
 

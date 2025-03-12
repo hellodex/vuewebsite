@@ -19,6 +19,7 @@
 import { ref, computed } from 'vue'
 import { handleCoinPairInfo, mainNetworkCurrency, numberFormat } from '@/utils'
 import { useGlobalStore } from '@/stores/global'
+import { useChainConfigsStore } from '@/stores/chainConfigs'
 import { useI18n } from 'vue-i18n'
 import BigNumber from 'bignumber.js'
 import { infinityAmount } from '@/types'
@@ -57,6 +58,7 @@ const props = defineProps({
 })
 const globalStore = useGlobalStore()
 const i18n = useI18n()
+const chainConfigs = useChainConfigsStore().chainConfigs
 
 const address = computed(() => globalStore.walletInfo.address)
 const chainId = computed(() => globalStore.walletInfo.chainId)
@@ -95,7 +97,8 @@ const updateTradingInfo = async () => {
       : await getTokenList(
           walletType.value == 'Email'
             ? customWalletInfo.value.chainCode
-            : coinInfo.value.sellCoin.chainCode,
+            : chainConfigs?.find((item: { chainId: any }) => item.chainId == chainId.value)
+                ?.chainCode,
           customWalletInfo.value.walletInfo?.wallet
         )
   if (coinInfo.value.buyCoin.baseAddress) {

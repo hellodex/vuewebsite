@@ -94,7 +94,7 @@ const getProperty = async (chainCode: any, walletAddress: any) => {
 
 watch([address, chainId], () => {
   getProperty(
-    chainConfigs.value?.find((item: { chainId: any }) => item.chainId == chainId.value).chainCode,
+    chainConfigs.value?.find((item: { chainId: any }) => item.chainId == chainId.value)?.chainCode,
     address.value
   )
 })
@@ -102,7 +102,8 @@ watch([address, chainId], () => {
 watch(chainConfigs, () => {
   if (address.value) {
     getProperty(
-      chainConfigs.value?.find((item: { chainId: any }) => item.chainId == chainId.value).chainCode,
+      chainConfigs.value?.find((item: { chainId: any }) => item.chainId == chainId.value)
+        ?.chainCode,
       address.value
     )
   }

@@ -370,7 +370,7 @@ const handelSearch = async (type: string) => {
     (await getTokensByWalletAddr({
       walletAddress: address.value,
       chainCode: chainConfigs.value?.find((item: { chainId: any }) => item.chainId == chainId.value)
-        .chainCode
+        ?.chainCode
     }))
   closeToast()
   showBottom.value = true

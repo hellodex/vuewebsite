@@ -65,7 +65,7 @@
             <span>创建监控</span>
           </div>
         </WalletConnect>
-        <div class="display-flex align-items-center add-btn" @click="handelAdd(ruleFormRef)" v-else>
+        <div class="display-flex align-items-center add-btn" @click="handelAdd" v-else>
           <el-icon size="14"><Plus /></el-icon>
           <span>创建监控</span>
         </div>
@@ -153,7 +153,7 @@
     <div class="strategy-dialog-content">
       <div
         class="display-flex align-items-center justify-content-sp strategy-dialog-content-item"
-        @click="handelDialog('price')"
+        @click="handelDialog('price', ruleFormRef)"
       >
         <div class="display-flex align-items-center title-txt">
           <svg-icon name="price-monitor" class="price-monitor icon"></svg-icon>
@@ -166,7 +166,7 @@
       </div>
       <div
         class="display-flex align-items-center justify-content-sp strategy-dialog-content-item"
-        @click="handelDialog('chg')"
+        @click="handelDialog('chg', ruleFormRef)"
       >
         <div class="display-flex align-items-center title-txt">
           <svg-icon name="chg-monitor" class="chg-monitor icon"></svg-icon>
@@ -179,7 +179,7 @@
       </div>
       <div
         class="display-flex align-items-center justify-content-sp strategy-dialog-content-item"
-        @click="handelDialog('buy')"
+        @click="handelDialog('buy', ruleFormRef)"
       >
         <div class="display-flex align-items-center title-txt">
           <svg-icon name="buy-monitor" class="icon buy-monitor"></svg-icon>
@@ -192,7 +192,7 @@
       </div>
       <div
         class="display-flex align-items-center justify-content-sp strategy-dialog-content-item"
-        @click="handelDialog('sell')"
+        @click="handelDialog('sell', ruleFormRef)"
       >
         <div class="display-flex align-items-center title-txt">
           <svg-icon name="sell-monitor" class="icon sell-monitor"></svg-icon>
@@ -426,19 +426,6 @@ const monitorChainCode = ref<string>('DEX')
 const dialogVisible = ref<boolean>(false)
 const dialogFormVisible = ref<boolean>(false)
 
-const handelDialog = (type: string) => {
-  dialogVisible.value = false
-  dialogFormVisible.value = true
-  ruleForm.type = type
-
-  if (ruleForm.type == 'price') {
-    ruleForm.data = ''
-  } else {
-    ruleForm.targetPrice = ''
-    ruleForm.startPrice = ''
-  }
-}
-
 const typeList = [
   {
     value: 'price',
@@ -574,18 +561,22 @@ const remoteMethod = async (query: string) => {
   }
 }
 
-const handelAdd = (formEl: FormInstance | undefined) => {
+const handelAdd = () => {
   dialogType.value = 'add'
   dialogVisible.value = true
+}
+
+const handelDialog = (type: string, formEl: FormInstance | undefined) => {
+  dialogVisible.value = false
+  dialogFormVisible.value = true
+  ruleForm.type = type
   ruleForm.logo = ''
   ruleForm.symbol = ''
   ruleForm.baseAddress = ''
   ruleForm.data = ''
   ruleForm.startPrice = ''
   ruleForm.targetPrice = ''
-
-  if (!formEl) return
-  formEl.resetFields()
+  formEl?.resetFields()
 }
 
 const handelSelectBaseAddress = (val: any) => {

@@ -179,7 +179,7 @@ const chain_Stablecoins = computed(() => {
       walletAddress: customWalletInfo.value.walletInfo.wallet
     }
   } else {
-    const chainConfig = chainConfigs.value.find((item: any) => item.chainId == chainId.value) || {}
+    const chainConfig = chainConfigs.value?.find((item: any) => item.chainId == chainId.value) || {}
     return {
       logo: chainConfig.logo,
       chainCode: chainConfig.chainCode,
