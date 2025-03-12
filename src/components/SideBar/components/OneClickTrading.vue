@@ -234,7 +234,9 @@ const updateTradingInfo = async () => {
   networkResult.value = mainNetworkCurrency(sellInfo.value.chainCode).chainId == chainId.value
 
   const res: any = await getTokenList(
-    walletType.value == 'Email' ? customWalletInfo.value.chainCode : sellInfo.value.chainCode,
+    walletType.value == 'Email'
+      ? customWalletInfo.value.chainCode
+      : chainConfigs?.find((item: { chainId: any }) => item.chainId == chainId.value)?.chainCode,
     customWalletInfo.value.walletInfo?.wallet
   )
   mainNetworkCurrencyAmount.value = res?.[0]?.amount || 0

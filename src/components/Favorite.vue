@@ -70,7 +70,7 @@ const getListFavorite = async () => {
     chainCode:
       walletType.value == 'Email'
         ? customWalletInfo.value.chainCode
-        : chainConfigs.find((item: any) => item.chainId == chainId.value)?.chainCode,
+        : chainConfigs?.find((item: any) => item.chainId == chainId.value)?.chainCode,
     walletAddress:
       walletType.value == 'Email' ? customWalletInfo.value.walletInfo?.wallet : address.value
   })
