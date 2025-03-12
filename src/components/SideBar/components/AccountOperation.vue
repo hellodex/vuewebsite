@@ -135,10 +135,10 @@ const getProperty = async (chainCode: any, walletAddress: any) => {
   })
 }
 
-getProperty(customWalletInfo.value.chainCode, customWalletInfo.value.walletInfo?.wallet)
-
 watch(customWalletInfo, (newValue) => {
-  getProperty(newValue.chainCode, newValue.walletInfo.wallet)
+  if (newValue.chainCode) {
+    getProperty(newValue.chainCode, newValue.walletInfo.wallet)
+  }
 })
 
 const handelJump = (url: string) => {

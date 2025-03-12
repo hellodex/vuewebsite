@@ -28,42 +28,58 @@ function sendMessage(title: string, data: any) {
     duration: 3000,
     position: 'bottom-right',
     customClass:
-      data.flag == 0
+      data.payload.flag == 0
         ? 'socket-elMessage socket-elMessage_success'
         : 'socket-elMessage socket-elMessage_error',
     message: `<div class='display-flex flex-direction-col'>
                 <div class='display-flex align-items-center'>
                   ${(() => {
-                    if (data.flag == 0) {
+                    if (data.payload.flag == 0) {
                       return `<img src='${BuyImg}'/>`
                     } else {
                       return `<img src='${SellImg}'/>`
                     }
                   })()}
-                  <strong class='title'>AI${title}：${data.symbol}</strong>
+                  <strong class='title'>${data.title}</strong>
                 </div>
                 <div class='sun-title display-flex align-items-center'>
-                  <div>
-                    <span>价格已到:</span>
-                    <strong>${'$' + numberFormat(data.price)}</strong>
-                  </div>
-                  <div style='margin:0 14px;'>
-                    <span>交易额:</span>
-                    <strong>${'$' + numberFormat(data.volume)}</strong>
-                  </div>
+                  ${(() => {
+                    if (title == '涨跌幅监控') {
+                      return `<div>
+                                <span>涨跌幅已到:</span>
+                                <strong>${data.payload.chg + '%'}</strong>
+                              </div>
+                              <div style='margin:0 14px;'>
+                                <span>价格:</span>
+                                <strong>${'$' + numberFormat(data.payload.price)}</strong>
+                              </div>`
+                    } else {
+                      return `<div>
+                                <span>价格已到:</span>
+                                <strong>${'$' + numberFormat(data.payload.price)}</strong>
+                              </div>
+                              <div style='margin:0 14px;'>
+                                <span>交易额:</span>
+                                <strong>${'$' + numberFormat(data.payload.volume)}</strong>
+                              </div>`
+                    }
+                  })()}
                   <div>
                     <span>方向:</span>
-                    <strong class='${data.flag == 0 ? 'up-color' : 'down-color'}'>${data.flag == 0 ? '买入' : '卖出'}</strong>
+                    <strong class='${data.payload.flag == 0 ? 'up-color' : 'down-color'}'>${data.payload.flag == 0 ? '买入' : '卖出'}</strong>
                   </div>
                 </div>
               </div>`,
     showClose: true,
     onClick: () => {
       notification.close()
-      if (window.location.href.indexOf('/k/') >= 0 && data.baseAddress == tokenInfo?.baseAddress) {
+      if (
+        window.location.href.indexOf('/k/') >= 0 &&
+        data.payload.baseAddress == tokenInfo?.baseAddress
+      ) {
         return false
       }
-      window.open(`/k/${data.pairAddress}?chainCode=${data.chainCode}`)
+      window.open(`/k/${data.payload.pairAddress}?chainCode=${data.payload.chainCode}`)
     }
   })
 }
