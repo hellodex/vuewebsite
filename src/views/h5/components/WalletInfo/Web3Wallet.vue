@@ -235,8 +235,8 @@ const timer = ref<any>(null)
 const getTokensByWalletAddr = async () => {
   const res: any = await APIgetTokensByWalletAddress({
     walletAddress: address.value,
-    chainCode: chainConfigs.find((item: { chainId: any }) => item.chainId == chainId.value)
-      .chainCode
+    chainCode: chainConfigs?.find((item: { chainId: any }) => item.chainId == chainId.value)
+      ?.chainCode
   })
 
   console.log(res)
