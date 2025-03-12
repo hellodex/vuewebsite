@@ -30,7 +30,7 @@ const login = async () => {
     const userInfo: any = await APIuserInfo()
     customMessage({
       type: 'success',
-      title: 'tg账户登录成功'
+      title: 'TG BOT 账户登录成功'
     })
     const obj = Object.assign({}, res, userInfo)
     localStorage.setItem('accountInfo', JSON.stringify(obj))

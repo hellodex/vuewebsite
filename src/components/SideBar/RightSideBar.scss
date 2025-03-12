@@ -41,7 +41,7 @@
     width: 92%;
     height: 24px;
     border-radius: 6px;
-    background: #222;
+    background: rgba(58, 60, 64, 0.4);
     position: absolute;
     left: 10px;
     bottom: 0;
@@ -265,13 +265,13 @@
   }
   .tab-main {
     border-radius: 12px;
-    border: 1px solid var(--color-border);
+    border: 1px solid rgba(38, 40, 44, 0.3);
     padding: 4px;
     margin-bottom: 16px;
     .tab-main-item {
       border-radius: 8px;
-      background-color: var(--card-bg-color);
-      color: var(--dex-color-4);
+      background-color: transparent;
+      color: #848e9c;
       font-size: 14px;
       font-style: normal;
       flex: 1;
@@ -280,7 +280,7 @@
       cursor: pointer;
     }
     .cur {
-      background-color: var(--tab-bg-color);
+      background-color: rgba(58, 60, 64, 0.4);
       color: var(--font-color-default);
     }
   }
