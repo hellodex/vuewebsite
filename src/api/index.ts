@@ -879,3 +879,15 @@ export function APIresumeUserTokenSubscribe(data: object) {
     }
   })
 }
+
+export function APIgetUserSubscribe(data: object) {
+  const account: any = localStorage.getItem('accountInfo')
+  return http({
+    url: WEB_URL + '/api/auth/sub/getUserSubscribe',
+    method: 'POST',
+    data,
+    headers: {
+      [`${JSON.parse(account)?.tokenInfo.tokenName}`]: `Bearer ${JSON.parse(account)?.tokenInfo.tokenValue}`
+    }
+  })
+}
