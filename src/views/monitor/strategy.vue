@@ -295,7 +295,7 @@
                     <svg-icon name="logo1" class="icon-svg"></svg-icon>
                   </template>
                 </el-image>
-                <span v-if="ruleForm.symbol" style="margin-left: 2px">{{ ruleForm.symbol }}</span>
+                <span v-if="ruleForm.symbol" style="margin-left: 4px">{{ ruleForm.symbol }}</span>
                 <span style="margin-left: 4px">$</span>
                 <span style="margin-left: 2px" v-if="ruleForm.startPrice">{{
                   numberFormat(ruleForm.startPrice)
@@ -365,6 +365,7 @@ import type { ComponentSize, FormInstance, FormRules } from 'element-plus'
 import { ElMessageBox } from 'element-plus'
 import { useGlobalStore } from '@/stores/global'
 import {
+  APIgetUserSubscribe,
   APIgetTokenMata,
   APIupdateCommonSubscribe,
   APIlistUserTokenSubscribe,
@@ -545,18 +546,24 @@ const loading = ref(false)
 const remoteMethod = async (query: string) => {
   if (query) {
     loading.value = true
-    const res: any = await APIgetTokenMata({
+    const res: any = await APIgetUserSubscribe({
       baseAddress: query,
-      chainCode: ruleForm.value.chainCode
+      chainCode: ruleForm.value.chainCode,
+      type: ruleForm.value.type
     })
-    const arr: any = res ? [{ ...res }] : []
-    options.value = arr.map((item: any) => {
-      return {
-        ...item,
-        label: item.symbol,
-        value: item.address
-      }
-    })
+    if (JSON.stringify(res.subscribe) == '{}') {
+      const arr: any = res ? [{ ...res.info }] : []
+      options.value = arr.map((item: any) => {
+        return {
+          ...item,
+          label: item.symbol,
+          value: item.baseToken.address
+        }
+      })
+    } else {
+      handelEdit(res.subscribe)
+    }
+
     loading.value = false
   } else {
     options.value = []
@@ -571,6 +578,7 @@ const handelAdd = () => {
 const handelDialog = (type: string, formEl: FormInstance | undefined) => {
   dialogVisible.value = false
   dialogFormVisible.value = true
+  formEl?.resetFields()
   ruleForm.value.type = type
   ruleForm.value.logo = ''
   ruleForm.value.symbol = ''
@@ -578,7 +586,6 @@ const handelDialog = (type: string, formEl: FormInstance | undefined) => {
   ruleForm.value.data = ''
   ruleForm.value.startPrice = ''
   ruleForm.value.targetPrice = ''
-  formEl?.resetFields()
 }
 
 const handelSelectBaseAddress = (val: any) => {

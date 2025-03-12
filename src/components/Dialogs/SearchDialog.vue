@@ -69,11 +69,11 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="24H交易额/池子大小" align="right" width="160px">
+          <el-table-column label="池子大小/交易额" align="right" width="160px">
             <template #default="scope">
               <div class="display-flex flex-direction-col">
-                <span class="sub-txt">${{ numberFormat(scope.row.volume) }}</span>
-                <span class="txt">${{ numberFormat(scope.row.tvl) }}</span>
+                <span class="sub-txt">${{ numberFormat(scope.row.tvl) }}</span>
+                <span class="txt">${{ numberFormat(scope.row.volume) }}</span>
               </div>
             </template>
           </el-table-column>
