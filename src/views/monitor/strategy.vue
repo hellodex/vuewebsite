@@ -252,14 +252,14 @@ const handelAdd = () => {
 }
 
 const handelMonitorTypeClose = (val: boolean) => {
-  monitorTypeDialogVisible.value = false
+  monitorTypeDialogVisible.value = val
 }
 
 const handelMonitorFormClose = (val: boolean) => {
-  monitorFormDialogVisible.value = false
+  monitorFormDialogVisible.value = val
 }
 
-const handelRefresh = (val: any) => {
+const handelRefresh = () => {
   getTableData()
   monitorFormDialogVisible.value = false
 }

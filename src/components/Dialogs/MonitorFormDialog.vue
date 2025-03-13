@@ -26,7 +26,11 @@
             </el-select>
           </el-form-item>
           <el-form-item label="链" style="width: 48%">
-            <el-select v-model="ruleForm.chainCode" :teleported="false">
+            <el-select
+              v-model="ruleForm.chainCode"
+              :teleported="false"
+              :disabled="dialogType == 'edit'"
+            >
               <template #prefix>
                 <img
                   :src="chainData.find((item: any) => item.chainCode == ruleForm.chainCode)?.logo"
