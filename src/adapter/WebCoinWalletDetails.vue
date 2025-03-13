@@ -246,7 +246,7 @@ import { useMyCoinTab } from '@/hooks/useMyCoinTab' // 我的 hook
 
 import { useSubscribeKChartInfo } from '@/stores/subscribeKChartInfo'
 import { numberFormat, handleCoinPairInfo } from '@/utils'
-import { socket } from '@/utils/socket'
+// import { socket } from '@/utils/socket'
 
 const useSubscribeKChart = useSubscribeKChartInfo()
 
@@ -547,13 +547,13 @@ onBeforeRouteUpdate((to, from) => {
   console.log('组件K : onBeforeRouteUpdate - from :', from)
   console.log(`即将跳转到 /k/${to.params.pairAddress},请稍等`)
   // 交易信息
-  socket.emit(
-    'kchart-off',
-    JSON.stringify({
-      pair: from.params?.pairAddress,
-      chainCode: from.query?.chainCode
-    })
-  )
+  // socket.emit(
+  //   'kchart-off',
+  //   JSON.stringify({
+  //     pair: from.params?.pairAddress,
+  //     chainCode: from.query?.chainCode
+  //   })
+  // )
   globalStore.SetSocketKchartConnectType(null)
   useChainInfo.createChainInfo({
     chainCode: to.query.chainCode, // 币ID
@@ -565,13 +565,13 @@ onBeforeRouteUpdate((to, from) => {
 onBeforeRouteLeave((to, from) => {
   console.log('🔥onBeforeRouteLeave - to :', to)
   console.log('🔥onBeforeRouteLeave - from :', from)
-  socket.emit(
-    'kchart-off',
-    JSON.stringify({
-      pair: from.params?.pairAddress,
-      chainCode: from.query?.chainCode
-    })
-  )
+  // socket.emit(
+  //   'kchart-off',
+  //   JSON.stringify({
+  //     pair: from.params?.pairAddress,
+  //     chainCode: from.query?.chainCode
+  //   })
+  // )
   globalStore.SetSocketKchartConnectType(null)
 })
 

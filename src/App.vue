@@ -76,7 +76,7 @@ import { useI18n } from 'vue-i18n'
 import { browserLang, numberFormat } from '@/utils'
 import { QUICK_TRADE_CONFIG } from '@/types'
 
-import { socket } from '@/utils/socket'
+// import { socket } from '@/utils/socket'
 import Loading from '@/components/Loading/index.vue'
 import NavBar from '@/components/SideBar/NavBar.vue'
 import FooterBar from '@/components/SideBar/FooterBar.vue'
@@ -124,20 +124,20 @@ initTheme()
 // init language
 const i18n = useI18n()
 const routerState = ref(true)
-const danmakuFun = () => {
-  if (danmaku.value) {
-    socket.off('smartWalletDanmaku')
-    socket.on('smartWalletDanmaku', (message) => {
-      const data = JSON.parse(message)
-      console.log(`socket-danmaku:`, data)
-      danmus.value.push(data)
-    })
-  } else {
-    socket.off('smartWalletDanmaku')
-  }
-}
+// const danmakuFun = () => {
+//   if (danmaku.value) {
+//     socket.off('smartWalletDanmaku')
+//     socket.on('smartWalletDanmaku', (message) => {
+//       const data = JSON.parse(message)
+//       console.log(`socket-danmaku:`, data)
+//       danmus.value.push(data)
+//     })
+//   } else {
+//     socket.off('smartWalletDanmaku')
+//   }
+// }
 
-danmakuFun()
+// danmakuFun()
 
 watch(danmaku, () => {
   danmakuFun()

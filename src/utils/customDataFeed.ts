@@ -4,7 +4,7 @@ import { useSubscribeKChartInfo } from '@/stores/subscribeKChartInfo'
 import { useGlobalStore } from '@/stores/global'
 import { APIpairInfo } from '@/api/coinWalletDetails'
 import { formatDecimals, formatDate } from '@/utils'
-import { socket } from '@/utils/socket'
+// import { socket } from '@/utils/socket'
 
 // 自定义数据源对象
 import { APIkCharts } from '@/api'
@@ -178,52 +178,52 @@ export default class CustomDataFeed {
       chainCode: chainInfo?.chainCode
     })
 
-    socket.off('kchart')
+    // socket.off('kchart')
 
-    socket.emit(
-      'kchart-off',
-      JSON.stringify({
-        pair: chainInfo?.pairAddress,
-        chainCode: chainInfo?.chainCode
-      })
-    )
-    socket.emit(
-      'kchart-on',
-      JSON.stringify({
-        pair: chainInfo?.pairAddress,
-        chainCode: chainInfo?.chainCode
-      })
-    )
+    // socket.emit(
+    //   'kchart-off',
+    //   JSON.stringify({
+    //     pair: chainInfo?.pairAddress,
+    //     chainCode: chainInfo?.chainCode
+    //   })
+    // )
+    // socket.emit(
+    //   'kchart-on',
+    //   JSON.stringify({
+    //     pair: chainInfo?.pairAddress,
+    //     chainCode: chainInfo?.chainCode
+    //   })
+    // )
 
     const globalStore = useGlobalStore()
 
     globalStore.SetSocketKchartConnectType('kChart_connect')
 
-    socket.on('kchart', (message: any) => {
-      const data = JSON.parse(message)
-      console.log(`socket-message: ${data.tx} <========> ${formatDate(data.txTime * 1000)}`)
-      useSubscribeKChart.createSubscribeKChartInfo({
-        C: data.price,
-        H: data.price,
-        L: data.price,
-        O: data.price,
-        chg: (
-          ((parseFloat(data.price) - parseFloat(res.start1d)) / parseFloat(res.start1d)) *
-          100
-        ).toString(),
-        timestamp: data.txTime
-      })
-      useSubscribeKChart.createSubscribeSwapInfo(data)
-      const bar = {
-        time: data.txTime * 1000,
-        close: parseFloat(data.price),
-        open: parseFloat(data.price),
-        high: parseFloat(data.price),
-        low: parseFloat(data.price),
-        volume: parseFloat(data.orderAmount)
-      }
-      onRealtimeCallback(bar)
-    })
+    // socket.on('kchart', (message: any) => {
+    //   const data = JSON.parse(message)
+    //   console.log(`socket-message: ${data.tx} <========> ${formatDate(data.txTime * 1000)}`)
+    //   useSubscribeKChart.createSubscribeKChartInfo({
+    //     C: data.price,
+    //     H: data.price,
+    //     L: data.price,
+    //     O: data.price,
+    //     chg: (
+    //       ((parseFloat(data.price) - parseFloat(res.start1d)) / parseFloat(res.start1d)) *
+    //       100
+    //     ).toString(),
+    //     timestamp: data.txTime
+    //   })
+    //   useSubscribeKChart.createSubscribeSwapInfo(data)
+    //   const bar = {
+    //     time: data.txTime * 1000,
+    //     close: parseFloat(data.price),
+    //     open: parseFloat(data.price),
+    //     high: parseFloat(data.price),
+    //     low: parseFloat(data.price),
+    //     volume: parseFloat(data.orderAmount)
+    //   }
+    //   onRealtimeCallback(bar)
+    // })
   }
 
   // 取消订阅实时数据
