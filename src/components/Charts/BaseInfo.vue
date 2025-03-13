@@ -190,6 +190,20 @@
               <span class="font-family-Heavy up-color">安全</span>
             </div>
           </div>
+          <div
+            class="display-flex flex-direction-col align-items-center ai-text"
+            @click="handelAddMonitor"
+            v-if="isConnected"
+          >
+            <svg-icon name="icon-strategy" class="icon-strategy"></svg-icon>
+            <span>AI监控</span>
+          </div>
+          <WalletConnect v-else>
+            <div class="display-flex flex-direction-col align-items-center ai-text">
+              <svg-icon name="icon-strategy" class="icon-strategy"></svg-icon>
+              <span>AI监控</span>
+            </div>
+          </WalletConnect>
           <!-- <div class="display-flex align-items-center pond-audit">
             <svg-icon name="icon-audit" class="icon-base"></svg-icon>
             <span>审计</span>
@@ -210,6 +224,21 @@
     :baseInfo="baseInfo"
     @close="handleClose"
     v-if="shareDialogVisible"
+  />
+
+  <MonitorTypeDialog
+    :monitorTypeDialogVisible="monitorTypeDialogVisible"
+    @monitorType="handelDialog"
+    @close="handelMonitorTypeClose"
+  />
+
+  <MonitorFormDialog
+    :info="formInfo"
+    dialogType="edit"
+    :monitorFormDialogVisible="monitorFormDialogVisible"
+    @close="handelMonitorFormClose"
+    @refresh="handelRefresh"
+    v-if="monitorFormDialogVisible"
   />
 
   <el-drawer
@@ -235,17 +264,42 @@ import { numberFormat, shortifyAddress } from '@/utils'
 import { useSubscribeKChartInfo } from '@/stores/subscribeKChartInfo'
 import PercentageChange from '@/components/Percentage/PercentageChange.vue'
 import ShareDialog from '@/components/Dialogs/ShareDialog.vue'
-
+import MonitorTypeDialog from '@/components/Dialogs/MonitorTypeDialog.vue'
+import MonitorFormDialog from '@/components/Dialogs/MonitorFormDialog.vue'
 import Favorite from '@/components/Favorite.vue'
 import SecurityTest from '@/components/Charts/SecurityTest.vue'
+import WalletConnect from '@/components/Wallet/WalletConnect.vue'
 
+import { APIgetUserSubscribe } from '@/api'
 import { useI18n } from 'vue-i18n'
+import { useGlobalStore } from '@/stores/global'
 import { MAIN_COIN } from '@/types'
 import { customMessage } from '@/utils/message'
 
 const i18n = useI18n()
+const globalStore = useGlobalStore()
+
+const isConnected = computed(() => globalStore.walletInfo.isConnected)
+const walletType = computed(() => globalStore.walletInfo.walletType)
 
 const shareDialogVisible = ref<boolean>(false) // 弹框显示隐藏状态
+
+const monitorTypeDialogVisible = ref<boolean>(false) // 监控类型弹框
+const monitorFormDialogVisible = ref<boolean>(false) // 监控表单
+
+const formInfo = ref<any>({
+  type: 'price',
+  coin: 'Single',
+  chainCode: 'SOLANA',
+  baseAddress: '',
+  symbol: '',
+  data: '',
+  noticeType: [1],
+  startPrice: '',
+  targetPrice: '',
+  status: 1,
+  logo: ''
+})
 
 const securityTestDrawer = ref<boolean>(false)
 
@@ -294,11 +348,69 @@ const handleClose = (val: boolean) => {
   shareDialogVisible.value = val
 }
 
-const handelIcon = () => {
-  customMessage({
-    type: 'info',
-    title: '代币未收录信息，请联系项目方在平台收录信息'
+const handelAddMonitor = () => {
+  if (walletType.value !== 'Email') {
+    customMessage({
+      type: 'error',
+      title: '请使用账户模式登录'
+    })
+    return false
+  }
+  monitorTypeDialogVisible.value = true
+}
+
+const handelDialog = async (type: string) => {
+  const res: any = await APIgetUserSubscribe({
+    baseAddress: props.baseInfo?.tokenInfo?.baseAddress,
+    chainCode: props.baseInfo?.chainInfo?.chainCode,
+    type: type
   })
+  if (res) {
+    if (JSON.stringify(res.subscribe) == '{}') {
+      formInfo.value = {
+        type: type,
+        coin: 'Single',
+        chainCode: res.info.chainCode,
+        baseAddress: res.info.baseToken.address,
+        symbol: res.info.baseToken.symbol,
+        data: '',
+        noticeType: [1],
+        startPrice: res.info.price,
+        targetPrice: '',
+        status: 1,
+        logo: res.info.logo
+      }
+    } else {
+      handelMap(res.subscribe)
+    }
+  }
+  monitorTypeDialogVisible.value = false
+  monitorFormDialogVisible.value = true
+}
+
+const handelMap = (map: any) => {
+  for (const key in formInfo.value) {
+    if (Object.prototype.hasOwnProperty.call(formInfo.value, key)) {
+      formInfo.value[key] = map[key]
+    }
+  }
+  if (formInfo.value.type == 'chg') {
+    formInfo.value.data = formInfo.value.data * 100
+  }
+  formInfo.value.noticeType = [formInfo.value.noticeType]
+  formInfo.value.coin = 'Single'
+}
+
+const handelMonitorTypeClose = (val: boolean) => {
+  monitorTypeDialogVisible.value = val
+}
+
+const handelMonitorFormClose = (val: boolean) => {
+  monitorFormDialogVisible.value = val
+}
+
+const handelRefresh = () => {
+  monitorFormDialogVisible.value = false
 }
 
 const handelRouter = (url: string) => {
@@ -317,6 +429,11 @@ const handelRouter = (url: string) => {
   margin-bottom: 8px;
   line-height: 1.5;
   overflow: hidden;
+  .connect-wallet-btn {
+    padding: 0;
+    background-color: transparent;
+    min-width: auto;
+  }
   .logo {
     width: 40px;
     height: 40px;
@@ -471,6 +588,21 @@ const handelRouter = (url: string) => {
       width: 14px;
       height: 14px;
       margin-right: 4px;
+    }
+  }
+  .ai-text {
+    margin-left: 20px;
+    font-size: 12px;
+    color: #959a9f;
+    justify-content: space-between;
+    height: 40px;
+    font-family: 'PingFangSC-Heavy';
+    cursor: pointer;
+    .icon-strategy {
+      width: 16px;
+      height: 16px;
+      position: relative;
+      top: 2px;
     }
   }
 }
