@@ -7,7 +7,8 @@ import CryptoJS from 'crypto-js'
 import { customMessage } from './message'
 import BuyImg from '@/assets/img/buy-img.png'
 import SellImg from '@/assets/img/sell-img.png'
-
+import SuccessImg from '@/assets/img/success-img.png'
+import ErrorImg from '@/assets/img/error-img.png'
 // const data = {
 //   baseAddress: '6LjccmR327LvnfbabH44xnKUBpDbErzMnbMovL8Kpump',
 //   chainCode: 'SOLANA',
@@ -36,7 +37,7 @@ function sendMessage(title: string, data: any) {
                     if (data.payload.flag == 0) {
                       return `<img src='${BuyImg}'/>`
                     } else {
-                      return `<img src='${SellImg}'/>`
+                      return `<img src='${ErrorImg}'/>`
                     }
                   })()}
                   <strong class='title'>${data.title}</strong>
@@ -83,6 +84,56 @@ function sendMessage(title: string, data: any) {
   })
 }
 
+function sendOrderMessage(data: any) {
+  const tokenInfo = useTokenInfoStore().tokenInfo
+  const notification = ElNotification({
+    dangerouslyUseHTMLString: true,
+    duration: 3000,
+    position: 'bottom-right',
+    customClass:
+      data.payload.status == 200
+        ? 'socket-elMessage socket-elMessage_success'
+        : 'socket-elMessage socket-elMessage_error',
+    message: `<div class='display-flex flex-direction-col'>
+                <div class='display-flex align-items-center'>
+                  ${(() => {
+                    if (data.payload.status == 200) {
+                      return `<img src='${SuccessImg}'/>`
+                    } else {
+                      return `<img src='${SellImg}'/>`
+                    }
+                  })()}
+                  <strong class='title'>${data.title}</strong>
+                </div>
+                <div class='sun-title display-flex align-items-center'>
+                  <div>
+                    <span>挂单价：</span>
+                    <strong>${'$' + data.payload.targetPrice}</strong>
+                  </div>
+                  <div style='margin:0 14px;'>
+                    <span>现价：</span>
+                    <strong>${'$' + data.payload.price}</strong>
+                  </div>
+                  <div>
+                    <span>结果：</span>
+                    <strong class='${data.payload.status == 200 ? 'up-color' : 'down-color'}'>${data.payload.msg}</strong>
+                  </div>
+                </div>
+              </div>`,
+    showClose: true,
+    onClick: () => {
+      notification.close()
+      if (
+        window.location.href.indexOf('/k/') >= 0 &&
+        data.payload.baseAddress == tokenInfo?.baseAddress
+      ) {
+        return false
+      }
+      window.open(`/k/${data.payload.pairAddress}?chainCode=${data.payload.chainCode}`)
+    }
+  })
+}
+
 const version = '1.0'
 const channel = import.meta.env.VITE_NOT_TG_CHANNEL
 const key = import.meta.env.VITE_NOT_TG_KEY
@@ -106,6 +157,7 @@ export const socketOnMonitor = (uuid: string, token: string) => {
   socket.off('chg')
   socket.off('buy')
   socket.off('sell')
+  socket.off('order')
   // 价格
   socket.emit(
     'price-on',
@@ -165,6 +217,20 @@ export const socketOnMonitor = (uuid: string, token: string) => {
     console.info(`sell-monitor:`, data)
     sendMessage('大单卖出监控', data)
   })
+
+  socket.emit(
+    'order-on',
+    JSON.stringify({
+      uuid,
+      token
+    })
+  )
+
+  socket.on('order', (message: string) => {
+    const data = JSON.parse(message)
+    console.info(`order-monitor:`, data)
+    sendOrderMessage(data)
+  })
 }
 
 export const socketOffMonitor = (uuid: string, token: string) => {
@@ -194,6 +260,14 @@ export const socketOffMonitor = (uuid: string, token: string) => {
 
   socket.emit(
     'sell-off',
+    JSON.stringify({
+      uuid,
+      token
+    })
+  )
+
+  socket.emit(
+    'order-off',
     JSON.stringify({
       uuid,
       token
