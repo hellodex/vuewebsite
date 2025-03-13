@@ -48,9 +48,6 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 // Vue.prototype.$echarts = echarts; // vue2的挂载方式
 
 // app.config.globalProperties.$echarts = echarts; // vue3的挂载方式（一个用于注册能够被应用内所有组件实例访问到的全局属性的对象。）
-if (import.meta.env.VITE_USER_NODE_ENV !== 'development') {
-  console.log = () => {}
-}
 
 app.provide('$echarts', echarts) // vue3采用provide, inject方式使用
 
