@@ -37,7 +37,7 @@ function sendMessage(title: string, data: any) {
                     if (data.payload.flag == 0) {
                       return `<img src='${BuyImg}'/>`
                     } else {
-                      return `<img src='${ErrorImg}'/>`
+                      return `<img src='${SellImg}'/>`
                     }
                   })()}
                   <strong class='title'>${data.title}</strong>
@@ -100,7 +100,7 @@ function sendOrderMessage(data: any) {
                     if (data.payload.status == 200) {
                       return `<img src='${SuccessImg}'/>`
                     } else {
-                      return `<img src='${SellImg}'/>`
+                      return `<img src='${ErrorImg}'/>`
                     }
                   })()}
                   <strong class='title'>${data.title}</strong>
