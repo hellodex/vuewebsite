@@ -142,201 +142,188 @@ const sign = CryptoJS.SHA256(channel + ts + version + key).toString()
 
 const URL = `https://wss.apihellodex.lol`
 
-export const socket: any = io(URL, {
-  query: {
-    channel,
-    ts,
-    version,
-    sign,
-    test: '222222'
-  }
-})
+// export const socket: any = io(URL, {
+//   query: {
+//     channel,
+//     ts,
+//     version,
+//     sign,
+//     test: '222222'
+//   }
+// })
 
 export const socketOnMonitor = (uuid: string, token: string) => {
-  socket.off('price')
-  socket.off('chg')
-  socket.off('buy')
-  socket.off('sell')
-  socket.off('order')
-  // 价格
-  socket.emit(
-    'price-on',
-    JSON.stringify({
-      uuid,
-      token
-    })
-  )
-
-  socket.on('price', (message: string) => {
-    const data = JSON.parse(message)
-    console.info(`price-monitor:`, data)
-    sendMessage('价格监控', data)
-  })
-
-  // 订阅1d价格变化率
-  socket.emit(
-    'chg-on',
-    JSON.stringify({
-      uuid,
-      token
-    })
-  )
-
-  socket.on('chg', (message: string) => {
-    const data = JSON.parse(message)
-    console.info(`chg-monitor:`, data)
-    sendMessage('涨跌幅监控', data)
-  })
-
-  // 大额买单
-  socket.emit(
-    'buy-on',
-    JSON.stringify({
-      uuid,
-      token
-    })
-  )
-
-  socket.on('buy', (message: string) => {
-    const data = JSON.parse(message)
-    console.info(`buy-monitor:`, data)
-    sendMessage('大单买入监控', data)
-  })
-
-  // 大额卖单
-  socket.emit(
-    'sell-on',
-    JSON.stringify({
-      uuid,
-      token
-    })
-  )
-
-  socket.on('sell', (message: string) => {
-    const data = JSON.parse(message)
-    console.info(`sell-monitor:`, data)
-    sendMessage('大单卖出监控', data)
-  })
-
-  socket.emit(
-    'order-on',
-    JSON.stringify({
-      uuid,
-      token
-    })
-  )
-
-  socket.on('order', (message: string) => {
-    const data = JSON.parse(message)
-    console.info(`order-monitor:`, data)
-    sendOrderMessage(data)
-  })
+  // socket.off('price')
+  // socket.off('chg')
+  // socket.off('buy')
+  // socket.off('sell')
+  // socket.off('order')
+  // // 价格
+  // socket.emit(
+  //   'price-on',
+  //   JSON.stringify({
+  //     uuid,
+  //     token
+  //   })
+  // )
+  // socket.on('price', (message: string) => {
+  //   const data = JSON.parse(message)
+  //   console.info(`price-monitor:`, data)
+  //   sendMessage('价格监控', data)
+  // })
+  // // 订阅1d价格变化率
+  // socket.emit(
+  //   'chg-on',
+  //   JSON.stringify({
+  //     uuid,
+  //     token
+  //   })
+  // )
+  // socket.on('chg', (message: string) => {
+  //   const data = JSON.parse(message)
+  //   console.info(`chg-monitor:`, data)
+  //   sendMessage('涨跌幅监控', data)
+  // })
+  // // 大额买单
+  // socket.emit(
+  //   'buy-on',
+  //   JSON.stringify({
+  //     uuid,
+  //     token
+  //   })
+  // )
+  // socket.on('buy', (message: string) => {
+  //   const data = JSON.parse(message)
+  //   console.info(`buy-monitor:`, data)
+  //   sendMessage('大单买入监控', data)
+  // })
+  // // 大额卖单
+  // socket.emit(
+  //   'sell-on',
+  //   JSON.stringify({
+  //     uuid,
+  //     token
+  //   })
+  // )
+  // socket.on('sell', (message: string) => {
+  //   const data = JSON.parse(message)
+  //   console.info(`sell-monitor:`, data)
+  //   sendMessage('大单卖出监控', data)
+  // })
+  // socket.emit(
+  //   'order-on',
+  //   JSON.stringify({
+  //     uuid,
+  //     token
+  //   })
+  // )
+  // socket.on('order', (message: string) => {
+  //   const data = JSON.parse(message)
+  //   console.info(`order-monitor:`, data)
+  //   sendOrderMessage(data)
+  // })
 }
 
 export const socketOffMonitor = (uuid: string, token: string) => {
-  socket.emit(
-    'price-off',
-    JSON.stringify({
-      uuid,
-      token
-    })
-  )
-
-  socket.emit(
-    'chg-off',
-    JSON.stringify({
-      uuid,
-      token
-    })
-  )
-
-  socket.emit(
-    'buy-off',
-    JSON.stringify({
-      uuid,
-      token
-    })
-  )
-
-  socket.emit(
-    'sell-off',
-    JSON.stringify({
-      uuid,
-      token
-    })
-  )
-
-  socket.emit(
-    'order-off',
-    JSON.stringify({
-      uuid,
-      token
-    })
-  )
+  // socket.emit(
+  //   'price-off',
+  //   JSON.stringify({
+  //     uuid,
+  //     token
+  //   })
+  // )
+  // socket.emit(
+  //   'chg-off',
+  //   JSON.stringify({
+  //     uuid,
+  //     token
+  //   })
+  // )
+  // socket.emit(
+  //   'buy-off',
+  //   JSON.stringify({
+  //     uuid,
+  //     token
+  //   })
+  // )
+  // socket.emit(
+  //   'sell-off',
+  //   JSON.stringify({
+  //     uuid,
+  //     token
+  //   })
+  // )
+  // socket.emit(
+  //   'order-off',
+  //   JSON.stringify({
+  //     uuid,
+  //     token
+  //   })
+  // )
 }
 
 export function socketLogout() {
-  socket.off('logout')
-  socket.on('logout', (message: string) => {
-    const data = JSON.parse(message)
-    if (data) {
-      const globalStore = useGlobalStore()
-      customMessage({
-        type: 'error',
-        title: '此账户已在新设备登录，如有问题请尽快联系客服'
-      })
-      socketOffMonitor(globalStore.accountInfo.uuid, globalStore.accountInfo.tokenInfo.tokenValue)
-      localStorage.removeItem('accountInfo')
-      localStorage.removeItem('customWalletIndex')
-      localStorage.removeItem('customWalletIndex1')
-      globalStore.setAccountInfo(null)
-      globalStore.setWalletInfo({
-        address: null,
-        isConnected: false,
-        chainId: null,
-        walletType: null
-      })
-      location.reload()
-    }
-  })
+  // socket.off('logout')
+  // socket.on('logout', (message: string) => {
+  //   const data = JSON.parse(message)
+  //   if (data) {
+  //     const globalStore = useGlobalStore()
+  //     customMessage({
+  //       type: 'error',
+  //       title: '此账户已在新设备登录，如有问题请尽快联系客服'
+  //     })
+  //     socketOffMonitor(globalStore.accountInfo.uuid, globalStore.accountInfo.tokenInfo.tokenValue)
+  //     localStorage.removeItem('accountInfo')
+  //     localStorage.removeItem('customWalletIndex')
+  //     localStorage.removeItem('customWalletIndex1')
+  //     globalStore.setAccountInfo(null)
+  //     globalStore.setWalletInfo({
+  //       address: null,
+  //       isConnected: false,
+  //       chainId: null,
+  //       walletType: null
+  //     })
+  //     location.reload()
+  //   }
+  // })
 }
 
-socket.on('connect', () => {
-  console.info('🔥🔥🔥🔥🔥🔥 socket_ID：', socket.id)
-  const globalStore = useGlobalStore()
-  const chainInfo = useChainInfoStore().chainInfo
-  setTimeout(() => {
-    if (globalStore.socketKchartConnectType == 'kChart_disconnect') {
-      socket.emit(
-        'kchart-on',
-        JSON.stringify({
-          pair: chainInfo?.pairAddress,
-          chainCode: chainInfo?.chainCode
-        })
-      )
-      globalStore.SetSocketKchartConnectType('kChart_connect')
-    }
-    socketLogout()
-    if (globalStore.accountInfo) {
-      socketOffMonitor(globalStore.accountInfo.uuid, globalStore.accountInfo.tokenInfo.tokenValue)
-      socketOnMonitor(globalStore.accountInfo.uuid, globalStore.accountInfo.tokenInfo.tokenValue)
-    }
-  }, 3000)
+// socket.on('connect', () => {
+//   console.info('🔥🔥🔥🔥🔥🔥 socket_ID：', socket.id)
+//   const globalStore = useGlobalStore()
+//   const chainInfo = useChainInfoStore().chainInfo
+//   setTimeout(() => {
+//     if (globalStore.socketKchartConnectType == 'kChart_disconnect') {
+//       socket.emit(
+//         'kchart-on',
+//         JSON.stringify({
+//           pair: chainInfo?.pairAddress,
+//           chainCode: chainInfo?.chainCode
+//         })
+//       )
+//       globalStore.SetSocketKchartConnectType('kChart_connect')
+//     }
+//     socketLogout()
+//     if (globalStore.accountInfo) {
+//       socketOffMonitor(globalStore.accountInfo.uuid, globalStore.accountInfo.tokenInfo.tokenValue)
+//       socketOnMonitor(globalStore.accountInfo.uuid, globalStore.accountInfo.tokenInfo.tokenValue)
+//     }
+//   }, 3000)
 
-  console.log('socket connect 🔥🔥🔥🔥🔥🔥')
-})
+//   console.log('socket connect 🔥🔥🔥🔥🔥🔥')
+// })
 
-socket.on('disconnect', () => {
-  const globalStore = useGlobalStore()
-  if (globalStore.socketKchartConnectType) {
-    globalStore.SetSocketKchartConnectType('kChart_disconnect')
-  }
-  console.log('socket disconnect 🔥🔥🔥🔥🔥🔥')
-})
+// socket.on('disconnect', () => {
+//   const globalStore = useGlobalStore()
+//   if (globalStore.socketKchartConnectType) {
+//     globalStore.SetSocketKchartConnectType('kChart_disconnect')
+//   }
+//   console.log('socket disconnect 🔥🔥🔥🔥🔥🔥')
+// })
 
-socket.on('connect_error', (err: any) => {
-  const ts = String(new Date().getTime())
-  console.info('connect_error', ts)
-  socket.io.opts.query.ts = ts
-  socket.io.opts.query.sign = CryptoJS.SHA256(channel + ts + version + key).toString()
-})
+// socket.on('connect_error', (err: any) => {
+//   const ts = String(new Date().getTime())
+//   console.info('connect_error', ts)
+//   socket.io.opts.query.ts = ts
+//   socket.io.opts.query.sign = CryptoJS.SHA256(channel + ts + version + key).toString()
+// })
