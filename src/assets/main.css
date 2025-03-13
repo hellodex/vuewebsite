@@ -306,7 +306,6 @@ a,
 .el-notification {
   border: none !important;
   box-shadow: none !important;
-  position: relative;
 }
 
 .notification_loader {

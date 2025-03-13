@@ -148,226 +148,26 @@
         </template>
       </el-skeleton>
     </div>
-    <el-dialog v-model="dialogVisible" title="创建监控" width="510">
-      <div class="strategy-dialog-content">
-        <div
-          class="display-flex align-items-center justify-content-sp strategy-dialog-content-item"
-          @click="handelDialog('price', ruleFormRef)"
-        >
-          <div class="display-flex align-items-center title-txt">
-            <svg-icon name="price-monitor" class="price-monitor icon"></svg-icon>
-            <div>
-              <span>价格监控</span>
-              <p class="description-txt">设置代币到达指定价格时通知。</p>
-            </div>
-          </div>
-          <svg-icon name="chevron-right" class="chevron-right"></svg-icon>
-        </div>
-        <div
-          class="display-flex align-items-center justify-content-sp strategy-dialog-content-item"
-          @click="handelDialog('chg', ruleFormRef)"
-        >
-          <div class="display-flex align-items-center title-txt">
-            <svg-icon name="chg-monitor" class="chg-monitor icon"></svg-icon>
-            <div>
-              <span>涨跌幅监控</span>
-              <p class="description-txt">设置代币到达指定涨跌幅知。</p>
-            </div>
-          </div>
-          <svg-icon name="chevron-right" class="chevron-right"></svg-icon>
-        </div>
-        <div
-          class="display-flex align-items-center justify-content-sp strategy-dialog-content-item"
-          @click="handelDialog('buy', ruleFormRef)"
-        >
-          <div class="display-flex align-items-center title-txt">
-            <svg-icon name="buy-monitor" class="icon buy-monitor"></svg-icon>
-            <div>
-              <span>大单买入监控</span>
-              <p class="description-txt">设置代币每笔买入交易额通知。</p>
-            </div>
-          </div>
-          <svg-icon name="chevron-right" class="chevron-right"></svg-icon>
-        </div>
-        <div
-          class="display-flex align-items-center justify-content-sp strategy-dialog-content-item"
-          @click="handelDialog('sell', ruleFormRef)"
-        >
-          <div class="display-flex align-items-center title-txt">
-            <svg-icon name="sell-monitor" class="icon sell-monitor"></svg-icon>
-            <div>
-              <span>大单卖出监控</span>
-              <p class="description-txt">设置代币每笔卖出交易额通知。</p>
-            </div>
-          </div>
-          <svg-icon name="chevron-right" class="chevron-right"></svg-icon>
-        </div>
-      </div>
-    </el-dialog>
-
-    <el-dialog v-model="dialogFormVisible" title="创建监控" width="600">
-      <div class="strategy-dialog-content">
-        <el-form
-          ref="ruleFormRef"
-          :model="ruleForm"
-          :rules="rules"
-          :size="formSize"
-          label-position="top"
-          :hide-required-asterisk="true"
-        >
-          <el-form-item label="监控类型" prop="type">
-            <el-select v-model="ruleForm.type" :teleported="false" disabled>
-              <el-option
-                v-for="item in typeList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
-          </el-form-item>
-          <div class="display-flex align-items-center justify-content-sp">
-            <el-form-item label="监控对象" style="width: 48%">
-              <el-select v-model="ruleForm.coin" :teleported="false" disabled>
-                <el-option label="代币" value="Single" />
-              </el-select>
-            </el-form-item>
-            <el-form-item label="链" style="width: 48%">
-              <el-select v-model="ruleForm.chainCode" :teleported="false">
-                <template #prefix>
-                  <img
-                    :src="chainData.find((item: any) => item.chainCode == ruleForm.chainCode)?.logo"
-                    alt=""
-                    class="icon-svg"
-                  />
-                </template>
-                <el-option
-                  v-for="(item, index) in chainData"
-                  :key="index"
-                  :value="item.chainCode"
-                  :label="item.chainName"
-                >
-                  <div class="display-flex align-items-center">
-                    <img v-if="item.logo" :src="item.logo" alt="" class="icon-svg" />
-                    <img src="@/assets/icons/coinDEX.svg" alt="" class="icon-svg" v-else />
-                    <span class="span-txt">{{ item.chainName }}</span>
-                  </div>
-                </el-option>
-              </el-select>
-            </el-form-item>
-          </div>
-          <el-form-item prop="baseAddress" label="合约地址">
-            <el-select
-              v-model="ruleForm.baseAddress"
-              :teleported="false"
-              placeholder="请先输入代币合约地址"
-              remote-show-suffix
-              remote
-              :remote-method="remoteMethod"
-              :loading="loading"
-              filterable
-              clearable
-              :disabled="dialogType == 'edit'"
-              @change="handelSelectBaseAddress"
-            >
-              <el-option v-for="item in options" :key="item.value" :value="item.value">
-                <div class="display-flex align-items-center">
-                  <el-image :src="item.logo" alt="" class="icon-svg">
-                    <template #error>
-                      <svg-icon name="logo1" class="icon-svg"></svg-icon>
-                    </template>
-                  </el-image>
-                  <span class="span-txt">{{ item.label }}</span>
-                  <span class="span-txt">{{ numberFormat(item.price) }}</span>
-                  <span class="span-txt">{{ item.chg }}%</span>
-                </div>
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <div
-            class="display-flex align-items-center justify-content-sp"
-            v-if="ruleForm.type == 'price'"
-            style="width: 100%"
-          >
-            <el-form-item label="当前价格" style="width: 48%" prop="startPrice">
-              <div class="startPrice display-flex align-items-center">
-                <el-image :src="ruleForm.logo" alt="" class="icon-svg" v-if="ruleForm.logo">
-                  <template #error>
-                    <svg-icon name="logo1" class="icon-svg"></svg-icon>
-                  </template>
-                </el-image>
-                <span v-if="ruleForm.symbol" style="margin-left: 4px">{{ ruleForm.symbol }}</span>
-                <span style="margin-left: 4px">$</span>
-                <span style="margin-left: 2px" v-if="ruleForm.startPrice">{{
-                  numberFormat(ruleForm.startPrice)
-                }}</span>
-              </div>
-            </el-form-item>
-            <el-form-item label="目标价格" style="width: 48%" prop="targetPrice">
-              <el-input v-model="ruleForm.targetPrice" placeholder="请输入目标价格">
-                <template #prefix>$</template>
-              </el-input>
-            </el-form-item>
-          </div>
-          <el-form-item
-            label="触发条件"
-            prop="data"
-            v-else-if="ruleForm.type == 'chg'"
-            :rules="[
-              {
-                validator: validateChgData,
-                trigger: ['blur', 'change']
-              }
-            ]"
-          >
-            <el-input v-model="ruleForm.data" placeholder="设置当天涨跌幅">
-              <template #suffix>%</template>
-            </el-input>
-          </el-form-item>
-          <el-form-item
-            label="触发条件"
-            prop="data"
-            :rules="[
-              {
-                validator: validateBuySellData,
-                trigger: ['blur', 'change']
-              }
-            ]"
-            v-else
-          >
-            <el-input v-model="ruleForm.data" placeholder="请输入每笔交易总金额">
-              <template #prefix>$</template>
-            </el-input>
-          </el-form-item>
-          <el-form-item label="通知频率" prop="noticeType" class="checkbox-notice">
-            <el-checkbox-group v-model="ruleForm.noticeType" @change="handleChange">
-              <el-checkbox
-                v-for="item in noticeTypeList"
-                :value="item.value"
-                :label="item.label"
-                :key="item.value"
-                >{{ item.label }}</el-checkbox
-              >
-            </el-checkbox-group>
-          </el-form-item>
-
-          <div class="display-flex align-items-center justify-content-fd btn">
-            <span class="delete" @click="deleteForm(ruleFormRef)">删除监控</span>
-            <span class="submit" @click="submitForm(ruleFormRef)">保存监控</span>
-          </div>
-        </el-form>
-      </div>
-    </el-dialog>
+    <MonitorTypeDialog
+      :monitorTypeDialogVisible="monitorTypeDialogVisible"
+      @monitorType="handelDialog"
+      @close="handelMonitorTypeClose"
+    />
+    <MonitorFormDialog
+      :info="formInfo"
+      :dialogType="dialogType"
+      :monitorFormDialogVisible="monitorFormDialogVisible"
+      @close="handelMonitorFormClose"
+      @refresh="handelRefresh"
+      v-if="monitorFormDialogVisible"
+    />
   </div>
 </template>
 <script setup lang="ts">
-import { reactive, ref, onMounted, computed, watch } from 'vue'
-import type { ComponentSize, FormInstance, FormRules } from 'element-plus'
+import { ref, onMounted, computed, watch } from 'vue'
 import { ElMessageBox } from 'element-plus'
 import { useGlobalStore } from '@/stores/global'
 import {
-  APIgetUserSubscribe,
-  APIgetTokenMata,
-  APIupdateCommonSubscribe,
   APIlistUserTokenSubscribe,
   APIupdateUserSubscribeSetting,
   APIdeleteUserTokenSubscribe,
@@ -377,7 +177,10 @@ import {
 import { timeago, numberFormat } from '@/utils'
 import { useI18n } from 'vue-i18n'
 import WalletConnect from '@/components/Wallet/WalletConnect.vue'
+import MonitorTypeDialog from '@/components/Dialogs/MonitorTypeDialog.vue'
+import MonitorFormDialog from '@/components/Dialogs/MonitorFormDialog.vue'
 import { customMessage } from '@/utils/message'
+import { typeList, noticeTypeList } from '@/types'
 
 const i18n = useI18n()
 const globalStore = useGlobalStore()
@@ -426,75 +229,11 @@ const handelTab = (item: any) => {
 }
 
 const monitorChainCode = ref<string>('DEX')
-const dialogVisible = ref<boolean>(false)
-const dialogFormVisible = ref<boolean>(false)
-
-const typeList = [
-  {
-    value: 'price',
-    label: '价格监控'
-  },
-  {
-    value: 'chg',
-    label: '涨跌幅监控'
-  },
-  {
-    value: 'buy',
-    label: '大单买入监控'
-  },
-  {
-    value: 'sell',
-    label: '大单卖出监控'
-  }
-]
-
-const noticeTypeList = [
-  {
-    value: 1,
-    label: '仅一次'
-  },
-  {
-    value: 2,
-    label: '一日一次'
-  },
-  {
-    value: 3,
-    label: '每次'
-  },
-  {
-    value: 0,
-    label: '暂停监控'
-  }
-]
-
-const validateTargetPrice = (rule: any, value: any, callback: any) => {
-  if (/^[1-9]\d*(\.\d+)?$|^0\.\d+$/.test(value)) {
-    callback()
-  } else {
-    callback(new Error('请输入目标价格'))
-  }
-}
-
-const validateBuySellData = (rule: any, value: any, callback: any) => {
-  if (/^[1-9]\d*(\.\d+)?$|^0\.\d+$/.test(value)) {
-    callback()
-  } else {
-    callback(new Error('请输入每笔交易总金额'))
-  }
-}
-
-const validateChgData = (rule: any, value: any, callback: any) => {
-  if (/^-?\d+(\.\d+)?$/.test(value)) {
-    callback()
-  } else {
-    callback(new Error('设置当天涨跌幅'))
-  }
-}
-
+const monitorTypeDialogVisible = ref<boolean>(false)
+const monitorFormDialogVisible = ref<boolean>(false)
 const dialogType = ref<string>('add')
-const ruleFormRef = ref<FormInstance>()
-const formSize = ref<ComponentSize>('large')
-const ruleForm = ref<any>({
+
+const formInfo = ref<any>({
   type: 'price',
   coin: 'Single',
   chainCode: 'SOLANA',
@@ -507,145 +246,40 @@ const ruleForm = ref<any>({
   status: 1,
   logo: ''
 })
-
-const rules = reactive<FormRules<any>>({
-  type: [
-    {
-      required: true,
-      message: '请选择监控类型',
-      trigger: ['blur', 'change']
-    }
-  ],
-  baseAddress: [
-    {
-      required: true,
-      message: '请先输入代币合约地址',
-      trigger: ['blur', 'change']
-    }
-  ],
-  startPrice: [
-    {
-      required: true,
-      message: '请输入当前价格',
-      trigger: ['blur', 'change']
-    }
-  ],
-  targetPrice: [
-    {
-      required: true,
-      message: '请输入目标价格',
-      trigger: ['blur', 'change']
-    },
-    { validator: validateTargetPrice, trigger: ['blur', 'change'] }
-  ]
-})
-
-const options = ref<any>([])
-const loading = ref(false)
-
-const remoteMethod = async (query: string) => {
-  if (query) {
-    loading.value = true
-    const res: any = await APIgetUserSubscribe({
-      baseAddress: query,
-      chainCode: ruleForm.value.chainCode,
-      type: ruleForm.value.type
-    })
-    if (JSON.stringify(res.subscribe) == '{}') {
-      const arr: any = res ? [{ ...res.info }] : []
-      options.value = arr.map((item: any) => {
-        return {
-          ...item,
-          label: item.symbol,
-          value: item.baseToken.address
-        }
-      })
-    } else {
-      handelEdit(res.subscribe)
-    }
-
-    loading.value = false
-  } else {
-    options.value = []
-  }
-}
-
 const handelAdd = () => {
   dialogType.value = 'add'
-  dialogVisible.value = true
+  monitorTypeDialogVisible.value = true
 }
 
-const handelDialog = (type: string, formEl: FormInstance | undefined) => {
-  dialogVisible.value = false
-  dialogFormVisible.value = true
-  formEl?.resetFields()
-  ruleForm.value.type = type
-  ruleForm.value.logo = ''
-  ruleForm.value.symbol = ''
-  ruleForm.value.baseAddress = ''
-  ruleForm.value.data = ''
-  ruleForm.value.startPrice = ''
-  ruleForm.value.targetPrice = ''
+const handelMonitorTypeClose = (val: boolean) => {
+  monitorTypeDialogVisible.value = false
 }
 
-const handelSelectBaseAddress = (val: any) => {
-  ruleForm.value.symbol = options.value.find((item: any) => item.address == val)?.symbol || ''
-  ruleForm.value.startPrice = options.value.find((item: any) => item.address == val)?.price || ''
-  ruleForm.value.logo = options.value.find((item: any) => item.address == val)?.logo || ''
+const handelMonitorFormClose = (val: boolean) => {
+  monitorFormDialogVisible.value = false
 }
 
-const handleChange = (value: any) => {
-  // 只允许选择一个选项，因此每次选择后清除之前的选中项（如果有的话）
-  if (value && value.length > 1) {
-    ruleForm.value.noticeType = [value[value.length - 1]] // 只保留最后一个选中的值
-  } else {
-    ruleForm.value.noticeType = value // 更新为当前选中的值
+const handelRefresh = (val: any) => {
+  getTableData()
+  monitorFormDialogVisible.value = false
+}
+
+const handelDialog = (type: string) => {
+  monitorTypeDialogVisible.value = false
+  monitorFormDialogVisible.value = true
+  formInfo.value = {
+    type: type,
+    coin: 'Single',
+    chainCode: 'SOLANA',
+    baseAddress: '',
+    symbol: '',
+    data: '',
+    noticeType: [1],
+    startPrice: '',
+    targetPrice: '',
+    status: 1,
+    logo: ''
   }
-}
-
-const deleteForm = async (formEl: FormInstance | undefined) => {
-  if (!formEl) return
-  await formEl.validate(async (valid, fields) => {
-    if (valid) {
-      ruleForm.value.status = 0
-      console.log(ruleForm.value)
-      await APIupdateCommonSubscribe({
-        ...ruleForm.value,
-        noticeType: ruleForm.value.noticeType.join()
-      })
-      getTableData()
-      customMessage({
-        type: 'success',
-        title: `${typeList.find((item) => item.value == ruleForm.value.type)?.label}删除成功`
-      })
-      dialogFormVisible.value = false
-    } else {
-      console.log('error submit!', fields)
-    }
-  })
-}
-
-const submitForm = async (formEl: FormInstance | undefined) => {
-  if (!formEl) return
-  await formEl.validate(async (valid, fields) => {
-    if (valid) {
-      console.log(ruleForm.value)
-
-      await APIupdateCommonSubscribe({
-        ...ruleForm.value,
-        data: ruleForm.value.type == 'chg' ? ruleForm.value.data / 100 : ruleForm.value.data,
-        noticeType: ruleForm.value.noticeType.join()
-      })
-      getTableData()
-      customMessage({
-        type: 'success',
-        title: `${typeList.find((item) => item.value == ruleForm.value.type)?.label}创建成功`
-      })
-      dialogFormVisible.value = false
-    } else {
-      console.log('error submit!', fields)
-    }
-  })
 }
 
 const tableData = ref<any>([])
@@ -661,18 +295,18 @@ const getTableData = async () => {
 
 const handelEdit = (row: any) => {
   dialogType.value = 'edit'
-  for (const key in ruleForm.value) {
-    if (Object.prototype.hasOwnProperty.call(ruleForm.value, key)) {
-      ruleForm.value[key] = row[key]
+  for (const key in formInfo.value) {
+    if (Object.prototype.hasOwnProperty.call(formInfo.value, key)) {
+      formInfo.value[key] = row[key]
     }
   }
-  if (ruleForm.value.type == 'chg') {
-    ruleForm.value.data = ruleForm.value.data * 100
+  if (formInfo.value.type == 'chg') {
+    formInfo.value.data = formInfo.value.data * 100
   }
 
-  ruleForm.value.noticeType = [ruleForm.value.noticeType]
-  ruleForm.value.coin = 'Single'
-  dialogFormVisible.value = true
+  formInfo.value.noticeType = [formInfo.value.noticeType]
+  formInfo.value.coin = 'Single'
+  monitorFormDialogVisible.value = true
 }
 
 const handelDel = async (row: any) => {
@@ -762,23 +396,22 @@ onMounted(() => {
   height: 100%;
   .checkout-box {
     margin-left: 12px;
-  }
-
-  :deep(.el-checkbox) {
-    margin-right: 15px;
-  }
-  :deep(.el-checkbox__label) {
-    font-size: 12px;
-  }
-  :deep(.el-checkbox__input.is-checked + .el-checkbox__label) {
-    color: var(--font-color-default);
-  }
-  :deep(.el-checkbox__input.is-checked .el-checkbox__inner) {
-    background-color: #2ebd85;
-    border-color: #2ebd85;
-  }
-  :deep(.el-checkbox__input.is-checked .el-checkbox__inner:after) {
-    border-color: var(--font-color-default);
+    :deep(.el-checkbox) {
+      margin-right: 15px;
+    }
+    :deep(.el-checkbox__label) {
+      font-size: 12px;
+    }
+    :deep(.el-checkbox__input.is-checked + .el-checkbox__label) {
+      color: var(--font-color-default);
+    }
+    :deep(.el-checkbox__input.is-checked .el-checkbox__inner) {
+      background-color: #2ebd85;
+      border-color: #2ebd85;
+    }
+    :deep(.el-checkbox__input.is-checked .el-checkbox__inner:after) {
+      border-color: var(--font-color-default);
+    }
   }
 
   .tab-content {
@@ -875,121 +508,6 @@ onMounted(() => {
     }
     .el-select-dropdown__item.is-selected {
       color: var(--font-color-default);
-    }
-  }
-}
-.strategy-dialog-content {
-  .strategy-dialog-content-item {
-    position: relative;
-    overflow: hidden;
-    border-radius: 12px;
-    background: rgba(37, 37, 37, 0.2);
-    padding: 12px;
-    transition: all 0.2s ease;
-    cursor: pointer;
-    margin-bottom: 12px;
-    .title-txt {
-      color: #cfd3dc;
-    }
-    .icon {
-      width: 25px;
-      height: 25px;
-      margin-right: 8px;
-    }
-    .price-monitor {
-      color: #bf8c00;
-    }
-    .chg-monitor,
-    .sell-monitor {
-      color: var(--down-color);
-    }
-    .buy-monitor {
-      color: var(--up-color);
-    }
-
-    .description-txt {
-      font-size: 12px;
-      margin-top: 4px;
-      color: var(--dex-color-4);
-    }
-    .chevron-right {
-      width: 24px;
-      height: 24px;
-      color: #666;
-    }
-  }
-  /* 水波纹效果 */
-  .strategy-dialog-content-item::after {
-    content: '';
-    position: absolute;
-    background: rgba(37, 37, 37, 0.6);
-    border-radius: 50%;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    opacity: 0;
-    transform: translate(-50%, -50%); /* 居中 */
-    transition:
-      width 1s,
-      height 1s; /* 平滑过渡 */
-    pointer-events: none; /* 防止影响点击 */
-  }
-
-  .strategy-dialog-content-item:hover::after {
-    opacity: 1;
-    width: 500px; /* 宽度增加到原来的两倍 */
-    height: 500px; /* 高度增加到原来的两倍 */
-  }
-
-  :deep(.el-popper) {
-    .el-select-dropdown__item {
-      color: var(--dex-color-4);
-    }
-    .el-select-dropdown__item.is-selected {
-      color: var(--font-color-default);
-    }
-  }
-  :deep(.el-input__prefix-inner) {
-    margin-right: 4px;
-  }
-  :deep(.el-select__wrapper.is-disabled) {
-    background-color: transparent;
-  }
-  .startPrice {
-    width: 100%;
-    cursor: not-allowed;
-    padding: 0px 15px;
-    border: 1px solid #212121;
-    border-radius: 4px;
-    transition: all 0.2s;
-  }
-
-  .startPrice:hover {
-    border: 1px solid var(--dex-color-4);
-  }
-  .btn {
-    span {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-left: 12px;
-      height: 36px;
-      min-width: 94px;
-      padding: 6px 16px;
-      border-radius: 10px;
-      cursor: pointer;
-      background-color: rgba(58, 60, 64, 0.4);
-      color: #5c6068;
-    }
-    .submit {
-      color: #000;
-      background-color: #f5f5f5;
-    }
-    .delete {
-      background-color: transparent;
-      border: 1px solid var(--down-color);
-      color: var(--down-color);
     }
   }
 }

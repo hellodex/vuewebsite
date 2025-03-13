@@ -291,3 +291,41 @@ export const QUICK_TRADE_CONFIG = {
   y: 250,
   switch: true
 }
+
+export const typeList = [
+  {
+    value: 'price',
+    label: '价格监控'
+  },
+  {
+    value: 'chg',
+    label: '涨跌幅监控'
+  },
+  {
+    value: 'buy',
+    label: '大单买入监控'
+  },
+  {
+    value: 'sell',
+    label: '大单卖出监控'
+  }
+]
+
+export const noticeTypeList = [
+  {
+    value: 1,
+    label: '仅一次'
+  },
+  {
+    value: 2,
+    label: '一日一次'
+  },
+  {
+    value: 3,
+    label: '每次'
+  },
+  {
+    value: 0,
+    label: '暂停监控'
+  }
+]
