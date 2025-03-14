@@ -96,12 +96,20 @@ export default defineConfig({
               return '@reown'
             }
 
-            if (id.includes('node_modules/crypto-js')) {
-              return 'crypto-js'
-            }
-
             if (id.includes('node_modules/@goplus')) {
               return '@goplus'
+            }
+
+            if (id.includes('node_modules/web3')) {
+              return 'web3'
+            }
+
+            if (id.includes('node_modules/ethers')) {
+              return 'ethers'
+            }
+
+            if (id.includes('node_modules/vite-plugin-svg-icons')) {
+              return 'vite-plugin-svg-icons'
             }
 
             return id.toString().split('node_modules/')[1].split('/')[0].toString()
