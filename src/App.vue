@@ -85,15 +85,6 @@ import { useGlobalStore } from '@/stores/global'
 import { useWindowWidth } from '@/hooks/useWindowWidth'
 import vueDanmaku from 'vue3-danmaku'
 
-import { createAppKit } from '@reown/appkit/vue'
-import { SolanaAdapter } from '@reown/appkit-adapter-solana'
-import { EthersAdapter } from '@reown/appkit-adapter-ethers'
-
-import { solana } from '@reown/appkit/networks'
-import { mainnet, bsc, arbitrum, xLayer, base, optimism } from '@reown/appkit/networks'
-
-import { SolflareWalletAdapter, PhantomWalletAdapter } from '@solana/wallet-adapter-wallets'
-
 const { windowWidth } = useWindowWidth()
 
 const danmus = ref([])
@@ -207,41 +198,6 @@ const reload = () => {
 }
 
 provide('reload', { reload })
-
-/********************  Connect Wallet 配置 ********************/
-
-// 0. Create the Ethers adapter
-const ethersAdapter = new EthersAdapter()
-
-// 1. Create Solana adapter
-const solanaWeb3JsAdapter = new SolanaAdapter({
-  wallets: [new PhantomWalletAdapter(), new SolflareWalletAdapter()]
-})
-
-// 2. Get projectId from https://cloud.reown.com
-const projectId = '0994d604ea8f67806c1604de2ab87feb' // projectId
-
-// 3. Set up the metadata - Optional
-const metadata = {
-  name: 'Hello Dex',
-  description: 'Hello Dex!',
-  url: 'https://hellodex.io',
-  icons: ['@/assets/icons/logo.svg']
-}
-
-// 4. Create the AppKit instance
-createAppKit({
-  metadata,
-  projectId,
-  adapters: [ethersAdapter, solanaWeb3JsAdapter],
-  networks: [mainnet, bsc, arbitrum, xLayer, base, optimism, solana],
-  allWallets: 'SHOW',
-  features: {
-    analytics: true,
-    socials: false,
-    email: false
-  }
-})
 
 const handelRoute = (danmu) => {
   window.open(`/k/${danmu.transaction.pairAddress}?chainCode=${danmu.transaction.chainCode}`)
