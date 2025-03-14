@@ -57,20 +57,4 @@ function countDecimalPlaces(num: number | string) {
 console.log(countDecimalPlaces(123.456)) // 输出: 3
 console.log(countDecimalPlaces(123)) // 输出: 0
 
-//将数字小数点后花为三位(不留0)
-function shortenNum(num: String): String {
-  const numMactch: any = num.match(/^0.[0-9]{3}/)
-  return numMactch[0].replace(/\.?0+$/, '')
-}
-//将指定数字划分为指定位数的小数(小数点前移)
-function makeDecimal(num: any, dec: number): String {
-  const intDecimal = num.valueOf() / Math.pow(10, dec)
-  return intDecimal.toString() // Number.toString()
-}
-// 将指定数字划分为指定位数的整数(小数点后移)
-function makeInt(num: any, dec: number): String {
-  const intData = num.valueOf() * Math.pow(10, dec)
-  return intData.toString() // Number.toString() 方法ts报错
-}
-
-export { shorten0, shortenNum, makeDecimal, makeInt }
+export { shorten0 }
