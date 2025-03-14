@@ -440,6 +440,16 @@ const submitForm = async (formEl: FormInstance | undefined) => {
         socketOffMonitor(globalStore.accountInfo.uuid, globalStore.accountInfo.tokenInfo.tokenValue)
         socketOnMonitor(globalStore.accountInfo.uuid, globalStore.accountInfo.tokenInfo.tokenValue)
         loading.value = false
+
+        /******  登录成功 表单数据及状态重置 *******/
+        clearInterval(timer.value)
+        captchaStatus.value = 1
+        captchaTimes.value = 60
+        checklogin.value = false
+        ruleForm.account = ''
+        ruleForm.password = ''
+        ruleForm.captcha = ''
+        ruleForm.checked = null
         return
       }
       loading.value = false
