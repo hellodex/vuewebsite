@@ -132,7 +132,13 @@
               >{{ item }}%</span
             >
           </div>
-          <div class="one-click-recovery" @click="handelRecovery">回本</div>
+          <div
+            class="one-click-recovery"
+            @click="handelRecovery"
+            v-if="walletType.value == 'Email'"
+          >
+            回本
+          </div>
         </div>
       </template>
     </template>
@@ -150,7 +156,6 @@ import {
   handleEvmAllowance,
   sendEvmTransaction,
   sendSolanaTransaction,
-  handelSwitchNetwork,
   handleEvmApprove,
   solanaTransactionReceipt,
   evmTransactionReceipt,
@@ -507,7 +512,7 @@ const handelRecovery = async () => {
   })
 
   const params = {
-    chain: chainConfigs.find((item: any) => item.chainCode == sellInfo.value.chainCode)?.chain,
+    chain: customWalletInfo.value.walletInfo?.chainCode,
     walletId: customWalletInfo.value.walletInfo?.walletId,
     walletKey: customWalletInfo.value.walletInfo?.walletKey,
     walletAddress: customWalletInfo.value.walletInfo?.wallet,
