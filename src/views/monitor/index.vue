@@ -1,5 +1,5 @@
 <template>
-  <div class="monitor-main display-flex align-items-center justify-content-sp">
+  <div class="monitor-main display-flex justify-content-sp">
     <div class="monitor-left display-flex flex-direction-col">
       <RouterLink to="/Monitor/Strategy">
         <span class="user-item display-flex align-items-center">
@@ -30,7 +30,7 @@ const router = useRouter()
 
     font-style: normal;
     background-color: rgba(23, 24, 27, 0.3);
-    height: calc(-144px + 100vh);
+    height: calc(-120px + 100vh);
     a {
       display: block;
       color: #5c6068;
