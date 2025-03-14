@@ -4,7 +4,7 @@
     <div class="activity display-flex align-items-center justify-content-sp">
       <span></span>
       <div class="display-flex align-items-center activity-content">
-        <span>🔥HelloDex：利润80%分给用户的链上交易工具，平台币预售中</span>
+        <span>🔥开创和主导Web3变革，利润80%分给用户，平台币预售中</span>
         <span
           @click="router.push('/Ido')"
           class="display-flex align-items-center"

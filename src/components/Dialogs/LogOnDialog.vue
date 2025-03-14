@@ -100,13 +100,18 @@
                 </div>
               </el-form-item>
               <el-form-item>
-                <div class="form-btn" v-if="loading">
-                  <el-icon class="is-loading" :size="18">
-                    <Loading />
-                  </el-icon>
-                  <span>确认登录</span>
-                </div>
-                <div class="form-btn" v-else @click="submitForm(ruleFormRef)">确认登录</div>
+                <template v-if="checklogin">
+                  <div class="form-btn" v-if="loading">
+                    <el-icon class="is-loading" :size="18">
+                      <Loading />
+                    </el-icon>
+                    <span>确认登录</span>
+                  </div>
+                  <div class="form-btn" v-else @click="submitForm(ruleFormRef)">确认登录</div>
+                </template>
+                <template v-else>
+                  <div class="form-btn" @click="handelCaptcha(ruleFormRef)">获取验证码</div>
+                </template>
                 <div class="display-flex align-items-center justify-content-sp" style="width: 100%">
                   <span class="tips-operate" @click="handelForgotPassword">忘记密码？</span>
                   <span class="tips-operate" @click="handelNotReceivedCode">未收到验证码？</span>
@@ -178,7 +183,7 @@ import { useConnectWallet } from '@/hooks/useConnectWallet'
 import VerificationCodeInput from '@/components/VerificationCodeInput.vue'
 
 import { isAllSpaces } from '@/utils'
-import { APIdologin, APIuserInfo, APIsendMessage } from '@/api/login'
+import { APIdologin, APIuserInfo, APIsendMessage, APIdologinCheck } from '@/api/login'
 import { socketOffMonitor, socketOnMonitor } from '@/utils/socket'
 import { customMessage } from '@/utils/message'
 
@@ -276,6 +281,7 @@ interface RuleForm {
 }
 
 const loading = ref<boolean>(false)
+const checklogin = ref<boolean>(false)
 const formSize = ref<ComponentSize>('large')
 const ruleFormRef = ref<FormInstance>()
 const ruleForm = reactive<RuleForm>({
@@ -355,21 +361,32 @@ const timer = ref<any>(null)
 const handelCaptcha = async (formEl: FormInstance | undefined) => {
   if (!formEl) return
   formEl.validateField('account')
+  formEl.validateField('password')
   try {
     await formEl.validateField('account')
+    await formEl.validateField('password')
   } catch (error) {
     return false
   }
 
-  const res: any = await APIsendMessage({
+  const result: any = await APIdologinCheck({
     account: ruleForm.account,
-    accountType: 1,
-    type: 3
+    password: ruleForm.password,
+    type: '0'
   })
-  console.log(res)
-  if (res == 'success') {
-    captchaCountDown()
-    captchaStatus.value = 2
+
+  if (result == 'success') {
+    checklogin.value = true
+    const res: any = await APIsendMessage({
+      account: ruleForm.account,
+      accountType: 1,
+      type: 3
+    })
+    console.log(res)
+    if (res == 'success') {
+      captchaCountDown()
+      captchaStatus.value = 2
+    }
   }
 }
 

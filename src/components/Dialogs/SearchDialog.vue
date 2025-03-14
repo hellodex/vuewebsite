@@ -69,7 +69,7 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="池子大小/交易额" align="right" width="160px">
+          <el-table-column label="池子大小/交易额" align="right">
             <template #default="scope">
               <div class="display-flex flex-direction-col">
                 <span class="sub-txt">${{ numberFormat(scope.row.tvl) }}</span>
@@ -77,16 +77,6 @@
               </div>
             </template>
           </el-table-column>
-
-          <el-table-column label="持币人/交易数" align="right" width="160px">
-            <template #default="scope">
-              <div class="display-flex flex-direction-col">
-                <span class="sub-txt">{{ numberFormat(scope.row.holders) }}</span>
-                <span class="txt">{{ numberFormat(scope.row.tradeCount) }}</span>
-              </div>
-            </template>
-          </el-table-column>
-          <!-- <el-table-column prop="volume" label="风险程度" /> -->
           <template #empty>
             <empty-data class="empty-data"></empty-data>
           </template>

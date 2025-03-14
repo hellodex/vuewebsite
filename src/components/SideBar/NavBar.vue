@@ -279,7 +279,7 @@ onUnmounted(() => {
     }
   }
   .seach-block {
-    width: 350px;
+    width: 300px;
     border-radius: 4px;
     background: #17181b;
     color: #5c6068;
@@ -300,9 +300,9 @@ onUnmounted(() => {
     background: #17181b;
   }
   .SearchDialog-box {
-    width: 710px;
+    width: 650px;
     position: absolute;
-    left: -180px;
+    left: -170px;
   }
   .theme-switch {
     cursor: pointer;
