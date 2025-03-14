@@ -1,6 +1,6 @@
 <template>
   <div class="strategy">
-    <div class="display-flex align-items-center justify-content-sp">
+    <div class="strategy-head display-flex align-items-center justify-content-sp">
       <div class="display-flex align-items-center">
         <div
           v-for="(item, index) in strategyList"
@@ -82,7 +82,7 @@
           />
         </template>
         <template #default>
-          <el-table :data="tableData" style="width: 100%" max-height="100%">
+          <el-table :data="tableData" style="width: 100%" max-height="calc(100vh - 190px)">
             <el-table-column label="监控名称">
               <template #default="scope">
                 <span>{{ typeList.find((item: any) => item.value == scope.row.type)?.label }}</span>
@@ -393,7 +393,8 @@ onMounted(() => {
   padding: 12px;
   border-radius: 12px;
   background-color: rgba(23, 24, 27, 0.3);
-  height: 100%;
+  height: calc(100vh - 120px);
+  overflow: hidden;
   .checkout-box {
     margin-left: 12px;
     :deep(.el-checkbox) {
