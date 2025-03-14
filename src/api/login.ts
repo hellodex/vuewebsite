@@ -33,6 +33,19 @@ export function APIdologin(data: object) {
 }
 
 /**
+ * @description 登录/注册
+ * @param data
+ * @returns
+ */
+export function APIdologinCheck(data: object) {
+  return http({
+    url: WEB_URL + '/api/auth/dologinCheck',
+    method: 'POST',
+    data
+  })
+}
+
+/**
  * @description 登出/退出登录
  * @returns
  */
