@@ -1,5 +1,5 @@
-import { solana, solanaTestnet, solanaDevnet } from '@reown/appkit/networks'
-import { mainnet, bsc, arbitrum, xLayer, base, optimism } from '@reown/appkit/networks'
+// import { solana, solanaTestnet, solanaDevnet } from '@reown/appkit/networks'
+// import { mainnet, bsc, arbitrum, xLayer, base, optimism } from '@reown/appkit/networks'
 
 export enum MarketTrend {
   Bullish = 1,
@@ -77,15 +77,15 @@ export const CHAIN_SYMBOL: any = {
   OP: 'ETH'
 }
 
-export const CHAIN_NETWORKS: any = {
-  1: mainnet,
-  56: bsc,
-  42161: arbitrum,
-  8453: base,
-  196: xLayer,
-  10: optimism,
-  501: solana
-}
+// export const CHAIN_NETWORKS: any = {
+//   1: mainnet,
+//   56: bsc,
+//   42161: arbitrum,
+//   8453: base,
+//   196: xLayer,
+//   10: optimism,
+//   501: solana
+// }
 
 export const USDT_CONFIG: any = {
   ETH: {

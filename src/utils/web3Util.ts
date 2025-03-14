@@ -310,11 +310,7 @@ const address_weth = '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'
 const address_wbnb = '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c'
 //获得ethereum的provider的web3实例
 function getETHInstanceUseWallet(): Web3 {
-  if (window.ethereum) {
-    return new Web3(window.ethereum)
-  } else {
-    return new Web3('https://eth.drpc.org')
-  }
+  return new Web3('https://eth.drpc.org')
 }
 //获得ethereum的provider的web3实例
 function getETHInstance(): Web3 {
