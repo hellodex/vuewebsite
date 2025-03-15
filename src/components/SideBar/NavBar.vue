@@ -76,10 +76,49 @@
             注册
           </div> -->
         </div>
-        <div class="invite-btn display-flex align-items-center">
+        <div
+          class="invite-btn display-flex align-items-center"
+          @click="router.push('/Account/Rebate')"
+          v-if="isConnected"
+        >
           <img src="@/assets/img/invite.gif" alt="" class="icon-invite" />
           <span>邀请返佣</span>
         </div>
+        <el-popover
+          :width="400"
+          popper-class="invite-popper-box"
+          trigger="click"
+          placement="bottom-end"
+          :teleported="false"
+          v-else
+        >
+          <template #reference>
+            <div class="invite-btn display-flex align-items-center">
+              <img src="@/assets/img/invite.gif" alt="" class="icon-invite" />
+              <span>邀请返佣</span>
+            </div>
+          </template>
+          <div class="invite-box display-flex flex-direction-col align-items-center">
+            <img src="@/assets/img/invite-txt.png" alt="" class="invite-txt" />
+            <div class="link-btn">请先连接</div>
+            <div class="rake-back">
+              <h3>如何获得返佣？</h3>
+              <p>当您的好友完成以下步骤，您即可获得返佣奖励!</p>
+            </div>
+            <div class="operate-box display-flex justify-content-sp">
+              <div class="operate-item display-flex flex-direction-col align-items-center">
+                <svg-icon name="image-user-right" class="icon"></svg-icon>
+                <span>注册</span>
+                <p>使用您的邀请码或链接注册</p>
+              </div>
+              <div class="operate-item display-flex flex-direction-col align-items-center">
+                <svg-icon name="coins-swap" class="icon"></svg-icon>
+                <span>交易</span>
+                <p>使用HelloDex进行交易，交易金额不低于10 USDT</p>
+              </div>
+            </div>
+          </div>
+        </el-popover>
         <div class="download-btn display-flex align-items-center" @click="router.push('/Download')">
           <svg-icon name="download-01" class="download-01"></svg-icon>
         </div>
@@ -359,5 +398,74 @@ onUnmounted(() => {
 .el-dropdown-menu__item:not(.is-disabled):focus {
   background-color: #333 !important;
   color: #fff !important;
+}
+
+.invite-popper-box {
+  padding: 0 !important;
+  .invite-box {
+    padding: 25px 12px;
+    .invite-txt {
+      width: 200px;
+      height: auto;
+    }
+    .link-btn {
+      width: 100%;
+      margin-top: 20px;
+      border-radius: 4px;
+      background: linear-gradient(270deg, #cf0 0%, #70f6ff 100%);
+      display: flex;
+      padding: 8px 12px;
+      justify-content: center;
+      align-items: center;
+      color: #101114;
+      font-style: normal;
+      font-family: 'PingFangSC-Heavy';
+      font-size: 14px;
+    }
+    .rake-back {
+      text-align: center;
+      margin-top: 30px;
+      h3 {
+        color: #fff;
+        font-family: 'PingFangSC-Heavy';
+        font-size: 18px;
+        line-height: 1;
+      }
+      p {
+        color: #9aa0aa;
+        font-size: 12px;
+        line-height: 1;
+        margin-top: 12px;
+      }
+    }
+    .operate-box {
+      margin-top: 50px;
+      .operate-item {
+        width: 45%;
+        text-align: center;
+      }
+      .icon {
+        width: 30px;
+        height: 30px;
+        color: #f5f5f5;
+      }
+      span {
+        color: #f5f5f5;
+        font-family: 'PingFangSC-Heavy';
+        font-size: 12px;
+        line-height: 1;
+        margin: 12px 0;
+      }
+      p {
+        color: #aaa;
+        font-size: 10px;
+      }
+    }
+  }
+}
+.invite-popper-box.is-light,
+.invite-popper-box.is-light > .el-popper__arrow:before {
+  background: #17181b;
+  border: 1px solid #17181b;
 }
 </style>
