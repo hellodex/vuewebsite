@@ -15,7 +15,19 @@
 
         <div class="display-flex align-items-center checkout-box">
           <span>推送渠道：</span>
-          <el-checkbox-group v-model="checkedChannel" @change="handleCheckedChannel">
+          <WalletConnect v-if="!accountInfo">
+            <el-checkbox-group>
+              <el-checkbox
+                v-for="(item, index) in channels"
+                :key="index"
+                :label="item.label"
+                :value="item.value"
+              >
+                {{ item.label }}
+              </el-checkbox>
+            </el-checkbox-group>
+          </WalletConnect>
+          <el-checkbox-group v-model="checkedChannel" @change="handleCheckedChannel" v-else>
             <el-checkbox
               v-for="(item, index) in channels"
               :key="index"
@@ -449,6 +461,7 @@ onMounted(() => {
   .connect-wallet-btn {
     min-width: 0;
     padding: 0;
+    background-color: transparent;
   }
   .table-box {
     margin-top: 12px;

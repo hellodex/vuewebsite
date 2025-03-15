@@ -90,6 +90,7 @@
                 class="display-flex align-items-center pump-progress"
                 v-if="pondTabInfo.isPumpFun"
               >
+                <img src="@/assets/img/pump-logo.webp" alt="" />
                 <span class="up-color"
                   >{{
                     Math.ceil(priceIncrease.pumpFunProgress ?? pondTabInfo.pumpFunProgress)
@@ -455,8 +456,12 @@ const handelRouter = (url: string) => {
   .pump-progress {
     width: 100px;
     margin-right: 6px;
+    img {
+      width: 12px;
+      height: 12px;
+    }
     span {
-      margin-right: 4px;
+      margin: 0 4px;
       font-family: 'PingFangSC-Medium';
     }
     .el-progress {
