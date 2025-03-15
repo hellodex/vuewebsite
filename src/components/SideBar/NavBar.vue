@@ -51,10 +51,6 @@
         />
       </div>
       <div class="display-flex align-items-center">
-        <!-- <div class="theme-switch display-flex align-items-center" @click="theme = !theme">
-        <el-icon v-if="theme" color="#aaa" :size="24"><Moon /></el-icon>
-        <el-icon v-else class="sunny-icon" color="#aaa" :size="24"><Sunny /></el-icon>
-      </div> -->
         <div v-show="isConnected && walletType === 'Email'">
           <CustomWalletConfig />
         </div>
@@ -62,19 +58,6 @@
         <WalletDisconnected v-if="isConnected && walletType !== 'Email'" />
         <div v-if="!isConnected" class="login-regiter">
           <WalletConnect />
-          <!-- <div
-            class="login-btn"
-            @click="
-              globalStore.setDialogVisible({
-                registerDialogVisible: true,
-                logOnDialogVisible: false,
-                forgotPasswordDialogVisible: false,
-                notReceivedCodeDialogVisible: false
-              })
-            "
-          >
-            注册
-          </div> -->
         </div>
         <div
           class="invite-btn display-flex align-items-center"
@@ -85,7 +68,7 @@
           <span>邀请返佣</span>
         </div>
         <el-popover
-          :width="400"
+          :width="350"
           popper-class="invite-popper-box"
           trigger="click"
           placement="bottom-end"
@@ -414,13 +397,13 @@ onUnmounted(() => {
       border-radius: 4px;
       background: linear-gradient(270deg, #cf0 0%, #70f6ff 100%);
       display: flex;
-      padding: 8px 12px;
+      padding: 6px 12px;
       justify-content: center;
       align-items: center;
       color: #101114;
       font-style: normal;
       font-family: 'PingFangSC-Heavy';
-      font-size: 14px;
+      font-size: 12px;
     }
     .rake-back {
       text-align: center;
@@ -428,13 +411,11 @@ onUnmounted(() => {
       h3 {
         color: #fff;
         font-family: 'PingFangSC-Heavy';
-        font-size: 18px;
-        line-height: 1;
+        font-size: 16px;
       }
       p {
         color: #9aa0aa;
         font-size: 12px;
-        line-height: 1;
         margin-top: 12px;
       }
     }
@@ -453,7 +434,6 @@ onUnmounted(() => {
         color: #f5f5f5;
         font-family: 'PingFangSC-Heavy';
         font-size: 12px;
-        line-height: 1;
         margin: 12px 0;
       }
       p {

@@ -36,7 +36,7 @@
   </footer>
 </template>
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 
@@ -66,10 +66,6 @@ const othersLink = ref<{ icon: string; to: string; txt: string }[]>([
     txt: ''
   }
 ])
-
-const feeVolume = ref<any>(0)
-
-onMounted(() => {})
 </script>
 <style scoped lang="scss">
 .web-footer {

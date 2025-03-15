@@ -37,13 +37,6 @@
               v-copy="customWalletInfo.walletInfo?.wallet"
             ></svg-icon>
           </div>
-          <!-- <div class="tg-btn-box display-flex align-items-center justify-content-sp">
-            <div class="display-flex align-items-center">
-              <img src="@/assets/img/img-tg.png" alt="" class="icon-tg" />
-              <span class="change-txt">切换TG登录</span>
-            </div>
-            <span class="link-txt">连接</span>
-          </div> -->
           <div class="operate-box">
             <div
               class="user-item display-flex align-items-center justify-content-sp"
@@ -220,27 +213,6 @@ const handelLogon = async () => {
     .copy {
       width: 12px;
       height: 12px;
-    }
-    .tg-btn-box {
-      padding: 10px;
-      border-radius: 8px;
-      border: 1px solid #26282c;
-      margin: 10px 0 4px;
-      img {
-        width: 24px;
-        height: 24px;
-        margin-right: 8px;
-      }
-      .change-txt {
-        color: #9aa0aa;
-        font-family: 'PingFangSC-Heavy';
-        font-size: 12px;
-      }
-      .link-txt {
-        color: #f5f5f5;
-        font-size: 12px;
-        cursor: pointer;
-      }
     }
     .operate-box {
       height: 160px;
