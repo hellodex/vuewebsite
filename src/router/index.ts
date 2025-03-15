@@ -30,11 +30,6 @@ const router = createRouter({
       component: () => import('@/views/kline.vue')
     },
     {
-      path: '/Staking',
-      name: 'Staking',
-      component: () => import('@/views/stakingView.vue')
-    },
-    {
       path: '/Smartmoney',
       name: 'SmartMoney',
       component: () => import('@/views/smartMoney.vue')
@@ -156,11 +151,6 @@ const router = createRouter({
       name: 'WalletOperation',
       component: () => import('@/views/h5/WalletOperation.vue')
     },
-    // {
-    //   path: '/Invite',
-    //   name: 'Invite',
-    //   component: () => import('@/views/invite.vue')
-    // },
     {
       path: '/Setting',
       name: 'Setting',

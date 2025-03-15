@@ -72,7 +72,7 @@
 </template>
 <script lang="ts" setup>
 import { ref, inject, onMounted, onUnmounted, nextTick, watch, computed } from 'vue'
-import { numberFormat, shortifyAddress } from '@/utils'
+import { numberFormat } from '@/utils'
 import { useI18n } from 'vue-i18n'
 
 const i18n = useI18n()
@@ -192,32 +192,12 @@ const initEcharts = () => {
   }
 
   fundChart.value.setOption(option)
-  // fundChart.resize()
 }
-const buyingSellingTopData = [
-  {
-    name: i18n.t('kChart.Buyer'),
-    id: 0
-  },
-  {
-    name: i18n.t('kChart.Seller'),
-    id: 1
-  },
-  {
-    name: i18n.t('kChart.Gainer'),
-    topNum: 50,
-    id: 2
-  },
-  {
-    name: i18n.t('kChart.Loser'),
-    id: 3
+
+const resizeChart = () => {
+  if (fundChart.value) {
+    fundChart.value.resize()
   }
-]
-const buyingSellingTopIndex = ref(0)
-const emit = defineEmits(['buyingSellingTopSelect'])
-const handelBuyingSellingTopSelect = async (item: { id: number }) => {
-  buyingSellingTopIndex.value = item.id
-  emit('buyingSellingTopSelect', item.id)
 }
 
 watch(
@@ -232,9 +212,10 @@ watch(
 onMounted(() => {
   nextTick(() => {
     initEcharts()
-    window.addEventListener('resize', initEcharts)
   })
 })
+
+window.addEventListener('resize', resizeChart)
 
 onUnmounted(() => {
   window.removeEventListener('resize', initEcharts)

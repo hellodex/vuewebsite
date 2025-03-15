@@ -44,9 +44,6 @@
                     >{{ item.name }}</span
                   >
                 </div>
-                <!-- <div class="refresh-box">
-                  <RefreshHold v-if="activeName == 'seven'" />
-                </div> -->
                 <span class="transaction-tab-pause-txt" v-if="pauseType == 1">⏸ 已暂停</span>
                 <div
                   class="data-items display-flex align-items-center"
@@ -114,11 +111,6 @@
                   :baseInfo="baseInfo"
                   @pauseAndPlay="handelPauseAndPlay"
                 />
-                <!-- <TransferAccountsTab
-                  v-else-if="activeName == 'third'"
-                  :transferAccountsTabInfo="transferAccountsTabInfo"
-                  :baseInfo="baseInfo"
-                /> -->
                 <HoldingCoinsTab
                   v-else-if="activeName == 'fourth'"
                   @topSelect="handelTopSelect"
@@ -130,9 +122,7 @@
                   :listPeriodInfo="listPeriodInfo"
                   :topNetInfo="topNetInfo"
                   :topProfitInfo="topProfitInfo"
-                  @buyingSellingTopSelect="handelBuyingSellingTopSelect"
                 />
-                <!-- <MyCoinTab v-else-if="activeName == 'six'" :myCoinTabInfo="myCoinTabInfo" /> -->
                 <MyHold
                   v-else-if="activeName == 'seven'"
                   :list="initLimitedOrders.positions"
@@ -169,18 +159,6 @@
             <el-icon v-else color="#101114"><ArrowRight /></el-icon>
           </div>
         </el-tooltip>
-        <!-- <el-tooltip
-          class="box-item"
-          effect="light"
-          :auto-close="1000"
-          :content="switchRightState ? '隐藏交易区' : '显示交易区'"
-          placement="left"
-        >
-          <div class="switch-ele-right switch-ele" @click="switchRightState = !switchRightState">
-            <el-icon v-if="switchRightState"><ArrowRight /></el-icon>
-            <el-icon v-else><ArrowLeft /></el-icon>
-          </div>
-        </el-tooltip> -->
       </section>
       <!-- 右边栏钱包信息 -->
       <RightSideBar
@@ -222,17 +200,16 @@ import BaseInfo from '@/components/Charts/BaseInfo.vue'
 import TradingView from '@/components/Charts/TradingView.vue'
 import PondTab from '@/components/Charts/PondTab.vue'
 import TransactionTab from '@/components/Charts/TransactionTab.vue'
-import TransferAccountsTab from '@/components/Charts/TransferAccountsTab.vue'
 import HoldingCoinsTab from '@/components/Charts/HoldingCoinsTab.vue'
 import FundTab from '@/components/Charts/FundTab.vue'
-import MyCoinTab from '@/components/Charts/MyCoinTab.vue'
+
 import TransactionHistory from '@/components/Charts/TransactionHistory.vue'
 import MyHold from '@/components/Charts/MyHold.vue'
 import CurrentCommission from '@/components/Charts/CurrentCommission.vue'
 import CommissionHistory from '@/components/Charts/CommissionHistory.vue'
 
 import RightSideBar from '@/components/SideBar/RightSideBar.vue'
-import RefreshHold from '@/components/RefreshHold.vue'
+
 import QuickTrading from '@/components/SideBar/components/QuickTrading.vue'
 // hook 函数
 import { useGlobalStore } from '@/stores/global'
@@ -240,10 +217,8 @@ import { useCoinWalletDetail } from '@/hooks/useCoinWalletDetail'
 import { useBaseInfo } from '@/hooks/useBaseInfo' // 头部 代币信息 hook
 import { useRightSideBar } from '@/hooks/useRightSideBar' // 右边栏 hook
 import { usePondTab } from '@/hooks/usePondTab' // 池子 hook
-import { useTransferAccountsTab } from '@/hooks/useTransferAccountsTab' // 转账 hook
 import { useHoldingCoinsTab } from '@/hooks/useHoldingCoinsTab' // 持币 hook
-import { useFlowGroup, useListPeriod, useTopNet, useTopProfit } from '@/hooks/useFundTab'
-import { useMyCoinTab } from '@/hooks/useMyCoinTab' // 我的 hook
+import { useFlowGroup, useListPeriod } from '@/hooks/useFundTab'
 
 import { useSubscribeKChartInfo } from '@/stores/subscribeKChartInfo'
 import { numberFormat, handleCoinPairInfo } from '@/utils'
@@ -255,7 +230,6 @@ const i18n = useI18n()
 const route = useRoute()
 console.log(route) // 页面携带的参数
 const switchLeftState = ref<boolean>(true)
-const switchRightState = ref<boolean>(true)
 
 const useChainInfo = useChainInfoStore()
 //获取token数据
@@ -348,11 +322,6 @@ const rightSideBarInfo = ref<any>({
 // 池子信息
 const pondTabInfo = ref<any>({})
 
-// 转账信息
-const transferAccountsTabInfo = ref<any>({
-  loading: true
-})
-
 // 持币 信息
 const holdingCoinsTabInfo = ref<any>({
   loading: true
@@ -367,11 +336,6 @@ const topNetInfo = ref<any>({
 })
 const topProfitInfo = ref<any>({
   loading: false
-})
-
-// 我的 信息
-const myCoinTabInfo = ref<any>({
-  loading: true
 })
 
 const earliest100TraderData = ref<any>({})
@@ -403,7 +367,6 @@ async function initTokenData() {
   getEarliest100Trader()
   pondTabInfo.value = usePondTab()
   rightSideBarInfo.value = useRightSideBar()
-  // transferAccountsTabInfo.value = useTransferAccountsTab()
   holdingCoinsTabInfo.value = useHoldingCoinsTab(10, 'Top 10')
   flowGroupInfo.value = useFlowGroup()
   listPeriodInfo.value = useListPeriod('1H')
@@ -411,10 +374,6 @@ async function initTokenData() {
     ...baseInfo.value.tokenInfo,
     chainCode: baseInfo.value.chainInfo?.chainCode
   })
-  // topNetInfo.value = useTopNet(0)
-  // if (walletType.value !== 'Email') {
-  //   myCoinTabInfo.value = useMyCoinTab()
-  // }
 
   document.title = `${baseInfo.value?.tokenInfo?.baseSymbol} | $${numberFormat(priceIncrease.value.price)} | ${priceIncrease.value.increase}% | 利润80%分给所有人的去中心化交易所`
 }
@@ -513,14 +472,6 @@ const fundIndex = ref(1)
 const handelfundSelect = (item: { id: number; timeNum: string }) => {
   fundIndex.value = item.id
   listPeriodInfo.value = useListPeriod(item.timeNum)
-}
-
-const handelBuyingSellingTopSelect = (id: number) => {
-  if ([0, 1].includes(id)) {
-    topNetInfo.value = useTopNet(id)
-  } else {
-    topProfitInfo.value = useTopProfit(id)
-  }
 }
 
 const setPolling = async () => {

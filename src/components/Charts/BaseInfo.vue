@@ -225,27 +225,10 @@
               <span>AI监控</span>
             </div>
           </WalletConnect>
-          <!-- <div class="display-flex align-items-center pond-audit">
-            <svg-icon name="icon-audit" class="icon-base"></svg-icon>
-            <span>审计</span>
-          </div> -->
-          <!-- <div
-            class="display-flex align-items-center pond-share"
-            @click="shareDialogVisible = true"
-          >
-            <svg-icon name="icon-share" class="icon-base"></svg-icon>
-            <span>分享送币</span>
-          </div> -->
         </div>
       </div>
     </template>
   </el-skeleton>
-  <ShareDialog
-    :shareDialogVisible="shareDialogVisible"
-    :baseInfo="baseInfo"
-    @close="handleClose"
-    v-if="shareDialogVisible"
-  />
 
   <MonitorTypeDialog
     :monitorTypeDialogVisible="monitorTypeDialogVisible"
@@ -284,7 +267,6 @@ import { ref, computed } from 'vue'
 import { numberFormat, shortifyAddress } from '@/utils'
 import { useSubscribeKChartInfo } from '@/stores/subscribeKChartInfo'
 import PercentageChange from '@/components/Percentage/PercentageChange.vue'
-import ShareDialog from '@/components/Dialogs/ShareDialog.vue'
 import MonitorTypeDialog from '@/components/Dialogs/MonitorTypeDialog.vue'
 import MonitorFormDialog from '@/components/Dialogs/MonitorFormDialog.vue'
 import Favorite from '@/components/Favorite.vue'
@@ -302,8 +284,6 @@ const globalStore = useGlobalStore()
 
 const isConnected = computed(() => globalStore.walletInfo.isConnected)
 const walletType = computed(() => globalStore.walletInfo.walletType)
-
-const shareDialogVisible = ref<boolean>(false) // 弹框显示隐藏状态
 
 const monitorTypeDialogVisible = ref<boolean>(false) // 监控类型弹框
 const monitorFormDialogVisible = ref<boolean>(false) // 监控表单
@@ -371,10 +351,6 @@ const isLocked = computed(() => {
 const isContract = computed(() => {
   return props.baseInfo?.coinGoPlusInfo?.lp_holders?.some((item: any) => item.is_contract == 1)
 })
-
-const handleClose = (val: boolean) => {
-  shareDialogVisible.value = val
-}
 
 const handelAddMonitor = () => {
   if (walletType.value !== 'Email') {
@@ -590,26 +566,6 @@ const handelRouter = (url: string) => {
       color: var(--up-color);
       font-family: 'PingFangSC-Heavy';
     }
-  }
-  .pond-audit {
-    padding: 10px;
-    border-radius: 8px;
-    font-size: 12px;
-    margin-left: 16px;
-    color: #f5f5f5;
-    background-color: #0aa76f;
-    cursor: pointer;
-    white-space: nowrap;
-  }
-  .pond-share {
-    color: var(--bg-color);
-    padding: 10px;
-    border-radius: 8px;
-    background-color: #f5f5f5;
-    font-size: 12px;
-    margin-left: 16px;
-    cursor: pointer;
-    white-space: nowrap;
   }
   .icon-base {
     width: 16px;
