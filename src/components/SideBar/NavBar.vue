@@ -147,7 +147,7 @@ function handleSearchInput() {
 
 const getTokenList = async () => {
   const tokens = await APISearchToken({
-    query: search.value
+    query: search.value.trim()
   })
   tokenList.value = tokens || []
   searchLoading.value = false
