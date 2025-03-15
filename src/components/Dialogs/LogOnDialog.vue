@@ -16,7 +16,6 @@
           <strong>欢迎来到HelloDex</strong>
           <span>开创和主导Web3变革，利润80%分给用户</span>
         </div>
-        <!-- <img src="../../assets/img/image-641.png" alt="" class="image-641" /> -->
       </div>
       <div class="connect-wallet-tab display-flex align-items-center justify-content-sp">
         <div
