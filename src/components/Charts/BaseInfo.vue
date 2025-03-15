@@ -93,12 +93,16 @@
                 <img src="@/assets/img/pump-logo.webp" alt="" />
                 <span class="up-color"
                   >{{
-                    Math.ceil(priceIncrease.pumpFunProgress ?? pondTabInfo.pumpFunProgress)
+                    Math.ceil(pondTabInfo.pumpFunProgress) == 100
+                      ? Math.ceil(pondTabInfo.pumpFunProgress)
+                      : Math.ceil(priceIncrease.pumpFunProgress ?? pondTabInfo.pumpFunProgress)
                   }}%</span
                 >
                 <el-progress
                   :percentage="
-                    Math.ceil(priceIncrease.pumpFunProgress ?? pondTabInfo.pumpFunProgress)
+                    Math.ceil(pondTabInfo.pumpFunProgress) == 100
+                      ? Math.ceil(pondTabInfo.pumpFunProgress)
+                      : Math.ceil(priceIncrease.pumpFunProgress ?? pondTabInfo.pumpFunProgress)
                   "
                   color="#2ebd85"
                 ></el-progress>
