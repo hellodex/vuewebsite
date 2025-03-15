@@ -559,5 +559,14 @@ export function priceNumFormat(txt: number | string): string {
  * @returns
  */
 export function pumpFunPercent(num: number) {
-  return ((1000000000 - num) / 1000000000) * 100
+  return num < 200000000 ? 100 : Math.ceil((1 - (num - 200000000) / 800000000) * 10000) / 100
+}
+
+/**
+ * 数字保留两位小数
+ * @param num
+ * @returns
+ */
+export function numToFixedTwo(num: number) {
+  return Math.ceil(num * 10000) / 100
 }

@@ -93,16 +93,16 @@
                 <img src="@/assets/img/pump-logo.webp" alt="" />
                 <span class="up-color"
                   >{{
-                    Math.ceil(pondTabInfo.pumpFunProgress) == 100
-                      ? Math.ceil(pondTabInfo.pumpFunProgress)
-                      : Math.ceil(priceIncrease.pumpFunProgress ?? pondTabInfo.pumpFunProgress)
+                    pondTabInfo.pumpFunProgress == 100
+                      ? pondTabInfo.pumpFunProgress
+                      : (priceIncrease.pumpFunProgress ?? pondTabInfo.pumpFunProgress)
                   }}%</span
                 >
                 <el-progress
                   :percentage="
-                    Math.ceil(pondTabInfo.pumpFunProgress) == 100
-                      ? Math.ceil(pondTabInfo.pumpFunProgress)
-                      : Math.ceil(priceIncrease.pumpFunProgress ?? pondTabInfo.pumpFunProgress)
+                    pondTabInfo.pumpFunProgress == 100
+                      ? pondTabInfo.pumpFunProgress
+                      : (priceIncrease.pumpFunProgress ?? pondTabInfo.pumpFunProgress)
                   "
                   color="#2ebd85"
                 ></el-progress>
@@ -458,7 +458,7 @@ const handelRouter = (url: string) => {
   line-height: 1.5;
   overflow: hidden;
   .pump-progress {
-    width: 100px;
+    width: 120px;
     margin-right: 6px;
     img {
       width: 12px;
@@ -475,7 +475,7 @@ const handelRouter = (url: string) => {
       display: none;
     }
     .el-progress-bar__outer {
-      background-color: rgba(58, 60, 64, 0.4);
+      background-color: rgba(58, 60, 64, 0.8);
     }
   }
   .connect-wallet-btn {

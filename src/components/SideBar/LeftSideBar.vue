@@ -353,14 +353,16 @@
                         <span class="clock-timer-txt">{{ timeago(item.createTime * 1000) }}</span>
                         <svg-icon name="icon-percent" class="icon-percent"></svg-icon>
                         <span class="up-color percent-txt"
-                          >{{ ((item.percent || 0) * 100).toFixed(2) }}%</span
+                          >{{ numToFixedTwo(parseFloat(item.percent || '0')) }}%</span
                         >
                       </div>
                     </div>
                   </div>
                   <div class="display-flex flex-direction-col table-item-last">
                     <span>${{ numberFormat(item.price) }}</span>
-                    <span class="up-color"> {{ ((item.percent || 0) * 100).toFixed(2) }}% </span>
+                    <span class="up-color">
+                      {{ numToFixedTwo(parseFloat(item.percent || '0')) }}%
+                    </span>
                   </div>
                 </div>
               </div>
@@ -382,7 +384,7 @@ import Favorite from '@/components/Favorite.vue'
 import WalletConnect from '@/components/Wallet/WalletConnect.vue'
 import { useGlobalStore } from '@/stores/global'
 import { useSubscribeKChartInfo } from '@/stores/subscribeKChartInfo'
-import { numberFormat, timeago } from '@/utils'
+import { numberFormat, timeago, numToFixedTwo } from '@/utils'
 
 const i18n = useI18n()
 const router = useRouter()
