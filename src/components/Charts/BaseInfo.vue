@@ -87,6 +87,22 @@
             </div>
             <div class="display-flex align-items-center address-text">
               <div
+                class="display-flex align-items-center pump-progress"
+                v-if="pondTabInfo.isPumpFun"
+              >
+                <span class="up-color"
+                  >{{
+                    Math.ceil(priceIncrease.pumpFunProgress ?? pondTabInfo.pumpFunProgress)
+                  }}%</span
+                >
+                <el-progress
+                  :percentage="
+                    Math.ceil(priceIncrease.pumpFunProgress ?? pondTabInfo.pumpFunProgress)
+                  "
+                  color="#2ebd85"
+                ></el-progress>
+              </div>
+              <div
                 class="info-txt font-family-Medium display-flex align-items-center justify-content-sp"
               >
                 <span>{{ i18n.t('kChart.Address') }}：</span>
@@ -321,6 +337,12 @@ const props = defineProps({
     default: () => {
       return {}
     }
+  },
+  pondTabInfo: {
+    type: Object,
+    default: () => {
+      return {}
+    }
   }
 })
 
@@ -329,7 +351,8 @@ const useSubscribeKChart = useSubscribeKChartInfo()
 const priceIncrease = computed(() => {
   return {
     price: useSubscribeKChart.subscribeKChartInfo?.C || 0,
-    increase: useSubscribeKChart.subscribeKChartInfo?.chg || 0
+    increase: useSubscribeKChart.subscribeKChartInfo?.chg || 0,
+    pumpFunProgress: useSubscribeKChart.subscribeKChartInfo?.pumpFunProgress
   }
 })
 
@@ -429,6 +452,23 @@ const handelRouter = (url: string) => {
   margin-bottom: 8px;
   line-height: 1.5;
   overflow: hidden;
+  .pump-progress {
+    width: 100px;
+    margin-right: 6px;
+    span {
+      margin-right: 4px;
+      font-family: 'PingFangSC-Medium';
+    }
+    .el-progress {
+      width: 100%;
+    }
+    .el-progress__text {
+      display: none;
+    }
+    .el-progress-bar__outer {
+      background-color: rgba(58, 60, 64, 0.4);
+    }
+  }
   .connect-wallet-btn {
     padding: 0;
     background-color: transparent;

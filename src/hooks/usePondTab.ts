@@ -3,7 +3,7 @@ import { useTokenInfoStore } from '@/stores/tokenInfo'
 import { useChainInfoStore } from '@/stores/chainInfo'
 import { APIgetPools } from '@/api/coinWalletDetails'
 import { CHAIN_ID } from '@/types'
-
+import { pumpFunPercent } from '@/utils'
 //goplus获取LP数据
 import { GoPlus, ErrorCode } from '@goplus/sdk-node'
 
@@ -14,6 +14,10 @@ export function usePondTab() {
   const pools = ref<any>([])
   const poolList = ref<any>([])
   const mobilityList = ref<any>([])
+  const isPumpFun = ref<boolean>(false)
+  const isInsidePumpFun = ref<boolean | null>(false)
+  const pumpFunProgress = ref<number>(0)
+
   async function getPools() {
     const res = await APIgetPools({
       baseAddress: tokenInfo?.baseAddress,
@@ -41,6 +45,13 @@ export function usePondTab() {
           return item
         })
       : []
+
+    const pumpFun = pools.value.find((item: { dex: string }) => item.dex == 'PumpFun')
+    isPumpFun.value = pumpFun ? true : false
+    if (isPumpFun.value) {
+      isInsidePumpFun.value = pumpFun.pair === chainInfo.pairAddress ? true : false
+      pumpFunProgress.value = pumpFunPercent(parseFloat(pumpFun.baseAmount))
+    }
   }
 
   async function getGoPlus(baseAddress: string | undefined, chainCode: string) {
@@ -64,6 +75,9 @@ export function usePondTab() {
   return {
     poolList,
     lpList,
-    mobilityList
+    mobilityList,
+    isPumpFun,
+    isInsidePumpFun,
+    pumpFunProgress
   }
 }

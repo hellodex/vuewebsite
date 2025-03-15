@@ -3,7 +3,7 @@ import { useTokenInfoStore } from '@/stores/tokenInfo'
 import { useSubscribeKChartInfo } from '@/stores/subscribeKChartInfo'
 import { useGlobalStore } from '@/stores/global'
 import { APIpairInfo } from '@/api/coinWalletDetails'
-import { formatDecimals, formatDate } from '@/utils'
+import { formatDecimals, formatDate, pumpFunPercent } from '@/utils'
 import { socket } from '@/utils/socket'
 
 // 自定义数据源对象
@@ -211,7 +211,8 @@ export default class CustomDataFeed {
           ((parseFloat(data.price) - parseFloat(res.start1d)) / parseFloat(res.start1d)) *
           100
         ).toString(),
-        timestamp: data.txTime
+        timestamp: data.txTime,
+        pumpFunProgress: pumpFunPercent(data.baseAmount)
       })
       useSubscribeKChart.createSubscribeSwapInfo(data)
       const bar = {

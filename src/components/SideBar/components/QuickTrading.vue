@@ -512,13 +512,10 @@ const handelRecovery = async () => {
   })
 
   const params = {
-    chain: customWalletInfo.value.walletInfo?.chainCode,
+    uuid: customWalletInfo.value.walletInfo?.uuid,
     walletId: customWalletInfo.value.walletInfo?.walletId,
     walletKey: customWalletInfo.value.walletInfo?.walletKey,
-    walletAddress: customWalletInfo.value.walletInfo?.wallet,
-    price: props.pairInfo.price,
-    address: sellInfo.value.baseAddress,
-    decimals: sellInfo.value.baseTokenDecimals
+    address: sellInfo.value.baseAddress
   }
   const res = await APIauthRecoverTradeCost({ ...params })
 
