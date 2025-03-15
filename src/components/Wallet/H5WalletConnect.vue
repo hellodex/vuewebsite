@@ -67,17 +67,16 @@ import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { useConnectWallet } from '@/hooks/useConnectWallet'
 
-import { showFailToast } from 'vant'
-
 const dialogVisible = ref(false)
+
 const i18n = useI18n()
+
 const router = useRouter()
 
 const { connectWallet } = useConnectWallet()
 
 const handelConnect = () => {
   dialogVisible.value = true
-  // showFailToast('很快支持Ton链交易')
 }
 
 const handelWalletConnect = () => {
