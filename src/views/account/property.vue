@@ -294,7 +294,6 @@ import TransactionHistory from '@/components/Charts/TransactionHistory.vue'
 import MyHold from '@/components/Charts/MyHold.vue'
 import CurrentCommission from '@/components/Charts/CurrentCommission.vue'
 import CommissionHistory from '@/components/Charts/CommissionHistory.vue'
-import RefreshHold from '@/components/RefreshHold.vue'
 import PercentageNotbg from '@/components/Percentage/PercentageNotbg.vue'
 
 const i18n = useI18n()

@@ -69,10 +69,9 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { ref, inject, onMounted, watch, nextTick, computed } from 'vue'
+import { ref, inject, onMounted, watch, nextTick, computed, onUnmounted } from 'vue'
 import { numberFormat, shortifyAddress } from '@/utils'
 import { useI18n } from 'vue-i18n'
-import { color } from 'echarts/core'
 
 const i18n = useI18n()
 const emit = defineEmits(['topSelect'])
@@ -303,6 +302,12 @@ const initEcharts = () => {
   holdingCoinsChart.value.setOption(option)
 }
 
+const resizeChart = () => {
+  if (holdingCoinsChart.value) {
+    holdingCoinsChart.value.resize()
+  }
+}
+
 watch(
   () => props.holdingCoinsTabInfo,
   (value) => {
@@ -315,6 +320,12 @@ onMounted(() => {
   nextTick(() => {
     initEcharts()
   })
+})
+
+window.addEventListener('resize', resizeChart)
+
+onUnmounted(() => {
+  window.removeEventListener('resize', initEcharts)
 })
 </script>
 <style lang="scss" scoped>
@@ -345,8 +356,8 @@ onMounted(() => {
     line-height: 32px;
   }
   #holdingCoins-echarts {
-    width: 500px;
-    height: 450px;
+    width: 100%;
+    height: 545.5px;
     border-radius: 8px;
     background: rgba(23, 24, 27, 0.3);
     padding: 32px 16px 16px 16px;
@@ -358,6 +369,7 @@ onMounted(() => {
   }
   .holdingCoinsTab {
     position: relative;
+    width: 38%;
   }
   .holdingCoins-info {
     position: absolute;
