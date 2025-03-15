@@ -64,7 +64,7 @@
                     <div
                       class="progress-circle"
                       :style="{
-                        background: `conic-gradient(#20B26C 0% ${((item.percent || 0) * 100).toFixed(2)}%, rgba(32, 178, 108, 0.30) ${((item.percent || 0) * 100).toFixed(2)}% 100%)`
+                        background: `conic-gradient(#20B26C 0% ${numToFixedTwo(parseFloat(item.percent || '0'))}%, rgba(32, 178, 108, 0.30) ${((item.percent || 0) * 100).toFixed(2)}% 100%)`
                       }"
                     >
                       <div class="logo">
@@ -118,7 +118,7 @@
                       <div class="display-flex align-items-center">
                         <div class="display-flex align-items-center percent-txt">
                           <svg-icon name="icon-percent" class="icon-percent"></svg-icon>
-                          <span>{{ ((item.percent || 0) * 100).toFixed(2) }}%</span>
+                          <span>{{ numToFixedTwo(parseFloat(item.percent || '0')) }}%</span>
                         </div>
                         <span class="num-txt">MC ${{ numberFormat(item.marketCap) }}</span>
                         <el-popover popper-class="pump-popper-box" :teleported="false">
@@ -200,13 +200,12 @@ import { ref, onMounted, onUnmounted, computed, reactive, onActivated, onDeactiv
 import { ApiGetPumpRanking } from '@/api'
 import { useI18n } from 'vue-i18n'
 import { useGlobalStore } from '@/stores/global'
-import { numberFormat, timeago, handleCoinPairInfo, shortifyAddress } from '@/utils'
+import { numberFormat, timeago, handleCoinPairInfo, shortifyAddress, numToFixedTwo } from '@/utils'
 import { getTokenList } from '@/utils/transition'
 import TradeDraw from '@/components/Dialogs/TradeDraw.vue'
 import WalletConnect from '@/components/Wallet/WalletConnect.vue'
 import QuickBuyTrade from './QuickBuyTrade.vue'
 import Favorite from '@/components/Favorite.vue'
-import { id } from 'ethers'
 
 defineProps({
   amount: {
