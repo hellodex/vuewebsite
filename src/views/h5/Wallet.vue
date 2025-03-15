@@ -181,9 +181,5 @@ const handelModeTab = (item: any) => {
       color: #29a0da;
     }
   }
-
-  .account_ad {
-    width: 100%;
-  }
 }
 </style>
