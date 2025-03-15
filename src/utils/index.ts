@@ -552,3 +552,12 @@ export function priceNumFormat(txt: number | string): string {
 
   return (txtString[0] === '-' ? '-$' : '$') + numberFormat(txtString.replace(/-/g, ''))
 }
+
+/**
+ * pumpFun 进度换算
+ * @param num
+ * @returns
+ */
+export function pumpFunPercent(num: number) {
+  return ((1000000000 - num) / 1000000000) * 100
+}

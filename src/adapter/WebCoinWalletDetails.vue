@@ -9,6 +9,7 @@
         <BaseInfo
           :baseInfo="baseInfo"
           :pairInfo="rightSideBarInfo.pairInfo"
+          :pondTabInfo="pondTabInfo"
           :holdingCoinsTabInfo="holdingCoinsTabInfo"
         />
         <!-- K线 -->
