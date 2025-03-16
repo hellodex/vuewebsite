@@ -83,7 +83,9 @@
           </template>
           <div class="invite-box display-flex flex-direction-col align-items-center">
             <img src="@/assets/img/invite-txt.png" alt="" class="invite-txt" />
-            <div class="link-btn">请先连接</div>
+            <WalletConnect>
+              <div class="link-btn">请先连接</div>
+            </WalletConnect>
             <div class="rake-back">
               <h3>如何获得返佣？</h3>
               <p>当您的好友完成以下步骤，您即可获得返佣奖励!</p>
@@ -390,6 +392,12 @@ onUnmounted(() => {
     .invite-txt {
       width: 200px;
       height: auto;
+    }
+    .connect-wallet-btn {
+      width: 100%;
+      background-color: transparent;
+      padding: 0;
+      margin: 0;
     }
     .link-btn {
       width: 100%;
