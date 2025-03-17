@@ -38,25 +38,26 @@
           <el-table-column prop="chainCode" :label="i18n.t('home.token')">
             <template #default="scope">
               <div class="display-flex align-items-center">
-                <!-- <Favorite
-                  :coinInfo="{
-                    pairAddress: scope.row.pairAddress,
-                    chainCode: scope.row.chainCode
-                  }"
-                /> -->
                 <div class="logo">
                   <el-image :src="scope.row.logo" alt="" class="logo-img">
                     <template #error>
                       <svg-icon name="logo1" class="logo-img"></svg-icon>
                     </template>
                   </el-image>
-                  <img :src="chainLogoObj[scope.row.chainCode]" alt="" class="chainCode" />
+                  <img
+                    :src="chainLogoObj[scope.row.chainCode]"
+                    alt=""
+                    class="chainCode"
+                    v-if="scope.row.chainCode"
+                  />
                 </div>
                 <div class="display-flex flex-direction-col">
                   <span class="sub-txt"
                     >{{ scope.row.baseToken }}<i>/{{ scope.row.quoteToken }}</i></span
                   >
-                  <span class="txt">{{ shortifyAddress(scope.row.baseAddress) }}</span>
+                  <span class="txt">{{
+                    scope.row.baseAddress ? shortifyAddress(scope.row.baseAddress) : '-'
+                  }}</span>
                 </div>
               </div>
             </template>
@@ -64,16 +65,16 @@
           <el-table-column prop="price" :label="i18n.t('home.price')" align="right">
             <template #default="scope">
               <div class="display-flex flex-direction-col">
-                <span class="sub-txt">${{ numberFormat(scope.row.price) }}</span>
-                <PercentageNotbg class="txt" :value="scope.row.chg1d" />
+                <span class="sub-txt">${{ numberFormat(scope.row.price ?? 0) }}</span>
+                <PercentageNotbg class="txt" :value="scope.row.chg1d ?? '0'" />
               </div>
             </template>
           </el-table-column>
           <el-table-column label="池子大小/交易额" align="right">
             <template #default="scope">
               <div class="display-flex flex-direction-col">
-                <span class="sub-txt">${{ numberFormat(scope.row.tvl) }}</span>
-                <span class="txt">${{ numberFormat(scope.row.volume) }}</span>
+                <span class="sub-txt">${{ numberFormat(scope.row.tvl ?? 0) }}</span>
+                <span class="txt">${{ numberFormat(scope.row.volume ?? 0) }}</span>
               </div>
             </template>
           </el-table-column>

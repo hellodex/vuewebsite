@@ -419,7 +419,9 @@ onMounted(() => {})
 <style lang="scss" scoped>
 .securityTest-tabs-content {
   font-style: normal;
-  height: calc(100vh - 150px);
+  height: calc(100vh - 130px);
+  overflow: hidden;
+  overflow-y: auto;
   .logo {
     width: 40px;
     height: 40px;
@@ -644,7 +646,7 @@ onMounted(() => {})
   }
 }
 .community-trust-support {
-  padding-top: 25px;
+  padding-top: 15px;
   font-size: 14px;
   color: #fff;
   .icon {

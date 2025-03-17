@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { MarketTrend } from '@/types'
-import { numberFormat } from '@/utils'
 const props = defineProps<{ value: string }>()
 
 const getMarketTren = () => {
