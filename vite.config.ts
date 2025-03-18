@@ -44,6 +44,7 @@ export default defineConfig({
       }
     },
     rollupOptions: {
+      external: ['react-dom'],
       output: {
         sourcemap: false,
         chunkFileNames: 'assets/js/index-[hash].js',
