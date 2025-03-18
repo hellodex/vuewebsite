@@ -8,6 +8,9 @@ import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  optimizeDeps: {
+    include: ['react-dom']
+  },
   server: {
     host: '0.0.0.0',
     port: 8001 // 将3000修改为你想要的端口号
@@ -44,7 +47,6 @@ export default defineConfig({
       }
     },
     rollupOptions: {
-      external: ['react-dom'],
       output: {
         sourcemap: false,
         chunkFileNames: 'assets/js/index-[hash].js',
