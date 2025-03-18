@@ -13,10 +13,8 @@
             <span class="price-btn" @click="handelWithdrawal">提现</span>
           </p>
         </div>
-        <div
-          class="document-text display-flex align-items-center"
-          @click="router.push('/Account/Withdrawal')"
-        >
+        <div class="document-text display-flex align-items-center">
+          <!-- @click="router.push('/Account/Withdrawal')" -->
           <span class="icon-text">提现金额</span>
           <svg-icon name="icon-document" class="icon-document"></svg-icon>
         </div>
