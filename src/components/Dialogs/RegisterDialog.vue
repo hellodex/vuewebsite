@@ -373,7 +373,7 @@ const resetForm = (formEl: FormInstance | undefined) => {
 </script>
 
 <style scoped lang="scss">
-@import './logon.scss';
+@use './logon.scss';
 .checked-text {
   color: var(--font-color-default);
   a {

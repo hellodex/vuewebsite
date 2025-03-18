@@ -930,6 +930,6 @@ onUnmounted(() => {
 })
 </script>
 
-<style scoped>
-@import './BuySell.scss';
+<style scoped lang="scss">
+@use './BuySell.scss';
 </style>
