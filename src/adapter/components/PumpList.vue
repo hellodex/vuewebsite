@@ -224,7 +224,7 @@ const customWalletInfo = computed(() => globalStore.customWalletInfo)
 const tokenList = ref<any>([])
 const skeletonLoading = ref<boolean>(false)
 
-const pumpObj = reactive<any>({
+const pumpObj = reactive<Record<string, any>>({
   list1: [],
   list2: [],
   list3: []
