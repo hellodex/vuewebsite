@@ -8,9 +8,6 @@ import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  optimizeDeps: {
-    exclude: ['react-dom']
-  },
   server: {
     host: '0.0.0.0',
     port: 8001 // 将3000修改为你想要的端口号
