@@ -17,7 +17,7 @@
       </div>
     </div>
     <div class="display-flex align-items-center">
-      <span style="color: #f5f5f5">出本</span>
+      <span>出本</span>
       <el-checkbox
         v-model="increaseSwitch"
         @change="handelSwitch"

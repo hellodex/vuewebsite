@@ -646,7 +646,7 @@ onMounted(() => {})
   }
 }
 .community-trust-support {
-  padding-top: 15px;
+  padding-top: 5px;
   font-size: 14px;
   color: #fff;
   .icon {
