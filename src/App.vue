@@ -92,7 +92,7 @@ import { EthersAdapter } from '@reown/appkit-adapter-ethers'
 import { solana } from '@reown/appkit/networks'
 import { mainnet, bsc, arbitrum, xLayer, base, optimism } from '@reown/appkit/networks'
 
-import { SolflareWalletAdapter, PhantomWalletAdapter } from '@solana/wallet-adapter-wallets'
+// import { SolflareWalletAdapter, PhantomWalletAdapter } from '@solana/wallet-adapter-wallets'
 
 const { windowWidth } = useWindowWidth()
 
@@ -214,9 +214,7 @@ provide('reload', { reload })
 const ethersAdapter = new EthersAdapter()
 
 // 1. Create Solana adapter
-const solanaWeb3JsAdapter = new SolanaAdapter({
-  wallets: [new PhantomWalletAdapter(), new SolflareWalletAdapter()]
-})
+const solanaWeb3JsAdapter = new SolanaAdapter()
 
 // 2. Get projectId from https://cloud.reown.com
 const projectId = '0994d604ea8f67806c1604de2ab87feb' // projectId
