@@ -144,7 +144,7 @@
             class="holders-list-item display-flex align-items-center justify-content-sp"
           >
             <span>{{ index + 1 }}.{{ shortifyAddress(item.walletAddress) }}</span>
-            <span>{{ numberFormat(item.amount) }}（{{ parseFloat(item.per).toFixed(2) }}%）</span>
+            <span>{{ numberFormat(item.amount) }}（{{ numberFormat(item.per) }}%）</span>
           </div>
         </div>
         <div class="securityTest-txt font-family-Heavy">
@@ -646,7 +646,7 @@ onMounted(() => {})
   }
 }
 .community-trust-support {
-  padding-top: 15px;
+  padding-top: 5px;
   font-size: 14px;
   color: #fff;
   .icon {
