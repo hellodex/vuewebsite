@@ -131,8 +131,8 @@ watch(customWalletInfo, (newValue) => {
   }
   .copy {
     margin-left: 4px;
-    width: 18px;
-    height: 18px;
+    width: 14px;
+    height: 14px;
     cursor: pointer;
   }
   .export-btn {
