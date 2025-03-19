@@ -43,6 +43,12 @@
                       class="copy"
                       v-copy="scope.row.baseToken.address"
                     ></svg-icon>
+                    <Favorite
+                      :coinInfo="{
+                        pairAddress: scope.row.pairAddress,
+                        chainCode: scope.row.baseToken.chainCode
+                      }"
+                    />
                   </p>
                 </div>
               </div>
@@ -245,82 +251,6 @@
               </div>
             </template>
           </el-table-column>
-          <!--<el-table-column min-width="130">
-            <template #header>
-              <div class="display-flex align-items-center">
-                <span class="table-head-tag">{{
-                  timeTabIndex == '1d' ? '24h' : timeTabIndex
-                }}</span>
-                <span>{{ i18n.t('home.Markers') }}</span>
-              </div>
-            </template>
-            <template #default="scope">
-              <div class="trading-indicators display-flex flex-direction-col">
-                <span>{{
-                  numberFormat(
-                    scope.row.tradingSummary['tradingSummary' + timeTabIndex].TotalAmount
-                  )
-                }}</span>
-                <div
-                  class="trading-indicators-proportion display-flex align-items-center"
-                  v-if="scope.row.tradingSummary['tradingSummary' + timeTabIndex].TotalAmount > 0"
-                >
-                  <div
-                    class="proportion-up display-flex flex-direction-col"
-                    v-if="
-                      percentage(
-                        scope.row.tradingSummary['tradingSummary' + timeTabIndex].buyAmount,
-                        scope.row.tradingSummary['tradingSummary' + timeTabIndex].TotalAmount
-                      ) !== '0'
-                    "
-                    :style="{
-                      width:
-                        percentage(
-                          scope.row.tradingSummary['tradingSummary' + timeTabIndex].buyAmount,
-                          scope.row.tradingSummary['tradingSummary' + timeTabIndex].TotalAmount
-                        ) + '%'
-                    }"
-                  >
-                    <span
-                      >{{
-                        percentage(
-                          scope.row.tradingSummary['tradingSummary' + timeTabIndex].buyAmount,
-                          scope.row.tradingSummary['tradingSummary' + timeTabIndex].TotalAmount
-                        )
-                      }}%</span
-                    >
-                    <strong></strong>
-                  </div>
-                  <div
-                    class="proportion-down display-flex flex-direction-col"
-                    v-if="
-                      percentage(
-                        scope.row.tradingSummary['tradingSummary' + timeTabIndex].sellAmount,
-                        scope.row.tradingSummary['tradingSummary' + timeTabIndex].TotalAmount
-                      ) !== '0'
-                    "
-                    :style="{
-                      width:
-                        percentage(
-                          scope.row.tradingSummary['tradingSummary' + timeTabIndex].sellAmount,
-                          scope.row.tradingSummary['tradingSummary' + timeTabIndex].TotalAmount
-                        ) + '%'
-                    }"
-                  >
-                    <span
-                      >{{
-                        percentage(
-                          scope.row.tradingSummary['tradingSummary' + timeTabIndex].sellAmount,
-                          scope.row.tradingSummary['tradingSummary' + timeTabIndex].TotalAmount
-                        )
-                      }}%</span
-                    >
-                    <strong></strong>
-                  </div>
-                </div>
-              </div>
-            </template>
-          </el-table-column>-->
           <el-table-column
             :label="i18n.t('home.Top10hold') + '%'"
             sortable
@@ -426,6 +356,7 @@ import { numberFormat, timeago, shortifyAddress, handleCoinPairInfo } from '@/ut
 import TradeDraw from '@/components/Dialogs/TradeDraw.vue'
 import WalletConnect from '@/components/Wallet/WalletConnect.vue'
 import QuickBuyTrade from './QuickBuyTrade.vue'
+import Favorite from '@/components/Favorite.vue'
 
 const i18n = useI18n()
 const globalStore = useGlobalStore()
@@ -628,7 +559,21 @@ const handleDrawClose = () => {
   .address {
     margin: 2px 0;
     font-size: 12px;
+    :deep(.favorite-box) {
+      margin-left: 4px;
+      .star-o-icon {
+        width: 12px;
+        height: 12px;
+        margin-right: 0;
+      }
+      .star-icon {
+        width: 12px;
+        height: 12px;
+        margin-right: 0;
+      }
+    }
   }
+
   .logo {
     width: 32px;
     height: 32px;
