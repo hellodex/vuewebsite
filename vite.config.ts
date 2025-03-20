@@ -30,6 +30,9 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
+  },
+  optimizeDeps: {
+    exclude: ['react-dom']
   }, // defineConfig 下
   build: {
     chunkSizeWarningLimit: 1024,
@@ -41,80 +44,6 @@ export default defineConfig({
       },
       output: {
         comments: false // 去除注释
-      }
-    },
-    rollupOptions: {
-      output: {
-        sourcemap: false,
-        chunkFileNames: 'assets/js/index-[hash].js',
-        entryFileNames: 'assets/js/index-[hash].js',
-        assetFileNames: 'assets/[ext]/index-[hash].[ext]',
-        manualChunks(id) {
-          // id为文件的绝对路径
-          if (id.includes('node_modules')) {
-            if (id.includes('node_modules/vue')) {
-              return 'vue-vendor'
-            }
-
-            if (id.includes('node_modules/element-plus')) {
-              return 'elementplus-vendor'
-            }
-
-            if (id.includes('node_modules/vant')) {
-              return 'vant-vendor'
-            }
-
-            if (id.includes('node_modules/html2canvas')) {
-              return 'html2canvas'
-            }
-
-            if (id.includes('node_modules/lightweight-charts')) {
-              return 'lightweight-charts'
-            }
-
-            if (id.includes('node_modules/echarts')) {
-              return 'echarts'
-            }
-
-            if (id.includes('node_modules/moment')) {
-              return 'moment'
-            }
-
-            if (id.includes('node_modules/swiper')) {
-              return 'swiper'
-            }
-
-            if (id.includes('node_modules/vue-i18n')) {
-              return 'vue-i18n'
-            }
-
-            if (id.includes('node_modules/firebase')) {
-              return 'firebase'
-            }
-
-            if (id.includes('node_modules/@reown')) {
-              return '@reown'
-            }
-
-            if (id.includes('node_modules/@goplus')) {
-              return '@goplus'
-            }
-
-            if (id.includes('node_modules/web3')) {
-              return 'web3'
-            }
-
-            if (id.includes('node_modules/ethers')) {
-              return 'ethers'
-            }
-
-            if (id.includes('node_modules/vite-plugin-svg-icons')) {
-              return 'vite-plugin-svg-icons'
-            }
-
-            return id.toString().split('node_modules/')[1].split('/')[0].toString()
-          }
-        }
       }
     }
   }

@@ -174,5 +174,5 @@ const num1 = ref<number>(1)
 </script>
 
 <style lang="scss" scoped>
-@import './tools.scss';
+@use './tools.scss';
 </style>

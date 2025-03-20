@@ -303,5 +303,5 @@ const resetForm = (formEl: FormInstance | undefined) => {
 </script>
 
 <style lang="scss">
-@import './logon.scss';
+@use './logon.scss';
 </style>

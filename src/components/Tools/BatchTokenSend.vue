@@ -58,5 +58,5 @@ const token = ref<string | null>(null)
 </script>
 
 <style lang="scss" scoped>
-@import './tools.scss';
+@use './tools.scss';
 </style>
