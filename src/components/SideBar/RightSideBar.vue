@@ -478,5 +478,5 @@ const handelRouter = (url: string) => {
 }
 </script>
 <style scoped lang="scss">
-@import './RightSideBar.scss';
+@use './RightSideBar.scss';
 </style>
