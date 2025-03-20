@@ -227,5 +227,5 @@ const onClickOutside = (e: any) => {
 </script>
 
 <style lang="scss" scoped>
-@import './tools.scss';
+@use './tools.scss';
 </style>

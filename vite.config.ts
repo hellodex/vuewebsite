@@ -30,6 +30,9 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
+  },
+  optimizeDeps: {
+    exclude: ['react-dom']
   }, // defineConfig 下
   build: {
     chunkSizeWarningLimit: 1024,
