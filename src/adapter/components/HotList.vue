@@ -284,7 +284,7 @@
               ></svg-icon>
               <svg-icon
                 name="alert-triangle"
-                style="width: 24px; height: 24px; color: #ff9900"
+                style="width: 24px; height: 24px"
                 v-else-if="scope.row.security == '1'"
               ></svg-icon>
               <span v-else class="txt">未知</span>

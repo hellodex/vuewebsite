@@ -210,7 +210,7 @@ const isMainToken = computed(() => {
 const riskList = computed(() => {
   const obj = props.coinGoPlusInfo
 
-  if (props.chainInfo?.chainCode) {
+  if (obj) {
     return props.chainInfo.chainCode == 'SOLANA'
       ? [
           {
@@ -471,7 +471,7 @@ onMounted(() => {})
         color: #2970ff;
       }
       .warning {
-        color: #f90;
+        color: var(--down-color);
       }
       .success {
         color: #9c9c9c;
