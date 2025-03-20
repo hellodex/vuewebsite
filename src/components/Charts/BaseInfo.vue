@@ -203,7 +203,17 @@
               <span>检测</span>
               <svg-icon name="chevron-right" class="chevron-right"></svg-icon>
             </div>
-            <div class="display-flex align-items-center">
+            <div
+              class="display-flex align-items-center"
+              v-if="securityTestTypeList.includes('warning')"
+            >
+              <svg-icon
+                name="alert-triangle"
+                style="width: 14px; height: 14px; margin-right: 2px"
+              ></svg-icon>
+              <span class="font-family-Heavy down-color">危险</span>
+            </div>
+            <div class="display-flex align-items-center" v-else>
               <svg-icon
                 name="auth-check"
                 style="width: 14px; height: 14px; color: var(--up-color); margin-right: 2px"
@@ -328,6 +338,46 @@ const props = defineProps({
     default: () => {
       return {}
     }
+  }
+})
+
+const securityTestTypeList = computed(() => {
+  const obj = props.baseInfo?.coinGoPlusInfo
+  if (obj) {
+    return props.baseInfo.chainInfo.chainCode == 'SOLANA'
+      ? [
+          obj?.non_transferable == 0 ? 'success' : 'warning',
+          obj?.transfer_hook?.length == 0 ? 'success' : 'warning',
+          obj?.mintable?.status == 0 ? 'success' : 'warning',
+          obj?.freezable?.status == 0 ? 'success' : 'warning',
+          obj?.closable?.status == 0 ? 'success' : 'warning',
+          obj?.transfer_fee_upgradable?.status == 0 ? 'success' : 'warning',
+          obj?.default_account_state_upgradable?.status == 0 ? 'success' : 'warning',
+          obj?.balance_mutable_authority?.status == 0 ? 'success' : 'warning',
+          obj?.transfer_hook_upgradable?.status == 0 ? 'success' : 'warning'
+        ]
+      : [
+          obj?.is_open_source == 1 ? 'success' : 'warning',
+          obj?.is_proxy == 0 ? 'success' : 'warning',
+          obj?.is_mintable == 0 ? 'success' : 'warning',
+          obj?.can_take_back_ownership == 0 ? 'success' : 'warning',
+          obj?.owner_change_balance == 0 ? 'success' : 'warning',
+          obj?.hidden_owner == 0 ? 'success' : 'warning',
+          obj?.selfdestruct == 0 ? 'success' : 'warning',
+          obj?.external_call == 0 ? 'success' : 'warning',
+          obj?.gas_abuse == 1 ? 'warning' : 'success',
+          obj?.cannot_sell_all == 0 ? 'success' : 'warning',
+          obj?.slippage_modifiable == 0 ? 'success' : 'warning',
+          obj?.is_honeypot == 0 ? 'success' : 'warning',
+          obj?.transfer_pausable == 0 ? 'success' : 'warning',
+          obj?.transfer_pausable == 0 ? 'success' : 'warning',
+          obj?.is_whitelisted == 0 ? 'success' : 'warning',
+          obj?.is_anti_whale == 0 ? 'success' : 'warning',
+          obj?.trading_cooldown == 0 ? 'success' : 'warning',
+          obj?.personal_slippage_modifiable == 0 ? 'success' : 'warning'
+        ]
+  } else {
+    return []
   }
 })
 

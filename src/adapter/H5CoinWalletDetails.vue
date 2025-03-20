@@ -91,8 +91,8 @@
                 "
                 >{{
                   priceIncrease.increase[0] == '-'
-                    ? priceIncrease.increase
-                    : '+' + priceIncrease.increase
+                    ? parseFloat(priceIncrease.increase || '0').toFixed(2)
+                    : '+' + parseFloat(priceIncrease.increase || '0').toFixed(2)
                 }}%</span
               >
             </div>
