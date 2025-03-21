@@ -151,39 +151,52 @@
           <template v-if="baseInfo?.chainInfo?.chainCode != 'SOLANA'">
             <div class="display-flex align-items-center pond-start">
               <div class="display-flex flex-direction-col align-items-center">
-                <span>合约开源</span>
-                <span>{{ baseInfo?.coinGoPlusInfo?.is_open_source == 1 ? '是' : '否' }}</span>
+                <span>合约未开源</span>
+                <span v-if="baseInfo?.coinGoPlusInfo?.is_open_source == 1" class="up-color"
+                  >否</span
+                >
+                <span v-else class="down-color">是</span>
               </div>
               <div class="display-flex flex-direction-col align-items-center">
-                <span>合约未放弃</span>
-                <span>{{ isContract ? '是' : '否' }}</span>
+                <span>合约放弃</span>
+                <span v-if="isContract" class="up-color">否</span>
+                <span v-else class="down-color">是</span>
               </div>
               <div class="display-flex flex-direction-col align-items-center">
-                <span>流动性锁定</span>
-                <span>{{ isLocked ? '是' : '否' }}</span>
+                <span>流动性未锁定</span>
+                <span v-if="isLocked" class="up-color">否</span>
+                <span v-else class="down-color">是</span>
               </div>
               <div class="display-flex flex-direction-col align-items-center">
-                <span>非蜜罐</span>
-                <span>{{ baseInfo?.coinGoPlusInfo?.is_honeypot == 0 ? '是' : '否' }}</span>
+                <span>蜜罐</span>
+                <span v-if="baseInfo?.coinGoPlusInfo?.is_honeypot == 0" class="up-color">否</span>
+                <span v-else class="down-color">是</span>
               </div>
             </div>
           </template>
           <template v-if="baseInfo?.chainInfo?.chainCode == 'SOLANA'">
             <div class="display-flex align-items-center pond-start">
               <div class="display-flex flex-direction-col align-items-center">
-                <span>不可冻币</span>
-                <span>{{ baseInfo?.coinGoPlusInfo?.freezable?.status == 0 ? '是' : '否' }}</span>
+                <span>可冻币</span>
+                <span v-if="baseInfo?.coinGoPlusInfo?.freezable?.status == 0" class="up-color"
+                  >否</span
+                >
+                <span v-else class="down-color">是</span>
               </div>
               <div class="display-flex flex-direction-col align-items-center">
-                <span>不可增发</span>
-                <span>{{ baseInfo?.coinGoPlusInfo?.freezable?.status == 0 ? '是' : '否' }}</span>
+                <span>可增发</span>
+                <span v-if="baseInfo?.coinGoPlusInfo?.freezable?.status == 0" class="up-color"
+                  >否</span
+                >
+                <span v-else class="down-color">是</span>
               </div>
 
               <div class="display-flex flex-direction-col align-items-center">
-                <span>无外部合约</span>
-                <span>{{
-                  baseInfo?.coinGoPlusInfo?.transfer_hook?.length == 0 ? '是' : '否'
-                }}</span>
+                <span>有外部合约</span>
+                <span v-if="baseInfo?.coinGoPlusInfo?.transfer_hook?.length == 0" class="up-color"
+                  >否</span
+                >
+                <span v-else class="down-color">是</span>
               </div>
               <div class="display-flex flex-direction-col align-items-center">
                 <span>Top 10</span>
