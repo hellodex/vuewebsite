@@ -732,8 +732,8 @@ onUnmounted(() => {
     }
   }
   .copy {
-    width: 18px;
-    height: 18px;
+    width: 14px;
+    height: 14px;
     margin-left: 4px;
     position: relative;
     top: 3px;
