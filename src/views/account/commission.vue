@@ -63,47 +63,9 @@
                 <span>${{ numberFormat(scope.row.totalAmount) }}</span>
               </template>
             </el-table-column>
-            <!-- <el-table-column label="已提现金额">
-              <template #default="scope">
-                <span>${{ numberFormat(scope.row.issuedAmount) }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column label="可提现金额">
-              <template #default="scope">
-                <span>${{ numberFormat(scope.row.withdrawableAmount) }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column>
-              <template #header>
-                <div class="display-flex align-items-center">
-                  <span>冻结金额</span>
-                  <el-tooltip effect="light" content="已提现，并且正在审核中的余额" placement="top">
-                    <van-icon name="question-o" class="question-o-icon" />
-                  </el-tooltip>
-                </div>
-              </template>
-              <template #default="scope">
-                <span>${{ numberFormat(scope.row.frozenAmount) }}</span>
-              </template>
-            </el-table-column> -->
-            <!-- <el-table-column prop="date">
-              <template #header>
-                <div class="display-flex align-items-center">
-                  <span>未到账金额</span>
-                  <el-tooltip effect="light" content="交易已发出等待链上确认的金额" placement="top">
-                    <van-icon name="question-o" class="question-o-icon" />
-                  </el-tooltip>
-                </div>
-              </template>
-              <template #default="scope">
-                <span>${{ numberFormat(scope.row.pendingAmount) }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column label="操作">
-              <template #default="scope">
-                <span class="withdrawal-btn" @click="handelWithdrawal(scope.row)">提现</span>
-              </template>
-            </el-table-column> -->
+            <template #empty>
+              <empty-data></empty-data>
+            </template>
           </el-table>
         </template>
       </el-skeleton>
