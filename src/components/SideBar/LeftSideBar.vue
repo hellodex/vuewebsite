@@ -391,7 +391,9 @@ const router = useRouter()
 const globalStore = useGlobalStore()
 const useSubscribeKChart = useSubscribeKChartInfo()
 
-const timer = ref<any>(null) // 定时器
+const timer = ref<any>(null) // 接口定时器
+const dataTimer = ref<any>(null) // 数据定时器
+
 const skeletonLoading = ref<boolean>(true)
 const favoriteSkeleton = ref<boolean>(true)
 
@@ -456,7 +458,7 @@ const tabHoldList = computed(() => {
 
 const handelPumpTab = (item: any) => {
   pumpTabIndex.value = item.value
-  clearInterval(timer.value)
+  stopTimer()
   setPolling()
 }
 
@@ -468,6 +470,10 @@ const setPolling = async () => {
   getPumpRanking()
   timer.value = setInterval(() => {
     getPumpRanking()
+  }, 5000)
+
+  dataTimer.value = setInterval(() => {
+    pumpList.value = [...pumpList.value]
   }, 1000)
 }
 
@@ -482,7 +488,7 @@ const getPumpRanking = async () => {
 watch(
   () => customWalletInfo.value,
   (newVal, oldVal) => {
-    clearInterval(timer.value)
+    stopTimer()
     setPolling()
   }
 )
@@ -496,6 +502,13 @@ const handelRouter = (url: string) => {
   window.open(url)
 }
 
+const stopTimer = () => {
+  clearInterval(timer.value)
+  clearInterval(dataTimer.value)
+  dataTimer.value = null
+  timer.value = null
+}
+
 onMounted(async () => {
   skeletonLoading.value = true
   favoriteSkeleton.value = true
@@ -505,7 +518,7 @@ onMounted(async () => {
 })
 
 onUnmounted(() => {
-  clearInterval(timer.value)
+  stopTimer()
 })
 </script>
 

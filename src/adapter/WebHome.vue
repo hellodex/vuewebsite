@@ -335,10 +335,11 @@ const handelNounScreenTab = async (item: any) => {
     await getRankings()
     await getFreshPriceList()
     tableLoading.value = false
+    setPolling()
   } else {
-    await getFreshPriceList()
+    clearInterval(timer.value)
+    timer.value = null
   }
-  setPolling()
 }
 
 const handelChain = async (item: any) => {
@@ -418,7 +419,9 @@ watch(
 onActivated(() => {
   // 调用时机为首次挂载
   // 以及每次从缓存中被重新插入时
-  setPolling()
+  if (nounScreenId.value !== 13) {
+    setPolling()
+  }
 })
 
 onDeactivated(() => {

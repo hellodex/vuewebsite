@@ -231,8 +231,11 @@ const pumpObj = reactive<Record<string, any>>({
 })
 const timer = ref<any>(null)
 const timer1 = ref<any>(null)
+const dataTimer1 = ref<any>(null)
 const timer2 = ref<any>(null)
+const dataTimer2 = ref<any>(null)
 const timer3 = ref<any>(null)
+const dataTimer3 = ref<any>(null)
 const curNode = ref<number>(0)
 const tradeDrawVisible = ref<boolean>(false)
 const coinInfo = ref<any>(null)
@@ -275,16 +278,26 @@ const setPolling = () => {
 const setPolling1 = () => {
   timer1.value = setInterval(() => {
     getPumpRanking(1)
+  }, 5000)
+  dataTimer1.value = setInterval(() => {
+    pumpObj.list1 = [...pumpObj.list1]
   }, 1000)
 }
 const setPolling2 = () => {
   timer2.value = setInterval(() => {
     getPumpRanking(2)
+  }, 5000)
+  dataTimer2.value = setInterval(() => {
+    pumpObj.list2 = [...pumpObj.list2]
   }, 1000)
 }
 const setPolling3 = () => {
   timer3.value = setInterval(() => {
     getPumpRanking(3)
+  }, 5000)
+
+  dataTimer3.value = setInterval(() => {
+    pumpObj.list3 = [...pumpObj.list3]
   }, 1000)
 }
 
@@ -351,9 +364,9 @@ const handleMouseLeave = (index: number) => {
 }
 
 const initData = async () => {
-  await getPumpRanking(1)
-  await getPumpRanking(2)
-  await getPumpRanking(3)
+  getPumpRanking(1)
+  getPumpRanking(2)
+  getPumpRanking(3)
 }
 
 const startTimer = () => {
@@ -368,10 +381,16 @@ const stopTimer = () => {
   clearInterval(timer1.value)
   clearInterval(timer2.value)
   clearInterval(timer3.value)
+  clearInterval(dataTimer1.value)
+  clearInterval(dataTimer2.value)
+  clearInterval(dataTimer3.value)
   timer.value = null
   timer1.value = null
   timer2.value = null
   timer3.value = null
+  dataTimer1.value = null
+  dataTimer2.value = null
+  dataTimer3.value = null
 }
 
 onDeactivated(() => {
