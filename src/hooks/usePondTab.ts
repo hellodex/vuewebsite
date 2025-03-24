@@ -50,7 +50,9 @@ export function usePondTab() {
     isPumpFun.value = pumpFun ? true : false
     if (isPumpFun.value) {
       isInsidePumpFun.value = pumpFun.pair === chainInfo.pairAddress ? true : false
-      pumpFunProgress.value = pumpFunPercent(parseFloat(pumpFun.baseAmount))
+      pumpFunProgress.value = isInsidePumpFun.value
+        ? pumpFunPercent(parseFloat(pumpFun.baseAmount))
+        : 100
     }
   }
 

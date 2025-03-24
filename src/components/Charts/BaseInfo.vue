@@ -94,14 +94,14 @@
                 <span class="up-color"
                   >{{
                     pondTabInfo.pumpFunProgress == 100
-                      ? pondTabInfo.pumpFunProgress
+                      ? 100
                       : (priceIncrease.pumpFunProgress ?? pondTabInfo.pumpFunProgress)
                   }}%</span
                 >
                 <el-progress
                   :percentage="
                     pondTabInfo.pumpFunProgress == 100
-                      ? pondTabInfo.pumpFunProgress
+                      ? 100
                       : (priceIncrease.pumpFunProgress ?? pondTabInfo.pumpFunProgress)
                   "
                   color="#2ebd85"
