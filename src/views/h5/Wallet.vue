@@ -32,7 +32,7 @@
         </div>
 
         <a
-          :href="`${tgUrl}?start=l_${new Date().getTime()}_P_Web`"
+          :href="`${tgUrl}?start=TS_${new Date().getTime()}_P_Web`"
           target="_blank"
           class="tg-btn display-flex align-items-center justify-content-center"
         >
