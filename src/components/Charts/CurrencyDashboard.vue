@@ -1,50 +1,58 @@
 <template>
   <section class="currency-dashboard display-flex align-items-center">
     <div class="tabs display-flex align-items-center">
-      <div
-        class="display-flex align-items-center tab-item"
-        :class="item.pairAddress == chainInfo.pairAddress ? 'tab-item-cur' : ''"
-        v-for="(item, index) in currencyDashboard"
-        :key="index"
-        @click="handelJump(item)"
+      <vue-draggable-next
+        v-model="currencyDashboard"
+        @change="log"
+        :sort="true"
+        :animation="1000"
+        class="dragArea list-group display-flex align-items-center"
       >
-        <el-icon
-          v-if="item.pairAddress == chainInfo.pairAddress"
-          size="18"
-          style="margin-right: 12px"
-          ><Fold
-        /></el-icon>
-        <div class="display-flex align-items-center">
-          <span class="logo">
-            <el-image :src="item.logo" alt="" class="baseInfo-img">
-              <template #error>
-                <svg-icon name="logo1" class="baseInfo-img"></svg-icon>
-              </template>
-            </el-image>
-            <svg-icon :name="'coin' + item.chainCode" class="chainCode"></svg-icon>
-          </span>
-          <div class="display-flex flex-direction-col">
-            <div class="display-flex align-items-center coin-text font-family-Heavy">
-              <span>{{ MAIN_COIN[item.baseSymbol] || item.baseSymbol || '-' }}</span>
-              <span class="coin-sub-txt">/{{ item.quoteSymbol || '-' }}</span>
-            </div>
-            <div class="display-flex align-items-center font-family-Heavy">
-              <span
-                :class="item.increase[0] === '-' ? 'price-txt down-color' : 'price-txt up-color'"
-                >${{ numberFormat(item.price || 0) }}</span
-              >
-              <PercentageNotbg :value="item.increase" />
+        <div
+          class="display-flex align-items-center tab-item"
+          :class="item.pairAddress == chainInfo.pairAddress ? 'tab-item-cur' : ''"
+          v-for="(item, index) in currencyDashboard"
+          :key="index"
+          @click="handelJump(item)"
+        >
+          <el-icon
+            v-if="item.pairAddress == chainInfo.pairAddress"
+            size="18"
+            style="margin-right: 12px"
+            ><Fold
+          /></el-icon>
+          <div class="display-flex align-items-center">
+            <span class="logo">
+              <el-image :src="item.logo" alt="" class="baseInfo-img">
+                <template #error>
+                  <svg-icon name="logo1" class="baseInfo-img"></svg-icon>
+                </template>
+              </el-image>
+              <svg-icon :name="'coin' + item.chainCode" class="chainCode"></svg-icon>
+            </span>
+            <div class="display-flex flex-direction-col">
+              <div class="display-flex align-items-center coin-text font-family-Heavy">
+                <span>{{ MAIN_COIN[item.baseSymbol] || item.baseSymbol || '-' }}</span>
+                <span class="coin-sub-txt">/{{ item.quoteSymbol || '-' }}</span>
+              </div>
+              <div class="display-flex align-items-center font-family-Heavy">
+                <span
+                  :class="item.increase[0] === '-' ? 'price-txt down-color' : 'price-txt up-color'"
+                  >${{ numberFormat(item.price || 0) }}</span
+                >
+                <PercentageNotbg :value="item.increase" />
+              </div>
             </div>
           </div>
+          <el-icon
+            size="18"
+            style="margin-left: 18px"
+            v-if="item.pairAddress == chainInfo.pairAddress"
+            @click.stop="handelRemove(item, index)"
+            ><Close
+          /></el-icon>
         </div>
-        <el-icon
-          size="18"
-          style="margin-left: 18px"
-          v-if="item.pairAddress == chainInfo.pairAddress"
-          @click.stop="handelRemove(item, index)"
-          ><Close
-        /></el-icon>
-      </div>
+      </vue-draggable-next>
     </div>
   </section>
 </template>
@@ -56,6 +64,7 @@ import { useRouter } from 'vue-router'
 import { useChainInfoStore } from '@/stores/chainInfo'
 import { useGlobalStore } from '@/stores/global'
 import PercentageNotbg from '@/components/Percentage/PercentageNotbg.vue'
+import { VueDraggableNext } from 'vue-draggable-next'
 
 const router = useRouter()
 const useChainInfo = useChainInfoStore()
@@ -73,6 +82,10 @@ const handelRemove = (params: any, index: number) => {
   globalStore.delCurrencyDashboard(arr)
   handelJump(info)
 }
+
+const log = (evt: any) => {
+  console.log('Dragging ended:', evt)
+}
 </script>
 
 <style scoped lang="scss">
@@ -87,6 +100,7 @@ const handelRemove = (params: any, index: number) => {
   .tab-item {
     padding: 8px 10px;
     cursor: pointer;
+    background-color: transparent;
   }
   .tab-item-cur {
     background-color: rgba(58, 60, 64, 0.4);
