@@ -9,6 +9,7 @@
       :key="index"
       :id="`captcha-input${index}`"
       @input="handleInput(index)"
+      @keydown.delete="handelDelete(index)"
       :style="{
         width: '46px',
         animation: captchaStatus == 1 ? '' : getBoxStyle(index)
@@ -60,13 +61,28 @@ const getBoxStyle = (index: any) => {
 }
 
 const handleInput = (index: number) => {
-  captcha.value = ''
-  if (index < captchaVal.length - 1) {
+  if (captchaVal[index].value && index < captchaVal.length - 1) {
     // 自动跳到下一个输入框
     setTimeout(() => {
       document.getElementById(`captcha-input${index + 1}`)?.focus()
-    }, 100)
+    }, 50)
   }
+
+  emitData()
+}
+
+const handelDelete = (index: number) => {
+  if (index > 0) {
+    // 自动跳到下一个输入框
+    setTimeout(() => {
+      document.getElementById(`captcha-input${index - 1}`)?.focus()
+    }, 50)
+  }
+  emitData()
+}
+
+const emitData = () => {
+  captcha.value = ''
 
   captchaVal.forEach((item) => {
     captcha.value += item.value
