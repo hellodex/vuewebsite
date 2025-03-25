@@ -3,7 +3,9 @@
     <NavBar />
   </div>
   <main class="display-flex flex-direction-col main">
-    <CurrencyDashboard v-if="route.fullPath.indexOf('/k/') !== -1 && windowWidth > 700" />
+    <CurrencyDashboard
+      v-if="route.fullPath.indexOf('/k/') !== -1 && windowWidth > 700 && currencyDashboardSwitch"
+    />
     <section
       :class="
         route.fullPath.indexOf('/k/') !== -1 && windowWidth > 700
@@ -110,6 +112,7 @@ const router = useRouter()
 const globalStore = useGlobalStore()
 const accountInfo = computed(() => globalStore.accountInfo)
 const danmaku = computed(() => globalStore.danmaku)
+const currencyDashboardSwitch = computed(() => globalStore.currencyDashboardSwitch)
 
 const isTradeUrl = computed(() => {
   return window.location.href.indexOf('/trade/') !== -1

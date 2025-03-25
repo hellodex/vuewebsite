@@ -64,6 +64,9 @@ export const useGlobalStore = defineStore('global', () => {
   const Dashboard = localStorage.getItem('currencyDashboard')
   const currencyDashboard = ref<any>(Dashboard ? JSON.parse(Dashboard) : [])
 
+  const DashboardSwitch = localStorage.getItem('currencyDashboardSwitch')
+  const currencyDashboardSwitch = ref(Number(DashboardSwitch) ?? 0)
+
   /** 处置操作 */
 
   // 修改语言
@@ -141,6 +144,11 @@ export const useGlobalStore = defineStore('global', () => {
     localStorage.setItem('currencyDashboard', JSON.stringify(currencyDashboard.value))
   }
 
+  function setCurrencyDashboardSwitch(val: any) {
+    currencyDashboardSwitch.value = val
+    localStorage.setItem('currencyDashboardSwitch', val)
+  }
+
   return {
     theme,
     language,
@@ -155,6 +163,7 @@ export const useGlobalStore = defineStore('global', () => {
     favoriteData,
     socketKchartConnectType,
     currencyDashboard,
+    currencyDashboardSwitch,
     setDanmaku,
     setTheme,
     setLanguage,
@@ -167,6 +176,7 @@ export const useGlobalStore = defineStore('global', () => {
     setFavoriteData,
     SetSocketKchartConnectType,
     setCurrencyDashboard,
-    delCurrencyDashboard
+    delCurrencyDashboard,
+    setCurrencyDashboardSwitch
   }
 })

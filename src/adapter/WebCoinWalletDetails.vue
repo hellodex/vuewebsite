@@ -14,7 +14,10 @@
         />
         <!-- K线 -->
         <el-scrollbar>
-          <div class="coinWalletDetails-section-main">
+          <div
+            class="coinWalletDetails-section-main"
+            :style="{ height: `calc(100vh - 174px - ${dashboardSwitch ? '56px' : '0px'})` }"
+          >
             <div class="tradingViewLoading" id="trading-view-box">
               <el-skeleton
                 style="width: 100%; height: 100%"
@@ -70,6 +73,17 @@
                     size="small"
                     :active-value="1"
                     :inactive-value="0"
+                    style="--el-switch-on-color: #13ce66; --el-switch-off-color: #26282c"
+                  />
+                </div>
+                <div class="data-items display-flex align-items-center">
+                  <span style="margin-right: 4px">多币种看板</span>
+                  <el-switch
+                    v-model="dashboardSwitch"
+                    @change="handelSwitchCurrencyDashboard"
+                    :active-value="1"
+                    :inactive-value="0"
+                    size="small"
                     style="--el-switch-on-color: #13ce66; --el-switch-off-color: #26282c"
                   />
                 </div>
@@ -240,6 +254,9 @@ const globalStore = useGlobalStore()
 const walletType = computed(() => globalStore.walletInfo.walletType)
 const isConnected = computed(() => globalStore.walletInfo.isConnected)
 const customWalletInfo = computed(() => globalStore.customWalletInfo)
+
+const dashboardSwitch = ref(Number(localStorage.getItem('currencyDashboardSwitch')) ?? 0)
+
 const danmaku = ref(
   localStorage.getItem('danmaku') == undefined || localStorage.getItem('danmaku') == null
     ? 1
@@ -655,6 +672,10 @@ const handelSwitchDanmaku = (val: string) => {
   globalStore.setDanmaku(val)
 }
 
+const handelSwitchCurrencyDashboard = (val: string) => {
+  globalStore.setCurrencyDashboardSwitch(val)
+}
+
 onUnmounted(() => {
   clearInterval(timer.value)
   timer.value = null
@@ -743,7 +764,6 @@ onUnmounted(() => {
   }
   .coinWalletDetails-section-main {
     padding-right: 12px;
-    height: calc(100vh - 230px);
   }
   .coinWallet-tabs-box {
     // background-color: rgba(23, 24, 27, 0.3);

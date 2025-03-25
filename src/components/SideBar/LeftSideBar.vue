@@ -1,5 +1,5 @@
 <template>
-  <el-scrollbar height="calc(100vh - 160px)">
+  <el-scrollbar :height="`calc(100vh - 104px - ${currencyDashboardSwitch ? '56px' : '0px'})`">
     <aside class="left-layout">
       <div class="coin-list">
         <div class="coin-tab display-flex align-items-center justify-content-sp">
@@ -406,6 +406,7 @@ const customWalletInfo = computed(() => globalStore.customWalletInfo)
 const favoriteData = computed(() => globalStore.favoriteData)
 const isConnected = computed(() => globalStore.walletInfo.isConnected)
 const walletType = computed(() => globalStore.walletInfo.walletType)
+const currencyDashboardSwitch = computed(() => globalStore.currencyDashboardSwitch)
 
 const subscribePositions = computed(() => {
   return useSubscribeKChart.subscribePositions || []
