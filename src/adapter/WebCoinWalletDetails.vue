@@ -378,6 +378,17 @@ async function initTokenData() {
   document.title = `${baseInfo.value?.tokenInfo?.baseSymbol} | $${numberFormat(priceIncrease.value.price)} | ${priceIncrease.value.increase}% | 利润80%分给所有人的去中心化交易所`
 }
 
+const setCurrencyDashboard = () => {
+  const params = {
+    pairAddress: baseInfo.value.chainInfo?.pairAddress,
+    chainCode: baseInfo.value.chainInfo?.chainCode,
+    ...baseInfo.value.tokenInfo,
+    price: priceIncrease.value.price,
+    increase: priceIncrease.value.increase
+  }
+  globalStore.setCurrencyDashboard(params)
+}
+
 const getData = async () => {
   const res = await initLimitedOrderPage({
     walletId: parseFloat(customWalletInfo.value.walletInfo?.walletId),
@@ -421,6 +432,7 @@ const priceIncrease = computed(() => {
 watch(
   () => priceIncrease.value,
   (newVal, oldVal) => {
+    setCurrencyDashboard()
     document.title = `${baseInfo.value?.tokenInfo?.baseSymbol} | $${numberFormat(priceIncrease.value.price)} | ${priceIncrease.value.increase}% | 利润80%分给所有人的去中心化交易所`
   }
 )
@@ -650,7 +662,6 @@ onUnmounted(() => {
 </script>
 <style lang="scss" scoped>
 .coinWalletDetails {
-  height: calc(100vh - 135px);
   padding-top: 10px;
   .resize-box {
     width: 99%;
@@ -732,7 +743,7 @@ onUnmounted(() => {
   }
   .coinWalletDetails-section-main {
     padding-right: 12px;
-    height: calc(100vh - 174px);
+    height: calc(100vh - 230px);
   }
   .coinWallet-tabs-box {
     // background-color: rgba(23, 24, 27, 0.3);
