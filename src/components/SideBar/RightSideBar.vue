@@ -1,5 +1,8 @@
 <template>
-  <el-scrollbar height="calc(100vh - 160px)" class="scrollbar-box">
+  <el-scrollbar
+    :height="`calc(100vh - 104px - ${currencyDashboardSwitch ? '56px' : '0px'})`"
+    class="scrollbar-box"
+  >
     <aside class="right-layout">
       <el-skeleton style="width: 100%" :loading="props.loadRightSideBar" animated :rows="28">
         <div class="pond-main">
@@ -359,6 +362,7 @@ const globalStore = useGlobalStore()
 const useSubscribeKChart = useSubscribeKChartInfo()
 
 const walletType = computed(() => globalStore.walletInfo.walletType)
+const currencyDashboardSwitch = computed(() => globalStore.currencyDashboardSwitch)
 
 const i18n = useI18n()
 
