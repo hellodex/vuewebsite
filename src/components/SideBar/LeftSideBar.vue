@@ -1,5 +1,5 @@
 <template>
-  <el-scrollbar height="calc(100vh - 104px)">
+  <el-scrollbar height="calc(100vh - 160px)">
     <aside class="left-layout">
       <div class="coin-list">
         <div class="coin-tab display-flex align-items-center justify-content-sp">

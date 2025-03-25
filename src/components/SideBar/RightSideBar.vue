@@ -1,5 +1,5 @@
 <template>
-  <el-scrollbar height="calc(100vh - 104px)" class="scrollbar-box">
+  <el-scrollbar height="calc(100vh - 160px)" class="scrollbar-box">
     <aside class="right-layout">
       <el-skeleton style="width: 100%" :loading="props.loadRightSideBar" animated :rows="28">
         <div class="pond-main">
@@ -124,7 +124,7 @@
               <PercentageNotbg :value="props.pairInfo.chg4h || 0" />
             </div>
             <div class="flex-1 display-flex flex-direction-col align-items-center">
-              <span class="color-1">24h</span>
+              <span class="color-1">当天</span>
               <PercentageNotbg :value="props.pairInfo.chg1d || 0" />
             </div>
           </div>
