@@ -662,7 +662,6 @@ onUnmounted(() => {
 </script>
 <style lang="scss" scoped>
 .coinWalletDetails {
-  height: calc(100vh - 135px);
   padding-top: 10px;
   .resize-box {
     width: 99%;
@@ -744,7 +743,7 @@ onUnmounted(() => {
   }
   .coinWalletDetails-section-main {
     padding-right: 12px;
-    height: calc(100vh - 174px);
+    height: calc(100vh - 230px);
   }
   .coinWallet-tabs-box {
     // background-color: rgba(23, 24, 27, 0.3);
