@@ -124,7 +124,7 @@
               <PercentageNotbg :value="props.pairInfo.chg4h || 0" />
             </div>
             <div class="flex-1 display-flex flex-direction-col align-items-center">
-              <span class="color-1">24h</span>
+              <span class="color-1">当天</span>
               <PercentageNotbg :value="props.pairInfo.chg1d || 0" />
             </div>
           </div>

@@ -61,6 +61,9 @@ export const useGlobalStore = defineStore('global', () => {
   // k线 socket 连接状态
   const socketKchartConnectType = ref<string | null>(null)
 
+  const Dashboard = localStorage.getItem('currencyDashboard')
+  const currencyDashboard = ref<any>(Dashboard ? JSON.parse(Dashboard) : [])
+
   /** 处置操作 */
 
   // 修改语言
@@ -120,6 +123,24 @@ export const useGlobalStore = defineStore('global', () => {
     socketKchartConnectType.value = val
   }
 
+  function setCurrencyDashboard(val: any) {
+    if (currencyDashboard.value.find((item: any) => item.pairAddress == val.pairAddress)) {
+      currencyDashboard.value.forEach((item: any) => {
+        if (item.pairAddress == val.pairAddress) {
+          item = val
+        }
+      })
+    } else {
+      currencyDashboard.value.push(val)
+    }
+    localStorage.setItem('currencyDashboard', JSON.stringify(currencyDashboard.value))
+  }
+
+  function delCurrencyDashboard(val: any) {
+    currencyDashboard.value = val
+    localStorage.setItem('currencyDashboard', JSON.stringify(currencyDashboard.value))
+  }
+
   return {
     theme,
     language,
@@ -133,6 +154,7 @@ export const useGlobalStore = defineStore('global', () => {
     customWalletInfo,
     favoriteData,
     socketKchartConnectType,
+    currencyDashboard,
     setDanmaku,
     setTheme,
     setLanguage,
@@ -143,6 +165,8 @@ export const useGlobalStore = defineStore('global', () => {
     setAccountInfo,
     setCustomWalletInfo,
     setFavoriteData,
-    SetSocketKchartConnectType
+    SetSocketKchartConnectType,
+    setCurrencyDashboard,
+    delCurrencyDashboard
   }
 })

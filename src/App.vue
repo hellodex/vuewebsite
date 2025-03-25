@@ -3,6 +3,7 @@
     <NavBar />
   </div>
   <main class="display-flex flex-direction-col main">
+    <CurrencyDashboard v-if="route.fullPath.indexOf('/k/') !== -1 && windowWidth > 700" />
     <section
       :class="
         route.fullPath.indexOf('/k/') !== -1 && windowWidth > 700
@@ -81,6 +82,8 @@ import Loading from '@/components/Loading/index.vue'
 import NavBar from '@/components/SideBar/NavBar.vue'
 import FooterBar from '@/components/SideBar/FooterBar.vue'
 import LeftSideBar from '@/components/SideBar/LeftSideBar.vue'
+import CurrencyDashboard from '@/components/Charts/CurrencyDashboard.vue'
+
 import { useGlobalStore } from '@/stores/global'
 import { useWindowWidth } from '@/hooks/useWindowWidth'
 import vueDanmaku from 'vue3-danmaku'
