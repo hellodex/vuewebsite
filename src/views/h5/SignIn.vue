@@ -100,7 +100,7 @@
       </el-form>
       <div class="other-login">
         <van-divider>其他登录方式</van-divider>
-        <a :href="`${tgUrl}?start=l_${new Date().getTime()}_P_Web`" target="_blank" class="img-tg">
+        <a :href="`${tgUrl}?start=TS_${new Date().getTime()}_P_Web`" target="_blank" class="img-tg">
           <img src="@/assets/img/img-tg.png" alt="" />
         </a>
       </div>

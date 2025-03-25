@@ -44,7 +44,7 @@
 
               <span class="tg-trade-subtitle">更快发现，秒级交易🚀 1 秒光速上链，点击即交易</span>
               <a
-                :href="`${tgUrl}?start=l_${new Date().getTime()}_P_Web`"
+                :href="`${tgUrl}?start=TS_${new Date().getTime()}_P_Web`"
                 target="_blank"
                 class="form-btn"
               >
