@@ -78,7 +78,7 @@ const handelJump = (item: any) => {
 }
 
 const handelRemove = (params: any, index: number) => {
-  const info = currencyDashboard.value[index - 1]
+  const info = index == 0 ? currencyDashboard.value[1] : currencyDashboard.value[index - 1]
   const arr = currencyDashboard.value.filter((item: any) => item.pairAddress !== params.pairAddress)
   globalStore.delCurrencyDashboard(arr)
   handelJump(info)
