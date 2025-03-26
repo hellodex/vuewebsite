@@ -3,10 +3,11 @@
     <div class="tabs display-flex align-items-center">
       <vue-draggable-next
         v-model="currencyDashboard"
-        @change="log"
+        @end="onEnd"
         :sort="true"
         :animation="1000"
-        class="dragArea list-group display-flex align-items-center"
+        force-fallback="true"
+        class="display-flex align-items-center"
       >
         <div
           class="display-flex align-items-center tab-item"
@@ -83,8 +84,12 @@ const handelRemove = (params: any, index: number) => {
   handelJump(info)
 }
 
-const log = (evt: any) => {
-  console.log('Dragging ended:', evt)
+const onEnd = (evt: any) => {
+  const { newIndex, oldIndex } = evt
+  const arr = JSON.parse(JSON.stringify(currencyDashboard.value))
+  const movedItem = arr.splice(oldIndex, 1)[0]
+  arr.splice(newIndex, 0, movedItem)
+  globalStore.delCurrencyDashboard(arr)
 }
 </script>
 
@@ -100,7 +105,11 @@ const log = (evt: any) => {
   .tab-item {
     padding: 8px 10px;
     cursor: pointer;
+    user-select: none;
     background-color: transparent;
+  }
+  .tab-item:active {
+    cursor: grabbing;
   }
   .tab-item-cur {
     background-color: rgba(58, 60, 64, 0.4);
