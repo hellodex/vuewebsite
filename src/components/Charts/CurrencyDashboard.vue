@@ -48,7 +48,7 @@
           <el-icon
             size="18"
             style="margin-left: 18px"
-            v-if="item.pairAddress == chainInfo.pairAddress"
+            v-if="item.pairAddress == chainInfo.pairAddress && currencyDashboard.length > 1"
             @click.stop="handelRemove(item, index)"
             ><Close
           /></el-icon>
