@@ -449,7 +449,10 @@ const priceIncrease = computed(() => {
 watch(
   () => priceIncrease.value,
   (newVal, oldVal) => {
-    setCurrencyDashboard()
+    if (baseInfo.value.chainInfo?.pairAddress) {
+      setCurrencyDashboard()
+    }
+
     document.title = `${baseInfo.value?.tokenInfo?.baseSymbol} | $${numberFormat(priceIncrease.value.price)} | ${priceIncrease.value.increase}% | 利润80%分给所有人的去中心化交易所`
   }
 )
