@@ -280,8 +280,9 @@ export const STATUS_TYPE: any = {
 }
 
 export const MAIN_COIN: any = {
-  WETH: 'ETH',
-  BTCB: 'BTC'
+  WETH: 'WETH',
+  BTCB: 'BTC',
+  WBTC: 'WBTC'
 }
 
 export const QUICK_TRADE_CONFIG = {
