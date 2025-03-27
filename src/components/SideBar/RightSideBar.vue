@@ -180,9 +180,9 @@
                         ? 'down-color'
                         : 'up-color'
                     "
-                    >${{ numberFormat(props.currentTokenHoldInfo?.totalEarn) }}(
-                    <PercentageNotbg :value="props.currentTokenHoldInfo?.totalEarnRate || 0" />
-                    )</strong
+                    >${{ numberFormat(props.currentTokenHoldInfo?.totalEarn) }}(<PercentageNotbg
+                      :value="props.currentTokenHoldInfo?.totalEarnRate || 0"
+                    />)</strong
                   >
                 </div>
               </div>

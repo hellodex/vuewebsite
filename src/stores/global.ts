@@ -130,12 +130,14 @@ export const useGlobalStore = defineStore('global', () => {
     if (currencyDashboard.value.find((item: any) => item.pairAddress == val.pairAddress)) {
       currencyDashboard.value.forEach((item: any) => {
         if (item.pairAddress == val.pairAddress) {
-          item = val
+          item.price = val.price
+          item.increase = val.increase
         }
       })
     } else {
       currencyDashboard.value.push(val)
     }
+
     localStorage.setItem('currencyDashboard', JSON.stringify(currencyDashboard.value))
   }
 
