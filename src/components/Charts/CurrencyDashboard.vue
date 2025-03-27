@@ -39,7 +39,11 @@
               <div class="display-flex align-items-center font-family-Heavy">
                 <span
                   :class="item.increase[0] === '-' ? 'price-txt down-color' : 'price-txt up-color'"
-                  >${{ numberFormat(item.price || 0) }}</span
+                  >${{
+                    MAIN_COIN[item.baseSymbol]
+                      ? numFormat(item.price || 0)
+                      : numberFormat(item.price || 0)
+                  }}</span
                 >
                 <PercentageNotbg :value="item.increase" />
               </div>
@@ -60,7 +64,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { MAIN_COIN } from '@/types'
-import { numberFormat } from '@/utils'
+import { numberFormat, numFormat } from '@/utils'
 import { useRouter } from 'vue-router'
 import { useChainInfoStore } from '@/stores/chainInfo'
 import { useGlobalStore } from '@/stores/global'

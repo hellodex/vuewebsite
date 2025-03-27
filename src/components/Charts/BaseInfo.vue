@@ -80,7 +80,11 @@
               </div>
               <div class="increase-text display-flex align-items-center font-family-Heavy">
                 <span :class="priceIncrease.increase[0] === '-' ? 'down-color' : 'up-color'"
-                  >${{ numberFormat(priceIncrease.price || 0) }}</span
+                  >${{
+                    MAIN_COIN[baseInfo?.tokenInfo?.baseSymbol]
+                      ? numFormat(priceIncrease.price || 0)
+                      : numberFormat(priceIncrease.price || 0)
+                  }}</span
                 >
                 <PercentageChange :value="priceIncrease.increase" />
               </div>
@@ -287,7 +291,7 @@
 </template>
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { numberFormat, shortifyAddress } from '@/utils'
+import { numberFormat, shortifyAddress, numFormat } from '@/utils'
 import { useSubscribeKChartInfo } from '@/stores/subscribeKChartInfo'
 import PercentageChange from '@/components/Percentage/PercentageChange.vue'
 import MonitorTypeDialog from '@/components/Dialogs/MonitorTypeDialog.vue'
