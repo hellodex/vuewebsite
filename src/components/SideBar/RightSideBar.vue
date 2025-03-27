@@ -1,7 +1,8 @@
 <template>
   <el-scrollbar
-    :height="`calc(100vh - 104px - ${currencyDashboardSwitch ? '56px' : '0px'})`"
+    :height="`calc(100vh - 104px)`"
     class="scrollbar-box"
+    :style="{ position: 'relative', top: `${currencyDashboardSwitch ? '-56px' : '0px'}` }"
   >
     <aside class="right-layout">
       <el-skeleton style="width: 100%" :loading="props.loadRightSideBar" animated :rows="28">
