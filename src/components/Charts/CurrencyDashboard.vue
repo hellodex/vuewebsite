@@ -5,7 +5,7 @@
         v-model="currencyDashboard"
         @end="onEnd"
         :sort="true"
-        :animation="1000"
+        :animation="100"
         force-fallback="true"
         class="display-flex align-items-center"
       >
@@ -95,12 +95,14 @@ const onEnd = (evt: any) => {
 
 <style scoped lang="scss">
 .currency-dashboard {
+  width: calc(100vw - 300px);
   height: 56px;
   border-bottom: 1px solid rgba(38, 40, 44, 0.3);
   .tabs {
-    width: 100vw;
+    width: 100%;
     overflow: hidden;
     overflow-x: scroll;
+    scroll-behavior: smooth; /* 添加平滑滚动 */
   }
   .tab-item {
     padding: 8px 10px;
