@@ -23,7 +23,8 @@
     </div>
     <div class="other-link">
       <a v-for="item in othersLink" :href="item.to" :key="item.to" target="_blank">
-        <svg-icon :name="item.icon" class="link-icon"></svg-icon>
+        <svg-icon :name="item.icon" class="link-icon" v-if="item.icon"></svg-icon>
+        <img src="@/assets/img/img-tg.png" class="link-icon" v-else />
         <span style="color: #a0a0a0; margin-left: 4px">{{ item.txt }}</span>
       </a>
       <a target="_blank" href="https://t.me/HelloDex_cn">
@@ -49,6 +50,11 @@ const othersLink = ref<{ icon: string; to: string; txt: string }[]>([
     icon: 'github-grey',
     to: 'https://github.com/hellodex',
     txt: '代码已开源'
+  },
+  {
+    icon: '',
+    to: 'https://t.me/hellodexbot?start=start',
+    txt: '交易机器人'
   },
   {
     icon: 'bot',
