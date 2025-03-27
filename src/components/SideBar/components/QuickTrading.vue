@@ -281,7 +281,7 @@ const handelBuy = async (item: any) => {
 }
 
 const handelSell = async (item: any) => {
-  sellIndex.value = item
+  sellIndex.value = item / 100
   if (walletType.value == 'Email') {
     await handelCustomTradeSwap(sellInfo.value, buyInfo.value, 'sell')
   } else {
