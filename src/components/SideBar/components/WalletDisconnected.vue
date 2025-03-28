@@ -62,7 +62,6 @@ import { useI18n } from 'vue-i18n'
 import { useGlobalStore } from '@/stores/global'
 import { useChainConfigsStore } from '@/stores/chainConfigs'
 import { shortifyAddress, numberFormat } from '@/utils'
-import { getTokenList } from '@/utils/transition'
 
 import { useConnectWallet } from '@/hooks/useConnectWallet'
 
@@ -74,7 +73,8 @@ const total = ref<number>(0)
 const chainConfigs = computed(() => chain.chainConfigs)
 const address = computed(() => globalStore.walletInfo.address)
 const chainId = computed(() => globalStore.walletInfo.chainId)
-const walletType = computed(() => globalStore.walletInfo.walletType)
+
+const tokenList = computed(() => globalStore.tokenList)
 
 const { disconnectWallet } = useConnectWallet()
 
@@ -82,31 +82,15 @@ const handelDisconnect = () => {
   disconnectWallet()
 }
 
-const getProperty = async (chainCode: any, walletAddress: any) => {
-  const res = await getTokenList(chainCode, walletAddress)
-  console.log(res)
+const getProperty = () => {
   total.value = 0
-  let propertyData: any = res || []
-  propertyData?.forEach((item: any) => {
+  tokenList.value.forEach((item: any) => {
     total.value += parseFloat(item.totalAmount)
   })
 }
 
-watch([address, chainId], () => {
-  getProperty(
-    chainConfigs.value?.find((item: { chainId: any }) => item.chainId == chainId.value)?.chainCode,
-    address.value
-  )
-})
-
-watch(chainConfigs, () => {
-  if (address.value) {
-    getProperty(
-      chainConfigs.value?.find((item: { chainId: any }) => item.chainId == chainId.value)
-        ?.chainCode,
-      address.value
-    )
-  }
+watch(tokenList, () => {
+  getProperty()
 })
 </script>
 <style lang="scss">

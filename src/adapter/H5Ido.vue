@@ -143,7 +143,7 @@ import {
   evmTransactionReceipt,
   solanaTransactionReceipt
 } from '@/utils/transition'
-import { APItransferTo, APIgetTokensByWalletAddr, APIgetidoInfo } from '@/api'
+import { APItransferTo, APIgetidoInfo } from '@/api'
 import {
   notificationInfo,
   notificationSuccessful,
@@ -166,6 +166,7 @@ const address = computed(() => globalStore.walletInfo.address)
 const isConnected = computed(() => globalStore.walletInfo.isConnected)
 const chainId = computed(() => globalStore.walletInfo.chainId)
 const walletType = computed(() => globalStore.walletInfo.walletType)
+const tokenList = computed(() => globalStore.tokenList)
 
 const customWalletInfo = computed(() => globalStore.customWalletInfo)
 
@@ -247,11 +248,8 @@ watch(chain_Stablecoins, () => {
   tokensByWalletAddr()
 })
 
-const tokensByWalletAddr = async () => {
-  const res: any = await APIgetTokensByWalletAddr({
-    chainCode: chain_Stablecoins.value.chainCode,
-    walletAddress: chain_Stablecoins.value.walletAddress
-  })
+const tokensByWalletAddr = () => {
+  const res: any = tokenList.value
   const obj = res?.find((item: any) => {
     const address = item.chainCode == 'SOLANA' ? item.address : item.address.toLowerCase()
     const rpc =

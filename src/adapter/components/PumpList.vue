@@ -172,7 +172,7 @@
                           >
                         </div>
                       </WalletConnect>
-                      <QuickBuyTrade :info="item" :amount="amount" :tokenList="tokenList" v-else
+                      <QuickBuyTrade :info="item" :amount="amount" v-else
                         >买入
                         {{ amount && amount !== '0' ? numberFormat(amount) : '' }}</QuickBuyTrade
                       >
@@ -201,7 +201,7 @@ import { ApiGetPumpRanking } from '@/api'
 import { useI18n } from 'vue-i18n'
 import { useGlobalStore } from '@/stores/global'
 import { numberFormat, timeago, handleCoinPairInfo, shortifyAddress, numToFixedTwo } from '@/utils'
-import { getTokenList } from '@/utils/transition'
+
 import TradeDraw from '@/components/Dialogs/TradeDraw.vue'
 import WalletConnect from '@/components/Wallet/WalletConnect.vue'
 import QuickBuyTrade from './QuickBuyTrade.vue'
@@ -216,12 +216,9 @@ defineProps({
 
 const i18n = useI18n()
 const globalStore = useGlobalStore()
-const { chainLogoObj } = globalStore
 
 const isConnected = computed(() => globalStore.walletInfo.isConnected)
-const customWalletInfo = computed(() => globalStore.customWalletInfo)
 
-const tokenList = ref<any>([])
 const skeletonLoading = ref<boolean>(false)
 
 const pumpObj = reactive<Record<string, any>>({
@@ -229,7 +226,7 @@ const pumpObj = reactive<Record<string, any>>({
   list2: [],
   list3: []
 })
-const timer = ref<any>(null)
+
 const timer1 = ref<any>(null)
 const dataTimer1 = ref<any>(null)
 const timer2 = ref<any>(null)
@@ -259,20 +256,6 @@ const getPumpRanking = async (type: number) => {
     default:
       break
   }
-}
-
-const getToken = async () => {
-  const res: any = await getTokenList(
-    customWalletInfo.value.chainCode,
-    customWalletInfo.value.walletInfo?.wallet
-  )
-  tokenList.value = res || []
-}
-
-const setPolling = () => {
-  timer.value = setInterval(() => {
-    isConnected.value && getToken()
-  }, 5000)
 }
 
 const setPolling1 = () => {
@@ -373,18 +356,15 @@ const startTimer = () => {
   setPolling1()
   setPolling2()
   setPolling3()
-  setPolling()
 }
 
 const stopTimer = () => {
-  clearInterval(timer.value)
   clearInterval(timer1.value)
   clearInterval(timer2.value)
   clearInterval(timer3.value)
   clearInterval(dataTimer1.value)
   clearInterval(dataTimer2.value)
   clearInterval(dataTimer3.value)
-  timer.value = null
   timer1.value = null
   timer2.value = null
   timer3.value = null

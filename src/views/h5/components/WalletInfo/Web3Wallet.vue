@@ -179,12 +179,9 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, onUnmounted, computed, watch } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
 import H5WalletConnect from '@/components/Wallet/H5WalletConnect.vue'
 
-import { APIgetTokensByWalletAddress } from '@/api'
-
-import { useChainConfigsStore } from '@/stores/chainConfigs'
 import { numberFormat, shortifyAddress } from '@/utils'
 
 import { useGlobalStore } from '@/stores/global'
@@ -201,9 +198,8 @@ const { chainLogoObj } = globalStore
 
 const address = computed(() => globalStore.walletInfo.address)
 const isConnected = computed(() => globalStore.walletInfo.isConnected)
-const chainId = computed(() => globalStore.walletInfo.chainId)
+const tokenList = computed(() => globalStore.tokenList)
 
-const chainConfigs = useChainConfigsStore().chainConfigs
 const maskDigit = ref(true)
 const checked = ref(false)
 const listSkeletonLoading = ref(false)
@@ -230,17 +226,9 @@ const handelTabChange = (item: { id: number }) => {
 
 const list = ref<any>([])
 const overviewOfFunds = ref<number>(0)
-const timer = ref<any>(null)
 
-const getTokensByWalletAddr = async () => {
-  const res: any = await APIgetTokensByWalletAddress({
-    walletAddress: address.value,
-    chainCode: chainConfigs?.find((item: { chainId: any }) => item.chainId == chainId.value)
-      ?.chainCode
-  })
-
-  console.log(res)
-  listSkeletonLoading.value = false
+const getTokensByWalletAddr = () => {
+  const res: any = tokenList.value
   list.value = res
   overviewOfFunds.value = 0
   res.forEach((item: { totalAmount: any }) => {
@@ -252,26 +240,12 @@ const handelJump = (item: any) => {
   router.push(`/k/${item.pairAddress}?chainCode=${item.chainCode}`)
 }
 
-watch(address, () => {
-  isConnected.value && intervalFun()
+watch(tokenList, () => {
+  getTokensByWalletAddr()
 })
 
-const intervalFun = () => {
-  if (isConnected.value) {
-    clearInterval(timer.value)
-    listSkeletonLoading.value = true
-    getTokensByWalletAddr()
-    timer.value = setInterval(() => {
-      getTokensByWalletAddr()
-    }, 5000)
-  }
-}
 onMounted(() => {
-  intervalFun()
-})
-
-onUnmounted(() => {
-  clearInterval(timer.value)
+  getTokensByWalletAddr()
 })
 </script>
 

@@ -31,8 +31,7 @@ import {
   handelSwitchNetwork,
   handleEvmApprove,
   solanaTransactionReceipt,
-  evmTransactionReceipt,
-  getTokenList
+  evmTransactionReceipt
 } from '@/utils/transition'
 import {
   notificationInfo,
@@ -51,9 +50,6 @@ const props = defineProps({
   amount: {
     required: true,
     type: String
-  },
-  tokenList: {
-    type: Array
   }
 })
 const globalStore = useGlobalStore()
@@ -64,6 +60,8 @@ const address = computed(() => globalStore.walletInfo.address)
 const chainId = computed(() => globalStore.walletInfo.chainId)
 const walletType = computed(() => globalStore.walletInfo.walletType)
 const customWalletInfo = computed(() => globalStore.customWalletInfo)
+const tokenList = computed(() => globalStore.tokenList)
+
 const networkResult = ref<boolean>(true) // 网络对比结果
 const loading = ref<boolean>(false)
 const account: any = localStorage.getItem('accountInfo')
@@ -90,17 +88,8 @@ const pairInfo = computed(() => {
   }
 })
 
-const updateTradingInfo = async () => {
-  const res: any =
-    walletType.value == 'Email' && props.tokenList
-      ? props.tokenList
-      : await getTokenList(
-          walletType.value == 'Email'
-            ? customWalletInfo.value.chainCode
-            : chainConfigs?.find((item: { chainId: any }) => item.chainId == chainId.value)
-                ?.chainCode,
-          customWalletInfo.value.walletInfo?.wallet
-        )
+const updateTradingInfo = () => {
+  const res: any = tokenList.value
   if (coinInfo.value.buyCoin.baseAddress) {
     const obj = res?.find((item: any) => item.address == coinInfo.value.buyCoin.baseAddress)
     coinInfo.value.buyCoin.balance = obj?.amount || 0

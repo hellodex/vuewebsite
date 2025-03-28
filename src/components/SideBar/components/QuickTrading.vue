@@ -145,9 +145,8 @@
   </section>
 </template>
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 
-import { useChainConfigsStore } from '@/stores/chainConfigs'
 import { useGlobalStore } from '@/stores/global'
 import { mainNetworkCurrency, numberFormat, isAllSpaces } from '@/utils'
 import {
@@ -158,8 +157,7 @@ import {
   sendSolanaTransaction,
   handleEvmApprove,
   solanaTransactionReceipt,
-  evmTransactionReceipt,
-  getTokenList
+  evmTransactionReceipt
 } from '@/utils/transition'
 import {
   notificationInfo,
@@ -177,13 +175,13 @@ import { customMessage } from '@/utils/message'
 const i18n = useI18n()
 
 const globalStore = useGlobalStore()
-const chainConfigs = useChainConfigsStore().chainConfigs
 
 const address = computed(() => globalStore.walletInfo.address)
 const isConnected = computed(() => globalStore.walletInfo.isConnected)
 const chainId = computed(() => globalStore.walletInfo.chainId)
 const walletType = computed(() => globalStore.walletInfo.walletType)
 const customWalletInfo = computed(() => globalStore.customWalletInfo)
+const tokenList = computed(() => globalStore.tokenList)
 
 const emit = defineEmits(['circulation', 'close'])
 
@@ -239,7 +237,6 @@ const sellInfo = computed(() => {
 })
 const settingType = ref<boolean>(false) // 设置
 const networkResult = ref<boolean>(true) // 网络对比结果
-const tradeTimer = ref<any>(null) // 代币余额定时器
 const buyIndex = ref<number>(0)
 const sellIndex = ref<number>(0)
 
@@ -248,15 +245,9 @@ const slippage = ref<any>(account ? JSON.parse(account).slippage : '0.03') // �
 
 const mainNetworkCurrencyAmount = ref<any>(0)
 const mainNetworkCurrencyPrice = ref<number>(0)
-const updateTradingInfo = async () => {
+const updateTradingInfo = () => {
   networkResult.value = mainNetworkCurrency(sellInfo.value.chainCode)?.chainId == chainId.value
-
-  const res: any = await getTokenList(
-    walletType.value == 'Email'
-      ? customWalletInfo.value.chainCode
-      : chainConfigs?.find((item: { chainId: any }) => item.chainId == chainId.value)?.chainCode,
-    customWalletInfo.value.walletInfo?.wallet
-  )
+  const res: any = tokenList.value
   mainNetworkCurrencyAmount.value = res?.[0]?.amount || 0
   mainNetworkCurrencyPrice.value = parseFloat(res?.[0]?.price || 0)
   if (sellInfo.value.baseAddress) {
@@ -380,7 +371,6 @@ const handleTrade = async (selectSellCoin: any, selectBuyCoin: any, type: any) =
     result = await sendSolanaTransaction(res, mainNetworkCurrency(selectSellCoin.chainCode).rpc)
   }
   if (result) {
-    updateTradingInfo()
     notificationSuccessful({
       title: `${sellInfo.value.baseSymbol}：${type == 'buy' ? '买入' : '卖出'}交易成功`,
       message: `${i18n.t('TransactionSuccessful')}`
@@ -580,31 +570,12 @@ const handelClose = () => {
   emit('close', false)
 }
 
-// 监听连接钱包的变化
-watch(isConnected, (newValue) => {
-  if (newValue) {
-    updateTradingInfo()
-  }
-})
-
-// 监听地址和链ID变化
-watch([address, chainId], () => {
-  updateTradingInfo()
-})
-
-watch(customWalletInfo, () => {
+watch(tokenList, () => {
   updateTradingInfo()
 })
 
 onMounted(() => {
-  isConnected.value && updateTradingInfo()
-  tradeTimer.value = setInterval(() => {
-    isConnected.value && updateTradingInfo()
-  }, 1000)
-})
-
-onUnmounted(() => {
-  clearInterval(tradeTimer.value)
+  updateTradingInfo()
 })
 </script>
 

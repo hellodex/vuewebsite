@@ -1,7 +1,6 @@
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
 import { useGlobalStore } from '@/stores/global'
-import { APIgetTokensByWalletAddr } from '@/api'
 import { erc20ABI, CHAIN_NETWORKS } from '@/types'
 
 import { useAppKitProvider, useAppKitNetwork } from '@reown/appkit/vue'
@@ -51,18 +50,6 @@ export const getEvmBalance = async (contract: any) => {
       ? await handCoinBalance(address)
       : await handleTokenBalance(address, contract)
   return bal
-}
-
-export const getBalance = async (address: any, chainCode: string, walletAddress: string = '') => {
-  const globalStore = useGlobalStore()
-  const add = address == okCoin || address == sol ? okCoin : address
-  const res: any = await APIgetTokensByWalletAddr({
-    chainCode,
-    walletAddress: walletAddress || globalStore.walletInfo.address
-  })
-  const balance =
-    res?.find((item: any) => item.address.toLowerCase() == add.toLowerCase())?.amount || 0
-  return balance
 }
 
 export const handCoinBalance = async (wallet: any) => {
@@ -401,22 +388,6 @@ export const solanaTransactionReceipt = async (tx: any, rpc: any, retries = 15) 
       await delay(500) // 等待1秒重试
     }
   }
-}
-
-/**
- * @description 代币列表
- * @param chainCode
- * @param walletAddress
- * @returns
- */
-export const getTokenList = async (chainCode: string, walletAddress: any = '') => {
-  const globalStore = useGlobalStore()
-  const res = await APIgetTokensByWalletAddr({
-    chainCode,
-    walletAddress: walletAddress || globalStore.walletInfo.address
-  })
-
-  return res
 }
 
 /**

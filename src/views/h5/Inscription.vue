@@ -403,7 +403,6 @@ import { timeago, numberFormat, shortifyAddress } from '@/utils'
 import Tabbar from '@/components/SideBar/Tabbar.vue'
 import { useI18n } from 'vue-i18n'
 import { useGlobalStore } from '@/stores/global'
-import { getTokenList } from '@/utils/transition'
 import DoubleCost from '@/components/DoubleCost.vue'
 import PumpTrade from './components/Trade/PumpTrade.vue'
 import H5WalletConnect from '@/components/Wallet/H5WalletConnect.vue'
@@ -414,9 +413,7 @@ const globalStore = useGlobalStore()
 const { chainLogoObj } = globalStore
 
 const isConnected = computed(() => globalStore.walletInfo.isConnected)
-const customWalletInfo = computed(() => globalStore.customWalletInfo)
-
-const tokenList = ref<any>([])
+const tokenList = computed(() => globalStore.tokenList)
 
 const handelSearch = () => {
   router.push('/Search')
@@ -490,18 +487,9 @@ const handelTab = async (item: any) => {
   setPolling()
 }
 
-const getToken = async () => {
-  const res: any = await getTokenList(
-    customWalletInfo.value.chainCode,
-    customWalletInfo.value.walletInfo?.wallet
-  )
-  tokenList.value = res || []
-}
-
 const setPolling = () => {
   timer.value = setInterval(() => {
     getPumpRanking()
-    isConnected.value && getToken()
   }, 5000)
 }
 
