@@ -89,10 +89,7 @@
         </template>
       </el-input>
       <div v-if="isConnected" class="price-btn">
-        <el-icon class="is-loading" v-if="loading" :size="18">
-          <Loading />
-        </el-icon>
-        <el-icon :size="18" v-else><Coin /></el-icon>
+        <el-icon :size="18"><Coin /></el-icon>
         <span>
           余额:
           {{ numberFormat(decimalsFormat(deductionInfo.balance, deductionInfo.decimals)) }}
@@ -206,7 +203,7 @@ const handleWalletListPopupClose = (val: boolean) => {
 /**************** ido操作 start ****************/
 const amount = ref('')
 const deductionInfo = ref<any>({})
-const loading = ref<boolean>(false)
+
 const idoInfo = ref<any>({})
 const timer = ref<any>(null)
 
@@ -243,8 +240,7 @@ const handelPresale = () => {
   }
 }
 
-watch(chain_Stablecoins, () => {
-  loading.value = true
+watch(tokenList, () => {
   tokensByWalletAddr()
 })
 
@@ -264,7 +260,6 @@ const tokensByWalletAddr = () => {
     decimals: obj?.decimals || 18,
     token: obj?.address
   }
-  loading.value = false
 }
 
 const customAccountTrade = async () => {
@@ -403,7 +398,6 @@ const handelDisconnect = () => {
 /**************** ido操作 end ****************/
 
 onMounted(() => {
-  loading.value = true
   isConnected.value && tokensByWalletAddr()
   getIdoInfo()
   timer.value = setInterval(() => {
