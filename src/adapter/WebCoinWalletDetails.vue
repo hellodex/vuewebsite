@@ -325,7 +325,7 @@ const activeName = ref(
     'second'
 ) // tabs 切换
 
-const timer = ref<any>(null) // 定时器
+const setIntervalTimer = ref<any>(null) // 定时器
 // 代币信息
 const baseInfo = ref<any>({
   tradingLoading: true
@@ -512,13 +512,13 @@ const setPolling = async () => {
   skeleton.value = true
   localStorage.getItem('accountInfo') && (await getData())
   skeleton.value = false
-  clearInterval(timer.value)
-  timer.value = null
-  timer.value = setInterval(() => {
+  console.log(setIntervalTimer.value)
+  setIntervalTimer.value = setInterval(() => {
     rightSideBarInfo.value = useRightSideBar()
     if (timeSec.value !== 0) {
-      console.info(
+      console.log(
         '🔥🔥🔥🔥🔥🔥K线持仓数据接口轮询时间间隔：',
+        setIntervalTimer.value,
         new Date().getTime() - timeSec.value
       )
     }
@@ -531,7 +531,7 @@ const setPolling = async () => {
 watch(
   () => customWalletInfo.value,
   (newVal, oldVal) => {
-    setPolling()
+    getData()
   }
 )
 
@@ -690,8 +690,10 @@ const handelSwitchCurrencyDashboard = (val: string) => {
 }
 
 onUnmounted(() => {
-  clearInterval(timer.value)
-  timer.value = null
+  if (setIntervalTimer.value) {
+    clearInterval(setIntervalTimer.value)
+    setIntervalTimer.value = null
+  }
 })
 </script>
 <style lang="scss" scoped>
