@@ -89,10 +89,7 @@
         </template>
       </el-input>
       <div v-if="isConnected" class="price-btn">
-        <el-icon class="is-loading" v-if="loading" :size="18">
-          <Loading />
-        </el-icon>
-        <el-icon :size="18" v-else><Coin /></el-icon>
+        <el-icon :size="18"><Coin /></el-icon>
         <span>
           余额:
           {{ numberFormat(decimalsFormat(deductionInfo.balance, deductionInfo.decimals)) }}
@@ -143,7 +140,7 @@ import {
   evmTransactionReceipt,
   solanaTransactionReceipt
 } from '@/utils/transition'
-import { APItransferTo, APIgetTokensByWalletAddr, APIgetidoInfo } from '@/api'
+import { APItransferTo, APIgetidoInfo } from '@/api'
 import {
   notificationInfo,
   notificationSuccessful,
@@ -166,6 +163,7 @@ const address = computed(() => globalStore.walletInfo.address)
 const isConnected = computed(() => globalStore.walletInfo.isConnected)
 const chainId = computed(() => globalStore.walletInfo.chainId)
 const walletType = computed(() => globalStore.walletInfo.walletType)
+const tokenList = computed(() => globalStore.tokenList)
 
 const customWalletInfo = computed(() => globalStore.customWalletInfo)
 
@@ -205,7 +203,7 @@ const handleWalletListPopupClose = (val: boolean) => {
 /**************** ido操作 start ****************/
 const amount = ref('')
 const deductionInfo = ref<any>({})
-const loading = ref<boolean>(false)
+
 const idoInfo = ref<any>({})
 const timer = ref<any>(null)
 
@@ -242,16 +240,12 @@ const handelPresale = () => {
   }
 }
 
-watch(chain_Stablecoins, () => {
-  loading.value = true
+watch(tokenList, () => {
   tokensByWalletAddr()
 })
 
-const tokensByWalletAddr = async () => {
-  const res: any = await APIgetTokensByWalletAddr({
-    chainCode: chain_Stablecoins.value.chainCode,
-    walletAddress: chain_Stablecoins.value.walletAddress
-  })
+const tokensByWalletAddr = () => {
+  const res: any = tokenList.value
   const obj = res?.find((item: any) => {
     const address = item.chainCode == 'SOLANA' ? item.address : item.address.toLowerCase()
     const rpc =
@@ -266,7 +260,6 @@ const tokensByWalletAddr = async () => {
     decimals: obj?.decimals || 18,
     token: obj?.address
   }
-  loading.value = false
 }
 
 const customAccountTrade = async () => {
@@ -405,7 +398,6 @@ const handelDisconnect = () => {
 /**************** ido操作 end ****************/
 
 onMounted(() => {
-  loading.value = true
   isConnected.value && tokensByWalletAddr()
   getIdoInfo()
   timer.value = setInterval(() => {

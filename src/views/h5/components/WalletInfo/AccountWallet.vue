@@ -410,7 +410,7 @@
 <script lang="ts" setup>
 import QRCode from 'qrcode'
 import BigNumber from 'bignumber.js'
-import { ref, onMounted, onUnmounted, computed, watch, reactive } from 'vue'
+import { ref, onMounted, computed, watch, reactive } from 'vue'
 import { useChainConfigsStore } from '@/stores/chainConfigs'
 import { numberFormat, shortifyAddress, isAllSpaces, formatDate } from '@/utils'
 
@@ -420,7 +420,6 @@ import { useI18n } from 'vue-i18n'
 
 import {
   decimalsFormat,
-  getTokenList,
   evmTransactionReceipt,
   solanaTransactionReceipt,
   isEvmAddress,
@@ -447,6 +446,7 @@ const chain = useChainConfigsStore()
 const { chainLogoObj } = globalStore
 
 const customWalletInfo = computed(() => globalStore.customWalletInfo)
+const tokenList = computed(() => globalStore.tokenList)
 
 const chainConfigs = computed(() => chain.chainConfigs)
 
@@ -468,7 +468,6 @@ const handelTabChange = (item: { id: number }) => {
 
 const list = ref<any>([])
 const overviewOfFunds = ref<number>(0)
-const timer = ref<any>(null)
 const listSkeletonLoading = ref(false)
 
 const listModel = computed(() => {
@@ -477,9 +476,8 @@ const listModel = computed(() => {
     : list.value
 })
 
-const getTokensByWalletAddr = async (chainCode: any, walletAddress: any) => {
-  const res: any = await getTokenList(chainCode, walletAddress)
-
+const getTokensByWalletAddr = () => {
+  const res: any = tokenList.value
   console.log(res)
   listSkeletonLoading.value = false
   list.value = res
@@ -636,28 +634,13 @@ const handelAccept = async (params: any) => {
 }
 /**************** 收款/转入 end ****************/
 
-const intervalFun = () => {
-  clearInterval(timer.value)
-  getTokensByWalletAddr(customWalletInfo.value.chainCode, customWalletInfo.value.walletInfo?.wallet)
-  timer.value = setInterval(() => {
-    getTokensByWalletAddr(
-      customWalletInfo.value.chainCode,
-      customWalletInfo.value.walletInfo?.wallet
-    )
-  }, 5000)
-}
-
-watch(customWalletInfo, () => {
-  intervalFun()
+watch(tokenList, () => {
+  getTokensByWalletAddr()
 })
 
 onMounted(() => {
   listSkeletonLoading.value = true
-  intervalFun()
-})
-
-onUnmounted(() => {
-  clearInterval(timer.value)
+  getTokensByWalletAddr()
 })
 </script>
 

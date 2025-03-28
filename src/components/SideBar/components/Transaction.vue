@@ -173,7 +173,6 @@ import { useGlobalStore } from '@/stores/global'
 
 import {
   balanceFormat,
-  getBalance,
   resetAddress,
   handleEvmAllowance,
   sendEvmTransaction,
@@ -228,9 +227,13 @@ const tradeLoading = ref<boolean>(false)
 const balanceInquiryLoading = ref<boolean>(false) // 币余额查询 loading
 const networkResult = ref<boolean>(true) // 网络对比结果
 const timer = ref<any>(null) // 定时器
-const tradeTimer = ref<any>(null)
 const okCoin = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
-const sol = 'So11111111111111111111111111111111111111112'
+
+const address = computed(() => globalStore.walletInfo.address)
+const isConnected = computed(() => globalStore.walletInfo.isConnected)
+const chainId = computed(() => globalStore.walletInfo.chainId)
+const walletType = computed(() => globalStore.walletInfo.walletType)
+const tokenList = computed(() => globalStore.tokenList)
 
 const sellingcoinInfo = ref<any>({}) // 选中的 卖出 币信息
 const buycoinInfo = ref<any>({}) // 选中的 买入 币信息
@@ -310,20 +313,14 @@ const handleSearchSelect = async (val: any) => {
   // 搜索卖出/买入 合约币 列表 选中信息
   if (sellingBuy.value == 'buy') {
     buycoinInfo.value = val.coinInfo
-    buycoinInfo.value.balance = await getBalance(
-      buycoinInfo.value.baseAddress,
-      buycoinInfo.value.chainCode
-    )
+    buycoinInfo.value.balance =
+      tokenList.value.find((item: any) => item.address == buycoinInfo.value.baseAddress)?.amount ||
+      0
   } else if (sellingBuy.value == 'selling') {
     sellingcoinInfo.value = val.coinInfo
-    let sellAddr = okCoin
-    if (sellingcoinInfo.value.baseAddress != '' && sellingcoinInfo.value.baseAddress != okCoin) {
-      sellAddr = sellingcoinInfo.value.baseAddress
-    }
-    if (!sellAddr) {
-      sellAddr = ''
-    }
-    sellingcoinInfo.value.balance = await getBalance(sellAddr, sellingcoinInfo.value.chainCode)
+    sellingcoinInfo.value.balance =
+      tokenList.value.find((item: any) => item.address == sellingcoinInfo.value.baseAddress)
+        ?.amount || 0
   }
   searchDialogVisible.value = val.dialogVisible
 }
@@ -350,12 +347,8 @@ const handelBalance = (params: any, type: string) => {
 }
 // 链接钱包 逻辑
 
-const address = computed(() => globalStore.walletInfo.address)
-const isConnected = computed(() => globalStore.walletInfo.isConnected)
-const chainId = computed(() => globalStore.walletInfo.chainId)
-const walletType = computed(() => globalStore.walletInfo.walletType)
-
-const updateWalletInfo = async () => {
+const updateWalletInfo = () => {
+  const res: any = tokenList.value
   walletInfo.value = {
     address: address.value,
     chainId: chainId.value,
@@ -370,16 +363,12 @@ const updateWalletInfo = async () => {
   // }
 
   if (sellingcoinInfo.value.baseAddress && address.value) {
-    sellingcoinInfo.value.balance = await getBalance(
-      sellingcoinInfo.value.baseAddress,
-      sellingcoinInfo.value.chainCode
-    )
+    const obj = res?.find((item: any) => item.address == sellingcoinInfo.value.baseAddress)
+    sellingcoinInfo.value.balance = obj?.amount || 0
   }
   if (buycoinInfo.value.baseAddress && address.value) {
-    buycoinInfo.value.balance = await getBalance(
-      buycoinInfo.value.baseAddress,
-      buycoinInfo.value.chainCode
-    )
+    const obj = res?.find((item: any) => item.address == buycoinInfo.value.baseAddress)
+    buycoinInfo.value.balance = obj?.amount || 0
   }
 }
 
@@ -446,7 +435,7 @@ const justQuote = async () => {
   const res: any = await APIgetSwap({
     chainId: chainId.value,
     amount: spendAmount,
-    fromTokenAddress: resetAddress(sellingcoinInfo.value.baseAddress || okCoin),
+    fromTokenAddress: resetAddress(sellingcoinInfo.value.baseAddress),
     toTokenAddress: resetAddress(buycoinInfo.value.baseAddress),
     slippage: slippageVal.value / 100,
     userWalletAddress: address.value
@@ -513,7 +502,7 @@ const handleTrade = async () => {
   const res: any = await APIgetSwap({
     chainId,
     amount: spendAmount,
-    fromTokenAddress: resetAddress(sellingcoinInfo.value.baseAddress || okCoin),
+    fromTokenAddress: resetAddress(sellingcoinInfo.value.baseAddress),
     toTokenAddress: resetAddress(buycoinInfo.value.baseAddress),
     slippage: slippageVal.value / 100,
     userWalletAddress: address.value
@@ -532,7 +521,6 @@ const handleTrade = async () => {
     sellingVal.value = ''
     buyVal.value = ''
     positionVal.value = 0
-    updateWalletInfo()
     customMessage({
       type: 'success',
       title: i18n.t('TransactionSuccessful')
@@ -549,7 +537,6 @@ const handleTrade = async () => {
 // 监听连接钱包的变化
 watch(isConnected, (newValue) => {
   if (newValue) {
-    updateWalletInfo()
     customMessage({
       type: 'success',
       title: i18n.t('WalletConnected')
@@ -559,13 +546,16 @@ watch(isConnected, (newValue) => {
 
 // 监听地址和链ID变化
 watch([address, chainId], () => {
-  updateWalletInfo()
   if (isConnected.value) {
     customMessage({
       type: 'success',
       title: i18n.t('WalletDetailsUpdated')
     })
   }
+})
+
+watch(tokenList, () => {
+  updateWalletInfo()
 })
 
 onMounted(() => {
@@ -577,16 +567,11 @@ onMounted(() => {
       )
     }, 1000)
   }
-  isConnected.value && updateWalletInfo()
-
-  tradeTimer.value = setInterval(() => {
-    isConnected.value && updateWalletInfo()
-  }, 5000)
+  updateWalletInfo()
 })
 
 onUnmounted(() => {
   clearInterval(timer.value)
-  clearInterval(tradeTimer.value)
 })
 </script>
 

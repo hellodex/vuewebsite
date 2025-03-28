@@ -380,19 +380,6 @@ export function APIopenFlash() {
 }
 
 /**
- * @description 获取钱包代币列表
- * @param data
- * @returns
- */
-export function APIgetTokensByWalletAddress(data: object) {
-  return http({
-    url: APP_URL + '/api/appv2/getTokensByWalletAddress',
-    method: 'POST',
-    data
-  })
-}
-
-/**
  * @description 初始化积分
  * @param data
  * @returns

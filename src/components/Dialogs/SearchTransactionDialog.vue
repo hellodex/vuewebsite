@@ -71,9 +71,9 @@
   </el-dialog>
 </template>
 <script lang="ts" setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { Search } from '@element-plus/icons-vue'
-import { APISearchToken, APIgetTokensByWalletAddr } from '@/api'
+import { APISearchToken } from '@/api'
 import { debounce, isAllSpaces, shortifyAddress, mainNetworkCurrency, numberFormat } from '@/utils'
 
 import { useChainConfigsStore } from '@/stores/chainConfigs'
@@ -82,6 +82,7 @@ import { decimalsFormat } from '@/utils/transition'
 
 const globalStore = useGlobalStore()
 const { chainLogoObj } = globalStore
+const tokenDataList = computed(() => globalStore.tokenList)
 
 const props: any = defineProps({
   searchDialogVisible: {
@@ -128,13 +129,11 @@ async function getTokenList() {
     return {
       logo: isCurrency
         ? chainConfigs.find((itm: { symbol: any }) => itm.symbol == item.baseToken)?.logo
-        : item.logo
-          ? item.logo
-          : '',
+        : item.logo,
       chainCode: item.chainCode,
       baseTokenDecimals: item.baseTokenDecimals,
       baseToken: item.baseToken,
-      baseAddress: isCurrency ? '' : item.baseAddress,
+      baseAddress: item.baseAddress,
       tvl: item.tvl,
       quoteToken: item.quoteToken
     }
@@ -175,33 +174,31 @@ function handleChange() {
     getTokenList()
   }, 500)
 }
-const getTokensByWalletAddr = async (params: any) => {
-  const res: any = await APIgetTokensByWalletAddr(params)
+
+const getTokensByWallet = () => {
+  const res: any = tokenDataList.value
   tokenList.value = res.map((item: any) => {
     const isCurrency = chainConfigs.some((itm: { symbol: any }) => itm.symbol == item.symbol)
     return {
       logo: isCurrency
         ? chainConfigs.find((itm: { symbol: any }) => itm.symbol == item.symbol)?.logo
-        : item.logo
-          ? item.logo
-          : '',
+        : item.logo,
       chainCode: item.chainCode,
       baseTokenDecimals: item.decimals,
       baseToken: item.symbol,
-      baseAddress: isCurrency ? '' : item.address,
+      baseAddress: item.address,
       tvl: item.amount,
       quoteToken: item.chainCode
     }
   })
 }
 
+watch(tokenDataList, () => {
+  getTokensByWallet()
+})
+
 onMounted(() => {
-  if (props.walletInfo.isConnected) {
-    getTokensByWalletAddr({
-      walletAddress: props.walletInfo.address,
-      chainCode: props.walletInfo.chainCode
-    })
-  }
+  getTokensByWallet()
 })
 </script>
 <style lang="scss">

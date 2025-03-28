@@ -272,7 +272,6 @@ import { useGlobalStore } from '@/stores/global'
 import { numberFormat, isAllSpaces } from '@/utils'
 import {
   decimalsFormat,
-  getTokenList,
   evmTransactionReceipt,
   solanaTransactionReceipt,
   isEvmAddress,
@@ -306,6 +305,8 @@ const { chainLogoObj } = globalStore
 const chainConfigs = computed(() => chain.chainConfigs)
 const accountInfo = computed(() => globalStore.accountInfo)
 const customWalletInfo = computed(() => globalStore.customWalletInfo)
+
+const tokenList = computed(() => globalStore.tokenList)
 
 const timer = ref<any>(null)
 
@@ -366,8 +367,8 @@ const rules = reactive<FormRules<RuleForm>>({
 
 const propertySkeleton = ref<boolean>(false)
 const propertyData = ref<any>([])
-const getProperty = async (chainCode: any, walletAddress: any) => {
-  const res = await getTokenList(chainCode, walletAddress)
+const getProperty = () => {
+  const res = tokenList.value
   console.log(res)
   total.value = 0
   propertyData.value = res || []
@@ -381,9 +382,12 @@ watch(customWalletInfo, (newValue) => {
   clearInterval(timer.value)
   propertySkeleton.value = true
   skeleton.value = true
-  getProperty(newValue.chainCode, newValue.walletInfo.wallet)
   getData()
   restart()
+})
+
+watch(tokenList, () => {
+  getProperty()
 })
 
 const handelTransfeIn = async (row: any, info: any) => {
@@ -532,7 +536,6 @@ const getData = async () => {
 
 const restart = () => {
   timer.value = setInterval(async () => {
-    getProperty(customWalletInfo.value.chainCode, customWalletInfo.value.walletInfo?.wallet)
     getData()
   }, 5000)
 }
@@ -549,7 +552,7 @@ const handelHidePosition = (val: string) => {
 onMounted(() => {
   propertySkeleton.value = true
   skeleton.value = true
-  getProperty(customWalletInfo.value.chainCode, customWalletInfo.value.walletInfo?.wallet)
+  getProperty()
   getData()
   restart()
 })

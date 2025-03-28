@@ -250,7 +250,7 @@
 </template>
 <script lang="ts" setup>
 import BigNumber from 'bignumber.js'
-import { ref, watchEffect, computed, onMounted, onUnmounted, reactive } from 'vue'
+import { ref, watchEffect, computed, onMounted, onUnmounted, reactive, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import type { CSSProperties } from 'vue'
 import { MAIN_COIN } from '@/types'
@@ -259,7 +259,6 @@ import {
   resetAddress,
   solanaTransactionReceipt,
   evmTransactionReceipt,
-  getTokenList,
   decimalsFormat,
   getEvmGasGwei
 } from '@/utils/transition'
@@ -322,6 +321,7 @@ const gasObj = ref<any>({
 
 const customWalletInfo = computed(() => globalStore.customWalletInfo)
 const isConnected = computed(() => globalStore.walletInfo.isConnected)
+const tokenList = computed(() => globalStore.tokenList)
 
 const buyInfo = ref<any>({})
 const sellInfo = ref<any>({})
@@ -337,11 +337,8 @@ const handelSlippage = (val: any) => {
   slippage.value = val
 }
 
-const updateCoinInfo = async () => {
-  const res: any = await getTokenList(
-    customWalletInfo.value.chainCode,
-    customWalletInfo.value.walletInfo?.wallet
-  )
+const updateCoinInfo = () => {
+  const res: any = tokenList.value
   mainNetworkCurrencyPrice.value = parseFloat(res?.[0].price || 0)
   if (sellInfo.value.baseAddress) {
     const obj = res?.find((item: any) => item.address == sellInfo.value.baseAddress)
@@ -381,12 +378,13 @@ watchEffect(async () => {
   console.log(props.coinInfo)
   buyInfo.value = { ...props.coinInfo.buyCoin }
   sellInfo.value = { ...props.coinInfo.sellCoin }
-  if (isConnected.value) {
-    await updateCoinInfo()
-  }
   if (sellInfo.value.chainCode != 'SOLANA') {
     gasObj.value = await getEvmGasGwei(mainNetworkCurrency(sellInfo.value.chainCode)?.rpc)
   }
+})
+
+watch(tokenList, () => {
+  updateCoinInfo()
 })
 
 /************** 一键交易 买入 start **************/
@@ -914,13 +912,11 @@ const handelLogon = () => {
   router.push('/h5/signIn')
 }
 
-onMounted(async () => {
+onMounted(() => {
+  updateCoinInfo()
   timer.value = setInterval(async () => {
     if (sellInfo.value.chainCode != 'SOLANA') {
       gasObj.value = await getEvmGasGwei(mainNetworkCurrency(sellInfo.value.chainCode).rpc)
-    }
-    if (isConnected.value) {
-      updateCoinInfo()
     }
   }, 5000)
 })
