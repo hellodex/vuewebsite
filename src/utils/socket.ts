@@ -169,7 +169,7 @@ export const socketOnMonitor = (uuid: string, token: string) => {
 
   socket.on('price', (message: string) => {
     const data = JSON.parse(message)
-    console.info(`price-monitor:`, data)
+    console.log(`price-monitor:`, data)
     sendMessage('价格监控', data)
   })
 
@@ -184,7 +184,7 @@ export const socketOnMonitor = (uuid: string, token: string) => {
 
   socket.on('chg', (message: string) => {
     const data = JSON.parse(message)
-    console.info(`chg-monitor:`, data)
+    console.log(`chg-monitor:`, data)
     sendMessage('涨跌幅监控', data)
   })
 
@@ -199,7 +199,7 @@ export const socketOnMonitor = (uuid: string, token: string) => {
 
   socket.on('buy', (message: string) => {
     const data = JSON.parse(message)
-    console.info(`buy-monitor:`, data)
+    console.log(`buy-monitor:`, data)
     sendMessage('大单买入监控', data)
   })
 
@@ -214,7 +214,7 @@ export const socketOnMonitor = (uuid: string, token: string) => {
 
   socket.on('sell', (message: string) => {
     const data = JSON.parse(message)
-    console.info(`sell-monitor:`, data)
+    console.log(`sell-monitor:`, data)
     sendMessage('大单卖出监控', data)
   })
 
@@ -228,7 +228,7 @@ export const socketOnMonitor = (uuid: string, token: string) => {
 
   socket.on('order', (message: string) => {
     const data = JSON.parse(message)
-    console.info(`order-monitor:`, data)
+    console.log(`order-monitor:`, data)
     sendOrderMessage(data)
   })
 }
@@ -302,7 +302,7 @@ export function socketLogout() {
 }
 
 socket.on('connect', () => {
-  console.info('🔥🔥🔥🔥🔥🔥 socket_ID：', socket.id)
+  console.log('🔥🔥🔥🔥🔥🔥 socket_ID：', socket.id)
   const globalStore = useGlobalStore()
   const chainInfo = useChainInfoStore().chainInfo
   setTimeout(() => {
@@ -336,7 +336,7 @@ socket.on('disconnect', () => {
 
 socket.on('connect_error', (err: any) => {
   const ts = String(new Date().getTime())
-  console.info('connect_error', ts)
+  console.log('connect_error', ts)
   socket.io.opts.query.ts = ts
   socket.io.opts.query.sign = CryptoJS.SHA256(channel + ts + version + key).toString()
 })
