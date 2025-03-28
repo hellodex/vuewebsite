@@ -99,11 +99,9 @@ import { computed, ref, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { ElMessageBox } from 'element-plus'
 import { useGlobalStore } from '@/stores/global'
-import { useChainConfigsStore } from '@/stores/chainConfigs'
 import { APIlogout } from '@/api/login'
 import { useI18n } from 'vue-i18n'
 import { shortifyAddress, numberFormat } from '@/utils'
-import { getTokenList } from '@/utils/transition'
 import { socketOffMonitor } from '@/utils/socket'
 import { customMessage } from '@/utils/message'
 
@@ -113,25 +111,21 @@ console.log(route)
 
 const i18n = useI18n()
 const globalStore = useGlobalStore()
-const chain = useChainConfigsStore()
 const total = ref(0)
+
+const tokenList = computed(() => globalStore.tokenList)
 
 const customWalletInfo = computed(() => globalStore.customWalletInfo)
 
-const getProperty = async (chainCode: any, walletAddress: any) => {
-  const res = await getTokenList(chainCode, walletAddress)
-  console.log(res)
+const getProperty = () => {
   total.value = 0
-  let propertyData: any = res || []
-  propertyData?.forEach((item: any) => {
+  tokenList.value.forEach((item: any) => {
     total.value += parseFloat(item.totalAmount)
   })
 }
 
-watch(customWalletInfo, (newValue) => {
-  if (newValue.chainCode) {
-    getProperty(newValue.chainCode, newValue.walletInfo.wallet)
-  }
+watch(tokenList, (newValue) => {
+  getProperty()
 })
 
 const handelJump = (url: string) => {

@@ -186,7 +186,7 @@
 <script lang="ts" setup>
 import { ref, reactive, onMounted, watch, computed, onUnmounted } from 'vue'
 import type { CSSProperties } from 'vue'
-import { APISearchToken, APIgetTokensByWalletAddress } from '@/api'
+import { APISearchToken } from '@/api'
 import { APIgetSwap, APIinitTokenData } from '@/api/coinWalletDetails'
 import {
   mainNetworkCurrency,
@@ -210,7 +210,6 @@ import { decimalsFormat } from '@/utils/transition'
 //钱包处理
 import {
   balanceFormat,
-  getBalance,
   resetAddress,
   handleEvmAllowance,
   sendEvmTransaction,
@@ -253,6 +252,8 @@ const address = computed(() => globalStore.walletInfo.address)
 const isConnected = computed(() => globalStore.walletInfo.isConnected)
 const chainId = computed(() => globalStore.walletInfo.chainId)
 const walletType = computed(() => globalStore.walletInfo.walletType)
+
+const tokenList = computed(() => globalStore.tokenList)
 
 const useChainInfo = useChainInfoStore()
 //获取token数据
@@ -359,20 +360,8 @@ const handelBalance = (params: any, type: string) => {
 }
 
 const handelSearch = async (type: string) => {
-  // 卖出/买入
-  showLoadingToast({
-    duration: 0,
-    forbidClick: true,
-    message: i18n.t('h5.loading')
-  })
   sellingBuy.value = type
-  isConnected.value &&
-    (await getTokensByWalletAddr({
-      walletAddress: address.value,
-      chainCode: chainConfigs.value?.find((item: { chainId: any }) => item.chainId == chainId.value)
-        ?.chainCode
-    }))
-  closeToast()
+  getTokensByWallet()
   showBottom.value = true
 }
 
@@ -381,6 +370,7 @@ const handelSwitchCoin = () => {
 }
 
 const updateWalletInfo = async () => {
+  const res: any = tokenList.value
   // 判断 当前卖出币 chainid 是否和钱包的 chainid 是否一致
   if (sellingcoinInfo.value.chainCode) {
     networkResult.value =
@@ -390,16 +380,12 @@ const updateWalletInfo = async () => {
     }
   }
   if (sellingcoinInfo.value.baseAddress) {
-    sellingcoinInfo.value.balance = await getBalance(
-      sellingcoinInfo.value.baseAddress,
-      sellingcoinInfo.value.chainCode
-    )
+    const obj = res?.find((item: any) => item.address == sellingcoinInfo.value.baseAddress)
+    sellingcoinInfo.value.balance = obj?.amount || 0
   }
   if (buycoinInfo.value.baseAddress) {
-    buycoinInfo.value.balance = await getBalance(
-      buycoinInfo.value.baseAddress,
-      buycoinInfo.value.chainCode
-    )
+    const obj = res?.find((item: any) => item.address == buycoinInfo.value.baseAddress)
+    buycoinInfo.value.balance = obj?.amount || 0
   }
 }
 
@@ -435,20 +421,14 @@ const handelItem = async (val: any) => {
   // 搜索卖出/买入 合约币 列表 选中信息
   if (sellingBuy.value == 'buy') {
     buycoinInfo.value = val
-    buycoinInfo.value.balance = await getBalance(
-      buycoinInfo.value.baseAddress,
-      buycoinInfo.value.chainCode
-    )
+    buycoinInfo.value.balance =
+      tokenList.value.find((item: any) => item.address == buycoinInfo.value.baseAddress)?.amount ||
+      0
   } else if (sellingBuy.value == 'selling') {
     sellingcoinInfo.value = val
-    let sellAddr = okCoin
-    if (sellingcoinInfo.value.baseAddress != '' && sellingcoinInfo.value.baseAddress != okCoin) {
-      sellAddr = sellingcoinInfo.value.baseAddress
-    }
-    if (!sellAddr) {
-      sellAddr = ''
-    }
-    sellingcoinInfo.value.balance = await getBalance(sellAddr, sellingcoinInfo.value.chainCode)
+    sellingcoinInfo.value.balance =
+      tokenList.value.find((item: any) => item.address == sellingcoinInfo.value.baseAddress)
+        ?.amount || 0
   }
   showBottom.value = false
 }
@@ -607,7 +587,7 @@ async function getSearchList() {
           : item.logo,
         chainCode: item.chainCode,
         baseTokenDecimals: item.baseTokenDecimals,
-        baseAddress: isCurrency ? '' : item.baseAddress,
+        baseAddress: item.baseAddress,
         baseTokenSymbol: item.baseToken || '-',
         quoteTokenSymbol: item.quoteToken || '-',
         pairAddress: item.pairAddress,
@@ -621,9 +601,8 @@ async function getSearchList() {
   closeToast()
 }
 
-const getTokensByWalletAddr = async (params: any) => {
-  const res: any = await APIgetTokensByWalletAddress(params)
-  closeToast()
+const getTokensByWallet = () => {
+  const res: any = tokenList.value
   list.value = res.map((item: any) => {
     const isCurrency = chainConfigs.value?.some((itm: { symbol: any }) => itm.symbol == item.symbol)
     return {
@@ -632,7 +611,7 @@ const getTokensByWalletAddr = async (params: any) => {
         : item.logo,
       chainCode: item.chainCode,
       baseTokenDecimals: item.decimals,
-      baseAddress: isCurrency ? '' : item.address,
+      baseAddress: item.address,
       baseTokenSymbol: item.symbol || '-',
       quoteTokenSymbol: item.chainCode || '-',
       pairAddress: '',
@@ -691,7 +670,7 @@ watch([address, chainId], () => {
 
 onMounted(async () => {
   await initTokenData()
-  isConnected.value && updateWalletInfo()
+  updateWalletInfo()
   if (sellingcoinInfo.value.chainCode && sellingcoinInfo.value.chainCode != 'SOLANA') {
     gasPrice.value = await getEvmGasPrice()
     timer.value = setInterval(async () => {

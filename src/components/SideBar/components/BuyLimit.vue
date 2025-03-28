@@ -213,14 +213,13 @@
 
 <script lang="ts" setup>
 import BigNumber from 'bignumber.js'
-import { ref, reactive, computed, watch, onMounted, onUnmounted } from 'vue'
+import { ref, reactive, computed, watch, onMounted } from 'vue'
 import type { CSSProperties } from 'vue'
 import {
   balanceFormat,
   resetAddress,
   solanaTransactionReceipt,
-  evmTransactionReceipt,
-  getTokenList
+  evmTransactionReceipt
 } from '@/utils/transition'
 import {
   notificationInfo,
@@ -241,7 +240,7 @@ const i18n = useI18n()
 const globalStore = useGlobalStore()
 
 const customWalletInfo = computed(() => globalStore.customWalletInfo)
-const isConnected = computed(() => globalStore.walletInfo.isConnected)
+const tokenList = computed(() => globalStore.tokenList)
 
 const props = defineProps({
   coinInfo: {
@@ -373,12 +372,8 @@ const sellInfo = ref({
 const mainNetworkCurrencyAmount = ref<any>(0)
 const mainNetworkCurrencyPrice = ref<any>(0)
 
-const updateTradingInfo = async () => {
-  const res: any = await getTokenList(
-    customWalletInfo.value.chainCode,
-    customWalletInfo.value.walletInfo?.wallet
-  )
-
+const updateTradingInfo = () => {
+  const res: any = tokenList.value
   mainNetworkCurrencyAmount.value = res?.[0].amount
   mainNetworkCurrencyPrice.value = parseFloat(res?.[0].price || 0)
   if (sellInfo.value.baseAddress) {
@@ -396,11 +391,10 @@ const updateTradingInfo = async () => {
 }
 
 const entrustmentOptions = ref<any>(2)
-const tradeTimer = ref<any>(null) // 代币余额定时器
 
 // 限价委托
 
-watch(customWalletInfo, () => {
+watch(tokenList, () => {
   updateTradingInfo()
 })
 
@@ -809,16 +803,8 @@ const formDataClear = () => {
   positionLimitVal.value = 0
 }
 
-onMounted(async () => {
-  isConnected.value && updateTradingInfo()
-
-  tradeTimer.value = setInterval(() => {
-    isConnected.value && updateTradingInfo()
-  }, 5000)
-})
-
-onUnmounted(() => {
-  clearInterval(tradeTimer.value)
+onMounted(() => {
+  updateTradingInfo()
 })
 
 defineExpose({

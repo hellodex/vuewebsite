@@ -87,9 +87,10 @@ import LeftSideBar from '@/components/SideBar/LeftSideBar.vue'
 import CurrencyDashboard from '@/components/Charts/CurrencyDashboard.vue'
 
 import { useGlobalStore } from '@/stores/global'
+import { useChainConfigsStore } from '@/stores/chainConfigs'
 import { useWindowWidth } from '@/hooks/useWindowWidth'
 import vueDanmaku from 'vue3-danmaku'
-
+import { APIgetTokensByWalletAddr } from '@/api'
 import { createAppKit } from '@reown/appkit/vue'
 import { SolanaAdapter } from '@reown/appkit-adapter-solana'
 import { EthersAdapter } from '@reown/appkit-adapter-ethers'
@@ -110,7 +111,16 @@ const route = useRoute()
 const router = useRouter()
 
 const globalStore = useGlobalStore()
+const chain = useChainConfigsStore()
+const chainConfigs = computed(() => chain.chainConfigs)
+
 const accountInfo = computed(() => globalStore.accountInfo)
+const chainId = computed(() => globalStore.walletInfo.chainId)
+const isConnected = computed(() => globalStore.walletInfo.isConnected)
+const address = computed(() => globalStore.walletInfo.address)
+const walletType = computed(() => globalStore.walletInfo.walletType)
+const customWalletInfo = computed(() => globalStore.customWalletInfo)
+
 const danmaku = computed(() => globalStore.danmaku)
 const currencyDashboardSwitch = computed(() => globalStore.currencyDashboardSwitch)
 
@@ -141,6 +151,19 @@ const danmakuFun = () => {
   } else {
     socket.off('smartWalletDanmaku')
   }
+}
+
+const getTokenData = async () => {
+  const res = await APIgetTokensByWalletAddr({
+    chainCode:
+      walletType.value == 'Email'
+        ? customWalletInfo.value.chainCode
+        : chainConfigs.value.find((item) => item.chainId == chainId.value)?.chainCode,
+    walletAddress:
+      walletType.value == 'Email' ? customWalletInfo.value.walletInfo?.wallet : address.value
+  })
+
+  globalStore.setTokenList(res || [])
 }
 
 danmakuFun()
@@ -176,6 +199,11 @@ onMounted(async () => {
   if (!config) {
     localStorage.setItem('quick_trade_config', JSON.stringify(QUICK_TRADE_CONFIG))
   }
+
+  isConnected.value && getTokenData()
+  setInterval(() => {
+    isConnected.value && getTokenData()
+  }, 3000)
 })
 
 // 页面全局loading

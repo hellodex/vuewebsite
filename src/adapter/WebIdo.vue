@@ -48,10 +48,7 @@
               </el-input>
               <WalletConnect v-if="!isConnected" class="ido-login" />
               <div v-else class="price-btn">
-                <el-icon class="is-loading" v-if="loading" :size="22">
-                  <Loading />
-                </el-icon>
-                <el-icon :size="22" v-else><Coin /></el-icon>
+                <el-icon :size="22"><Coin /></el-icon>
                 <span>
                   余额:
                   {{ numberFormat(decimalsFormat(deductionInfo.balance, deductionInfo.decimals)) }}
@@ -128,7 +125,7 @@ import {
 
 import { customMessage } from '@/utils/message'
 
-import { APItransferTo, APIgetTokensByWalletAddr, APIgetidoInfo } from '@/api'
+import { APItransferTo, APIgetidoInfo } from '@/api'
 
 import WalletConnect from '@/components/Wallet/WalletConnect.vue'
 
@@ -142,6 +139,7 @@ const chainId = computed(() => globalStore.walletInfo.chainId)
 const walletType = computed(() => globalStore.walletInfo.walletType)
 const isConnected = computed(() => globalStore.walletInfo.isConnected)
 const address = computed(() => globalStore.walletInfo.address)
+const tokenList = computed(() => globalStore.tokenList)
 
 const customWalletInfo = computed(() => globalStore.customWalletInfo)
 
@@ -168,7 +166,6 @@ const chain_Stablecoins = computed(() => {
 
 const amount = ref('')
 const deductionInfo = ref<any>({})
-const loading = ref<boolean>(false)
 const idoInfo = ref<any>({})
 const timer = ref<any>(null)
 
@@ -217,16 +214,12 @@ const handelPresale = () => {
   }
 }
 
-watch(chain_Stablecoins, () => {
-  loading.value = true
+watch(tokenList, () => {
   tokensByWalletAddr()
 })
 
-const tokensByWalletAddr = async () => {
-  const res: any = await APIgetTokensByWalletAddr({
-    chainCode: chain_Stablecoins.value.chainCode,
-    walletAddress: chain_Stablecoins.value.walletAddress
-  })
+const tokensByWalletAddr = () => {
+  const res: any = tokenList.value
   const obj = res?.find((item: any) => {
     const address = item.chainCode == 'SOLANA' ? item.address : item.address.toLowerCase()
     const rpc =
@@ -241,7 +234,6 @@ const tokensByWalletAddr = async () => {
     decimals: obj?.decimals || 18,
     token: obj?.address
   }
-  loading.value = false
 }
 
 const customAccountTrade = async () => {
@@ -374,12 +366,10 @@ const getIdoInfo = async () => {
 }
 
 onMounted(() => {
-  loading.value = true
-  isConnected.value && tokensByWalletAddr()
+  tokensByWalletAddr()
   getIdoInfo()
   timer.value = setInterval(() => {
     getIdoInfo()
-    isConnected.value && tokensByWalletAddr()
   }, 5000)
 })
 
