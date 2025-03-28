@@ -364,6 +364,8 @@ const handelPauseAndPlay = (val: number) => {
   pauseType.value = val
 }
 
+const timeSec = ref(0)
+
 const hidePosition = ref(Number(localStorage.getItem('hidePosition')))
 const onlyKlinePosition = ref(Number(localStorage.getItem('onlyKlinePosition')))
 
@@ -514,6 +516,14 @@ const setPolling = async () => {
   timer.value = null
   timer.value = setInterval(() => {
     rightSideBarInfo.value = useRightSideBar()
+    if (timeSec.value !== 0) {
+      console.info(
+        '🔥🔥🔥🔥🔥🔥K线持仓数据接口轮询时间间隔：',
+        new Date().getTime() - timeSec.value
+      )
+    }
+
+    timeSec.value = new Date().getTime()
     localStorage.getItem('accountInfo') && getData()
   }, 5000)
 }
