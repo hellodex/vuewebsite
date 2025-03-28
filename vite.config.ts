@@ -40,7 +40,7 @@ export default defineConfig({
     terserOptions: {
       compress: {
         drop_console: true, // 去除所有 console 方法
-        pure_funcs: ['console.error', 'console.warn', 'console.info'] // 保留 console.error
+        pure_funcs: ['console.error', 'console.warn'] // 保留 console.error
       },
       output: {
         comments: false // 去除注释
