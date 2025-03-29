@@ -515,13 +515,13 @@ const setPolling = async () => {
   console.log(setIntervalTimer.value)
   setIntervalTimer.value = setInterval(() => {
     rightSideBarInfo.value = useRightSideBar()
-    if (timeSec.value !== 0) {
-      console.log(
-        '🔥🔥🔥🔥🔥🔥K线持仓数据接口轮询时间间隔：',
-        setIntervalTimer.value,
-        new Date().getTime() - timeSec.value
-      )
-    }
+    // if (timeSec.value !== 0) {
+    //   console.log(
+    //     '🔥🔥🔥🔥🔥🔥K线持仓数据接口轮询时间间隔：',
+    //     setIntervalTimer.value,
+    //     new Date().getTime() - timeSec.value
+    //   )
+    // }
 
     timeSec.value = new Date().getTime()
     localStorage.getItem('accountInfo') && getData()

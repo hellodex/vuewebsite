@@ -1,6 +1,6 @@
 <template>
   <section class="currency-dashboard display-flex align-items-center">
-    <div class="tabs display-flex align-items-center">
+    <div class="tabs display-flex align-items-center" id="tab-items">
       <vue-draggable-next
         v-model="currencyDashboard"
         @end="onEnd"
@@ -8,6 +8,7 @@
         :animation="100"
         force-fallback="true"
         class="display-flex align-items-center"
+        id="drag-box"
       >
         <div
           class="display-flex align-items-center tab-item"
@@ -62,7 +63,7 @@
   </section>
 </template>
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { MAIN_COIN } from '@/types'
 import { numberFormat, numFormat } from '@/utils'
 import { useRouter } from 'vue-router'
@@ -95,6 +96,50 @@ const onEnd = (evt: any) => {
   arr.splice(newIndex, 0, movedItem)
   globalStore.delCurrencyDashboard(arr)
 }
+
+const currencyDashboardOperate = () => {
+  const tabItems = document.getElementById('tab-items')
+  if (tabItems) {
+    const tabWidth = tabItems.clientWidth - 260
+    const itemWidth = 200
+    const itemCount = Math.floor(tabWidth / itemWidth)
+    if (itemCount + 1 <= currencyDashboard.value.length) {
+      globalStore.delCurrencyDashboard(currencyDashboard.value.slice(-(itemCount + 1)))
+    }
+  }
+}
+
+// 创建一个ResizeObserver实例，并定义回调函数
+const resizeObserver = new ResizeObserver((entries) => {
+  for (const entry of entries) {
+    // 处理元素大小变化
+    const { width } = entry.contentRect
+    if (width) {
+      currencyDashboardOperate()
+    }
+  }
+})
+
+// 检查 dragBox 是否为 null
+onMounted(() => {
+  // 监听元素大小变化
+  // 选择需要监听的元素
+  const dragBox = document.getElementById('drag-box')
+  if (dragBox) {
+    resizeObserver.observe(dragBox)
+  }
+
+  window.addEventListener('resize', currencyDashboardOperate)
+})
+
+onUnmounted(() => {
+  // 停止监听元素大小变化
+  const dragBox = document.getElementById('drag-box')
+  if (dragBox) {
+    resizeObserver.unobserve(dragBox)
+  }
+  window.removeEventListener('resize', currencyDashboardOperate)
+})
 </script>
 
 <style scoped lang="scss">
@@ -113,11 +158,14 @@ const onEnd = (evt: any) => {
     cursor: pointer;
     user-select: none;
     background-color: transparent;
+    justify-content: space-between;
+    width: 200px;
   }
   .tab-item:active {
     cursor: grabbing;
   }
   .tab-item-cur {
+    width: 260px;
     background-color: rgba(58, 60, 64, 0.4);
   }
   .logo {

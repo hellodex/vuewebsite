@@ -25,7 +25,7 @@ function sendMessage(title: string, data: any) {
   const tokenInfo = useTokenInfoStore().tokenInfo
   const notification = ElNotification({
     dangerouslyUseHTMLString: true,
-    duration: 3000,
+    duration: 2000,
     position: 'bottom-right',
     customClass:
       data.payload.flag == 0
@@ -88,7 +88,7 @@ function sendOrderMessage(data: any) {
   const tokenInfo = useTokenInfoStore().tokenInfo
   const notification = ElNotification({
     dangerouslyUseHTMLString: true,
-    duration: 3000,
+    duration: 2000,
     position: 'bottom-right',
     customClass:
       data.payload.status == 200
