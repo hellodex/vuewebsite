@@ -16,7 +16,7 @@
         <el-scrollbar>
           <div
             class="coinWalletDetails-section-main"
-            :style="{ height: `calc(100vh - 174px - ${dashboardSwitch ? '56px' : '0px'})` }"
+            :style="{ height: `calc(100vh - 184px - ${dashboardSwitch ? '56px' : '0px'})` }"
           >
             <div class="tradingViewLoading" id="trading-view-box">
               <el-skeleton
@@ -515,13 +515,13 @@ const setPolling = async () => {
   console.log(setIntervalTimer.value)
   setIntervalTimer.value = setInterval(() => {
     rightSideBarInfo.value = useRightSideBar()
-    if (timeSec.value !== 0) {
-      console.log(
-        '🔥🔥🔥🔥🔥🔥K线持仓数据接口轮询时间间隔：',
-        setIntervalTimer.value,
-        new Date().getTime() - timeSec.value
-      )
-    }
+    // if (timeSec.value !== 0) {
+    //   console.log(
+    //     '🔥🔥🔥🔥🔥🔥K线持仓数据接口轮询时间间隔：',
+    //     setIntervalTimer.value,
+    //     new Date().getTime() - timeSec.value
+    //   )
+    // }
 
     timeSec.value = new Date().getTime()
     localStorage.getItem('accountInfo') && getData()
@@ -698,7 +698,6 @@ onUnmounted(() => {
 </script>
 <style lang="scss" scoped>
 .coinWalletDetails {
-  padding-top: 10px;
   .resize-box {
     width: 99%;
     background-color: transparent;
