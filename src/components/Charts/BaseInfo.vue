@@ -643,6 +643,9 @@ const handelRouter = (url: string) => {
     color: #959a9f;
     margin-left: 20px;
     cursor: pointer;
+    span {
+      white-space: nowrap;
+    }
     .snipe-icon {
       width: 12px;
       height: 12px;
@@ -670,6 +673,7 @@ const handelRouter = (url: string) => {
     height: 40px;
     font-family: 'PingFangSC-Heavy';
     cursor: pointer;
+    white-space: nowrap;
     .icon-strategy {
       width: 16px;
       height: 16px;
