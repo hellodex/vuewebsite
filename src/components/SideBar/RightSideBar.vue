@@ -1,6 +1,6 @@
 <template>
   <el-scrollbar
-    :height="`calc(100vh - 104px)`"
+    :height="`calc(100vh - 114px)`"
     class="scrollbar-box"
     :style="{ position: 'relative', top: `${currencyDashboardSwitch ? '-56px' : '0px'}` }"
   >

@@ -16,7 +16,7 @@
         <el-scrollbar>
           <div
             class="coinWalletDetails-section-main"
-            :style="{ height: `calc(100vh - 174px - ${dashboardSwitch ? '56px' : '0px'})` }"
+            :style="{ height: `calc(100vh - 184px - ${dashboardSwitch ? '56px' : '0px'})` }"
           >
             <div class="tradingViewLoading" id="trading-view-box">
               <el-skeleton
@@ -698,7 +698,6 @@ onUnmounted(() => {
 </script>
 <style lang="scss" scoped>
 .coinWalletDetails {
-  padding-top: 10px;
   .resize-box {
     width: 99%;
     background-color: transparent;
