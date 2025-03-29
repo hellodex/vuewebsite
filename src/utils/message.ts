@@ -9,7 +9,7 @@ export const customMessage = (params: any) => {
     type: params.type,
     dangerouslyUseHTMLString: true,
     plain: true,
-    duration: params.duration ?? 3000,
+    duration: params.duration ?? 2000,
     customClass: params.customClass || 'message_custom_class',
     message: `<div class='display-flex flex-direction-col'>
                 <div class='display-flex align-items-center'>
