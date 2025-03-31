@@ -200,11 +200,23 @@ onMounted(async () => {
     localStorage.setItem('quick_trade_config', JSON.stringify(QUICK_TRADE_CONFIG))
   }
 
-  isConnected.value && getTokenData()
+  initTokenData()
   setInterval(() => {
-    isConnected.value && getTokenData()
+    initTokenData()
   }, 3000)
 })
+
+const initTokenData = () => {
+  if (!isConnected.value) return
+
+  if (walletType.value == 'Email') {
+    if (customWalletInfo.value.walletInfo?.wallet) {
+      getTokenData()
+    }
+  } else {
+    getTokenData()
+  }
+}
 
 // 页面全局loading
 let loading = true

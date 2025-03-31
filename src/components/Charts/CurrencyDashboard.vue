@@ -63,7 +63,7 @@
   </section>
 </template>
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
+import { computed, onMounted, onUnmounted } from 'vue'
 import { MAIN_COIN } from '@/types'
 import { numberFormat, numFormat } from '@/utils'
 import { useRouter } from 'vue-router'
