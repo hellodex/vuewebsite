@@ -741,8 +741,8 @@ defineExpose({
   }
   .btn {
     border-radius: 4px;
-    height: 29px;
-    line-height: 29px;
+    height: 32px;
+    line-height: 32px;
     display: flex;
     align-items: center;
     justify-content: center;
