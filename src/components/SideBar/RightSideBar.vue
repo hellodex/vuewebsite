@@ -45,8 +45,8 @@
             </div>
             <img src="@/assets/img/rocket-logo.svg" alt="" class="rocket-logo" />
           </div>
-          <div class="pond-info">
-            <div class="pond-info-item display-flex align-items-center justify-content-sp">
+          <div class="pond-info" style="margin: 18px 0 12px 0">
+            <div class="display-flex align-items-center justify-content-sp">
               <div
                 class="flex-1 display-flex flex-direction-col snipe-text"
                 @click="sniperDialogVisible = true"
@@ -82,53 +82,44 @@
             </div>
           </div>
           <div class="pond-info">
-            <div class="pond-info-item display-flex flex-direction-col" style="padding: 6px 10px">
-              <div
-                class="flex-1 display-flex align-items-center justify-content-sp"
-                style="padding: 0"
-              >
-                <span class="color-1">{{ baseInfo.tokenInfo?.baseSymbol }}</span>
+            <div class="display-flex flex-direction-col" style="">
+              <div class="display-flex align-items-center justify-content-sp">
+                <span class="color1">{{ baseInfo.tokenInfo?.baseSymbol }}</span>
                 <strong
                   >{{ numberFormat(pairInfo.baseAmount || 0) }} ${{
                     numberFormat((pairInfo.baseAmount || 0) * (pairInfo.basePrice || 0))
                   }}</strong
                 >
               </div>
-              <div
-                class="flex-1 display-flex align-items-center justify-content-sp"
-                style="margin: 4px 0"
-              >
-                <span class="color-1">{{ baseInfo.tokenInfo?.quoteSymbol }}</span>
+              <div class="display-flex align-items-center justify-content-sp" style="margin: 6px 0">
+                <span class="color1">{{ baseInfo.tokenInfo?.quoteSymbol }}</span>
                 <strong
                   >{{ numberFormat(pairInfo.quoteAmount || 0) }} ${{
                     numberFormat((pairInfo.quoteAmount || 0) * (pairInfo.quotePrice || 0))
                   }}</strong
                 >
               </div>
-              <div
-                class="flex-1 display-flex align-items-center justify-content-sp"
-                style="padding: 0"
-              >
-                <span class="color-1">开盘时间</span>
+              <div class="display-flex align-items-center justify-content-sp" style="padding: 0">
+                <span class="color1">开盘时间</span>
                 <strong>{{ formatLineDate((pairInfo.startTime || 0) * 1000) }}</strong>
               </div>
             </div>
           </div>
           <div class="pond-time display-flex align-items-center justify-content-sp">
             <div class="flex-1 display-flex flex-direction-col align-items-center">
-              <span class="color-1">5m</span>
+              <span>5m</span>
               <PercentageNotbg :value="props.pairInfo.chg5m || 0" />
             </div>
             <div class="flex-1 display-flex flex-direction-col align-items-center">
-              <span class="color-1">1h</span>
+              <span>1h</span>
               <PercentageNotbg :value="props.pairInfo.chg1h || 0" />
             </div>
             <div class="flex-1 display-flex flex-direction-col align-items-center">
-              <span class="color-1">4h</span>
+              <span>4h</span>
               <PercentageNotbg :value="props.pairInfo.chg4h || 0" />
             </div>
             <div class="flex-1 display-flex flex-direction-col align-items-center">
-              <span class="color-1">当天</span>
+              <span>当天</span>
               <PercentageNotbg :value="props.pairInfo.chg1d || 0" />
             </div>
           </div>
@@ -156,34 +147,36 @@
                   </div>
                 </div>
                 <a target="_blank" href="https://t.me/HelloDex_cn" class="icon-add">
-                  <el-icon :size="16"><Plus /></el-icon>
+                  <el-icon :size="18"><Plus /></el-icon>
                 </a>
               </div>
               <div class="display-flex align-items-center justify-content-sp coin-hold">
                 <div class="display-flex flex-direction-col">
                   <span>{{ props.baseInfo.tokenInfo?.baseSymbol }} 余额</span>
-                  <strong
-                    >${{ numberFormat(props.currentTokenHoldInfo?.volume) }}({{
-                      numberFormat(props.currentTokenHoldInfo?.amount)
-                    }})</strong
+                  <strong style="margin: 6px 0"
+                    >${{ numberFormat(props.currentTokenHoldInfo?.volume) }}</strong
                   >
+                  <strong>{{ numberFormat(props.currentTokenHoldInfo?.amount) }}</strong>
                 </div>
                 <div class="display-flex flex-direction-col align-items-center">
                   <span>总买入</span>
-                  <strong>${{ numberFormat(props.currentTokenHoldInfo?.totalBuyVolume) }}</strong>
+                  <strong style="margin: 6px 0"
+                    >${{ numberFormat(props.currentTokenHoldInfo?.totalBuyVolume) }}</strong
+                  >
+                  <strong>{{ numberFormat(props.currentTokenHoldInfo?.totalBuyAmount) }}</strong>
                 </div>
                 <div class="display-flex flex-direction-col align-items-fd">
                   <span>未实现利润</span>
                   <strong
+                    style="margin: 6px 0"
                     :class="
                       props.currentTokenHoldInfo?.totalEarnRate?.[0] === '-'
                         ? 'down-color'
                         : 'up-color'
                     "
-                    >${{ numberFormat(props.currentTokenHoldInfo?.totalEarn) }}(<PercentageNotbg
-                      :value="props.currentTokenHoldInfo?.totalEarnRate || 0"
-                    />)</strong
+                    >${{ numberFormat(props.currentTokenHoldInfo?.totalEarn) }}</strong
                   >
+                  <PercentageNotbg :value="props.currentTokenHoldInfo?.totalEarnRate || 0" />
                 </div>
               </div>
             </template>
