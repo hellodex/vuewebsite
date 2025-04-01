@@ -157,7 +157,7 @@
                     </div>
                   </div>
                 </div>
-                <span class="icon-add" @click="handelTransfeIn">转入</span>
+                <span class="icon-add" @click="handelTransfeIn">充值</span>
               </div>
               <div class="display-flex align-items-center justify-content-sp coin-hold">
                 <div class="display-flex flex-direction-col">
@@ -351,7 +351,7 @@
         @close="handleClose"
         v-if="sniperDialogVisible"
       />
-      <el-dialog v-model="transfeInVisible" title="转入" width="450" align-center>
+      <el-dialog v-model="transfeInVisible" title="充值" width="450" align-center>
         <div class="display-flex flex-direction-col">
           <p class="network-text">选择网络</p>
           <div class="network-box display-flex align-items-center">
