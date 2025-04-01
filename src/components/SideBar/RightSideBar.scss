@@ -6,6 +6,7 @@
 .right-layout {
   width: 284px;
   min-width: 284px;
+  line-height: 1.2;
   .publicize-main {
     width: 100%;
     position: relative;
@@ -53,7 +54,7 @@
       color: #848e9c;
       flex: 1;
       border-right: 1px solid rgba(58, 60, 64, 0.4);
-      padding: 0 9px;
+      padding: 0 6px;
       span {
         margin-left: 4px;
         white-space: nowrap;
@@ -113,25 +114,29 @@
     display: block;
     font-style: normal;
     margin: 0px 0 12px 0;
-    color: #9aa0aa;
+    color: #cacad5;
     border-radius: 8px;
-    background: rgba(23, 24, 27, 0.3);
     overflow: hidden;
+    padding: 0 10px;
   }
   .pond-time {
-    height: 46px;
-    border-top: 1px solid rgba(38, 40, 44, 0.3);
+    padding: 12px 0;
     border-bottom: 1px solid rgba(38, 40, 44, 0.3);
     .flex-1 {
       height: 100%;
       justify-content: center;
       font-family: 'PingFangSC-Medium';
       span:first-child {
-        color: #5c6068;
+        color: #62636d;
+        text-align: center;
+        margin-bottom: 6px;
       }
-      span.color-1 {
-        color: #9aa0aa;
-      }
+    }
+    .flex-1:first-child {
+      align-items: flex-start;
+    }
+    .flex-1:last-child {
+      align-items: flex-end;
     }
   }
   .pond-info {
@@ -140,12 +145,15 @@
       font-size: 15px;
       padding: 12px 16px;
       span:first-child {
-        color: #5c6068;
+        color: #62636d;
       }
     }
     .pond-info-item {
-      padding: 6px 0;
+      padding: 10px 0;
       border-bottom: 1px solid rgba(38, 40, 44, 0.3);
+    }
+    .color1 {
+      color: #62636d;
     }
     .flex-1 {
       align-items: center;
@@ -154,34 +162,27 @@
         font-weight: normal;
       }
       span {
-        color: #5c6068;
+        color: #62636d;
         white-space: nowrap;
-        margin-bottom: 4px;
-      }
-      span.color-1 {
-        color: #9aa0aa;
-        margin-bottom: 0;
+        margin-bottom: 6px;
       }
     }
     .flex-1:first-child {
       align-items: flex-start;
-      padding-left: 10px;
     }
     .flex-1:last-child {
       align-items: flex-end;
-      padding-right: 10px;
     }
   }
   .coin-info-main {
-    margin-bottom: 8px;
+    margin-bottom: 12px;
     .coin-info {
       cursor: pointer;
       font-size: 14px;
-      color: #9aa0aa;
       padding: 4px 10px;
       flex: 1;
       border-radius: 4px;
-      background: rgba(58, 60, 64, 0.15);
+      background: #222429;
       font-family: 'PingFangSC-Medium';
       .coin-icon {
         width: 24px;
@@ -194,14 +195,14 @@
         -o-border-radius: 50%;
       }
       .chainCode {
-        width: 12px;
-        height: 12px;
+        width: 16px;
+        height: 16px;
         margin-right: 4px;
         border-radius: 50%;
         display: block;
       }
       .price-txt {
-        font-size: 12px;
+        font-size: 13px;
         font-family: 'PingFangSC-Heavy';
       }
     }
@@ -214,29 +215,29 @@
       -webkit-box-pack: center;
       justify-content: center;
       border-radius: 4px;
-      background: rgba(58, 60, 64, 0.15);
-      color: #9aa0aa;
+      background: #222429;
       cursor: pointer;
       margin-left: 8px;
+      color: #cacad5;
     }
   }
   .coin-hold {
-    margin-bottom: 10px;
-    color: #9aa0aa;
+    padding: 6px 0;
+    margin-bottom: 12px;
     font-family: 'PingFangSC-Medium';
     span {
-      color: #5c6068;
+      color: #62636d;
     }
   }
   .transaction-box {
-    padding: 10px 10px 0;
+    padding-top: 14px;
   }
   .trading-tab {
     justify-content: center;
     margin-bottom: 12px;
     padding: 2px;
-    border-radius: 6px;
-    border: 1px solid rgba(38, 40, 44, 0.3);
+    border-radius: 4px;
+    border: 1px solid #1c1c1c;
     .trading-tab-item {
       height: 29px;
       padding: 2px 10px;
@@ -245,22 +246,31 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      font-size: 14px;
+      font-size: 12px;
       color: #848e9c;
       cursor: pointer;
-      border-radius: 6px;
+      border-radius: 4px;
       font-family: 'PingFangSC-Medium';
+      background: rgba(34, 36, 41, 0.7);
+      border: 1px solid rgba(34, 36, 41, 0.7);
+    }
+    .trading-tab-item:nth-child(2) {
+      margin: 0 4px;
     }
     .active {
       color: #f5f5f5;
-      border-radius: 4px;
-      background: rgba(58, 60, 64, 0.4);
+      background-color: rgba(58, 60, 64, 0.2);
+      border: 1px solid rgba(58, 60, 64, 0.7);
     }
     .cur3 {
-      background-color: var(--up-color);
+      color: var(--up-color);
+      background-color: rgba(46, 189, 133, 0.2);
+      border: 1px solid rgba(46, 189, 133, 0.7);
     }
     .cur4 {
-      background-color: var(--down-color);
+      color: var(--down-color);
+      background-color: rgba(246, 70, 93, 0.2);
+      border: 1px solid rgba(246, 70, 93, 0.7);
     }
   }
   .tab-main {
@@ -367,19 +377,19 @@
     .snipe-icon {
       width: 12px;
       height: 12px;
-      margin-right: 6px;
+      margin-right: 2px;
     }
     .chevron-right {
       width: 14px;
       height: 14px;
       margin-left: 2px;
-      color: #5c6068;
+      color: #62636d;
     }
     .margin-element {
       margin-bottom: 4px;
     }
     .snipe-num {
-      color: #9aa0aa !important;
+      color: #cacad5 !important;
     }
   }
 }

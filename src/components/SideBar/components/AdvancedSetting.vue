@@ -6,19 +6,19 @@
         <template #title>
           <div class="display-flex align-items-center">
             <span class="setting-txt">高级设置</span>
-            <el-icon color="#9AA0AA"><Setting /></el-icon>
+            <el-icon color="#CACAD5"><Setting /></el-icon>
           </div>
         </template>
         <template #icon="{ isActive }">
           <span class="icon-ele">
             <svg-icon
               name="chevron-down"
-              style="width: 14px; height: 14px; color: #9aa0aa"
+              style="width: 14px; height: 14px; color: #cacad5"
               v-if="isActive"
             ></svg-icon>
             <svg-icon
               name="chevron-right"
-              style="width: 14px; height: 14px; color: #9aa0aa"
+              style="width: 14px; height: 14px; color: #cacad5"
               v-else
             ></svg-icon>
           </span>
@@ -268,7 +268,7 @@ defineExpose({
   }
   .setting-txt {
     margin-right: 5px;
-    color: #9aa0aa;
+    color: #cacad5;
     font-family: 'PingFangSC-Medium';
   }
   :deep(.el-collapse),
@@ -296,7 +296,7 @@ defineExpose({
   }
   .setting-item {
     margin-bottom: 6px;
-    color: #9aa0aa;
+    color: #cacad5;
     font-family: 'PingFangSC-Medium';
   }
   .setting-span {
@@ -343,7 +343,7 @@ defineExpose({
       border: 1px solid rgba(38, 40, 44, 0.3);
       span:first-child {
         font-size: 12px;
-        color: #9aa0aa;
+        color: #cacad5;
       }
       span:last-child {
         color: #8c8c8c;

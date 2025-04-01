@@ -899,5 +899,9 @@ defineExpose({
       color: var(--font-color-default);
     }
   }
+  :deep(.el-select__wrapper),
+  :deep(.el-input__wrapper) {
+    font-size: 12px;
+  }
 }
 </style>

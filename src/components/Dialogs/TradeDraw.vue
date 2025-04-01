@@ -108,13 +108,14 @@ const handleClose = () => {
 <style lang="scss">
 .draw-box {
   background-color: var(--card-bg-color);
+  color: #cacad5;
   .draw-content {
     .trading-tab {
-      border-radius: 8px;
       justify-content: center;
-      margin-bottom: 20px;
+      margin-bottom: 12px;
       padding: 2px;
-      background-color: var(--bg-color);
+      border-radius: 4px;
+      border: 1px solid #1c1c1c;
       .trading-tab-item {
         height: 29px;
         flex: 1;
@@ -122,20 +123,31 @@ const handleClose = () => {
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        font-size: 14px;
-        color: var(--dex-color-4);
+        font-size: 12px;
+        color: #848e9c;
         cursor: pointer;
-        border-radius: 6px;
+        border-radius: 4px;
+        font-family: 'PingFangSC-Medium';
+        background: rgba(34, 36, 41, 0.7);
+        border: 1px solid rgba(34, 36, 41, 0.7);
+      }
+      .trading-tab-item:nth-child(2) {
+        margin: 0 4px;
       }
       .active {
-        color: var(--font-color-default);
-        background-color: var(--hover-bg-color);
+        color: #f5f5f5;
+        background-color: rgba(58, 60, 64, 0.2);
+        border: 1px solid rgba(58, 60, 64, 0.7);
       }
       .cur3 {
-        background-color: var(--up-color);
+        color: var(--up-color);
+        background-color: rgba(46, 189, 133, 0.2);
+        border: 1px solid rgba(46, 189, 133, 0.7);
       }
       .cur4 {
-        background-color: var(--down-color);
+        color: var(--down-color);
+        background-color: rgba(246, 70, 93, 0.2);
+        border: 1px solid rgba(246, 70, 93, 0.7);
       }
     }
   }
