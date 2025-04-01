@@ -17,8 +17,17 @@
           "
           @click="handelTradeTab(item)"
         >
+          <svg-icon
+            v-if="item.icon && tradeTabIndex !== item.id"
+            :name="item.icon"
+            class="trading-tab-item-icon"
+          ></svg-icon>
+          <svg-icon
+            v-else-if="item.iconCur && tradeTabIndex == item.id"
+            :name="item.iconCur"
+            class="trading-tab-item-icon"
+          ></svg-icon>
           <span>{{ item.name }}</span>
-          <strong style="line"></strong>
         </div>
       </div>
       <OneClickTrading
@@ -80,10 +89,14 @@ const tradeTabList = computed(() => {
         },
         {
           name: '买入',
+          icon: 'icon-tab-buy',
+          iconCur: 'icon-tab-buy-cur',
           id: 3
         },
         {
           name: '卖出',
+          icon: 'icon-tab-sell',
+          iconCur: 'icon-tab-sell-cur',
           id: 4
         }
       ]
@@ -120,7 +133,6 @@ const handleClose = () => {
         height: 29px;
         flex: 1;
         display: flex;
-        flex-direction: column;
         justify-content: center;
         align-items: center;
         font-size: 12px;
@@ -128,26 +140,24 @@ const handleClose = () => {
         cursor: pointer;
         border-radius: 4px;
         font-family: 'PingFangSC-Medium';
-        background: rgba(34, 36, 41, 0.7);
-        border: 1px solid rgba(34, 36, 41, 0.7);
       }
       .trading-tab-item:nth-child(2) {
         margin: 0 4px;
       }
+      .trading-tab-item-icon {
+        width: 12px;
+        height: 12px;
+        margin-right: 4px;
+      }
       .active {
         color: #f5f5f5;
-        background-color: rgba(58, 60, 64, 0.2);
-        border: 1px solid rgba(58, 60, 64, 0.7);
+        background-color: var(--up-color);
       }
       .cur3 {
-        color: var(--up-color);
-        background-color: rgba(46, 189, 133, 0.2);
-        border: 1px solid rgba(46, 189, 133, 0.7);
+        background-color: var(--up-color);
       }
       .cur4 {
-        color: var(--down-color);
-        background-color: rgba(246, 70, 93, 0.2);
-        border: 1px solid rgba(246, 70, 93, 0.7);
+        background-color: var(--down-color);
       }
     }
   }

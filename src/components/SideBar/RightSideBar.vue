@@ -67,17 +67,26 @@
               </div>
               <div class="flex-1 display-flex flex-direction-col align-items-center">
                 <span>总市值</span>
-                <strong>${{ numberFormat(props.pairInfo?.circulationVol || 0) }}</strong>
+                <div class="display-flex align-items-center">
+                  <svg-icon name="icon-money-num" class="snipe-icon"></svg-icon>
+                  <strong>${{ numberFormat(props.pairInfo?.circulationVol || 0) }}</strong>
+                </div>
               </div>
               <div class="flex-1 display-flex flex-direction-col align-items-center">
                 <span>{{ i18n.t('kChart.Vol1D') }}</span>
-                <strong>${{ numberFormat(props.pairInfo.tradeTvl) }}</strong>
+                <div class="display-flex align-items-center">
+                  <svg-icon name="icon-money-num" class="snipe-icon"></svg-icon>
+                  <strong>${{ numberFormat(props.pairInfo.tradeTvl) }}</strong>
+                </div>
               </div>
               <div class="flex-1 display-flex flex-direction-col align-items-fd">
                 <span>持币人</span>
-                <strong>{{
-                  numberFormat(props.holdingCoinsTabInfo?.topHolders?.holds || 0)
-                }}</strong>
+                <div class="display-flex align-items-center">
+                  <svg-icon name="icon-people-num" class="snipe-icon"></svg-icon>
+                  <strong>{{
+                    numberFormat(props.holdingCoinsTabInfo?.topHolders?.holds || 0)
+                  }}</strong>
+                </div>
               </div>
             </div>
           </div>
@@ -126,29 +135,29 @@
           <div class="transaction-box">
             <template v-if="walletType == 'Email'">
               <div class="display-flex align-items-center justify-content-sp coin-info-main">
-                <div class="display-flex align-items-center justify-content-sp coin-info">
-                  <div class="display-flex align-items-center">
-                    <el-image :src="props.baseInfo.tokenInfo?.logo" alt="" class="coin-icon">
-                      <template #error>
-                        <svg-icon name="logo1" class="coin-icon"></svg-icon>
-                      </template>
-                    </el-image>
-                    <span>{{ shortifyAddress(props.baseInfo.tokenInfo?.baseAddress) }}</span>
-                  </div>
-                  <div class="display-flex align-items-center">
-                    <el-image :src="props.baseInfo.tokenInfo?.quoteLogo" alt="" class="chainCode">
-                      <template #error>
-                        <svg-icon name="logo1" class="chainCode"></svg-icon>
-                      </template>
-                    </el-image>
-                    <span class="price-txt">{{
-                      childrenRef && numberFormat(balanceFormat(childrenRef.buyInfo))
+                <div class="display-flex align-items-center coin-info">
+                  <el-image :src="props.baseInfo.tokenInfo?.logo" alt="" class="coin-icon">
+                    <template #error>
+                      <svg-icon name="logo1" class="coin-icon"></svg-icon>
+                    </template>
+                  </el-image>
+                  <div class="display-flex flex-direction-col">
+                    <span class="addr">{{
+                      shortifyAddress(props.baseInfo.tokenInfo?.baseAddress)
                     }}</span>
+                    <div class="display-flex align-items-center">
+                      <el-image :src="props.baseInfo.tokenInfo?.quoteLogo" alt="" class="chainCode">
+                        <template #error>
+                          <svg-icon name="logo1" class="chainCode"></svg-icon>
+                        </template>
+                      </el-image>
+                      <span class="price-txt">{{
+                        childrenRef && numberFormat(balanceFormat(childrenRef.buyInfo))
+                      }}</span>
+                    </div>
                   </div>
                 </div>
-                <a target="_blank" href="https://t.me/HelloDex_cn" class="icon-add">
-                  <el-icon :size="18"><Plus /></el-icon>
-                </a>
+                <a target="_blank" href="https://t.me/HelloDex_cn" class="icon-add">充值</a>
               </div>
               <div class="display-flex align-items-center justify-content-sp coin-hold">
                 <div class="display-flex flex-direction-col">
@@ -191,6 +200,16 @@
                 "
                 @click="handelTradingAreaTab(item)"
               >
+                <svg-icon
+                  v-if="item.icon && tradingAreaTabIndex !== item.id"
+                  :name="item.icon"
+                  class="trading-tab-item-icon"
+                ></svg-icon>
+                <svg-icon
+                  v-else-if="item.iconCur && tradingAreaTabIndex == item.id"
+                  :name="item.iconCur"
+                  class="trading-tab-item-icon"
+                ></svg-icon>
                 <span>{{ item.name }}</span>
               </div>
             </div>
@@ -413,10 +432,14 @@ const tradingAreaTabList = computed(() => {
         },
         {
           name: '买入',
+          icon: 'icon-tab-buy',
+          iconCur: 'icon-tab-buy-cur',
           id: 3
         },
         {
           name: '卖出',
+          icon: 'icon-tab-sell',
+          iconCur: 'icon-tab-sell-cur',
           id: 4
         }
       ]
