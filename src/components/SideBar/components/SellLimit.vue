@@ -820,9 +820,9 @@ defineExpose({
     .market-price-btn {
       cursor: not-allowed;
       border-radius: 6px;
-      height: 29px;
+      height: 32px;
       text-align: center;
-      line-height: 29px;
+      line-height: 32px;
       font-size: 12px;
       background-color: var(--hover-bg-color);
       color: var(--dex-color-4);
@@ -874,8 +874,8 @@ defineExpose({
     }
     .submit-btn {
       border-radius: 6px;
-      height: 29px;
-      line-height: 29px;
+      height: 32px;
+      line-height: 32px;
       background: var(--down-color);
       display: flex;
       align-items: center;
@@ -893,9 +893,12 @@ defineExpose({
       color: var(--font-color-default);
     }
   }
-  :deep(.el-select__wrapper),
+  :deep(.el-select__wrapper) {
+    font-size: 12px;
+  }
   :deep(.el-input__wrapper) {
     font-size: 12px;
+    padding: 0 11px;
   }
 }
 </style>
