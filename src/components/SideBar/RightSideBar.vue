@@ -67,17 +67,26 @@
               </div>
               <div class="flex-1 display-flex flex-direction-col align-items-center">
                 <span>总市值</span>
-                <strong>${{ numberFormat(props.pairInfo?.circulationVol || 0) }}</strong>
+                <div class="display-flex align-items-center">
+                  <svg-icon name="icon-money-num" class="snipe-icon"></svg-icon>
+                  <strong>${{ numberFormat(props.pairInfo?.circulationVol || 0) }}</strong>
+                </div>
               </div>
               <div class="flex-1 display-flex flex-direction-col align-items-center">
                 <span>{{ i18n.t('kChart.Vol1D') }}</span>
-                <strong>${{ numberFormat(props.pairInfo.tradeTvl) }}</strong>
+                <div class="display-flex align-items-center">
+                  <svg-icon name="icon-money-num" class="snipe-icon"></svg-icon>
+                  <strong>${{ numberFormat(props.pairInfo.tradeTvl) }}</strong>
+                </div>
               </div>
               <div class="flex-1 display-flex flex-direction-col align-items-fd">
                 <span>持币人</span>
-                <strong>{{
-                  numberFormat(props.holdingCoinsTabInfo?.topHolders?.holds || 0)
-                }}</strong>
+                <div class="display-flex align-items-center">
+                  <svg-icon name="icon-people-num" class="snipe-icon"></svg-icon>
+                  <strong>{{
+                    numberFormat(props.holdingCoinsTabInfo?.topHolders?.holds || 0)
+                  }}</strong>
+                </div>
               </div>
             </div>
           </div>
@@ -126,29 +135,29 @@
           <div class="transaction-box">
             <template v-if="walletType == 'Email'">
               <div class="display-flex align-items-center justify-content-sp coin-info-main">
-                <div class="display-flex align-items-center justify-content-sp coin-info">
-                  <div class="display-flex align-items-center">
-                    <el-image :src="props.baseInfo.tokenInfo?.logo" alt="" class="coin-icon">
-                      <template #error>
-                        <svg-icon name="logo1" class="coin-icon"></svg-icon>
-                      </template>
-                    </el-image>
-                    <span>{{ shortifyAddress(props.baseInfo.tokenInfo?.baseAddress) }}</span>
-                  </div>
-                  <div class="display-flex align-items-center">
-                    <el-image :src="props.baseInfo.tokenInfo?.quoteLogo" alt="" class="chainCode">
-                      <template #error>
-                        <svg-icon name="logo1" class="chainCode"></svg-icon>
-                      </template>
-                    </el-image>
-                    <span class="price-txt">{{
-                      childrenRef && numberFormat(balanceFormat(childrenRef.buyInfo))
+                <div class="display-flex align-items-center coin-info">
+                  <el-image :src="props.baseInfo.tokenInfo?.logo" alt="" class="coin-icon">
+                    <template #error>
+                      <svg-icon name="logo1" class="coin-icon"></svg-icon>
+                    </template>
+                  </el-image>
+                  <div class="display-flex flex-direction-col">
+                    <span class="addr">{{
+                      shortifyAddress(props.baseInfo.tokenInfo?.baseAddress)
                     }}</span>
+                    <div class="display-flex align-items-center">
+                      <el-image :src="props.baseInfo.tokenInfo?.quoteLogo" alt="" class="chainCode">
+                        <template #error>
+                          <svg-icon name="logo1" class="chainCode"></svg-icon>
+                        </template>
+                      </el-image>
+                      <span class="price-txt">{{
+                        childrenRef && numberFormat(balanceFormat(childrenRef.buyInfo))
+                      }}</span>
+                    </div>
                   </div>
                 </div>
-                <a target="_blank" href="https://t.me/HelloDex_cn" class="icon-add">
-                  <el-icon :size="18"><Plus /></el-icon>
-                </a>
+                <span class="icon-add" @click="handelTransfeIn">充值</span>
               </div>
               <div class="display-flex align-items-center justify-content-sp coin-hold">
                 <div class="display-flex flex-direction-col">
@@ -191,6 +200,16 @@
                 "
                 @click="handelTradingAreaTab(item)"
               >
+                <svg-icon
+                  v-if="item.icon && tradingAreaTabIndex !== item.id"
+                  :name="item.icon"
+                  class="trading-tab-item-icon"
+                ></svg-icon>
+                <svg-icon
+                  v-else-if="item.iconCur && tradingAreaTabIndex == item.id"
+                  :name="item.iconCur"
+                  class="trading-tab-item-icon"
+                ></svg-icon>
                 <span>{{ item.name }}</span>
               </div>
             </div>
@@ -332,12 +351,69 @@
         @close="handleClose"
         v-if="sniperDialogVisible"
       />
+      <el-dialog v-model="transfeInVisible" title="充值" width="450" align-center>
+        <div class="display-flex flex-direction-col">
+          <p class="network-text">选择网络</p>
+          <div class="network-box display-flex align-items-center">
+            <img :src="transfeInInfo.logo" alt="" class="icon-logo" v-if="transfeInInfo.logo" />
+            <span>{{ transfeInInfo.symbol || transfeInInfo.chain }}</span>
+          </div>
+        </div>
+        <div class="qrcode-box display-flex flex-direction-col">
+          <p>
+            仅接收
+            {{
+              transfeInInfo.symbol
+                ? transfeInInfo.symbol + ' 代币'
+                : transfeInInfo.chain + ' 网络资产'
+            }}
+          </p>
+          <div class="qrcode">
+            <img :src="transfeInInfo.qrcodeUrl" alt="" class="qrcode-img" />
+          </div>
+          <span
+            >{{ transfeInInfo.wallet
+            }}<svg-icon name="copy" class="copy" v-copy="transfeInInfo.wallet"></svg-icon
+          ></span>
+        </div>
+        <template #footer>
+          <div class="footer-btn" @click="transfeInCoinVisible = true">
+            <span>分享地址</span>
+            <el-icon><Share /></el-icon>
+          </div>
+        </template>
+      </el-dialog>
+      <el-dialog v-model="transfeInCoinVisible" title="" width="450" align-center>
+        <div class="transfeInCoin-box" ref="transfeInCoinImg">
+          <div class="transfeInCoin-qrcode">
+            <h5>充币</h5>
+            <img :src="transfeInInfo.qrcodeUrl" alt="" class="qrcode-img" />
+          </div>
+          <div class="display-flex flex-direction-col">
+            <p>网络</p>
+            <div class="display-flex align-items-center">
+              <img :src="transfeInInfo.logo" alt="" class="icon-logo" v-if="transfeInInfo.logo" />
+              <span>{{ transfeInInfo.chain }}</span>
+            </div>
+            <p>地址</p>
+            <span>{{ transfeInInfo.wallet }}</span>
+          </div>
+        </div>
+        <template #footer>
+          <div class="download-btn display-flex align-items-center" @click="handelDownload">
+            <el-icon :size="16"><Download /></el-icon>
+            <span>&nbsp;&nbsp;下载</span>
+          </div>
+        </template>
+      </el-dialog>
     </aside>
   </el-scrollbar>
 </template>
 <script lang="ts" setup>
 import BigNumber from 'bignumber.js'
 import { ref, computed } from 'vue'
+import html2canvas from 'html2canvas'
+import QRCode from 'qrcode'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { handleCoinPairInfo, numberFormat, shortifyAddress, formatLineDate } from '@/utils'
@@ -357,11 +433,17 @@ const useSubscribeKChart = useSubscribeKChartInfo()
 
 const walletType = computed(() => globalStore.walletInfo.walletType)
 const currencyDashboardSwitch = computed(() => globalStore.currencyDashboardSwitch)
+const customWalletInfo = computed(() => globalStore.customWalletInfo)
 
 const i18n = useI18n()
 
 const childrenRef = ref<any>(null)
 const sniperDialogVisible = ref<boolean>(false)
+const transfeInVisible = ref<boolean>(false)
+const transfeInCoinVisible = ref<boolean>(false)
+const transfeInCoinImg = ref()
+
+const transfeInInfo = ref<any>({})
 
 const props = defineProps({
   pairInfo: {
@@ -413,10 +495,14 @@ const tradingAreaTabList = computed(() => {
         },
         {
           name: '买入',
+          icon: 'icon-tab-buy',
+          iconCur: 'icon-tab-buy-cur',
           id: 3
         },
         {
           name: '卖出',
+          icon: 'icon-tab-sell',
+          iconCur: 'icon-tab-sell-cur',
           id: 4
         }
       ]
@@ -473,6 +559,36 @@ const handleClose = (val: boolean) => {
 const handelRouter = (url: string) => {
   console.log(url)
   url && window.open(url)
+}
+
+const handelTransfeIn = async () => {
+  transfeInInfo.value.symbol = props.baseInfo.tokenInfo?.baseSymbol
+  transfeInInfo.value.logo = customWalletInfo.value.logo
+  transfeInInfo.value.chain = customWalletInfo.value.chain
+  transfeInInfo.value.wallet = customWalletInfo.value.walletInfo?.wallet
+  try {
+    transfeInInfo.value.qrcodeUrl = await QRCode.toDataURL(
+      customWalletInfo.value.walletInfo?.wallet,
+      {
+        errorCorrectionLevel: 'H'
+      }
+    )
+    transfeInVisible.value = true
+  } catch (err) {
+    console.error(err)
+  }
+}
+
+const handelDownload = async () => {
+  await html2canvas(transfeInCoinImg.value, {
+    backgroundColor: '#111'
+  }).then((canvas) => {
+    let url = canvas.toDataURL('image/png')
+    const a = document.createElement('a')
+    a.href = url
+    a.download = 'transfeIn.png'
+    a.click()
+  })
 }
 </script>
 <style scoped lang="scss">

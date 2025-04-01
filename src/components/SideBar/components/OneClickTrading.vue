@@ -8,6 +8,20 @@
           >${{ numberFormat(buyInfo.totalAmount) }}</i
         >
       </p>
+      <div class="input-box">
+        <el-input
+          v-model="coinAmount"
+          :class="inputFocusType ? 'input-focus' : ''"
+          oninput="value=value.replace(/[^0-9.]/g,'')"
+          style="width: 100%"
+          placeholder="请输入"
+          @focus="handeCoinFocus"
+          @blur="handelCoinBlur"
+          @input="handelCoinAmount"
+        >
+          <template #suffix>{{ buyInfo.baseSymbol }}</template>
+        </el-input>
+      </div>
       <div class="display-flex align-items-center justify-content-sp">
         <span
           v-for="(item, index) in buyPosition"
@@ -16,21 +30,6 @@
           @click="handelBuy(item)"
           >{{ item.label }}</span
         >
-        <div class="input-box">
-          <el-input
-            v-model="coinAmount"
-            :class="inputFocusType ? 'input-focus' : ''"
-            size="small"
-            oninput="value=value.replace(/[^0-9.]/g,'')"
-            style="width: 100%"
-            placeholder="请输入"
-            @focus="handeCoinFocus"
-            @blur="handelCoinBlur"
-            @input="handelCoinAmount"
-          >
-            <template #suffix>{{ buyInfo.baseSymbol }}</template>
-          </el-input>
-        </div>
       </div>
     </div>
     <div class="trading-sell trading-operate">
@@ -207,10 +206,6 @@ const sellPosition = [
   {
     label: '50%',
     value: 0.5
-  },
-  {
-    label: '80%',
-    value: 0.8
   },
   {
     label: '100%',
@@ -639,7 +634,7 @@ defineExpose({
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 40px;
+      width: 60px;
       height: 25px;
       background: transparent;
       border-radius: 4px;
@@ -657,10 +652,11 @@ defineExpose({
     }
   }
   .input-box {
-    width: 80px;
-
+    margin-bottom: 8px;
     :deep(.el-input__wrapper) {
       box-shadow: 0 0 0 1px #26282c !important;
+      font-size: 12px;
+      padding: 0 11px;
       .el-input__suffix,
       .el-input__inner {
         color: #5c6068 !important;
@@ -682,7 +678,7 @@ defineExpose({
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 48px;
+      width: 60px;
       height: 25px;
       border-radius: 4px;
       border: 1px solid #26282c;
@@ -745,8 +741,8 @@ defineExpose({
   }
   .btn {
     border-radius: 4px;
-    height: 29px;
-    line-height: 29px;
+    height: 32px;
+    line-height: 32px;
     display: flex;
     align-items: center;
     justify-content: center;
