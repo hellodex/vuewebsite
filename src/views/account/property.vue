@@ -746,7 +746,6 @@ onUnmounted(() => {
 .transfeInCoin-box {
   width: 350px;
   padding: 16px;
-  background-color: var(--bg-color);
   margin: 0 auto;
   font-size: 14px;
   border-radius: 8px;
