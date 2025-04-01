@@ -207,6 +207,7 @@
     .icon-add {
       color: var(--up-color);
       font-family: 'PingFangSC-Medium';
+      cursor: pointer;
     }
   }
   .coin-hold {
@@ -376,5 +377,99 @@
     width: 12px;
     height: 12px;
     margin-right: 2px;
+  }
+
+  .network-text {
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+  .network-box {
+    width: 100%;
+    border: 1px solid var(--el-border-color);
+    border-radius: 4px;
+    padding: 8px 16px;
+  }
+  .icon-logo {
+    width: 22px;
+    height: 22px;
+    margin-right: 8px;
+  }
+  .qrcode-box {
+    align-items: center;
+    font-size: 14px;
+    margin-top: 16px;
+    p {
+      color: var(--dex-color-4);
+    }
+    span {
+      display: block;
+      width: 200px;
+      color: var(--font-color-default);
+    }
+    .qrcode {
+      border-radius: 16px;
+      overflow: hidden;
+      margin: 16px 0;
+      .qrcode-img {
+        width: 200px;
+        height: 200px;
+        display: block;
+        border-radius: 16px;
+      }
+    }
+    .copy {
+      width: 14px;
+      height: 14px;
+      margin-left: 4px;
+      position: relative;
+      top: 3px;
+      cursor: pointer;
+    }
+  }
+  .transfeInCoin-box {
+    width: 350px;
+    padding: 16px;
+    margin: 0 auto;
+    font-size: 14px;
+    border-radius: 8px;
+    .transfeInCoin-qrcode {
+      text-align: center;
+      margin-bottom: 20px;
+      h5 {
+        font-size: 20px;
+        margin-bottom: 26px;
+      }
+    }
+    p {
+      color: var(--dex-color-4);
+      margin: 10px 0 6px 0;
+    }
+    span {
+      color: var(--font-color-default);
+    }
+  }
+
+  .footer-btn,
+  .download-btn {
+    width: 100%;
+    padding: 12px 19px;
+    background-color: var(--font-color-default);
+    color: var(--bg-color);
+    height: 40px;
+    font-size: 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: inline-flex;
+    justify-content: center;
+    line-height: 1;
+    outline: none;
+    text-align: center;
+    transition: 0.1s;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+    vertical-align: middle;
+    white-space: nowrap;
+    align-items: center;
   }
 }
