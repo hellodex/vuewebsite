@@ -498,7 +498,6 @@ const pumpRankingFun = () => {
   socket.off('pumpRanking')
   socket.on('pumpRanking', (message: string) => {
     const data = JSON.parse(message)
-    console.log(`pumpRanking:`, data)
     if (pumpTabIndex.value !== data.type) return
     if (data.type == 1) {
       pumpList.value = data.ranking
