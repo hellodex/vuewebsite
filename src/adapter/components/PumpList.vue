@@ -569,6 +569,7 @@ onUnmounted(() => {
       margin-left: 8px;
       color: #9aa0aa;
       font-size: 10px;
+      white-space: nowrap;
     }
     :deep(.pump-popper-box) {
       width: auto !important;
@@ -636,6 +637,7 @@ onUnmounted(() => {
       .txt {
         color: var(--up-color);
         font-size: 12px;
+        white-space: nowrap;
         font-family: 'PingFangSC-Medium';
       }
     }
@@ -651,6 +653,7 @@ onUnmounted(() => {
         .txt {
           color: var(--up-color);
           font-size: 12px;
+          white-space: nowrap;
           font-family: 'PingFangSC-Medium';
         }
         .icon-buy {
