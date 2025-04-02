@@ -143,7 +143,7 @@
                   </el-image>
                   <div class="display-flex flex-direction-col">
                     <span class="addr">{{
-                      shortifyAddress(props.baseInfo.tokenInfo?.baseAddress)
+                      shortifyAddress(customWalletInfo.walletInfo?.wallet)
                     }}</span>
                     <div class="display-flex align-items-center">
                       <el-image :src="props.baseInfo.tokenInfo?.quoteLogo" alt="" class="chainCode">
@@ -356,7 +356,7 @@
           <p class="network-text">选择网络</p>
           <div class="network-box display-flex align-items-center">
             <img :src="transfeInInfo.logo" alt="" class="icon-logo" v-if="transfeInInfo.logo" />
-            <span>{{ transfeInInfo.symbol || transfeInInfo.chain }}</span>
+            <span>{{ transfeInInfo.chain }}</span>
           </div>
         </div>
         <div class="qrcode-box display-flex flex-direction-col">
