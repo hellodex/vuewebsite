@@ -28,10 +28,10 @@
             />
             {{ item.name }}
           </span>
-          <!-- <span class="display-flex align-items-center noun-screen-active">
+          <span class="display-flex align-items-center noun-screen-active">
             <img src="@/assets/img/img-tg.png" class="noun-screen-icon" />
             0 延时通知
-          </span> -->
+          </span>
         </div>
         <div class="table-network-screen display-flex align-items-center">
           <!-- <div class="time-tab display-flex align-items-center" v-if="nounScreenId != 13">

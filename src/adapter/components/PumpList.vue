@@ -206,6 +206,7 @@ import TradeDraw from '@/components/Dialogs/TradeDraw.vue'
 import WalletConnect from '@/components/Wallet/WalletConnect.vue'
 import QuickBuyTrade from './QuickBuyTrade.vue'
 import Favorite from '@/components/Favorite.vue'
+import { socket } from '@/utils/socket'
 
 defineProps({
   amount: {
@@ -227,16 +228,34 @@ const pumpObj = reactive<Record<string, any>>({
   list3: []
 })
 
-const timer1 = ref<any>(null)
 const dataTimer1 = ref<any>(null)
-const timer2 = ref<any>(null)
 const dataTimer2 = ref<any>(null)
-const timer3 = ref<any>(null)
 const dataTimer3 = ref<any>(null)
 const curNode = ref<number>(0)
 const tradeDrawVisible = ref<boolean>(false)
 const coinInfo = ref<any>(null)
 const pairInfo = ref<any>(null)
+
+const pumpRankingFun = () => {
+  socket.off('pumpRanking')
+  socket.on('pumpRanking', (message: string) => {
+    const data = JSON.parse(message)
+    console.log(`pumpRanking:`, data)
+    switch (data.type) {
+      case 1:
+        pumpObj.list1 = data.ranking
+        break
+      case 2:
+        pumpObj.list2 = data.ranking
+        break
+      case 3:
+        pumpObj.list3 = data.ranking
+        break
+      default:
+        break
+    }
+  })
+}
 
 const getPumpRanking = async (type: number) => {
   const res: any = await ApiGetPumpRanking({
@@ -259,26 +278,16 @@ const getPumpRanking = async (type: number) => {
 }
 
 const setPolling1 = () => {
-  timer1.value = setInterval(() => {
-    getPumpRanking(1)
-  }, 5000)
   dataTimer1.value = setInterval(() => {
     pumpObj.list1 = [...pumpObj.list1]
   }, 1000)
 }
 const setPolling2 = () => {
-  timer2.value = setInterval(() => {
-    getPumpRanking(2)
-  }, 5000)
   dataTimer2.value = setInterval(() => {
     pumpObj.list2 = [...pumpObj.list2]
   }, 1000)
 }
 const setPolling3 = () => {
-  timer3.value = setInterval(() => {
-    getPumpRanking(3)
-  }, 5000)
-
   dataTimer3.value = setInterval(() => {
     pumpObj.list3 = [...pumpObj.list3]
   }, 1000)
@@ -323,27 +332,26 @@ const handelRouter = (url: string) => {
 
 const handleMouseOver = (index: number) => {
   curNode.value = index + 1
-  if (curNode.value == 1) {
-    clearInterval(timer1.value)
-    timer1.value = null
-  } else if (curNode.value == 2) {
-    clearInterval(timer2.value)
-    timer2.value = null
-  } else if (curNode.value == 3) {
-    clearInterval(timer3.value)
-    timer3.value = null
-  }
+  socket.off('pumpRanking')
+  // if (curNode.value == 1) {
+  //   socket.off('pumpRanking')
+  // } else if (curNode.value == 2) {
+  //   socket.off('pumpRanking')
+  // } else if (curNode.value == 3) {
+  //   socket.off('pumpRanking')
+  // }
 }
 
 const handleMouseLeave = (index: number) => {
   curNode.value = 0
-  if (index == 0) {
-    setPolling1()
-  } else if (index == 1) {
-    setPolling2()
-  } else if (index == 2) {
-    setPolling3()
-  }
+  pumpRankingFun()
+  // if (index == 0) {
+  //   pumpRankingFun()
+  // } else if (index == 1) {
+  //   pumpRankingFun()
+  // } else if (index == 2) {
+  //   pumpRankingFun()
+  // }
 }
 
 const initData = async () => {
@@ -359,15 +367,9 @@ const startTimer = () => {
 }
 
 const stopTimer = () => {
-  clearInterval(timer1.value)
-  clearInterval(timer2.value)
-  clearInterval(timer3.value)
   clearInterval(dataTimer1.value)
   clearInterval(dataTimer2.value)
   clearInterval(dataTimer3.value)
-  timer1.value = null
-  timer2.value = null
-  timer3.value = null
   dataTimer1.value = null
   dataTimer2.value = null
   dataTimer3.value = null
@@ -382,8 +384,9 @@ onDeactivated(() => {
 
 onMounted(async () => {
   skeletonLoading.value = true
-  initData()
+  await initData()
   skeletonLoading.value = false
+  pumpRankingFun()
   startTimer()
 })
 
