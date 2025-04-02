@@ -375,7 +375,7 @@
   </el-scrollbar>
 </template>
 <script lang="ts" setup>
-import { ref, onMounted, onUnmounted, watch, computed } from 'vue'
+import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { ApiGetPumpRanking } from '@/api'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
@@ -385,13 +385,13 @@ import WalletConnect from '@/components/Wallet/WalletConnect.vue'
 import { useGlobalStore } from '@/stores/global'
 import { useSubscribeKChartInfo } from '@/stores/subscribeKChartInfo'
 import { numberFormat, timeago, numToFixedTwo } from '@/utils'
+import { socket } from '@/utils/socket'
 
 const i18n = useI18n()
 const router = useRouter()
 const globalStore = useGlobalStore()
 const useSubscribeKChart = useSubscribeKChartInfo()
 
-const timer = ref<any>(null) // 接口定时器
 const dataTimer = ref<any>(null) // 数据定时器
 
 const skeletonLoading = ref<boolean>(true)
@@ -402,7 +402,6 @@ const pumpTabIndex = ref<number>(1)
 
 const { chainLogoObj } = globalStore
 
-const customWalletInfo = computed(() => globalStore.customWalletInfo)
 const favoriteData = computed(() => globalStore.favoriteData)
 const isConnected = computed(() => globalStore.walletInfo.isConnected)
 const walletType = computed(() => globalStore.walletInfo.walletType)
@@ -469,10 +468,6 @@ const handelHoldTab = (item: { id: number }) => {
 
 const setPolling = async () => {
   getPumpRanking()
-  timer.value = setInterval(() => {
-    getPumpRanking()
-  }, 5000)
-
   dataTimer.value = setInterval(() => {
     pumpList.value = [...pumpList.value]
   }, 1000)
@@ -482,17 +477,8 @@ const getPumpRanking = async () => {
   const res: any = await ApiGetPumpRanking({
     type: pumpTabIndex.value
   })
-
   pumpList.value = res?.ranking || []
 }
-
-watch(
-  () => customWalletInfo.value,
-  (newVal, oldVal) => {
-    stopTimer()
-    setPolling()
-  }
-)
 
 const handelJump = (param: any) => {
   router.push(`/k/${param.pairAddress}?chainCode=${param.chainCode}`)
@@ -504,16 +490,31 @@ const handelRouter = (url: string) => {
 }
 
 const stopTimer = () => {
-  clearInterval(timer.value)
   clearInterval(dataTimer.value)
   dataTimer.value = null
-  timer.value = null
+}
+
+const pumpRankingFun = () => {
+  socket.off('pumpRanking')
+  socket.on('pumpRanking', (message: string) => {
+    const data = JSON.parse(message)
+    console.log(`pumpRanking:`, data)
+    if (pumpTabIndex.value !== data.type) return
+    if (data.type == 1) {
+      pumpList.value = data.ranking
+    } else if (data.type == 2) {
+      pumpList.value = data.ranking
+    } else if (data.type == 3) {
+      pumpList.value = data.ranking
+    }
+  })
 }
 
 onMounted(async () => {
   skeletonLoading.value = true
   favoriteSkeleton.value = true
   await setPolling()
+  pumpRankingFun()
   skeletonLoading.value = false
   favoriteSkeleton.value = false
 })
