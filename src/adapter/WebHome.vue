@@ -28,10 +28,14 @@
             />
             {{ item.name }}
           </span>
-          <span class="display-flex align-items-center noun-screen-active">
+          <a
+            href="https://t.me/HelloDex_cn"
+            target="_blank"
+            class="display-flex align-items-center noun-screen-active"
+          >
             <img src="@/assets/img/img-tg.png" class="noun-screen-icon" />
             0 延时通知
-          </span>
+          </a>
         </div>
         <div class="table-network-screen display-flex align-items-center">
           <!-- <div class="time-tab display-flex align-items-center" v-if="nounScreenId != 13">
