@@ -182,7 +182,7 @@
       <p class="network-text">选择网络</p>
       <div class="network-box display-flex align-items-center">
         <img :src="transfeInInfo.logo" alt="" class="icon-logo" v-if="transfeInInfo.logo" />
-        <span>{{ transfeInInfo.symbol || transfeInInfo.chain }}</span>
+        <span>{{ transfeInInfo.chain }}</span>
       </div>
     </div>
     <div class="qrcode-box display-flex flex-direction-col">
