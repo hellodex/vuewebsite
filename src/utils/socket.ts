@@ -231,14 +231,6 @@ export const socketOnMonitor = (uuid: string, token: string) => {
     console.log(`order-monitor:`, data)
     sendOrderMessage(data)
   })
-
-  socket.emit(
-    'pumpRanking-on',
-    JSON.stringify({
-      uuid,
-      token
-    })
-  )
 }
 
 export const socketOffMonitor = (uuid: string, token: string) => {
@@ -276,14 +268,6 @@ export const socketOffMonitor = (uuid: string, token: string) => {
 
   socket.emit(
     'order-off',
-    JSON.stringify({
-      uuid,
-      token
-    })
-  )
-
-  socket.emit(
-    'pumpRanking-off',
     JSON.stringify({
       uuid,
       token
@@ -333,6 +317,8 @@ socket.on('connect', () => {
       globalStore.SetSocketKchartConnectType('kChart_connect')
     }
     console.warn('🔥🔥🔥🔥🔥🔥 socket_connect：', 'connection successful!')
+    socket.emit('pumpRanking-off', '{}')
+    socket.emit('pumpRanking-on', '{}')
     socketLogout()
     if (globalStore.accountInfo) {
       socketOffMonitor(globalStore.accountInfo.uuid, globalStore.accountInfo.tokenInfo.tokenValue)
