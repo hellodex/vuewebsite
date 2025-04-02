@@ -73,7 +73,6 @@
                             <svg-icon name="logo1" class="coin-icon"></svg-icon>
                           </template>
                         </el-image>
-                        <!-- <img :src="chainLogoObj[item.baseToken.chainCode]" alt="" class="chainCode" /> -->
                       </div>
                     </div>
                     <div class="display-flex flex-direction-col">
@@ -196,7 +195,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, computed, reactive, onActivated, onDeactivated } from 'vue'
+import { ref, onMounted, onUnmounted, computed, reactive, onDeactivated } from 'vue'
 import { ApiGetPumpRanking } from '@/api'
 import { useI18n } from 'vue-i18n'
 import { useGlobalStore } from '@/stores/global'
@@ -240,7 +239,6 @@ const pumpRankingFun = () => {
   socket.off('pumpRanking')
   socket.on('pumpRanking', (message: string) => {
     const data = JSON.parse(message)
-    console.log(`pumpRanking:`, data)
     switch (data.type) {
       case 1:
         pumpObj.list1 = data.ranking
@@ -333,25 +331,11 @@ const handelRouter = (url: string) => {
 const handleMouseOver = (index: number) => {
   curNode.value = index + 1
   socket.off('pumpRanking')
-  // if (curNode.value == 1) {
-  //   socket.off('pumpRanking')
-  // } else if (curNode.value == 2) {
-  //   socket.off('pumpRanking')
-  // } else if (curNode.value == 3) {
-  //   socket.off('pumpRanking')
-  // }
 }
 
 const handleMouseLeave = (index: number) => {
   curNode.value = 0
   pumpRankingFun()
-  // if (index == 0) {
-  //   pumpRankingFun()
-  // } else if (index == 1) {
-  //   pumpRankingFun()
-  // } else if (index == 2) {
-  //   pumpRankingFun()
-  // }
 }
 
 const initData = async () => {
