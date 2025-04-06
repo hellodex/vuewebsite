@@ -19,6 +19,8 @@ import { customMessage } from './message'
 const okCoin = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
 const sol = 'So11111111111111111111111111111111111111112'
 
+const signatureMessage = 'Please sign this message to verify your wallet.'
+
 const delay = (ms: any) => new Promise((resolve) => setTimeout(resolve, ms))
 
 // 代币精度格式化
@@ -547,4 +549,36 @@ export const isSolanaAddress = (address: string) => {
     // 如果抛出错误，说明地址无效
     return false
   }
+}
+
+/**
+ * @description 生成 evm 签名
+ * @param message
+ * @returns
+ */
+export const evmSignature = async () => {
+  const { walletProvider }: any = useAppKitProvider('eip155')
+  const provider = new BrowserProvider(walletProvider)
+  const signer = await provider.getSigner()
+  const signature = await signer?.signMessage(signatureMessage)
+
+  console.log('signature', signature)
+  return signature
+}
+
+/**
+ * @description 生成 sol 签名
+ * @param message
+ * @returns
+ */
+export const solanaSignature = async () => {
+  const { walletProvider } = useAppKitProvider<Provider>('solana')
+  const encodedMessage = new TextEncoder().encode(signatureMessage)
+  const signature = await walletProvider?.signMessage(encodedMessage)
+
+  console.log('signature', signature)
+  // Convert the signature to a base58 string
+  const base58Signature = signature ? bs58.encode(signature) : ''
+
+  return base58Signature
 }

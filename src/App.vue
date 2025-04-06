@@ -89,6 +89,7 @@ import CurrencyDashboard from '@/components/Charts/CurrencyDashboard.vue'
 import { useGlobalStore } from '@/stores/global'
 import { useChainConfigsStore } from '@/stores/chainConfigs'
 import { useWindowWidth } from '@/hooks/useWindowWidth'
+import { evmSignature, solanaSignature } from '@/utils/transition'
 import vueDanmaku from 'vue3-danmaku'
 import { APIgetTokensByWalletAddr } from '@/api'
 import { createAppKit } from '@reown/appkit/vue'
@@ -182,6 +183,24 @@ watch(accountInfo, (newValue) => {
     })
   }
 })
+
+watch(address, (newValue, oldValue) => {
+  console.log('address oldValue', oldValue)
+  console.log('address newValue', newValue)
+  signatureFun()
+})
+
+const signatureFun = () => {
+  if (isConnected.value) {
+    if (walletType.value == 'Evm') {
+      const signature = evmSignature()
+      console.log('signature', signature)
+    } else if (walletType.value == 'Solana') {
+      const signature = solanaSignature()
+      console.log('signature', signature)
+    }
+  }
+}
 
 onMounted(async () => {
   const config = localStorage.getItem('quick_trade_config')
