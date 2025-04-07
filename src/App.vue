@@ -160,14 +160,18 @@ const danmakuFun = () => {
 }
 
 const getTokenData = async () => {
-  const res = await APIgetTokensByWalletAddr({
-    chainCode:
-      walletType.value == 'Email'
-        ? customWalletInfo.value.chainCode
-        : chainConfigs.value.find((item) => item.chainId == chainId.value)?.chainCode,
-    walletAddress:
-      walletType.value == 'Email' ? customWalletInfo.value.walletInfo?.wallet : address.value
-  })
+  const params =
+    walletType.value == 'Email'
+      ? {
+          chainCode: customWalletInfo.value.chainCode,
+          walletAddress: customWalletInfo.value.walletInfo?.wallet,
+          walletId: customWalletInfo.value.walletInfo?.walletId
+        }
+      : {
+          chainCode: chainConfigs.value.find((item) => item.chainId == chainId.value)?.chainCode,
+          walletAddress: address.value
+        }
+  const res = await APIgetTokensByWalletAddr(params)
 
   globalStore.setTokenList(res || [])
 }
