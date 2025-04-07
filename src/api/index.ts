@@ -520,6 +520,36 @@ export function APItransferTo(data: object) {
 }
 
 /**
+ * @description 自定义钱包 转出
+ * @param data
+ * @returns
+ */
+export function APItransferToV2(data: object) {
+  const account: any = localStorage.getItem('accountInfo')
+  return http({
+    url: WEB_URL + '/api/auth/trade/transferToV2',
+    method: 'POST',
+    data,
+    headers: {
+      [`${JSON.parse(account)?.tokenInfo.tokenName}`]: `Bearer ${JSON.parse(account)?.tokenInfo.tokenValue}`
+    }
+  })
+}
+
+/**
+ * @description gas费估算
+ * @param data
+ * @returns
+ */
+export function APItransferEstimateGas(data: object) {
+  return http({
+    url: WEB_URL + '/api/webv2/index/transferEstimateGas',
+    method: 'POST',
+    data
+  })
+}
+
+/**
  * @description 创建限价单
  * @param data
  * @returns

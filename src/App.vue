@@ -89,6 +89,12 @@ import CurrencyDashboard from '@/components/Charts/CurrencyDashboard.vue'
 import { useGlobalStore } from '@/stores/global'
 import { useChainConfigsStore } from '@/stores/chainConfigs'
 import { useWindowWidth } from '@/hooks/useWindowWidth'
+import {
+  evmSignature,
+  solanaSignature,
+  evmSignatureVerify,
+  solanaSignatureVerify
+} from '@/utils/transition'
 import vueDanmaku from 'vue3-danmaku'
 import { APIgetTokensByWalletAddr } from '@/api'
 import { createAppKit } from '@reown/appkit/vue'
@@ -186,6 +192,43 @@ watch(accountInfo, (newValue) => {
     })
   }
 })
+
+watch(address, async (newValue, oldValue) => {
+  const signature = localStorage.getItem('signature')
+  const isvalid = signature ? await signatureVerifyFun(signature) : false
+  if (!isvalid) {
+    localStorage.removeItem('signature')
+    signatureFun()
+  }
+})
+
+const signatureFun = async () => {
+  if (isConnected.value) {
+    if (walletType.value == 'Evm') {
+      const signature = await evmSignature()
+      console.log('signature', signature)
+      localStorage.setItem('signature', signature)
+    } else if (walletType.value == 'Solana') {
+      const signature = await solanaSignature()
+      console.log('signature', signature)
+      localStorage.setItem('signature', signature)
+    }
+  }
+}
+
+const signatureVerifyFun = async (signature) => {
+  if (isConnected.value) {
+    if (walletType.value == 'Evm') {
+      const res = await evmSignatureVerify(address.value, signature)
+      return res
+    } else if (walletType.value == 'Solana') {
+      const res = await solanaSignatureVerify(address.value, signature)
+      return res
+    }
+    return false
+  }
+  return false
+}
 
 onMounted(async () => {
   const config = localStorage.getItem('quick_trade_config')
@@ -286,6 +329,7 @@ createAppKit({
   adapters: [ethersAdapter, solanaWeb3JsAdapter],
   networks: [mainnet, bsc, arbitrum, xLayer, base, optimism, solana],
   allWallets: 'SHOW',
+  enableWalletConnect: false,
   features: {
     analytics: true,
     socials: false,

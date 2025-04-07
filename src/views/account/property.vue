@@ -38,7 +38,8 @@
                     wallet: customWalletInfo.walletInfo?.wallet,
                     walletId: customWalletInfo.walletInfo?.walletId,
                     walletKey: customWalletInfo.walletInfo?.walletKey,
-                    decimals: customWalletInfo.decimals
+                    decimals: customWalletInfo.decimals,
+                    address: customWalletInfo.symbolAddress
                   })
                 "
                 >转出</span
@@ -123,7 +124,8 @@
                           wallet: scope.row.address,
                           walletId: customWalletInfo.walletInfo?.walletId,
                           walletKey: customWalletInfo.walletInfo?.walletKey,
-                          decimals: scope.row.decimals
+                          decimals: scope.row.decimals,
+                          address: scope.row.address
                         })
                       "
                       >转出</span
@@ -222,7 +224,7 @@
         <span>{{ transfeOutInfo.symbol || customWalletInfo.chain }}</span>
       </div>
       <el-form-item label="转出地址" prop="to">
-        <el-input v-model="ruleForm.to" placeholder="请输入地址" />
+        <el-input v-model="ruleForm.to" placeholder="请输入地址" @change="handelChangeTo" />
       </el-form-item>
       <el-form-item label="转出数量" prop="amount">
         <el-input
@@ -230,6 +232,13 @@
           v-model="ruleForm.amount"
           placeholder="请输入转出数量"
         />
+      </el-form-item>
+      <el-form-item label="最大网络费用">
+        <span style="line-height: 1; font-size: 12px">
+          {{ numberFormat(transferEstimateGas.gasAmount || 0) }} {{ customWalletInfo.symbol }} ≈ ${{
+            numberFormat(transferEstimateGas.gasFee || 0)
+          }}
+        </span>
       </el-form-item>
     </el-form>
     <template #footer>
@@ -284,7 +293,7 @@ import {
   notificationWarn
 } from '@/utils/notification'
 
-import { APItransferTo } from '@/api'
+import { APItransferToV2, APItransferEstimateGas } from '@/api'
 import { useI18n } from 'vue-i18n'
 import { useChainConfigsStore } from '@/stores/chainConfigs'
 import { initLimitedOrderPage } from '@/api/coinWalletDetails'
@@ -294,6 +303,7 @@ import MyHold from '@/components/Charts/MyHold.vue'
 import CurrentCommission from '@/components/Charts/CurrentCommission.vue'
 import CommissionHistory from '@/components/Charts/CommissionHistory.vue'
 import PercentageNotbg from '@/components/Percentage/PercentageNotbg.vue'
+import { el } from 'element-plus/es/locale/index.mjs'
 
 const i18n = useI18n()
 const chain = useChainConfigsStore()
@@ -321,6 +331,7 @@ const transfeOutInfo = ref<any>({})
 const skeleton = ref<boolean>(false)
 const initLimitedOrders = ref<any>({})
 const total = ref<number>(0)
+const transferEstimateGas = ref<any>({})
 
 const hidePosition = ref(Number(localStorage.getItem('hidePosition')))
 
@@ -353,7 +364,7 @@ const rules = reactive<FormRules<RuleForm>>({
     {
       required: true,
       validator: validateAddress,
-      trigger: 'blur'
+      trigger: ['blur', 'change']
     }
   ],
   amount: [
@@ -369,7 +380,6 @@ const propertySkeleton = ref<boolean>(false)
 const propertyData = ref<any>([])
 const getProperty = () => {
   const res = tokenList.value
-  console.log(res)
   total.value = 0
   propertyData.value = res || []
   propertyData.value.forEach((item: any) => {
@@ -419,14 +429,39 @@ const handelDownload = async () => {
 
 const handelTransfeOut = (param: any) => {
   resetForm(ruleFormRef.value)
+  transferEstimateGas.value = {}
   transfeOutVisible.value = true
   transfeOutInfo.value = {
     symbol: param?.symbol,
     token: param.wallet,
     walletId: param.walletId,
     walletKey: param.walletKey,
-    decimals: param.decimals
+    decimals: param.decimals,
+    address: param.address
   }
+}
+
+const handelChangeTo = async () => {
+  await ruleFormRef.value?.validateField('to', async (valid, fields) => {
+    if (valid) {
+      if (ruleForm.to && ruleForm.to.length > 0) {
+        const res = await APItransferEstimateGas({
+          walletAddress: customWalletInfo.value.walletInfo?.wallet,
+          chainCode: customWalletInfo.value.chainCode,
+          toAddress: ruleForm.to,
+          contractAddress: transfeOutInfo.value.address,
+          amount: '10000'
+        })
+
+        if (res) {
+          transferEstimateGas.value = res
+        }
+        console.log(res)
+      }
+    } else {
+      console.log('error submit!', fields)
+    }
+  })
 }
 
 const handelSubmitForm = async (formEl: FormInstance | undefined) => {
@@ -450,11 +485,14 @@ const handelSubmitForm = async (formEl: FormInstance | undefined) => {
       const spendAmount = new BigNumber(ruleForm.amount)
         .times(num)
         .integerValue(BigNumber.ROUND_DOWN)
-      console.log('submit!')
-      const res: any = await APItransferTo({
+      const res: any = await APItransferToV2({
         to: ruleForm.to,
         amount: spendAmount,
-        ...transfeOutInfo.value
+        token: transfeOutInfo.value.token,
+        walletId: transfeOutInfo.value.walletId,
+        walletKey: transfeOutInfo.value.walletKey,
+        createToTokenAccount: transferEstimateGas.value.createToTokenAccount,
+        createAccountInfo: transferEstimateGas.value.createAccountInfo
       })
       transfeOutVisible.value = false
       loading.value = false

@@ -6,11 +6,13 @@ import { erc20ABI, CHAIN_NETWORKS } from '@/types'
 import { useAppKitProvider, useAppKitNetwork } from '@reown/appkit/vue'
 import { type Provider } from '@reown/appkit-adapter-solana/vue'
 
-import { BrowserProvider, Contract, formatUnits } from 'ethers'
+import { BrowserProvider, Contract, formatUnits, verifyMessage } from 'ethers'
 
 import { Connection, PublicKey, Transaction, VersionedTransaction } from '@solana/web3.js'
 
 import { Token, TOKEN_PROGRAM_ID } from '@solana/spl-token'
+
+import nacl from 'tweetnacl'
 
 import bs58 from 'bs58'
 import { mainNetworkCurrency } from '@/utils'
@@ -18,6 +20,8 @@ import { customMessage } from './message'
 
 const okCoin = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
 const sol = 'So11111111111111111111111111111111111111112'
+
+const signatureMessage = 'Please sign this message to verify your wallet.'
 
 const delay = (ms: any) => new Promise((resolve) => setTimeout(resolve, ms))
 
@@ -545,6 +549,80 @@ export const isSolanaAddress = (address: string) => {
     return true
   } catch (error) {
     // 如果抛出错误，说明地址无效
+    return false
+  }
+}
+
+/**
+ * @description 生成 evm 签名
+ * @param message
+ * @returns
+ */
+export const evmSignature = async () => {
+  const { walletProvider }: any = useAppKitProvider('eip155')
+  const provider = new BrowserProvider(walletProvider)
+  const signer = await provider.getSigner()
+  const signature = await signer?.signMessage(signatureMessage)
+
+  return signature
+}
+
+/**
+ * @description 生成 sol 签名
+ * @param message
+ * @returns
+ */
+export const solanaSignature = async () => {
+  const { walletProvider } = useAppKitProvider<Provider>('solana')
+  const encodedMessage = new TextEncoder().encode(signatureMessage)
+  const signature = await walletProvider?.signMessage(encodedMessage)
+  // Convert the signature to a base58 string
+  const base58Signature = signature ? bs58.encode(signature) : ''
+
+  return base58Signature
+}
+
+/**
+ * @description evm 签名验证
+ * @param address
+ * @param signature
+ * @returns
+ */
+export const evmSignatureVerify = async (address: any, signature: any) => {
+  const recoveredAddress = verifyMessage(signatureMessage, signature)
+  console.log('recoveredAddress', recoveredAddress)
+  const isValid = address.toLowerCase() === recoveredAddress.toLowerCase()
+  console.log('isValid', isValid)
+  return isValid
+}
+
+/**
+ * @description solana 签名验证
+ * @param address
+ * @param signature
+ * @returns
+ */
+export const solanaSignatureVerify = async (address: any, signature: any) => {
+  const decodedSignature = bs58.decode(signature)
+  const publicKey = new PublicKey(address)
+  const message = new TextEncoder().encode(signatureMessage)
+
+  const isValid = await verifySignature(publicKey, decodedSignature, message)
+
+  console.log('isValid', isValid)
+  return isValid
+}
+
+function verifySignature(
+  publicKey: PublicKey,
+  decodedSignature: Uint8Array,
+  message: Uint8Array
+): boolean {
+  try {
+    // Use the PublicKey's verify method to validate the signature
+    return nacl.sign.detached.verify(message, decodedSignature, publicKey.toBytes())
+  } catch (error) {
+    console.error('Error verifying signature:', error)
     return false
   }
 }

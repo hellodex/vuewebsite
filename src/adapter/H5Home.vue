@@ -79,7 +79,7 @@
             </div>
           </div>
           <span :class="btcData.chg > 0 ? 'core-chain-price up' : 'core-chain-price down'"
-            >${{ numFormat(btcData.price || 0) }}</span
+            >${{ numFormat(parseFloat(btcData.price || 0).toFixed(2)) }}</span
           >
         </div>
         <div class="core-chain-item" @click="handelJump(ethData)">
@@ -97,7 +97,7 @@
             </div>
           </div>
           <span :class="ethData.chg > 0 ? 'core-chain-price up' : 'core-chain-price down'"
-            >${{ numFormat(ethData.price || 0) }}</span
+            >${{ numFormat(parseFloat(ethData.price || 0).toFixed(2)) }}</span
           >
         </div>
         <div class="core-chain-item">
