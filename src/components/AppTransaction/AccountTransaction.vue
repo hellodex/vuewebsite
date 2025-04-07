@@ -79,7 +79,7 @@
             >
               <span class="down">{{
                 MAIN_COIN[item.baseSymbol]
-                  ? numFormat(item.price || 0)
+                  ? numFormat(parseFloat(item.price || 0).toFixed(2))
                   : numberFormat(item.price || 0)
               }}</span>
               <span class="down">{{ numberFormat(item.amount) }}</span>
@@ -89,7 +89,7 @@
             <p :class="tokenInfo?.chg?.[0] == '-' ? 'down-color' : 'up-color'">
               ${{
                 MAIN_COIN[baseInfo.tokenInfo?.baseSymbol]
-                  ? numFormat(tokenInfo?.price || 0)
+                  ? numFormat(parseFloat(tokenInfo?.price || 0).toFixed(2))
                   : numberFormat(tokenInfo?.price || 0)
               }}
             </p>
@@ -103,7 +103,7 @@
             >
               <span class="up">{{
                 MAIN_COIN[item.baseSymbol]
-                  ? numFormat(item.price || 0)
+                  ? numFormat(parseFloat(item.price || 0).toFixed(2))
                   : numberFormat(item.price || 0)
               }}</span>
               <span class="up">{{ numberFormat(item.amount || 0) }}</span>

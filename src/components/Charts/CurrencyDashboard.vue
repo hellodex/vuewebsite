@@ -42,7 +42,7 @@
                   :class="item.increase[0] === '-' ? 'price-txt down-color' : 'price-txt up-color'"
                   >${{
                     MAIN_COIN[item.baseSymbol]
-                      ? numFormat(item.price || 0)
+                      ? numFormat(parseFloat(item.price || 0).toFixed(2))
                       : numberFormat(item.price || 0)
                   }}</span
                 >

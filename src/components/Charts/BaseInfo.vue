@@ -82,7 +82,7 @@
                 <span :class="priceIncrease.increase[0] === '-' ? 'down-color' : 'up-color'"
                   >${{
                     MAIN_COIN[baseInfo?.tokenInfo?.baseSymbol]
-                      ? numFormat(priceIncrease.price || 0)
+                      ? numFormat(parseFloat(priceIncrease.price || 0).toFixed(2))
                       : numberFormat(priceIncrease.price || 0)
                   }}</span
                 >
