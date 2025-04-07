@@ -80,7 +80,7 @@
             <div class="display-flex align-items-center">
               <span :class="priceIncrease.increase[0] == '-' ? 'price down' : 'price up'">{{
                 MAIN_COIN[baseInfo?.tokenInfo?.baseSymbol]
-                  ? numFormat(priceIncrease.price || 0)
+                  ? numFormat(parseFloat(priceIncrease.price || 0).toFixed(2))
                   : numberFormat(priceIncrease.price || 0)
               }}</span>
               <span
@@ -99,7 +99,7 @@
             <div class="exchange-rate">
               ≈ ${{
                 MAIN_COIN[baseInfo?.tokenInfo?.baseSymbol]
-                  ? numFormat(priceIncrease.price)
+                  ? numFormat(parseFloat(priceIncrease.price || 0).toFixed(2))
                   : numberFormat(priceIncrease.price)
               }}
             </div>

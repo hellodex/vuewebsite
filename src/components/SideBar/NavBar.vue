@@ -182,7 +182,7 @@ const accountInfo = computed(() => globalStore.accountInfo)
 // 菜单
 const navList = computed(() => {
   return [
-    { name: '冲狗基金', to: '/ChongDogVentures' },
+    // { name: '冲狗基金', to: '/ChongDogVentures' },
     { name: 'AI监控', to: '/Monitor/Strategy' }
     // { name: i18n.t('tabbar.smart'), to: '/Smartmoney' },
     // { name: i18n.t('tabbar.tools'), to: '/Tools' },
