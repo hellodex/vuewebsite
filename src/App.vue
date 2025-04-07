@@ -325,6 +325,7 @@ createAppKit({
   adapters: [ethersAdapter, solanaWeb3JsAdapter],
   networks: [mainnet, bsc, arbitrum, xLayer, base, optimism, solana],
   allWallets: 'SHOW',
+  enableWalletConnect: false,
   features: {
     analytics: true,
     socials: false,
