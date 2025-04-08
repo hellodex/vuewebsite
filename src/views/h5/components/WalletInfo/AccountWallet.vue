@@ -177,6 +177,7 @@
     position="right"
     :style="{ width: '100%', height: '100%' }"
     :overlay="false"
+    z-index="2"
   >
     <div class="send-nav display-flex align-items-center">
       <svg-icon name="chevron-left" class="chevron-left" @click="sendPopupRight = false"></svg-icon>
@@ -327,6 +328,7 @@
     position="right"
     :style="{ width: '100%', height: '100%' }"
     :overlay="false"
+    z-index="3"
   >
     <div class="send-nav display-flex align-items-center">
       <svg-icon
@@ -347,6 +349,7 @@
         type="textarea"
         autocomplete="off"
         placeholder="输入或者粘贴收款地址"
+        @blur="handelblurTo"
       />
 
       <van-field
@@ -366,6 +369,15 @@
         >
       </div>
 
+      <div class="balance-text display-flex align-items-center justify-content-sp">
+        <span>最大网络费用</span>
+        <span>
+          {{ numberFormat(transferEstimateGas.gasAmount || 0) }} {{ customWalletInfo.symbol }} ≈ ${{
+            numberFormat(transferEstimateGas.gasFee || 0)
+          }}
+        </span>
+      </div>
+
       <div class="send-out-btn" @click="handelConfirm">确认</div>
     </div>
   </van-popup>
@@ -375,6 +387,7 @@
     position="right"
     :style="{ width: '100%', height: '100%' }"
     :overlay="false"
+    z-index="3"
   >
     <div class="accept-nav display-flex align-items-center">
       <svg-icon
@@ -428,7 +441,7 @@ import {
 
 import PercentageNotbg from '@/components/Percentage/PercentageNotbg.vue'
 import WalletListPopup from '@/components/Dialogs/WalletListPopup.vue'
-import { APIlistTransferHistory, APItransferTo } from '@/api'
+import { APIlistTransferHistory, APItransferToV2, APItransferEstimateGas } from '@/api'
 import { showToast } from 'vant'
 import {
   notificationInfo,
@@ -505,6 +518,7 @@ const coinInfo = ref<any>({})
 const sendPopupRight = ref(false)
 const listTransferHistory = ref<any>([])
 const listTransferHistorySkeleton = ref(false)
+const transferEstimateGas = ref<any>({})
 
 const handelSend = (item: any) => {
   sendPopupRight.value = true
@@ -539,6 +553,35 @@ const sendOutForm = reactive<any>({
 })
 const handelSendOut = () => {
   sendOutPopupRight.value = true
+}
+
+const handelblurTo = async () => {
+  if (isAllSpaces(sendOutForm.to)) {
+    showToast('请输入收款地址')
+    return
+  }
+
+  if (customWalletInfo.value.chainCode == 'SOLANA' && !isSolanaAddress(sendOutForm.to)) {
+    showToast(`请输入 ${customWalletInfo.value.chainCode} 合约地址`)
+    return
+  }
+
+  if (customWalletInfo.value.chainCode != 'SOLANA' && !isEvmAddress(sendOutForm.to)) {
+    showToast(`请输入 ${customWalletInfo.value.chainCode} 合约地址`)
+    return
+  }
+
+  const res = await APItransferEstimateGas({
+    walletAddress: customWalletInfo.value.walletInfo?.wallet,
+    chainCode: customWalletInfo.value.chainCode,
+    toAddress: sendOutForm.to,
+    contractAddress: coinInfo.value.address,
+    amount: '10000'
+  })
+
+  if (res) {
+    transferEstimateGas.value = res
+  }
 }
 
 const handelConfirm = async () => {
@@ -578,12 +621,14 @@ const handelConfirm = async () => {
   const spendAmount = new BigNumber(sendOutForm.amount)
     .times(num)
     .integerValue(BigNumber.ROUND_DOWN)
-  const res: any = await APItransferTo({
+  const res: any = await APItransferToV2({
     to: sendOutForm.to,
     amount: spendAmount,
     token: coinInfo.value.address, // 转出地址
     walletId: customWalletInfo.value.walletInfo.walletId,
-    walletKey: customWalletInfo.value.walletInfo?.walletKey
+    walletKey: customWalletInfo.value.walletInfo?.walletKey,
+    createToTokenAccount: transferEstimateGas.value.createToTokenAccount,
+    createAccountInfo: transferEstimateGas.value.createAccountInfo
   })
 
   if (res) {
@@ -964,6 +1009,7 @@ onMounted(() => {
   }
   .balance-text {
     color: #020202;
+    line-height: 1.8;
     span:first-child {
       font-size: 0.3733rem;
     }
