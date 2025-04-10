@@ -264,6 +264,15 @@ const updateTradingInfo = () => {
 
 const handelBuy = async (item: any) => {
   buyIndex.value = item
+
+  if (buyIndex.value > balanceFormat(buyInfo)) {
+    customMessage({
+      type: 'error',
+      title: `余额不足`
+    })
+    return false
+  }
+
   if (walletType.value == 'Email') {
     await handelCustomTradeSwap(buyInfo.value, sellInfo.value, 'buy')
   } else {
