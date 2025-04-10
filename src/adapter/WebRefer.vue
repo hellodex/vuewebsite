@@ -280,7 +280,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
         loading.value = false
         socketOffMonitor(globalStore.accountInfo.uuid, globalStore.accountInfo.tokenInfo.tokenValue)
         socketOnMonitor(globalStore.accountInfo.uuid, globalStore.accountInfo.tokenInfo.tokenValue)
-        router.replace('/')
+        window.location.href = '/'
         return
       }
       loading.value = false
