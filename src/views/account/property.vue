@@ -44,6 +44,7 @@
                 "
                 >转出</span
               >
+              <span class="wallet-to-out" @click="handelSendU">免费送 U</span>
             </div>
           </div>
         </div>
@@ -293,7 +294,7 @@ import {
   notificationWarn
 } from '@/utils/notification'
 
-import { APItransferToV2, APItransferEstimateGas } from '@/api'
+import { APItransferToV2, APItransferEstimateGas, APImemeClaim } from '@/api'
 import { useI18n } from 'vue-i18n'
 import { useChainConfigsStore } from '@/stores/chainConfigs'
 import { initLimitedOrderPage } from '@/api/coinWalletDetails'
@@ -303,7 +304,7 @@ import MyHold from '@/components/Charts/MyHold.vue'
 import CurrentCommission from '@/components/Charts/CurrentCommission.vue'
 import CommissionHistory from '@/components/Charts/CommissionHistory.vue'
 import PercentageNotbg from '@/components/Percentage/PercentageNotbg.vue'
-import { el } from 'element-plus/es/locale/index.mjs'
+import { customMessage } from '@/utils/message'
 
 const i18n = useI18n()
 const chain = useChainConfigsStore()
@@ -399,6 +400,27 @@ watch(customWalletInfo, (newValue) => {
 watch(tokenList, () => {
   getProperty()
 })
+
+const handelSendU = async () => {
+  if (customWalletInfo.value.walletInfo?.vaultType !== 1) {
+    customMessage({
+      type: 'error',
+      title: `请切换至冲土狗基金钱包`
+    })
+
+    return false
+  }
+  const res = await APImemeClaim({
+    walletId: customWalletInfo.value.walletInfo?.walletId,
+    chainCode: customWalletInfo.value.chainCode
+  })
+  if (res) {
+    customMessage({
+      type: 'success',
+      title: `领取成功`
+    })
+  }
+}
 
 const handelTransfeIn = async (row: any, info: any) => {
   transfeInInfo.value.symbol = row?.symbol
@@ -680,19 +702,20 @@ onUnmounted(() => {
   }
   .wallet-to-out {
     display: block;
-    height: 32px;
-    padding: 0 15px;
-    font-size: 14px;
-    background: #1e1e1e;
-    margin-left: 8px;
-    line-height: 32px;
+    line-height: 1.2;
+    padding: 4px 12px;
     border-radius: 16px;
+    border: 1px solid #222;
+    font-size: 12px;
     cursor: pointer;
-    color: var(--dex-color-4);
+    white-space: nowrap;
+    margin-left: 8px;
+    transition: all 0.2s;
+    color: #848e9c;
     transition: all 0.2s;
   }
   .wallet-to-out:hover {
-    background-color: #333;
+    color: #f5f5f5;
   }
   .entrustTab {
     margin-bottom: 16px;

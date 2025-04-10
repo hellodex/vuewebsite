@@ -570,3 +570,27 @@ export function pumpFunPercent(num: number) {
 export function numToFixedTwo(num: number) {
   return Math.ceil(num * 10000) / 100
 }
+
+/**
+ * @description 冲土狗交易拦截
+ * @returns
+ */
+
+export function transactionInterception(tokenInfo: any) {
+  const globalStore = useGlobalStore()
+  const chainConfigs = useChainConfigsStore()
+
+  const customWalletInfo = globalStore.customWalletInfo
+
+  const isBasePackCurrency =
+    tokenInfo.baseAddress.toLowerCase() ==
+    mainNetworkCurrency(tokenInfo.chainCode).wrapped.toLowerCase()
+  const isQuotePackCurrency =
+    tokenInfo.quoteAddress.toLowerCase() ==
+    mainNetworkCurrency(tokenInfo.chainCode).wrapped.toLowerCase()
+
+  if (customWalletInfo.walletInfo?.vaultType == 1) {
+    return true
+  }
+  return false
+}
