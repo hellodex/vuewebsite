@@ -105,6 +105,7 @@ import { solana } from '@reown/appkit/networks'
 import { mainnet, bsc, arbitrum, xLayer, base, optimism } from '@reown/appkit/networks'
 
 import { SolflareWalletAdapter, PhantomWalletAdapter } from '@solana/wallet-adapter-wallets'
+import { customMessage } from '@/utils/message'
 
 const { windowWidth } = useWindowWidth()
 
@@ -113,6 +114,12 @@ const danmus = ref([])
 const telegram__initParams = sessionStorage.getItem('__telegram__initParams')
 const tgWebAppData = (telegram__initParams && JSON.parse(telegram__initParams)?.tgWebAppData) || ''
 
+if (tgWebAppData) {
+  customMessage({
+    type: 'error',
+    title: '请复制链接在系统浏览器打开本网址'
+  })
+}
 const route = useRoute()
 const router = useRouter()
 

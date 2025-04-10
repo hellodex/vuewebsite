@@ -63,7 +63,7 @@ const othersLink = ref<{ icon: string; to: string; txt: string }[]>([
   },
   {
     icon: 'twitter',
-    to: 'https://lnk.bio/HelloDex',
+    to: 'https://x.com/HelloDex_io',
     txt: ''
   },
   {

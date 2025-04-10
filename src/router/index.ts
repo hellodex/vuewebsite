@@ -52,6 +52,10 @@ const router = createRouter({
     {
       path: '/ChongDogVentures',
       name: 'ChongDogVentures',
+      meta: {
+        title: 'HelloDex-冲狗基金',
+        description: '免费每天送U、欢迎加入'
+      },
       component: () => import('@/views/chongDogVentures.vue')
     },
     {
@@ -120,7 +124,8 @@ const router = createRouter({
           path: 'Strategy',
           name: 'Strategy',
           meta: {
-            title: 'HelloDex-监控配置'
+            title: 'HelloDex-AI监控',
+            description: '可添加代币、钱包、推特帖子任何异动第一时间推送给用户'
           },
           component: () => import('@/views/monitor/strategy.vue')
         }
@@ -169,6 +174,10 @@ const router = createRouter({
     {
       path: '/Download',
       name: 'Download',
+      meta: {
+        title: 'HelloDex-下载',
+        description: '支持iOS、安卓、Telegram bot、网页点击下载'
+      },
       component: () => import('@/views/download.vue')
     },
     {
@@ -210,7 +219,20 @@ router.beforeEach(async (to, from, next) => {
 
   document.title = to.meta?.title
     ? (to.meta.title as string)
-    : 'HelloDex: 利润80%分给所有人的去中心化交易所'
+    : 'HelloDex——开创和主导Web3变革，利润80%分给用户'
+  if (to.meta?.description) {
+    // 假设我们要修改description meta标签
+    const descriptionMeta = document.querySelector('meta[name="description"]')
+    const descriptionMeta1 = document.querySelector('meta[http-equiv="description"]')
+    const keywordsMeta = document.querySelector('meta[name="keywords"]')
+    const keywordsMeta1 = document.querySelector('meta[http-equiv="keywords"]')
+
+    // 更新content属性
+    descriptionMeta?.setAttribute('content', to.meta?.description as string)
+    descriptionMeta1?.setAttribute('content', to.meta?.description as string)
+    keywordsMeta?.setAttribute('content', to.meta?.description as string)
+    keywordsMeta1?.setAttribute('content', to.meta?.description as string)
+  }
   if (to.query.channel == 'okx') {
     import('@/utils/firebaseOkx').then((module) => {
       const analytics = module.default

@@ -17,9 +17,6 @@
           <a href="https://hellodex.gitbook.io/hellodex" target="_blank" class="link">
             <span class="link">白皮书</span>
           </a>
-          <a href="https://hellodex.gitbook.io/hellodex" target="_blank" class="link">
-            <span class="link">Web3变革</span>
-          </a>
 
           <RouterLink :to="item.to" v-for="item in navList" :key="item.name">
             <span class="link">{{ item.name }}</span>
@@ -182,7 +179,7 @@ const accountInfo = computed(() => globalStore.accountInfo)
 // 菜单
 const navList = computed(() => {
   return [
-    // { name: '冲狗基金', to: '/ChongDogVentures' },
+    { name: '送U-冲狗基金', to: '/ChongDogVentures' },
     { name: 'AI监控', to: '/Monitor/Strategy' }
     // { name: i18n.t('tabbar.smart'), to: '/Smartmoney' },
     // { name: i18n.t('tabbar.tools'), to: '/Tools' },
