@@ -908,3 +908,20 @@ export function APIgetUserSubscribe(data: object) {
     }
   })
 }
+
+/**
+ * 冲土狗领U
+ * @param data
+ * @returns
+ */
+export function APImemeClaim(data: object) {
+  const account: any = localStorage.getItem('accountInfo')
+  return http({
+    url: WEB_URL + '/api/auth/meme/claim',
+    method: 'POST',
+    data,
+    headers: {
+      [`${JSON.parse(account)?.tokenInfo.tokenName}`]: `Bearer ${JSON.parse(account)?.tokenInfo.tokenValue}`
+    }
+  })
+}
