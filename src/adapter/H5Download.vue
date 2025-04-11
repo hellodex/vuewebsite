@@ -66,7 +66,7 @@
             <span>Discord</span>
           </a>
           <a
-            href="https://x.com"
+            href="https://x.com/HelloDex_io"
             target="_blank"
             class="download-item display-flex align-items-center justify-content-center"
           >
