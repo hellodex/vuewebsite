@@ -12,7 +12,7 @@
         <svg-icon name="logo" class="logo-svg"></svg-icon>
         <span>HelloDex</span>
       </div>
-      <div class="display-flex flex-direction-col align-items-center">
+      <div class="display-flex flex-direction-col align-items-center download-content-main">
         <strong class="title">开创和主导Web3变革</strong>
         <span class="sub-title">平台利润80%分给用户</span>
         <div class="download-items">
@@ -66,7 +66,7 @@
             <span>Discord</span>
           </a>
           <a
-            href="https://x.com"
+            href="https://x.com/HelloDex_io"
             target="_blank"
             class="download-item display-flex align-items-center justify-content-center"
           >
@@ -122,6 +122,10 @@ const router = useRouter()
   .download-content {
     position: relative;
     padding-top: 0.8rem;
+    .download-content-main {
+      position: relative;
+      z-index: 6;
+    }
     .download-logo-main {
       font-size: 0.7467rem;
       color: #f5f5f5;
