@@ -38,7 +38,7 @@
             class="download-item display-flex align-items-center justify-content-center"
           >
             <svg-icon name="icon-download-tg" class="icon-svg"></svg-icon>
-            <span>TG Bot</span>
+            <span>TG 交易机器人</span>
           </a>
           <a
             href="https://hellodex.gitbook.io/hellodex"
@@ -71,7 +71,7 @@
             class="download-item display-flex align-items-center justify-content-center"
           >
             <svg-icon name="icon-download-x" class="icon-svg"></svg-icon>
-            <span>X</span>
+            <span>X (推特)</span>
           </a>
         </div>
 

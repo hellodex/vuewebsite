@@ -13,10 +13,8 @@
             <span class="price-btn" @click="handelWithdrawal">提现</span>
           </p>
         </div>
-        <div
-          class="document-text display-flex align-items-center"
-          @click="router.push('/Account/Withdrawal')"
-        >
+        <div class="document-text display-flex align-items-center">
+          <!-- @click="router.push('/Account/Withdrawal')" -->
           <span class="icon-text">提现金额</span>
           <svg-icon name="icon-document" class="icon-document"></svg-icon>
         </div>
@@ -74,7 +72,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { ElMessageBox } from 'element-plus'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
@@ -82,15 +80,18 @@ import { numberFormat } from '@/utils'
 import { useGlobalStore } from '@/stores/global'
 
 import { APIgetCommissionDetail, APIwithdraw } from '@/api'
+import { customMessage } from '@/utils/message'
 
 const i18n = useI18n()
 const router = useRouter()
 const globalStore = useGlobalStore()
 
 const { chainLogoObj } = globalStore
+
+const customWalletInfo = computed(() => globalStore.customWalletInfo)
+
 const info = ref<any>({})
 const skeleton = ref<boolean>(false)
-const withdrawInfo = ref<any>({})
 
 const getData = async () => {
   skeleton.value = true
@@ -101,19 +102,24 @@ const getData = async () => {
 }
 
 const handelWithdrawal = (row: any) => {
-  withdrawInfo.value
   ElMessageBox.confirm('是否进行提现操作', i18n.t('Tips'), {
     confirmButtonText: i18n.t('Confirm'),
     cancelButtonText: i18n.t('Cancel'),
     type: 'info'
   })
     .then(async () => {
-      // const res = await APIwithdraw({
-      //   chainCode: row.chainCode,
-      //   walletAddress: '',
-      //   amount: row.withdrawableAmount
-      // })
-      // console.log(res)
+      const res = await APIwithdraw({
+        chainCode: customWalletInfo.value.chainCode,
+        walletAddress: customWalletInfo.value.walletInfo?.wallet,
+        amount: info.value.withdrawableCommissionAmount
+      })
+      console.log(res)
+      if (res) {
+        customMessage({
+          type: 'success',
+          title: '提现成功'
+        })
+      }
     })
     .catch(() => {})
 }
