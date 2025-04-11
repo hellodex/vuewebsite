@@ -213,9 +213,6 @@ const tabList = [
 const tabIndex = ref<number>(1)
 
 const handelTab = (item: any) => {
-  if (item.value == 3) {
-    return false
-  }
   tabIndex.value = item.value
 }
 
