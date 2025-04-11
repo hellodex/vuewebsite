@@ -625,7 +625,7 @@ export function APIgetMyCommissionSummary(data: object) {
 export function APIwithdraw(data: object) {
   const account: any = localStorage.getItem('accountInfo')
   return http({
-    url: WEB_URL + '/api/auth/commission/withdraw',
+    url: WEB_URL + '/api/auth/commission/submitWithdraw',
     method: 'POST',
     data,
     headers: {
