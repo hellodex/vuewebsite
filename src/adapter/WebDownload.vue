@@ -18,7 +18,7 @@
             <span>苹果TF版下载</span>
           </a>
           <a
-            href="https://pub-9b1a3493aabe403482e838e3d4cb36d0.r2.dev/dex.apk"
+            href="https://hellodex.s3.ap-northeast-1.amazonaws.com/dex.apk"
             target="_blank"
             class="download-item display-flex align-items-center"
           >
