@@ -177,7 +177,7 @@
     position="right"
     :style="{ width: '100%', height: '100%' }"
     :overlay="false"
-    z-index="2"
+    z-index="999"
   >
     <div class="send-nav display-flex align-items-center">
       <svg-icon name="chevron-left" class="chevron-left" @click="sendPopupRight = false"></svg-icon>
@@ -328,7 +328,7 @@
     position="right"
     :style="{ width: '100%', height: '100%' }"
     :overlay="false"
-    z-index="3"
+    z-index="1000"
   >
     <div class="send-nav display-flex align-items-center">
       <svg-icon
@@ -387,7 +387,7 @@
     position="right"
     :style="{ width: '100%', height: '100%' }"
     :overlay="false"
-    z-index="3"
+    z-index="1000"
   >
     <div class="accept-nav display-flex align-items-center">
       <svg-icon
