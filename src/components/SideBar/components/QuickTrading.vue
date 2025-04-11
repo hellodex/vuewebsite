@@ -265,7 +265,7 @@ const updateTradingInfo = () => {
 const handelBuy = async (item: any) => {
   buyIndex.value = item
 
-  if (buyIndex.value > balanceFormat(buyInfo)) {
+  if (buyIndex.value > parseFloat(balanceFormat(buyInfo.value))) {
     customMessage({
       type: 'error',
       title: `余额不足`
@@ -568,8 +568,20 @@ const handelSure = () => {
   }
 
   emit('circulation', {
-    buyAmount: [buy1.value, buy2.value, buy3.value, buy4.value, buy5.value],
-    sellAmount: [sell1.value, sell2.value, sell3.value, sell4.value, sell5.value]
+    buyAmount: [
+      parseFloat(buy1.value),
+      parseFloat(buy2.value),
+      parseFloat(buy3.value),
+      parseFloat(buy4.value),
+      parseFloat(buy5.value)
+    ],
+    sellAmount: [
+      parseFloat(sell1.value),
+      parseFloat(sell2.value),
+      parseFloat(sell3.value),
+      parseFloat(sell4.value),
+      parseFloat(sell5.value)
+    ]
   })
 
   settingType.value = false
