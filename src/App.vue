@@ -89,6 +89,7 @@ import CurrencyDashboard from '@/components/Charts/CurrencyDashboard.vue'
 import { useGlobalStore } from '@/stores/global'
 import { useChainConfigsStore } from '@/stores/chainConfigs'
 import { useWindowWidth } from '@/hooks/useWindowWidth'
+import { showToast } from 'vant'
 import {
   evmSignature,
   solanaSignature,
@@ -115,11 +116,9 @@ const telegram__initParams = sessionStorage.getItem('__telegram__initParams')
 const tgWebAppData = (telegram__initParams && JSON.parse(telegram__initParams)?.tgWebAppData) || ''
 
 if (tgWebAppData) {
-  customMessage({
-    type: 'error',
-    title: '请复制链接在系统浏览器打开本网址'
-  })
+  showToast('请复制链接在系统浏览器打开本网址')
 }
+
 const route = useRoute()
 const router = useRouter()
 
