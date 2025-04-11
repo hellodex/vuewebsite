@@ -190,11 +190,11 @@ const tabList = [
   {
     value: 2,
     label: '价格'
-  },
-  {
-    value: 1,
-    label: '市场'
   }
+  // {
+  //   value: 1,
+  //   label: '市场'
+  // }
 ]
 
 const tabIndex = ref<number>(2)
@@ -274,6 +274,7 @@ const expectedProfitAndLoss = computed(() => {
    * 1. 获得盈亏百分比：输入的市值减去 averageBuyMarketCap 平均买入市值，再除 averageBuyMarketCap 再除100
    * 2. 获得盈亏百分比：输入的价格减去 averagePrice 平均买入价，再除 averagePrice 再除100
    * 3. 获得预计盈亏：volume*盈亏百分比 * 你输入的数量
+   * TODO: 改成 amount * averagePrice * 盈亏百分比 * 你输入的数量 ，只替换了 volume
    */
 
   let percentage = 0
@@ -290,7 +291,11 @@ const expectedProfitAndLoss = computed(() => {
       100
   }
 
-  const val = parseFloat(props.limitInfo.volume) * percentage * (positionVal.value || 0)
+  const val =
+    parseFloat(props.limitInfo.amount) *
+    parseFloat(props.limitInfo.averagePrice) *
+    percentage *
+    (positionVal.value || 0)
   return val.toString()
 })
 
@@ -502,7 +507,7 @@ p.p-txt:last-child {
   margin: 20px 0 35px;
   .tab-view {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(1, 1fr);
     gap: 18px;
     span {
       line-height: 35px;
