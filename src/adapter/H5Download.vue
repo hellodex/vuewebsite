@@ -74,6 +74,15 @@
             <span>X</span>
           </a>
         </div>
+
+        <div class="display-flex flex-direction-col">
+          <span>{{ ua }}</span>
+          <svg-icon
+            name="copy"
+            style="width: 0.64rem; height: 0.64rem; margin-left: 0.2133rem"
+            v-copy="ua"
+          ></svg-icon>
+        </div>
       </div>
       <img src="../assets/img/download-img.png" alt="" class="download-img" />
       <img src="../assets/img/download-h5-bac.png" alt="" class="download-bac" />
@@ -81,8 +90,11 @@
   </section>
 </template>
 <script lang="ts" setup>
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 const router = useRouter()
+
+const ua = ref(navigator.userAgent)
 </script>
 <style lang="scss" scoped>
 .h5-download-box {
