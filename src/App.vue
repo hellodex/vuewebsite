@@ -115,7 +115,14 @@ const danmus = ref([])
 const telegram__initParams = sessionStorage.getItem('__telegram__initParams')
 const tgWebAppData = (telegram__initParams && JSON.parse(telegram__initParams)?.tgWebAppData) || ''
 
-if (tgWebAppData) {
+/**
+ * @description: tg webview 运行环境判断
+ */
+if (
+  typeof window.TelegramWebview !== 'undefined' ||
+  typeof window.TelegramWebviewProxy !== 'undefined' ||
+  typeof window.TelegramWebviewProxyProto !== 'undefined'
+) {
   showToast('请复制链接在系统浏览器打开本网址')
 }
 
