@@ -74,10 +74,6 @@
             <span>X (推特)</span>
           </a>
         </div>
-
-        <div class="display-flex flex-direction-col">
-          <span>{{ isTg }}</span>
-        </div>
       </div>
       <img src="../assets/img/download-img.png" alt="" class="download-img" />
       <img src="../assets/img/download-h5-bac.png" alt="" class="download-bac" />
@@ -88,19 +84,6 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 const router = useRouter()
-
-const ua = ref(navigator.userAgent)
-
-const isTg = ref('')
-
-if (
-  typeof window.TelegramWebview !== 'undefined' ||
-  typeof window.TelegramWebviewProxy !== 'undefined' ||
-  typeof window.TelegramWebviewProxyProto !== 'undefined'
-) {
-  console.log('Found Telegram Webview')
-  isTg.value = 'Found Telegram Webview'
-}
 </script>
 <style lang="scss" scoped>
 .h5-download-box {
