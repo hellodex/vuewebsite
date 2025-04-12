@@ -5,8 +5,17 @@
       <div class="card-box property-user display-flex align-items-center">
         <img src="../../assets/img/0xSun.png" alt="" />
         <div class="nickname-box display-flex flex-direction-col justify-content-sp">
-          <div class="display-flex align-items-center">
+          <div class="display-flex align-items-fd">
             <span class="nickname">{{ accountInfo?.nickname }}</span>
+
+            <div class="display-flex align-items-center">
+              <span class="uuid-txt">UUID: {{ customWalletInfo?.walletInfo?.uuid }}</span>
+              <svg-icon
+                name="copy"
+                class="copy"
+                v-copy="customWalletInfo?.walletInfo?.uuid"
+              ></svg-icon>
+            </div>
             <!-- <el-icon :size="18" class="edit-icon"><EditPen /></el-icon> -->
           </div>
           <div class="display-flex align-items-center">
@@ -405,7 +414,7 @@ const handelSendU = async () => {
   if (customWalletInfo.value.walletInfo?.vaultType !== 1) {
     customMessage({
       type: 'error',
-      title: `请切换至冲土狗基金钱包`
+      title: `请切换至冲狗基金钱包`
     })
 
     return false
@@ -666,6 +675,7 @@ onUnmounted(() => {
     .nickname {
       font-size: 18px;
       margin-right: 5px;
+      line-height: 1.2;
     }
     .edit-icon {
       cursor: pointer;
@@ -673,6 +683,17 @@ onUnmounted(() => {
     strong {
       font-size: 13px;
       font-weight: normal;
+    }
+    .uuid-txt {
+      color: #848e9c;
+      line-height: 1.2;
+      margin-left: 8px;
+    }
+    .copy {
+      width: 12px;
+      height: 12px;
+      margin-left: 4px;
+      cursor: pointer;
     }
   }
   .icon-price {
