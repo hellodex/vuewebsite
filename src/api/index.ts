@@ -925,3 +925,39 @@ export function APImemeClaim(data: object) {
     }
   })
 }
+
+/**
+ * @description 领取奖励
+ * @param data
+ * @returns
+ */
+
+export function APIgetAllAta(data: object) {
+  const account: any = localStorage.getItem('accountInfo')
+  return http({
+    url: WEB_URL + '/api/auth/trade/getAllAta',
+    method: 'POST',
+    data,
+    headers: {
+      [`${JSON.parse(account)?.tokenInfo.tokenName}`]: `Bearer ${JSON.parse(account)?.tokenInfo.tokenValue}`
+    }
+  })
+}
+
+/**
+ * @description 退还SOL的接口
+ * @param data
+ * @returns
+ */
+
+export function APIcloseAllAta(data: object) {
+  const account: any = localStorage.getItem('accountInfo')
+  return http({
+    url: WEB_URL + '/api/auth/trade/closeAllAta',
+    method: 'POST',
+    data,
+    headers: {
+      [`${JSON.parse(account)?.tokenInfo.tokenName}`]: `Bearer ${JSON.parse(account)?.tokenInfo.tokenValue}`
+    }
+  })
+}
