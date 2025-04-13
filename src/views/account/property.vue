@@ -477,7 +477,8 @@ const handelSendU = async () => {
 const handelRefundSol = async () => {
   refundSolVisible.value = true
   const res = await APIgetAllAta({
-    wallet: customWalletInfo.value.walletInfo?.wallet
+    wallet: customWalletInfo.value.walletInfo?.wallet,
+    walletId: customWalletInfo.value.walletInfo?.walletId
   })
 
   if (res) {
