@@ -54,6 +54,12 @@
                 >转出</span
               >
               <span class="wallet-to-out" @click="handelSendU">免费送 U</span>
+              <span
+                class="wallet-to-out"
+                @click="handelRefundSol"
+                v-if="customWalletInfo.chainCode == 'SOLANA'"
+                >退还 SOL</span
+              >
             </div>
           </div>
         </div>
@@ -280,6 +286,34 @@
       </div>
     </template>
   </el-dialog>
+  <el-dialog v-model="refundSolVisible" title="关闭代币账户" width="500" align-center>
+    <div class="display-flex flex-direction-col">
+      <div class="display-flex flex-direction-col">
+        <p class="refundSol-txt">钱包地址</p>
+        <span style="margin-bottom: 30px; color: var(--dex-color-4)"
+          >{{ shortifyAddress(customWalletInfo.walletInfo?.wallet)
+          }}<svg-icon
+            name="copy"
+            style="margin-left: 4px; width: 13px; height: 13px; cursor: pointer"
+            v-copy="customWalletInfo.walletInfo?.wallet"
+          ></svg-icon
+        ></span>
+      </div>
+      <div class="display-flex flex-direction-col">
+        <p class="refundSol-txt">代币余额是0，可关闭的账户数</p>
+        <div class="item-box">{{ allAta?.length || 0 }}</div>
+      </div>
+      <div class="display-flex flex-direction-col">
+        <p class="refundSol-txt">可领取的租金</p>
+        <div class="item-box">{{ numberFormat(0.00203 * (allAta?.length || 0)) }} SOL</div>
+      </div>
+    </div>
+    <template #footer>
+      <div class="footer-btn" @click="!loading ? handelChoseAccount() : null">
+        关闭账户，领取 SOL
+      </div>
+    </template>
+  </el-dialog>
 </template>
 <script setup lang="ts">
 import { ref, computed, watch, reactive, onMounted, onUnmounted } from 'vue'
@@ -288,7 +322,7 @@ import html2canvas from 'html2canvas'
 import QRCode from 'qrcode'
 import BigNumber from 'bignumber.js'
 import { useGlobalStore } from '@/stores/global'
-import { numberFormat, isAllSpaces } from '@/utils'
+import { numberFormat, isAllSpaces, shortifyAddress } from '@/utils'
 import {
   decimalsFormat,
   evmTransactionReceipt,
@@ -303,7 +337,13 @@ import {
   notificationWarn
 } from '@/utils/notification'
 
-import { APItransferToV2, APItransferEstimateGas, APImemeClaim } from '@/api'
+import {
+  APItransferToV2,
+  APItransferEstimateGas,
+  APImemeClaim,
+  APIgetAllAta,
+  APIcloseAllAta
+} from '@/api'
 import { useI18n } from 'vue-i18n'
 import { useChainConfigsStore } from '@/stores/chainConfigs'
 import { initLimitedOrderPage } from '@/api/coinWalletDetails'
@@ -344,6 +384,9 @@ const total = ref<number>(0)
 const transferEstimateGas = ref<any>({})
 
 const hidePosition = ref(Number(localStorage.getItem('hidePosition')))
+
+const refundSolVisible = ref<boolean>(false)
+const allAta = ref<any>([])
 
 interface RuleForm {
   to: string
@@ -429,6 +472,46 @@ const handelSendU = async () => {
       title: `领取成功`
     })
   }
+}
+
+const handelRefundSol = async () => {
+  refundSolVisible.value = true
+  const res = await APIgetAllAta({
+    wallet: customWalletInfo.value.walletInfo?.wallet
+  })
+
+  if (res) {
+    allAta.value = res
+  }
+}
+
+const handelChoseAccount = async () => {
+  if (allAta.value.length == 0) {
+    customMessage({
+      type: 'error',
+      title: `没有可关闭的账户`
+    })
+    return false
+  }
+
+  loading.value = true
+  const res = await APIcloseAllAta({
+    walletId: customWalletInfo.value.walletInfo?.walletId,
+    walletKey: customWalletInfo.value.walletInfo?.walletKey
+  })
+  if (res) {
+    customMessage({
+      type: 'success',
+      title: `领取成功，请在钱包查看余额`
+    })
+    refundSolVisible.value = false
+  } else {
+    customMessage({
+      type: 'error',
+      title: `领取失败，请在钱包查看余额`
+    })
+  }
+  loading.value = false
 }
 
 const handelTransfeIn = async (row: any, info: any) => {
@@ -874,5 +957,20 @@ onUnmounted(() => {
   vertical-align: middle;
   white-space: nowrap;
   align-items: center;
+}
+.item-box {
+  width: 100%;
+  padding: 0 12px;
+  color: var(--dex-color-4);
+  background-color: var(--hover-bg-color);
+  height: 40px;
+  font-size: 14px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  margin-bottom: 30px;
+}
+.refundSol-txt {
+  margin-bottom: 10px;
 }
 </style>
