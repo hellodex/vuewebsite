@@ -43,7 +43,7 @@
               <PercentageNotbg :value="scope.row.chg1d" />
             </template>
           </el-table-column>
-          <el-table-column label="平均买入价格" min-width="120">
+          <el-table-column label="平均买入价格">
             <template #default="scope">
               <span class="text-color font-family-Medium"
                 >${{ numberFormat(scope.row.averagePrice) || '-' }}</span
@@ -93,8 +93,9 @@
               <PercentageNotbg :value="scope.row?.totalEarnRate || 0" class="font-family-Medium" />
             </template>
           </el-table-column>
-          <el-table-column label="操作" width="235" align="right">
+          <el-table-column label="操作" width="280" align="right">
             <template #default="scope">
+              <span class="hold-btn" @click.stop="handelShare(scope.row)">分享</span>
               <span class="hold-btn" @click.stop="handelSellLimit(scope.row)">止盈</span>
               <span class="hold-btn" @click.stop="handelStopLimit(scope.row)">止损</span>
               <span class="hold-btn btn-trade" @click.stop="handelCustomTradeSwap(scope.row)"
@@ -121,12 +122,21 @@
     @close="handleClose"
     v-if="stopLimitVisible"
   />
+
+  <TokenShareDialog
+    :tokenShareVisible="tokenShareVisible"
+    :shareCoinInfo="shareCoinInfo"
+    :qrcodeUrl="qrcodeUrl"
+    :chartData="chartData"
+    @close="handleClose"
+  />
 </template>
 
 <script lang="ts" setup>
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import BigNumber from 'bignumber.js'
+import QRCode from 'qrcode'
 import { numberFormat } from '@/utils'
 import { APIauthTradeSwap } from '@/api/coinWalletDetails'
 import { useGlobalStore } from '@/stores/global'
@@ -142,9 +152,11 @@ import { useChainConfigsStore } from '@/stores/chainConfigs'
 import { useSubscribeKChartInfo } from '@/stores/subscribeKChartInfo'
 import PercentageNotbg from '@/components/Percentage/PercentageNotbg.vue'
 import { useI18n } from 'vue-i18n'
-
+import { APIgetChartByBaseAddress } from '@/api'
 import StopLimitDialog from '../Dialogs/StopLimitDialog.vue'
 import SellLimiDialog from '../Dialogs/SellLimiDialog.vue'
+import TokenShareDialog from '../Dialogs/TokenShareDialog.vue'
+import { showLoadingToast, closeToast } from 'vant'
 
 defineProps({
   list: {
@@ -182,6 +194,11 @@ const price = computed(() =>
 const rowInfo = ref<any>({})
 const stopLimitVisible = ref<boolean>(false) // 限价止损
 const sellLimitVisible = ref<boolean>(false) // 限价卖出
+const tokenShareVisible = ref<boolean>(false) // 分享弹窗
+const shareCoinInfo = ref<any>({})
+const chartData = ref<any>({})
+const qrcodeUrl = ref<string>('')
+
 const account: any = localStorage.getItem('accountInfo')
 const slippage = account ? JSON.parse(account).slippage : '0.03'
 
@@ -260,6 +277,7 @@ const handelSellLimit = (row: any) => {
 const handleClose = (val: boolean) => {
   stopLimitVisible.value = val
   sellLimitVisible.value = val
+  tokenShareVisible.value = val
 }
 
 const handelTableRow = (row: any) => {
@@ -268,6 +286,51 @@ const handelTableRow = (row: any) => {
   } else {
     window.open(`/k/${row.pairAddress}?chainCode=${row.chainCode}`)
   }
+}
+
+const handelShare = async (row: any) => {
+  showLoadingToast({
+    message: `加载中...`,
+    forbidClick: true
+  })
+  shareCoinInfo.value = row
+  const url = ` https://t.me/HelloDex_cn`
+  qrcodeUrl.value = await QRCode.toDataURL(url, {
+    errorCorrectionLevel: 'H'
+  })
+  const res: any = await APIgetChartByBaseAddress({
+    baseAddress: row.tokenAddress,
+    chainCode: row.chainCode,
+    type: '5m',
+    size: 20
+  })
+
+  closeToast()
+
+  chartData.value = {
+    priceByPairAddress: {
+      k1h: res.reverse() || []
+    },
+    seriesOptions:
+      row.totalEarn[0] === '-'
+        ? {
+            topColor: '#F6465D',
+            bottomColor: 'rgba(246, 70, 93, 0.1)',
+            lineColor: '#F6465D',
+            lineWidth: 2,
+            lastValueVisible: false,
+            priceLineVisible: false
+          }
+        : {
+            topColor: '#2EBD85',
+            bottomColor: 'rgba(46, 189, 133, 0.1)',
+            lineColor: '#2EBD85',
+            lineWidth: 2,
+            lastValueVisible: false,
+            priceLineVisible: false
+          }
+  }
+  tokenShareVisible.value = true
 }
 </script>
 
