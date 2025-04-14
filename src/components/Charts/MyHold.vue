@@ -89,10 +89,7 @@
                   numberFormat(scope.row?.totalEarn.replace(/-/g, ''))
                 }}</span
               >
-            </template>
-          </el-table-column>
-          <el-table-column label="收益率">
-            <template #default="scope">
+              <br />
               <PercentageNotbg :value="scope.row?.totalEarnRate || 0" class="font-family-Medium" />
             </template>
           </el-table-column>
