@@ -354,7 +354,7 @@ const handelSlippage = (val: any) => {
 
 const updateCoinInfo = () => {
   const res: any = tokenList.value
-  mainNetworkCurrencyPrice.value = parseFloat(res?.[0].price || 0)
+  mainNetworkCurrencyPrice.value = parseFloat(res[0]?.price || 0)
   if (sellInfo.value.baseAddress) {
     const obj = res?.find((item: any) => item.address == sellInfo.value.baseAddress)
     sellInfo.value.balance = obj?.amount || 0
