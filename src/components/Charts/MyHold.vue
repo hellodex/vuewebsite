@@ -13,7 +13,7 @@
         <el-table :data="list" style="width: 100%" max-height="890px" @row-click="handelTableRow">
           <el-table-column label="币种">
             <template #default="scope">
-              <div class="display-flex align-items-center coin-box">
+              <div class="display-flex align-items-center coin-box" style="flex-wrap: wrap">
                 <span class="logo">
                   <el-image :src="scope.row.logo" alt="" class="coin-icon">
                     <template #error>
@@ -24,8 +24,8 @@
                 </span>
                 <p class="display-flex align-items-center">
                   <span class="base-symbol font-family-Medium">{{ scope.row.symbol || '-' }}</span>
+                  <svg-icon name="copy" class="copy" v-copy="scope.row.tokenAddress"></svg-icon>
                 </p>
-                <svg-icon name="copy" class="copy" v-copy="scope.row.tokenAddress"></svg-icon>
               </div>
             </template>
           </el-table-column>
@@ -323,15 +323,15 @@ const handelTableRow = (row: any) => {
       right: -1px;
       bottom: 0px;
     }
-    // .base-symbol {
-    //   color: #f5f5f5;
-    // }
+    .base-symbol {
+      line-height: 1.8;
+    }
   }
   .copy {
     width: 12px;
     min-width: 12px;
     height: 12px;
-    margin-left: 6px;
+    margin-left: 4px;
     cursor: pointer;
   }
 }
