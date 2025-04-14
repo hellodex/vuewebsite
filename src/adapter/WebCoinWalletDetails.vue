@@ -51,73 +51,79 @@
                   <RefreshHold v-if="activeName == 'seven'" />
                 </div>
                 <span class="transaction-tab-pause-txt" v-if="pauseType == 1">⏸ 已暂停</span>
-                <div
-                  class="data-items display-flex align-items-center"
-                  v-if="activeName == 'seven'"
-                >
-                  <span style="margin-right: 4px">只显示k线币仓位</span>
-                  <el-switch
-                    v-model="onlyKlinePosition"
-                    @change="handelOnlyKlinePosition"
-                    size="small"
-                    :active-value="1"
-                    :inactive-value="0"
-                    style="--el-switch-on-color: #13ce66; --el-switch-off-color: #26282c"
-                  />
-                </div>
-                <div
-                  class="data-items display-flex align-items-center"
-                  v-if="activeName == 'seven'"
-                >
-                  <span style="margin-right: 4px">隐藏小金额</span>
-                  <el-switch
-                    v-model="hidePosition"
-                    @change="handelHidePosition"
-                    size="small"
-                    :active-value="1"
-                    :inactive-value="0"
-                    style="--el-switch-on-color: #13ce66; --el-switch-off-color: #26282c"
-                  />
-                </div>
-                <div class="data-items display-flex align-items-center">
-                  <span style="margin-right: 4px">多币种看板</span>
-                  <el-switch
-                    v-model="dashboardSwitch"
-                    @change="handelSwitchCurrencyDashboard"
-                    :active-value="1"
-                    :inactive-value="0"
-                    size="small"
-                    style="--el-switch-on-color: #13ce66; --el-switch-off-color: #26282c"
-                  />
-                </div>
-                <div class="data-items display-flex align-items-center">
-                  <span style="margin-right: 4px">弹幕</span>
-                  <el-switch
-                    v-model="danmaku"
-                    @change="handelSwitchDanmaku"
-                    :active-value="1"
-                    :inactive-value="0"
-                    size="small"
-                    style="--el-switch-on-color: #13ce66; --el-switch-off-color: #26282c"
-                  />
-                </div>
-                <div class="data-items display-flex align-items-center">
-                  <span style="margin-right: 4px">快捷交易</span>
-                  <el-switch
-                    v-model="config.switch"
-                    @change="handelClose"
-                    size="small"
-                    style="--el-switch-on-color: #13ce66; --el-switch-off-color: #26282c"
-                  />
-                </div>
-                <div class="data-items display-flex align-items-center" v-if="activeName == 'five'">
+                <div class="display-flex align-items-center" style="float: right">
                   <div
-                    :class="fundIndex == item.id ? 'item item-active' : 'item'"
-                    v-for="item in fundData"
-                    :key="item.id"
-                    @click="handelfundSelect(item)"
+                    class="data-items display-flex align-items-center"
+                    v-if="activeName == 'five'"
                   >
-                    {{ item.timeLabel }}
+                    <div
+                      :class="fundIndex == item.id ? 'item item-active' : 'item'"
+                      v-for="item in fundData"
+                      :key="item.id"
+                      @click="handelfundSelect(item)"
+                    >
+                      {{ item.timeLabel }}
+                    </div>
+                  </div>
+                  <div class="data-items display-flex align-items-center">
+                    <span style="margin-right: 4px">快捷交易</span>
+                    <el-switch
+                      v-model="config.switch"
+                      @change="handelClose"
+                      size="small"
+                      style="--el-switch-on-color: #13ce66; --el-switch-off-color: #26282c"
+                    />
+                  </div>
+                  <div class="data-items display-flex align-items-center">
+                    <span style="margin-right: 4px">弹幕</span>
+                    <el-switch
+                      v-model="danmaku"
+                      @change="handelSwitchDanmaku"
+                      :active-value="1"
+                      :inactive-value="0"
+                      size="small"
+                      style="--el-switch-on-color: #13ce66; --el-switch-off-color: #26282c"
+                    />
+                  </div>
+                  <div class="data-items display-flex align-items-center">
+                    <span style="margin-right: 4px">多币种看板</span>
+                    <el-switch
+                      v-model="dashboardSwitch"
+                      @change="handelSwitchCurrencyDashboard"
+                      :active-value="1"
+                      :inactive-value="0"
+                      size="small"
+                      style="--el-switch-on-color: #13ce66; --el-switch-off-color: #26282c"
+                    />
+                  </div>
+                  <div
+                    class="data-items display-flex align-items-center"
+                    v-if="activeName == 'seven'"
+                  >
+                    <span style="margin-right: 4px">隐藏小金额</span>
+                    <el-switch
+                      v-model="hidePosition"
+                      @change="handelHidePosition"
+                      size="small"
+                      :active-value="1"
+                      :inactive-value="0"
+                      style="--el-switch-on-color: #13ce66; --el-switch-off-color: #26282c"
+                    />
+                  </div>
+
+                  <div
+                    class="data-items display-flex align-items-center"
+                    v-if="activeName == 'seven'"
+                  >
+                    <span style="margin-right: 4px">只显示k线币仓位</span>
+                    <el-switch
+                      v-model="onlyKlinePosition"
+                      @change="handelOnlyKlinePosition"
+                      size="small"
+                      :active-value="1"
+                      :inactive-value="0"
+                      style="--el-switch-on-color: #13ce66; --el-switch-off-color: #26282c"
+                    />
                   </div>
                 </div>
               </div>
@@ -830,7 +836,6 @@ onUnmounted(() => {
     padding: 2px;
     border-radius: 6px;
     background: var(--bg-color);
-    float: right;
     margin: 2px 0 2px 6px;
     .item {
       padding: 4px 8px;
