@@ -1,10 +1,10 @@
 <template>
   <LWChart
     :type="chartType"
-    :data="chartDataFun(props.chartData)"
+    :data="chartDataFun(chartData)"
     :autosize="true"
     :chart-options="chartOptions"
-    :series-options="props.chartData?.seriesOptions"
+    :series-options="chartData?.seriesOptions"
     ref="lwChart"
   />
 </template>
