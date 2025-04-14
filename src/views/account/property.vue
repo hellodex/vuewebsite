@@ -44,11 +44,10 @@
                 @click="
                   handelTransfeOut({
                     symbol: customWalletInfo.symbol,
-                    wallet: customWalletInfo.walletInfo?.wallet,
+                    token: customWalletInfo.symbolAddress,
                     walletId: customWalletInfo.walletInfo?.walletId,
                     walletKey: customWalletInfo.walletInfo?.walletKey,
-                    decimals: customWalletInfo.decimals,
-                    address: customWalletInfo.symbolAddress
+                    decimals: customWalletInfo.decimals
                   })
                 "
                 >转出</span
@@ -137,11 +136,10 @@
                       @click.stop="
                         handelTransfeOut({
                           symbol: scope.row.symbol,
-                          wallet: scope.row.address,
+                          token: scope.row.address,
                           walletId: customWalletInfo.walletInfo?.walletId,
                           walletKey: customWalletInfo.walletInfo?.walletKey,
-                          decimals: scope.row.decimals,
-                          address: scope.row.address
+                          decimals: scope.row.decimals
                         })
                       "
                       >转出</span
@@ -548,11 +546,10 @@ const handelTransfeOut = (param: any) => {
   transfeOutVisible.value = true
   transfeOutInfo.value = {
     symbol: param?.symbol,
-    token: param.wallet,
+    token: param.token,
     walletId: param.walletId,
     walletKey: param.walletKey,
-    decimals: param.decimals,
-    address: param.address
+    decimals: param.decimals
   }
 }
 
@@ -564,7 +561,7 @@ const handelChangeTo = async () => {
           walletAddress: customWalletInfo.value.walletInfo?.wallet,
           chainCode: customWalletInfo.value.chainCode,
           toAddress: ruleForm.to,
-          contractAddress: transfeOutInfo.value.address,
+          contractAddress: transfeOutInfo.value.token,
           amount: '10000'
         })
 
