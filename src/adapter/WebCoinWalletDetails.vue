@@ -47,6 +47,9 @@
                     >{{ item.name }}</span
                   >
                 </div>
+                <div class="refresh-box">
+                  <RefreshHold v-if="activeName == 'seven'" />
+                </div>
                 <span class="transaction-tab-pause-txt" v-if="pauseType == 1">⏸ 已暂停</span>
                 <div
                   class="data-items display-flex align-items-center"
@@ -223,6 +226,7 @@ import CurrentCommission from '@/components/Charts/CurrentCommission.vue'
 import CommissionHistory from '@/components/Charts/CommissionHistory.vue'
 
 import RightSideBar from '@/components/SideBar/RightSideBar.vue'
+import RefreshHold from '@/components/RefreshHold.vue'
 
 import QuickTrading from '@/components/SideBar/components/QuickTrading.vue'
 // hook 函数
@@ -720,7 +724,7 @@ onUnmounted(() => {
   .refresh-box {
     position: relative;
     left: 10px;
-    top: 12px;
+    top: 8px;
     display: inline-block;
   }
 

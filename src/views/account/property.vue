@@ -164,6 +164,7 @@
               @click="handelEntrustTab(item)"
               >{{ item.label }}</span
             >
+            <RefreshHold v-if="entrustTabIdex == 1" />
           </div>
           <div class="data-items display-flex align-items-center" v-if="entrustTabIdex == 1">
             <span style="margin-right: 4px">隐藏小金额</span>
@@ -350,6 +351,7 @@ import TransactionHistory from '@/components/Charts/TransactionHistory.vue'
 import MyHold from '@/components/Charts/MyHold.vue'
 import CurrentCommission from '@/components/Charts/CurrentCommission.vue'
 import CommissionHistory from '@/components/Charts/CommissionHistory.vue'
+import RefreshHold from '@/components/RefreshHold.vue'
 import PercentageNotbg from '@/components/Percentage/PercentageNotbg.vue'
 import { customMessage } from '@/utils/message'
 
