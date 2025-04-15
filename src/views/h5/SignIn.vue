@@ -113,7 +113,7 @@ import { ref, computed, onMounted, watch, reactive } from 'vue'
 import type { ComponentSize, FormInstance, FormRules } from 'element-plus'
 import { useGlobalStore } from '@/stores/global'
 import { useRoute, useRouter } from 'vue-router'
-import { isAllSpaces } from '@/utils'
+import { aesEncrypt, isAllSpaces } from '@/utils'
 import { APIdologin, APIuserInfo, APIsendMessage } from '@/api/login'
 import { showLoadingToast, showSuccessToast } from 'vant'
 import { socketOffMonitor, socketOnMonitor } from '@/utils/socket'
@@ -266,6 +266,17 @@ const submitForm = async (formEl: FormInstance | undefined) => {
         type: '0'
       })
       if (res) {
+        console.log('原始数据', JSON.parse(JSON.stringify(res)))
+        for (const key in res.wallets) {
+          if (Object.prototype.hasOwnProperty.call(res.wallets, key)) {
+            const element = res.wallets[key]
+            element.forEach((item: { walletKey: string; uuid: string }) => {
+              item.walletKey = aesEncrypt(item.walletKey, item.uuid)
+            })
+          }
+        }
+        console.log('加密后数据', res)
+
         localStorage.setItem('accountInfo', JSON.stringify(res))
         const userInfo: any = await APIuserInfo()
         showSuccessToast('账户登录成功')
