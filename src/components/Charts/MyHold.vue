@@ -29,6 +29,13 @@
               </div>
             </template>
           </el-table-column>
+          <el-table-column label="平均买入价格">
+            <template #default="scope">
+              <span class="text-color font-family-Medium"
+                >${{ numberFormat(scope.row.averagePrice) || '-' }}</span
+              >
+            </template>
+          </el-table-column>
           <el-table-column label="当前价格">
             <template #default="scope">
               <span
@@ -41,13 +48,6 @@
               </span>
               <br />
               <PercentageNotbg :value="scope.row.chg1d" />
-            </template>
-          </el-table-column>
-          <el-table-column label="平均买入价格">
-            <template #default="scope">
-              <span class="text-color font-family-Medium"
-                >${{ numberFormat(scope.row.averagePrice) || '-' }}</span
-              >
             </template>
           </el-table-column>
           <el-table-column label="当前持仓">
