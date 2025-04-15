@@ -64,10 +64,20 @@
             </div>
           </div>
         </div>
-        <div class="display-flex flex-direction-col">
+        <div class="display-flex flex-direction-col align-items-fd">
           <div class="rule-txt display-flex align-items-center" @click="ruleVisible = true">
             <span>冲狗基金规则</span>
             <svg-icon name="chevron-right" class="chevron-right"></svg-icon>
+          </div>
+          <div class="display-flex align-items-center">
+            <div class="activity-txt">
+              <span>活动类型：</span>
+              <strong>{{ accountInfo.memeVault.vaultType }}</strong>
+            </div>
+            <div class="activity-txt">
+              <span>截止时间：</span>
+              <strong>{{ accountInfo.memeVault.expireTime }}</strong>
+            </div>
           </div>
         </div>
       </div>
@@ -1005,5 +1015,12 @@ onUnmounted(() => {
 .rule-box {
   line-height: 32px;
   color: #848e9c;
+}
+.activity-txt {
+  margin-top: 12px;
+  margin-left: 12px;
+  span {
+    color: #848e9c;
+  }
 }
 </style>
