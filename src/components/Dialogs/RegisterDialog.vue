@@ -122,7 +122,7 @@ import { ref, computed, onMounted, watch, reactive } from 'vue'
 import type { ComponentSize, FormInstance, FormRules } from 'element-plus'
 import { useGlobalStore } from '@/stores/global'
 import { APIsendMessage, APIdologin, APIuserInfo } from '@/api/login'
-import { isAllSpaces } from '@/utils'
+import { aesEncrypt, isAllSpaces } from '@/utils'
 import VerificationCodeInput from '@/components/VerificationCodeInput.vue'
 import { socketOffMonitor, socketOnMonitor } from '@/utils/socket'
 import { customMessage } from '@/utils/message'
@@ -322,7 +322,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
     if (valid) {
       loading.value = true
       console.log('submit!')
-      const res = await APIdologin({
+      const res: any = await APIdologin({
         account: ruleForm.account,
         password: ruleForm.password,
         captcha: ruleForm.captcha,
@@ -330,6 +330,17 @@ const submitForm = async (formEl: FormInstance | undefined) => {
         type: '1'
       })
       if (res) {
+        console.log('原始数据', JSON.parse(JSON.stringify(res)))
+        for (const key in res.wallets) {
+          if (Object.prototype.hasOwnProperty.call(res.wallets, key)) {
+            const element = res.wallets[key]
+            element.forEach((item: { walletKey: string; uuid: string }) => {
+              item.walletKey = aesEncrypt(item.walletKey, item.uuid)
+            })
+          }
+        }
+        console.log('加密后数据', res)
+
         localStorage.setItem('accountInfo', JSON.stringify(res))
         const userInfo: any = await APIuserInfo()
         customMessage({

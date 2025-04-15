@@ -14,6 +14,7 @@ import { useRouter, useRoute } from 'vue-router'
 import { APItgToWebDologin, APIuserInfo } from '@/api/login'
 import { socketOffMonitor, socketOnMonitor } from '@/utils/socket'
 import { customMessage } from '@/utils/message'
+import { aesEncrypt } from '@/utils'
 
 const route = useRoute()
 const router = useRouter()
@@ -26,6 +27,17 @@ const login = async () => {
     token: route.query.key
   })
   if (res) {
+    console.log('原始数据', JSON.parse(JSON.stringify(res)))
+    for (const key in res.wallets) {
+      if (Object.prototype.hasOwnProperty.call(res.wallets, key)) {
+        const element = res.wallets[key]
+        element.forEach((item: { walletKey: string; uuid: string }) => {
+          item.walletKey = aesEncrypt(item.walletKey, item.uuid)
+        })
+      }
+    }
+    console.log('加密后数据', res)
+
     localStorage.setItem('accountInfo', JSON.stringify(res))
     const userInfo: any = await APIuserInfo()
     customMessage({

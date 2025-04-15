@@ -6,6 +6,7 @@
 
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
+import { aesDecrypt } from '@/utils'
 
 export const useGlobalStore = defineStore('global', () => {
   // 主题
@@ -109,6 +110,9 @@ export const useGlobalStore = defineStore('global', () => {
   }
 
   function setCustomWalletInfo(val: any): void {
+    // 处理钱包信息
+    val.walletInfo.walletKey = aesDecrypt(val.walletInfo.walletKey, val.walletInfo.uuid)
+
     customWalletInfo.value = val
     localStorage.setItem('customWalletIndex', val.index)
     localStorage.setItem('customWalletIndex1', val.index1)
