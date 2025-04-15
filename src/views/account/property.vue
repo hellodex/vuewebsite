@@ -73,10 +73,10 @@
             class="display-flex align-items-center"
             v-if="JSON.stringify(accountInfo.memeVault) !== '{}'"
           >
-            <div class="activity-txt" v-if="accountInfo.memeVault.vaultType">
+            <div class="activity-txt" v-if="accountInfo.memeVault?.vaultType">
               <strong>{{ accountInfo.memeVault.vaultType }}</strong>
             </div>
-            <div class="activity-txt" v-if="accountInfo.memeVault.expireTime">
+            <div class="activity-txt" v-if="accountInfo.memeVault?.expireTime">
               <span>截止：</span>
               <strong>{{ accountInfo.memeVault.expireTime }}</strong>
             </div>
