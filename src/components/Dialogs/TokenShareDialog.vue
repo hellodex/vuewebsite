@@ -7,21 +7,21 @@
     class="token-dialog"
     closeable
   >
-    <div class="share-img-dom">
+    <div class="share-img-dom" ref="shareImg">
       <img src="@/assets/img/share-bac.svg" alt="" class="img" />
       <div class="display-flex flex-direction-col share-content">
         <div class="tokenShareTitle display-flex align-items-center justify-content-sp">
           <div class="logo-box display-flex align-items-center">
-            <svg-icon name="logo" class="logo"></svg-icon>
+            <img src="@/assets/icons/logo.svg" alt="" class="logo" />
             <span>HelloDex</span>
           </div>
           <div class="title-url display-flex align-items-center">
             <div class="display-flex align-items-center">
-              <svg-icon name="x" class="icon-x"></svg-icon>
+              <img src="@/assets/icons/x.svg" alt="" class="icon-x" />
               <span>@HelloDex_io</span>
             </div>
             <div class="tg display-flex align-items-center">
-              <svg-icon name="tg-app" class="icon-tg"></svg-icon>
+              <img src="@/assets/icons/tg-app.svg" alt="" class="icon-tg" />
               <span>t.me/HelloDex_cn</span>
             </div>
           </div>
@@ -33,7 +33,7 @@
               <div class="logo">
                 <el-image :src="shareCoinInfo.logo" alt="" class="img">
                   <template #error>
-                    <svg-icon name="logo1" class="img"></svg-icon>
+                    <img src="@/assets/icons/logo1.svg" alt="" class="img" />
                   </template>
                 </el-image>
                 <img :src="chainLogoObj[shareCoinInfo.chainCode]" alt="" class="chainCode" />
@@ -62,6 +62,13 @@
         <p class="display-flex align-items-center flex-direction-col txt">
           普通用户撑起整个Web3，教育平台要把80%利润分给用户
         </p>
+
+        <p class="share-down" @click="downLoading ? null : handelSaveImage()">
+          <el-icon class="is-loading" :size="14" v-if="downLoading">
+            <Loading />
+          </el-icon>
+          分享收益
+        </p>
       </div>
     </div>
   </van-popup>
@@ -69,11 +76,10 @@
 
 <script lang="ts" setup>
 import { ref, computed, onMounted, inject, watch, onUnmounted, nextTick } from 'vue'
-
+import html2canvas from 'html2canvas'
 import { numberFormat } from '@/utils'
 import { useI18n } from 'vue-i18n'
 import { useGlobalStore } from '@/stores/global'
-import CoinsAreaChart from '@/adapter/components/CoinsAreaChart.vue'
 import PercentageNotbg from '@/components/Percentage/PercentageNotbg.vue'
 
 const globalStore = useGlobalStore()
@@ -82,6 +88,9 @@ const i18n = useI18n()
 const { chainLogoObj } = globalStore
 
 const emit = defineEmits(['close'])
+
+const downLoading = ref<boolean>(false)
+const shareImg = ref()
 
 const props: any = defineProps({
   tokenShareVisible: {
@@ -244,6 +253,21 @@ watch(
   },
   { deep: true }
 )
+
+const handelSaveImage = async () => {
+  downLoading.value = true
+  await html2canvas(shareImg.value, {
+    backgroundColor: '#171717'
+  }).then((canvas) => {
+    downLoading.value = false
+    let url = canvas.toDataURL('image/png')
+    const a = document.createElement('a')
+    a.href = url
+    a.download = 'share_token_img.png'
+    a.click()
+  })
+}
+
 onMounted(() => {
   nextTick(() => {
     initEcharts()
@@ -366,7 +390,7 @@ onUnmounted(() => {
         color: rgba(255, 255, 255, 0.6);
       }
       .qrcode-box {
-        font-size: 14px;
+        font-size: 13px;
         margin-top: 8px;
         color: rgba(255, 255, 255, 0.6);
         p {
@@ -392,8 +416,13 @@ onUnmounted(() => {
   }
   .txt {
     margin-top: 12px;
-    font-size: 12px;
+    font-size: 13px;
     color: rgba(255, 255, 255, 0.6);
+  }
+  .share-down {
+    text-align: right;
+    color: rgba(255, 255, 255, 0.6);
+    cursor: pointer;
   }
 }
 </style>

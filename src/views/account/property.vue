@@ -69,7 +69,10 @@
             <span>冲狗基金规则</span>
             <svg-icon name="chevron-right" class="chevron-right"></svg-icon>
           </div>
-          <div class="display-flex align-items-center" v-if="accountInfo.memeVault">
+          <div
+            class="display-flex align-items-center"
+            v-if="JSON.stringify(accountInfo.memeVault) !== '{}'"
+          >
             <div class="activity-txt">
               <strong>{{ accountInfo.memeVault.vaultType }}</strong>
             </div>
