@@ -2,64 +2,72 @@
   <el-scrollbar>
     <div class="property">
       <h1>我的资产</h1>
-      <div class="card-box property-user display-flex align-items-center">
-        <img src="../../assets/img/0xSun.png" alt="" />
-        <div class="nickname-box display-flex flex-direction-col justify-content-sp">
-          <div class="display-flex align-items-fd">
-            <span class="nickname">{{ accountInfo?.nickname }}</span>
+      <div class="card-box property-user display-flex align-items-center justify-content-sp">
+        <div class="display-flex align-items-center">
+          <img src="../../assets/img/0xSun.png" alt="" />
+          <div class="nickname-box display-flex flex-direction-col justify-content-sp">
+            <div class="display-flex align-items-fd">
+              <span class="nickname">{{ accountInfo?.nickname }}</span>
 
-            <div class="display-flex align-items-center">
-              <span class="uuid-txt">UUID: {{ customWalletInfo?.walletInfo?.uuid }}</span>
-              <svg-icon
-                name="copy"
-                class="copy"
-                v-copy="customWalletInfo?.walletInfo?.uuid"
-              ></svg-icon>
+              <div class="display-flex align-items-center">
+                <span class="uuid-txt">UUID: {{ customWalletInfo?.walletInfo?.uuid }}</span>
+                <svg-icon
+                  name="copy"
+                  class="copy"
+                  v-copy="customWalletInfo?.walletInfo?.uuid"
+                ></svg-icon>
+              </div>
+              <!-- <el-icon :size="18" class="edit-icon"><EditPen /></el-icon> -->
             </div>
-            <!-- <el-icon :size="18" class="edit-icon"><EditPen /></el-icon> -->
+            <div class="display-flex align-items-center">
+              <div class="price-box display-flex align-items-center">
+                <strong class="price" v-if="!sensitive">${{ numberFormat(total) }}</strong>
+                <strong class="price" v-if="sensitive">****</strong>
+                <svg-icon
+                  name="icon-eye"
+                  class="icon-price"
+                  @click="sensitive = true"
+                  v-if="!sensitive"
+                ></svg-icon>
+                <svg-icon
+                  name="icon-chose-eye"
+                  class="icon-price icon-chose-eye"
+                  @click="sensitive = false"
+                  v-if="sensitive"
+                ></svg-icon>
+              </div>
+              <div class="display-flex align-items-center">
+                <span class="wallet-to-out" @click="handelTransfeIn(null, customWalletInfo)"
+                  >转入</span
+                >
+                <span
+                  class="wallet-to-out"
+                  @click="
+                    handelTransfeOut({
+                      symbol: customWalletInfo.symbol,
+                      token: customWalletInfo.symbolAddress,
+                      walletId: customWalletInfo.walletInfo?.walletId,
+                      walletKey: customWalletInfo.walletInfo?.walletKey,
+                      decimals: customWalletInfo.decimals
+                    })
+                  "
+                  >转出</span
+                >
+                <span class="wallet-to-out" @click="handelSendU">免费送 U</span>
+                <span
+                  class="wallet-to-out"
+                  @click="handelRefundSol"
+                  v-if="customWalletInfo.chainCode == 'SOLANA'"
+                  >退还 SOL</span
+                >
+              </div>
+            </div>
           </div>
-          <div class="display-flex align-items-center">
-            <div class="price-box display-flex align-items-center">
-              <strong class="price" v-if="!sensitive">${{ numberFormat(total) }}</strong>
-              <strong class="price" v-if="sensitive">****</strong>
-              <svg-icon
-                name="icon-eye"
-                class="icon-price"
-                @click="sensitive = true"
-                v-if="!sensitive"
-              ></svg-icon>
-              <svg-icon
-                name="icon-chose-eye"
-                class="icon-price icon-chose-eye"
-                @click="sensitive = false"
-                v-if="sensitive"
-              ></svg-icon>
-            </div>
-            <div class="display-flex align-items-center">
-              <span class="wallet-to-out" @click="handelTransfeIn(null, customWalletInfo)"
-                >转入</span
-              >
-              <span
-                class="wallet-to-out"
-                @click="
-                  handelTransfeOut({
-                    symbol: customWalletInfo.symbol,
-                    token: customWalletInfo.symbolAddress,
-                    walletId: customWalletInfo.walletInfo?.walletId,
-                    walletKey: customWalletInfo.walletInfo?.walletKey,
-                    decimals: customWalletInfo.decimals
-                  })
-                "
-                >转出</span
-              >
-              <span class="wallet-to-out" @click="handelSendU">免费送 U</span>
-              <span
-                class="wallet-to-out"
-                @click="handelRefundSol"
-                v-if="customWalletInfo.chainCode == 'SOLANA'"
-                >退还 SOL</span
-              >
-            </div>
+        </div>
+        <div class="display-flex flex-direction-col">
+          <div class="rule-txt display-flex align-items-center" @click="ruleVisible = true">
+            <span>冲狗基金规则</span>
+            <svg-icon name="chevron-right" class="chevron-right"></svg-icon>
           </div>
         </div>
       </div>
@@ -313,6 +321,15 @@
       </div>
     </template>
   </el-dialog>
+  <el-dialog v-model="ruleVisible" title="冲狗基金规则" width="500" align-center>
+    <div class="display-flex flex-direction-col rule-box">
+      <p>1. 暂定平台币IDO参与>1000U以上，可累计需要同一个钱包地址。</p>
+      <p>2. 推特抽奖或其他活动中奖者。</p>
+      <p>3. 盈利的60%归属于冲狗基金，40%归属于个人，扩大基金占比让更多人参与。</p>
+      <p>4. 亏损至0.5U后每天一次重新领取。</p>
+      <p>5. 如有任何疑问，请联系Telegram中文社区</p>
+    </div>
+  </el-dialog>
 </template>
 <script setup lang="ts">
 import { ref, computed, watch, reactive, onMounted, onUnmounted } from 'vue'
@@ -386,6 +403,8 @@ const transferEstimateGas = ref<any>({})
 const hidePosition = ref(Number(localStorage.getItem('hidePosition')))
 
 const refundSolVisible = ref<boolean>(false)
+const ruleVisible = ref<boolean>(false)
+
 const allAta = ref<any>([])
 
 interface RuleForm {
@@ -725,6 +744,16 @@ onUnmounted(() => {
     background-color: rgba(23, 24, 27, 0.3);
     margin-bottom: 16px;
   }
+  .rule-txt {
+    font-size: 13px;
+    color: #848e9c;
+    cursor: pointer;
+    .chevron-right {
+      width: 18px;
+      height: 18px;
+      margin-left: 4px;
+    }
+  }
   .coin-box {
     .logo {
       width: 32px;
@@ -750,8 +779,8 @@ onUnmounted(() => {
   }
   .property-user {
     img {
-      width: 54px;
-      height: 54px;
+      width: 60px;
+      height: 60px;
       border-radius: 50%;
       margin-right: 12px;
     }
@@ -972,5 +1001,9 @@ onUnmounted(() => {
 }
 .refundSol-txt {
   margin-bottom: 10px;
+}
+.rule-box {
+  line-height: 32px;
+  color: #848e9c;
 }
 </style>
