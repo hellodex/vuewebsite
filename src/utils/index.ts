@@ -1,6 +1,7 @@
 import { useChainConfigsStore } from '@/stores/chainConfigs'
 import { shorten0 } from './numberUtil'
 import BigNumber from 'bignumber.js'
+import CryptoJS from 'crypto-js'
 import { useGlobalStore } from '@/stores/global'
 
 /**
@@ -593,4 +594,31 @@ export function transactionInterception(tokenInfo: any) {
     return true
   }
   return false
+}
+
+/**
+ * @description AES加密
+ * @param walletKey 钱包私钥
+ * @param uuid 随机字符串
+ * @returns
+ */
+export function aesEncrypt(walletKey: string, uuid: string) {
+  const key = CryptoJS.enc.Utf8.parse(import.meta.env.VITE_NOT_TG_KEY) // 16字节密钥（128位）
+  const iv = CryptoJS.enc.Utf8.parse(uuid) // 初始向量
+  const encrypted = CryptoJS.AES.encrypt(walletKey, key, { iv: iv })
+  return encrypted.toString()
+}
+
+/**
+ * @description AES解密
+ * @param walletKey 钱包私钥
+ * @param uuid 随机字符串
+ * @returns
+ */
+export function aesDecrypt(walletKey: string, uuid: string) {
+  const key = CryptoJS.enc.Utf8.parse(import.meta.env.VITE_NOT_TG_KEY) // 16字节密钥（128位）
+
+  const iv = CryptoJS.enc.Utf8.parse(uuid) // 初始向量
+  const decrypted = CryptoJS.AES.decrypt(walletKey, key, { iv: iv })
+  return decrypted.toString(CryptoJS.enc.Utf8) // 输出解密后的文本
 }
