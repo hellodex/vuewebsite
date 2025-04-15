@@ -129,6 +129,7 @@
     :qrcodeUrl="qrcodeUrl"
     :chartData="chartData"
     @close="handleClose"
+    v-if="tokenShareVisible"
   />
 </template>
 
@@ -308,26 +309,18 @@ const handelShare = async (row: any) => {
   closeToast()
 
   chartData.value = {
-    priceByPairAddress: {
-      k1h: res.reverse() || []
-    },
-    seriesOptions:
+    kLine: res.reverse() || [],
+    options:
       row.totalEarn[0] === '-'
         ? {
             topColor: '#F6465D',
-            bottomColor: 'rgba(246, 70, 93, 0.1)',
-            lineColor: '#F6465D',
-            lineWidth: 2,
-            lastValueVisible: false,
-            priceLineVisible: false
+            shadowTopColor: 'rgba(246, 70, 93, 0.2)',
+            shadowBottomColor: 'rgba(246, 70, 93, 0)'
           }
         : {
             topColor: '#2EBD85',
-            bottomColor: 'rgba(46, 189, 133, 0.1)',
-            lineColor: '#2EBD85',
-            lineWidth: 2,
-            lastValueVisible: false,
-            priceLineVisible: false
+            shadowTopColor: 'rgba(46, 189, 133, 0.2)',
+            shadowBottomColor: 'rgba(46, 189, 133, 0)'
           }
   }
   tokenShareVisible.value = true
