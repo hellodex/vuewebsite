@@ -69,13 +69,12 @@
             <span>冲狗基金规则</span>
             <svg-icon name="chevron-right" class="chevron-right"></svg-icon>
           </div>
-          <div class="display-flex align-items-center">
+          <div class="display-flex align-items-center" v-if="accountInfo.memeVault">
             <div class="activity-txt">
-              <span>活动类型：</span>
               <strong>{{ accountInfo.memeVault.vaultType }}</strong>
             </div>
             <div class="activity-txt">
-              <span>截止时间：</span>
+              <span>截止：</span>
               <strong>{{ accountInfo.memeVault.expireTime }}</strong>
             </div>
           </div>
