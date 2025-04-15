@@ -929,16 +929,16 @@ const handelShare = async (params: any) => {
     seriesOptions:
       params.totalEarn[0] === '-'
         ? {
-            topColor: '#F6465D',
-            bottomColor: 'rgba(246, 70, 93, 0.1)',
+            topColor: 'rgba(246, 70, 93, 0.2)',
+            bottomColor: 'rgba(246, 70, 93, 0)',
             lineColor: '#F6465D',
             lineWidth: 2,
             lastValueVisible: false,
             priceLineVisible: false
           }
         : {
-            topColor: '#2EBD85',
-            bottomColor: 'rgba(46, 189, 133, 0.1)',
+            topColor: 'rgba(246, 70, 93, 0.2)',
+            bottomColor: 'rgba(46, 189, 133, 0)',
             lineColor: '#2EBD85',
             lineWidth: 2,
             lastValueVisible: false,
