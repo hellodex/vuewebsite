@@ -111,9 +111,12 @@ export const useGlobalStore = defineStore('global', () => {
 
   function setCustomWalletInfo(val: any): void {
     // 处理钱包信息
-    val.walletInfo.walletKey = aesDecrypt(val.walletInfo.walletKey, val.walletInfo.uuid)
 
-    customWalletInfo.value = val
+    const obj = JSON.parse(JSON.stringify(val))
+
+    obj.walletInfo.walletKey = aesDecrypt(obj.walletInfo.walletKey, obj.walletInfo.uuid)
+
+    customWalletInfo.value = obj
     localStorage.setItem('customWalletIndex', val.index)
     localStorage.setItem('customWalletIndex1', val.index1)
   }

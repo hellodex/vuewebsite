@@ -62,15 +62,14 @@
         <p class="display-flex align-items-center flex-direction-col txt">
           普通用户撑起整个Web3，教育平台要把80%利润分给用户
         </p>
-
-        <p class="share-down" @click="downLoading ? null : handelSaveImage()">
-          <el-icon class="is-loading" :size="14" v-if="downLoading">
-            <Loading />
-          </el-icon>
-          分享收益
-        </p>
       </div>
     </div>
+    <p class="share-down" @click="downLoading ? null : handelSaveImage()">
+      <el-icon class="is-loading" :size="14" v-if="downLoading">
+        <Loading />
+      </el-icon>
+      分享收益
+    </p>
   </van-popup>
 </template>
 
@@ -263,7 +262,7 @@ const handelSaveImage = async () => {
     let url = canvas.toDataURL('image/png')
     const a = document.createElement('a')
     a.href = url
-    a.download = 'share_token_img.png'
+    a.download = `${props.shareCoinInfo.symbol}.png`
     a.click()
   })
 }
@@ -415,14 +414,26 @@ onUnmounted(() => {
     }
   }
   .txt {
-    margin-top: 12px;
-    font-size: 13px;
+    margin-top: 20px;
+    font-size: 12px;
     color: rgba(255, 255, 255, 0.6);
   }
   .share-down {
-    text-align: right;
-    color: rgba(255, 255, 255, 0.6);
+    display: flex;
+    width: 100px;
+    height: 32px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #101114;
+    border-radius: 8px;
+    background: #f5f5f5;
+    font-family: 'PingFangSC-Medium';
     cursor: pointer;
+    position: absolute;
+    bottom: 12px;
+    right: 24px;
+    z-index: 2;
   }
 }
 </style>
