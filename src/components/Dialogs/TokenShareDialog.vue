@@ -8,7 +8,7 @@
     closeable
   >
     <div class="share-img-dom" ref="shareImg">
-      <img src="@/assets/img/share-bac.svg" alt="" class="img" />
+      <img src="@/assets/img/share-bac.png" alt="" class="img" />
       <div class="display-flex flex-direction-col share-content">
         <div class="tokenShareTitle display-flex align-items-center justify-content-sp">
           <div class="logo-box display-flex align-items-center">
@@ -256,7 +256,8 @@ watch(
 const handelSaveImage = async () => {
   downLoading.value = true
   await html2canvas(shareImg.value, {
-    backgroundColor: '#171717'
+    useCORS: true, // 启用 CORS 支持
+    allowTaint: false // 禁止污染
   }).then((canvas) => {
     downLoading.value = false
     let url = canvas.toDataURL('image/png')
@@ -422,7 +423,7 @@ onUnmounted(() => {
     display: flex;
     width: 100px;
     height: 32px;
-    flex-direction: column;
+    align-items: center;
     justify-content: center;
     align-items: center;
     color: #101114;
