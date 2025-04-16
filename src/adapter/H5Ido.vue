@@ -133,20 +133,9 @@ import { useChainConfigsStore } from '@/stores/chainConfigs'
 import { useConnectWallet } from '@/hooks/useConnectWallet'
 
 import { numberFormat } from '@/utils'
-import {
-  decimalsFormat,
-  evmTransfer,
-  solanaTransfer,
-  evmTransactionReceipt,
-  solanaTransactionReceipt
-} from '@/utils/transition'
+import { decimalsFormat, evmTransfer, solanaTransfer } from '@/utils/transition'
 import { APItransferTo, APIgetidoInfo } from '@/api'
-import {
-  notificationInfo,
-  notificationSuccessful,
-  notificationFailed,
-  notificationWarn
-} from '@/utils/notification'
+import { notificationInfo, notificationSuccessful, notificationFailed } from '@/utils/notification'
 import WalletListPopup from '@/components/Dialogs/WalletListPopup.vue'
 import H5WalletConnect from '@/components/Wallet/H5WalletConnect.vue'
 
@@ -286,32 +275,16 @@ const customAccountTrade = async () => {
   })
   amount.value = ''
 
-  if (res) {
-    const result =
-      chain_Stablecoins.value.chainCode == 'SOLANA'
-        ? await solanaTransactionReceipt(res.tx, chainConfig.rpc)
-        : await evmTransactionReceipt(res.tx, chainConfig.rpc)
-    if (result === true) {
-      notificationSuccessful({
-        title: `HelloDex：参与平台币`,
-        message: `已确认`
-      })
-      tokensByWalletAddr()
-    } else if (result === false) {
-      notificationFailed({
-        title: `HelloDex：参与平台币`,
-        message: `确认失败`
-      })
-    } else {
-      notificationWarn({
-        title: `HelloDex：参与平台币`,
-        message: `${result}`
-      })
-    }
+  if (res.code == 200) {
+    notificationSuccessful({
+      title: `HelloDex：参与平台币`,
+      message: `已确认`
+    })
+    tokensByWalletAddr()
   } else {
     notificationFailed({
       title: `HelloDex：参与平台币`,
-      message: `确认失败`
+      message: res.msg
     })
   }
 }

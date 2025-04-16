@@ -109,19 +109,8 @@ import { isAllSpaces } from '@/utils'
 import { useGlobalStore } from '@/stores/global'
 import { useChainConfigsStore } from '@/stores/chainConfigs'
 import { numberFormat } from '@/utils'
-import {
-  decimalsFormat,
-  evmTransfer,
-  solanaTransfer,
-  evmTransactionReceipt,
-  solanaTransactionReceipt
-} from '@/utils/transition'
-import {
-  notificationInfo,
-  notificationSuccessful,
-  notificationFailed,
-  notificationWarn
-} from '@/utils/notification'
+import { decimalsFormat, evmTransfer, solanaTransfer } from '@/utils/transition'
+import { notificationInfo, notificationSuccessful, notificationFailed } from '@/utils/notification'
 
 import { customMessage } from '@/utils/message'
 
@@ -260,32 +249,16 @@ const customAccountTrade = async () => {
   })
   amount.value = ''
 
-  if (res) {
-    const result =
-      chain_Stablecoins.value.chainCode == 'SOLANA'
-        ? await solanaTransactionReceipt(res.tx, chainConfig.rpc)
-        : await evmTransactionReceipt(res.tx, chainConfig.rpc)
-    if (result === true) {
-      notificationSuccessful({
-        title: `HelloDex：参与平台币`,
-        message: `已确认`
-      })
-      tokensByWalletAddr()
-    } else if (result === false) {
-      notificationFailed({
-        title: `HelloDex：参与平台币`,
-        message: `确认失败`
-      })
-    } else {
-      notificationWarn({
-        title: `HelloDex：参与平台币`,
-        message: `${result}`
-      })
-    }
+  if (res.code == 200) {
+    notificationSuccessful({
+      title: `HelloDex：参与平台币`,
+      message: `已确认`
+    })
+    tokensByWalletAddr()
   } else {
     notificationFailed({
       title: `HelloDex：参与平台币`,
-      message: `确认失败`
+      message: res.msg
     })
   }
 }

@@ -615,13 +615,8 @@ import { APIcancelOrder, APIgetTokenTransaction, APIgetChartByBaseAddress } from
 import { APIinitTokenData, initLimitedOrderPage, APIauthTradeSwap } from '@/api/coinWalletDetails'
 import { numberFormat, handleCoinPairInfo, formatDate, shortifyAddress, numFormat } from '@/utils'
 import { TRANSFER_TYPE, STATUS_TYPE, USDT_CONFIG, MAIN_COIN } from '@/types'
-import { resetAddress, evmTransactionReceipt, solanaTransactionReceipt } from '@/utils/transition'
-import {
-  notificationInfo,
-  notificationSuccessful,
-  notificationFailed,
-  notificationWarn
-} from '@/utils/notification'
+import { resetAddress } from '@/utils/transition'
+import { notificationInfo, notificationSuccessful, notificationFailed } from '@/utils/notification'
 
 import BuyTrade from './BuyTrade.vue'
 import SellTrade from './SellTrade.vue'
@@ -826,35 +821,17 @@ const handelOneClickTrade = async (row: any) => {
     price: tokenInfo.value.price,
     profitFlag: 0
   })
-  if (res) {
-    const result =
-      row.chainCode == 'SOLANA'
-        ? await solanaTransactionReceipt(res.tx, chainConfig.rpc)
-        : await evmTransactionReceipt(res.tx, chainConfig.rpc)
-    if (result === true) {
-      notificationSuccessful({
-        title: `${row.symbol}：一键清仓交易成功`,
-        customClass: 'notification-h5',
-        message: `${i18n.t('TransactionSuccessful')}`
-      })
-    } else if (result === false) {
-      notificationFailed({
-        title: `${row.symbol}：一键清仓交易失败`,
-        customClass: 'notification-h5',
-        message: `${i18n.t('TransactionFailed')}`
-      })
-    } else {
-      notificationWarn({
-        title: `${row.symbol}`,
-        customClass: 'notification-h5',
-        message: `${result}`
-      })
-    }
+  if (res.code == 200) {
+    notificationSuccessful({
+      title: `${row.symbol}：一键清仓交易成功`,
+      customClass: 'notification-h5',
+      message: `${i18n.t('TransactionSuccessful')}`
+    })
   } else {
     notificationFailed({
       title: `${row.symbol}：一键清仓交易失败`,
       customClass: 'notification-h5',
-      message: `${i18n.t('TransactionFailed')}`
+      message: `${res.msg}`
     })
   }
 }
