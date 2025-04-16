@@ -200,7 +200,7 @@ const slippage = account ? JSON.parse(account).slippage : '0.03'
 
 const handelCustomTradeSwap = async (row: any) => {
   notificationInfo({
-    title: `${row.symbol}：一键清仓交易处理中`,
+    title: `${row.symbol}：一键清仓处理中`,
     message: `<div class="display-flex align-items-center">
                 <p class="notification_loader"></p>
                 <span>一键清仓处理中</span>
@@ -234,7 +234,7 @@ const handelCustomTradeSwap = async (row: any) => {
   if (res.code == 200) {
     notificationSuccessful({
       title: `${row.symbol}：一键清仓成功`,
-      message: `一键清仓交易成功`
+      message: `一键清仓成功`
     })
   } else {
     notificationFailed({

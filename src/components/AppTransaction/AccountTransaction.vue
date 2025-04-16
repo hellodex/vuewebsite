@@ -789,7 +789,7 @@ const handelHoldTab = (item: any) => {
 
 const handelOneClickTrade = async (row: any) => {
   notificationInfo({
-    title: `${row.symbol}：一键清仓交易处理中`,
+    title: `${row.symbol}：一键清仓处理中`,
     customClass: 'notification-h5',
     message: `<div class="display-flex align-items-center">
                 <p class="notification_loader"></p>
