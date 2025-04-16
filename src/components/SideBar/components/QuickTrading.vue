@@ -284,7 +284,7 @@ const handelSell = async (item: any) => {
 
 const handleTrade = async (selectSellCoin: any, selectBuyCoin: any, type: any) => {
   notificationInfo({
-    title: `${sellInfo.value.baseSymbol}：${type == 'buy' ? '买入' : '卖出'}交易正在发起`,
+    title: `${sellInfo.value.baseSymbol}：${type == 'buy' ? '买入' : '卖出'}正在发起`,
     message: `<div class="display-flex align-items-center">
                   <p class="notification_loader"></p>
                   <span>正在发起</span>
@@ -306,7 +306,7 @@ const handleTrade = async (selectSellCoin: any, selectBuyCoin: any, type: any) =
       console.log('allowance:' + allowance)
       if (allowance == 0) {
         notificationInfo({
-          title: `${selectSellCoin.baseSymbol}：${type == 'buy' ? '买入' : '卖出'}交易授权中`,
+          title: `${selectSellCoin.baseSymbol}：${type == 'buy' ? '买入' : '卖出'}授权中`,
           message: `<div class="display-flex align-items-center">
                       <p class="notification_loader"></p>
                       <span>授权中</span>
