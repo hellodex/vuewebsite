@@ -862,8 +862,8 @@ const limitTradeSwap = async (params: any) => {
             <div class='notification-step-line-down'></div>
             `
   })
-  const res = await APIcreateOrder(params)
-  if (res) {
+  const res: any = await APIcreateOrder(params)
+  if (res.code == 200) {
     notificationSuccessful({
       title: `${sellInfo.value.baseSymbol}：${title}`,
       message: `创建成功`,
@@ -872,7 +872,7 @@ const limitTradeSwap = async (params: any) => {
   } else {
     notificationFailed({
       title: `${sellInfo.value.baseSymbol}：${title}`,
-      message: `创建失败`,
+      message: `${res.msg}`,
       customClass: 'notification-h5'
     })
   }

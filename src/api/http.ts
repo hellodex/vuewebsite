@@ -61,7 +61,8 @@ axiosInstance.interceptors.response.use(
     if (
       response.config.url?.indexOf('/api/auth/trade/transferTo') !== -1 ||
       response.config.url?.indexOf('/api/auth/trade/transferToV2') !== -1 ||
-      response.config.url?.indexOf('/api/auth/trade/swap') !== -1
+      response.config.url?.indexOf('/api/auth/trade/swap') !== -1 ||
+      response.config.url?.indexOf('/api/auth/trade/createOrder') !== -1
     ) {
       return response.data
     }
@@ -111,7 +112,8 @@ axiosInstance.interceptors.response.use(
       if (
         response.config.url?.indexOf('/api/auth/trade/transferTo') == -1 ||
         response.config.url?.indexOf('/api/auth/trade/transferToV2') == -1 ||
-        response.config.url?.indexOf('/api/auth/trade/swap') == -1
+        response.config.url?.indexOf('/api/auth/trade/swap') == -1 ||
+        response.config.url?.indexOf('/api/auth/trade/createOrder') == -1
       ) {
         customMessage({
           type: 'error',

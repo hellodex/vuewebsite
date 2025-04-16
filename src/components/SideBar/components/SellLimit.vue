@@ -739,9 +739,9 @@ const handelLimitSell = async () => {
     profitFlag: 0
   }
   console.log(params)
-  const res = await APIcreateOrder(params)
+  const res: any = await APIcreateOrder(params)
   limitLoading.value = false
-  if (res) {
+  if (res.code == 200) {
     notificationSuccessful({
       title: `${sellInfo.value.baseSymbol}：${title}`,
       message: `创建成功`
@@ -750,7 +750,7 @@ const handelLimitSell = async () => {
   } else {
     notificationFailed({
       title: `${sellInfo.value.baseSymbol}：${title}`,
-      message: `创建失败`
+      message: `${res.msg}`
     })
   }
 }

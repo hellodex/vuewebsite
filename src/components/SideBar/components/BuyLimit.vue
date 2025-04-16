@@ -743,10 +743,10 @@ const handelLimitBuy = async () => {
     uiType,
     profitFlag: parseFloat(localStorage.getItem('increaseSet') || '0') / 100
   }
-  const res = await APIcreateOrder(params)
+  const res: any = await APIcreateOrder(params)
   limitLoading.value = false
 
-  if (res) {
+  if (res.code == 200) {
     notificationSuccessful({
       title: `${sellInfo.value.baseSymbol}：${title}`,
       message: `创建成功`
@@ -755,7 +755,7 @@ const handelLimitBuy = async () => {
   } else {
     notificationFailed({
       title: `${sellInfo.value.baseSymbol}：${title}`,
-      message: `创建失败`
+      message: `${res.msg}`
     })
   }
 }
