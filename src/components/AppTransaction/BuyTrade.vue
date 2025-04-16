@@ -279,6 +279,7 @@ import { notificationInfo, notificationSuccessful, notificationFailed } from '@/
 import { useI18n } from 'vue-i18n'
 import DoubleCost from '@/components/DoubleCost.vue'
 import SlideSettingPopup from '../Dialogs/SlideSettingPopup.vue'
+import type { AnyAaaaRecord } from 'dns'
 
 const i18n = useI18n()
 const route = useRoute()
@@ -886,8 +887,8 @@ const limitTradeSwap = async (params: any) => {
             <div class='notification-step-line-up'></div>
             `
   })
-  const res = await APIcreateOrder(params)
-  if (res) {
+  const res: any = await APIcreateOrder(params)
+  if (res.code == 200) {
     notificationSuccessful({
       title: `${sellInfo.value.baseSymbol}：${title}`,
       message: `创建成功`,
@@ -897,7 +898,7 @@ const limitTradeSwap = async (params: any) => {
     notificationFailed({
       title: `${sellInfo.value.baseSymbol}：${title}`,
       customClass: 'notification-h5',
-      message: `创建失败`
+      message: `${res.msg}`
     })
   }
 }

@@ -114,7 +114,9 @@ export const useGlobalStore = defineStore('global', () => {
 
     const obj = JSON.parse(JSON.stringify(val))
 
-    obj.walletInfo.walletKey = aesDecrypt(obj.walletInfo.walletKey, obj.walletInfo.uuid)
+    obj.walletInfo.walletKey = obj.walletInfo.walletKey
+      ? aesDecrypt(obj.walletInfo.walletKey, obj.walletInfo.uuid)
+      : ''
 
     customWalletInfo.value = obj
     localStorage.setItem('customWalletIndex', val.index)

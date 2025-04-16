@@ -430,10 +430,10 @@ const handelConfirm = async () => {
     profitFlag: 0
   }
   console.log(params)
-  const res = await APIcreateOrder(params)
+  const res: any = await APIcreateOrder(params)
   loading.value = false
   console.log(res)
-  if (res) {
+  if (res.code == 200) {
     notificationSuccessful({
       title: `${props.limitInfo.symbol}：止盈`,
       message: `创建成功`,
@@ -442,7 +442,7 @@ const handelConfirm = async () => {
   } else {
     notificationFailed({
       title: `${props.limitInfo.symbol}：止盈`,
-      message: `创建失败`,
+      message: `${res.msg}`,
       customClass: 'notification-h5'
     })
   }
