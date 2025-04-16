@@ -845,7 +845,7 @@ const marketTradeSwap = async (params: any) => {
   })
   if (res.code == 200) {
     notificationSuccessful({
-      title: `${sellInfo.value.baseSymbol}：买入交易成功`,
+      title: `${sellInfo.value.baseSymbol}：买入成功`,
       message: `<div class='display-flex flex-direction-col notification-box'>
                     <div class='display-flex align-items-center'>
                         <span class='notification-txt'>买入</span>
@@ -864,7 +864,7 @@ const marketTradeSwap = async (params: any) => {
     })
   } else {
     notificationFailed({
-      title: `${sellInfo.value.baseSymbol}：买入交易失败`,
+      title: `${sellInfo.value.baseSymbol}：买入失败`,
       message: `${res.msg}`,
       customClass: 'notification-h5'
     })
