@@ -633,7 +633,7 @@ const handelSubmitForm = async (formEl: FormInstance | undefined) => {
       if (res.code == 200) {
         notificationSuccessful({
           title: `${transfeOutInfo.value.symbol}：转出成功`,
-          message: `${i18n.t('TransactionSuccessful')}`
+          message: `转出成功`
         })
       } else {
         notificationFailed({

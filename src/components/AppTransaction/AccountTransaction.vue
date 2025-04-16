@@ -823,13 +823,13 @@ const handelOneClickTrade = async (row: any) => {
   })
   if (res.code == 200) {
     notificationSuccessful({
-      title: `${row.symbol}：一键清仓交易成功`,
+      title: `${row.symbol}：一键清仓成功`,
       customClass: 'notification-h5',
-      message: `${i18n.t('TransactionSuccessful')}`
+      message: `一键清仓成功`
     })
   } else {
     notificationFailed({
-      title: `${row.symbol}：一键清仓交易失败`,
+      title: `${row.symbol}：一键清仓失败`,
       customClass: 'notification-h5',
       message: `${res.msg}`
     })

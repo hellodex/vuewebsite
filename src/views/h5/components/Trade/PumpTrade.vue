@@ -201,13 +201,13 @@ const handleTrade = async (selectSellCoin: any, selectBuyCoin: any, type: any, a
     notificationSuccessful({
       title: `${selectBuyCoin.baseSymbol}：买入成功`,
       customClass: 'notification-h5',
-      message: `${i18n.t('TransactionSuccessful')}`
+      message: `买入成功`
     })
   } else {
     notificationFailed({
       title: `${selectBuyCoin.baseSymbol}：买入失败`,
       customClass: 'notification-h5',
-      message: `${i18n.t('TransactionFailed')}`
+      message: `买入失败`
     })
   }
   loading.value = false
