@@ -109,16 +109,9 @@ import {
   sendEvmTransaction,
   sendSolanaTransaction,
   handelSwitchNetwork,
-  handleEvmApprove,
-  solanaTransactionReceipt,
-  evmTransactionReceipt
+  handleEvmApprove
 } from '@/utils/transition'
-import {
-  notificationInfo,
-  notificationSuccessful,
-  notificationFailed,
-  notificationWarn
-} from '@/utils/notification'
+import { notificationInfo, notificationSuccessful, notificationFailed } from '@/utils/notification'
 import { useI18n } from 'vue-i18n'
 import { APItokenEstimateGas } from '@/api'
 import { APIgetSwap, APIauthTradeSwap } from '@/api/coinWalletDetails'
@@ -516,20 +509,15 @@ const handelCustomTradeSwap = async (selectSellCoin: any, selectBuyCoin: any, ty
     price: props.pairInfo.price,
     profitFlag: type == 'buy' ? parseFloat(localStorage.getItem('increaseSet') || '0') / 100 : 0
   })
-  if (res) {
-    const result =
-      selectSellCoin.chainCode == 'SOLANA'
-        ? await solanaTransactionReceipt(res.tx, mainNetworkCurrency(selectSellCoin.chainCode).rpc)
-        : await evmTransactionReceipt(res.tx, mainNetworkCurrency(selectSellCoin.chainCode).rpc)
-    if (result === true) {
-      notificationSuccessful({
-        title: `${sellInfo.value.baseSymbol}：${type == 'buy' ? '买入' : '卖出'}交易成功`,
-        message:
-          type == 'buy'
-            ? `<div class='display-flex flex-direction-col notification-box'>
+  if (res.code == 200) {
+    notificationSuccessful({
+      title: `${sellInfo.value.baseSymbol}：${type == 'buy' ? '买入' : '卖出'}交易成功`,
+      message:
+        type == 'buy'
+          ? `<div class='display-flex flex-direction-col notification-box'>
                     <div class='display-flex align-items-center'>
                         <span class='notification-txt'>买入</span>
-                        <span class='up-color'>${numberFormat(res.fromTokenAmount) + ' ' + selectSellCoin.baseSymbol}</span>
+                        <span class='up-color'>${numberFormat(res.data.fromTokenAmount) + ' ' + selectSellCoin.baseSymbol}</span>
                     </div>
                     <div class='display-flex align-items-center'>
                         <span class='notification-txt'>成交市值</span>
@@ -537,13 +525,13 @@ const handelCustomTradeSwap = async (selectSellCoin: any, selectBuyCoin: any, ty
                     </div>
                     <div class='display-flex align-items-center'>
                         <span class='notification-txt'>获得</span>
-                        <span class='up-color'>${numberFormat(res.toTokenAmount) + ' ' + selectBuyCoin.baseSymbol}</span>
+                        <span class='up-color'>${numberFormat(res.data.toTokenAmount) + ' ' + selectBuyCoin.baseSymbol}</span>
                     </div>
                   </div>`
-            : `<div class='display-flex flex-direction-col notification-box'>
+          : `<div class='display-flex flex-direction-col notification-box'>
                     <div class='display-flex align-items-center'>
                         <span class='notification-txt'>卖出</span>
-                        <span class='down-color'>${numberFormat(res.fromTokenAmount) + ' ' + selectSellCoin.baseSymbol}</span>
+                        <span class='down-color'>${numberFormat(res.data.fromTokenAmount) + ' ' + selectSellCoin.baseSymbol}</span>
                     </div>
                     <div class='display-flex align-items-center'>
                         <span class='notification-txt'>成交市值</span>
@@ -551,25 +539,14 @@ const handelCustomTradeSwap = async (selectSellCoin: any, selectBuyCoin: any, ty
                     </div>
                     <div class='display-flex align-items-center'>
                         <span class='notification-txt'>获得</span>
-                        <span class='down-color'>${numberFormat(res.toTokenAmount) + ' ' + selectBuyCoin.baseSymbol}</span>
+                        <span class='down-color'>${numberFormat(res.data.toTokenAmount) + ' ' + selectBuyCoin.baseSymbol}</span>
                     </div>
                   </div>`
-      })
-    } else if (result === false) {
-      notificationFailed({
-        title: `${sellInfo.value.baseSymbol}：${type == 'buy' ? '买入' : '卖出'}交易失败`,
-        message: `${i18n.t('TransactionFailed')}`
-      })
-    } else {
-      notificationWarn({
-        title: `${sellInfo.value.baseSymbol}`,
-        message: `${result}`
-      })
-    }
+    })
   } else {
     notificationFailed({
       title: `${sellInfo.value.baseSymbol}：${type == 'buy' ? '买入' : '卖出'}交易失败`,
-      message: `${i18n.t('TransactionFailed')}`
+      message: `${res.msg}`
     })
   }
 }
@@ -761,13 +738,26 @@ defineExpose({
     color: #5c6068;
   }
   .buy-submit-btn {
+    transition: all 0.3s;
     background: var(--up-color);
     color: #f5f5f5;
   }
 
+  .buy-submit-btn:active {
+    transition: all 0.3s;
+    outline: none;
+    box-shadow: 0 0 0 6px rgba(46, 189, 133, 0.1);
+  }
+
   .sell-submit-btn {
+    transition: all 0.3s;
     background: var(--down-color);
     color: #f5f5f5;
+  }
+  .sell-submit-btn:active {
+    transition: all 0.3s;
+    outline: none;
+    box-shadow: 0 0 0 6px rgba(246, 70, 93, 0.1);
   }
 }
 </style>

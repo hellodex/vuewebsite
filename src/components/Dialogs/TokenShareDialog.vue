@@ -257,8 +257,7 @@ const handelSaveImage = async () => {
   downLoading.value = true
   await html2canvas(shareImg.value, {
     backgroundColor: '#000000',
-    useCORS: true, // 启用 CORS 支持
-    allowTaint: false // 禁止污染
+    useCORS: true // 启用 CORS 支持
   }).then((canvas) => {
     downLoading.value = false
     let url = canvas.toDataURL('image/png')

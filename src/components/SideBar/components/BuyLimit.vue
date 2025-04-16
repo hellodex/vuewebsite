@@ -215,18 +215,8 @@
 import BigNumber from 'bignumber.js'
 import { ref, reactive, computed, watch, onMounted } from 'vue'
 import type { CSSProperties } from 'vue'
-import {
-  balanceFormat,
-  resetAddress,
-  solanaTransactionReceipt,
-  evmTransactionReceipt
-} from '@/utils/transition'
-import {
-  notificationInfo,
-  notificationSuccessful,
-  notificationFailed,
-  notificationWarn
-} from '@/utils/notification'
+import { balanceFormat, resetAddress } from '@/utils/transition'
+import { notificationInfo, notificationSuccessful, notificationFailed } from '@/utils/notification'
 import { APIauthTradeSwap } from '@/api/coinWalletDetails'
 import { APIcreateOrder } from '@/api'
 import { useI18n } from 'vue-i18n'
@@ -540,18 +530,13 @@ const handelMarketBuy = async () => {
     profitFlag: parseFloat(localStorage.getItem('increaseSet') || '0') / 100
   })
 
-  if (res) {
-    const result =
-      buyInfo.value.chainCode == 'SOLANA'
-        ? await solanaTransactionReceipt(res.tx, mainNetworkCurrency(buyInfo.value.chainCode).rpc)
-        : await evmTransactionReceipt(res.tx, mainNetworkCurrency(buyInfo.value.chainCode).rpc)
-    if (result === true) {
-      notificationSuccessful({
-        title: `${sellInfo.value.baseSymbol}：买入成功`,
-        message: `<div class='display-flex flex-direction-col notification-box'>
+  if (res.code == 200) {
+    notificationSuccessful({
+      title: `${sellInfo.value.baseSymbol}：买入成功`,
+      message: `<div class='display-flex flex-direction-col notification-box'>
                     <div class='display-flex align-items-center'>
                         <span class='notification-txt'>买入</span>
-                        <span class='up-color'>${numberFormat(res.fromTokenAmount) + ' ' + buyInfo.value.baseSymbol}</span>
+                        <span class='up-color'>${numberFormat(res.data.fromTokenAmount) + ' ' + buyInfo.value.baseSymbol}</span>
                     </div>
                     <div class='display-flex align-items-center'>
                         <span class='notification-txt'>成交市值</span>
@@ -559,28 +544,17 @@ const handelMarketBuy = async () => {
                     </div>
                     <div class='display-flex align-items-center'>
                         <span class='notification-txt'>获得</span>
-                        <span class='up-color'>${numberFormat(res.toTokenAmount) + ' ' + sellInfo.value.baseSymbol}</span>
+                        <span class='up-color'>${numberFormat(res.data.toTokenAmount) + ' ' + sellInfo.value.baseSymbol}</span>
                     </div>
                   </div>`
-      })
-      formDataClear()
-    } else if (result === false) {
-      notificationFailed({
-        title: `${sellInfo.value.baseSymbol}：买入失败`,
-        message: `${i18n.t('TransactionFailed')}`
-      })
-    } else {
-      notificationWarn({
-        title: `${sellInfo.value.baseSymbol}`,
-        message: `${result}`
-      })
-    }
+    })
+    formDataClear()
     marketLoading.value = false
   } else {
     marketLoading.value = false
     notificationFailed({
       title: `${sellInfo.value.baseSymbol}：买入失败`,
-      message: `${i18n.t('TransactionFailed')}`
+      message: `${res.msg}`
     })
   }
 }
@@ -769,10 +743,10 @@ const handelLimitBuy = async () => {
     uiType,
     profitFlag: parseFloat(localStorage.getItem('increaseSet') || '0') / 100
   }
-  const res = await APIcreateOrder(params)
+  const res: any = await APIcreateOrder(params)
   limitLoading.value = false
 
-  if (res) {
+  if (res.code == 200) {
     notificationSuccessful({
       title: `${sellInfo.value.baseSymbol}：${title}`,
       message: `创建成功`
@@ -781,7 +755,7 @@ const handelLimitBuy = async () => {
   } else {
     notificationFailed({
       title: `${sellInfo.value.baseSymbol}：${title}`,
-      message: `创建失败`
+      message: `${res.msg}`
     })
   }
 }
@@ -889,6 +863,12 @@ defineExpose({
       color: var(--font-color-default);
       font-size: 12px;
       cursor: pointer;
+      transition: all 0.3s;
+    }
+    .submit-btn:active {
+      transition: all 0.3s;
+      outline: none;
+      box-shadow: 0 0 0 6px rgba(46, 189, 133, 0.1);
     }
   }
   :deep(.el-popper) {

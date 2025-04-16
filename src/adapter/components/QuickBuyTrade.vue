@@ -29,16 +29,9 @@ import {
   sendEvmTransaction,
   sendSolanaTransaction,
   handelSwitchNetwork,
-  handleEvmApprove,
-  solanaTransactionReceipt,
-  evmTransactionReceipt
+  handleEvmApprove
 } from '@/utils/transition'
-import {
-  notificationInfo,
-  notificationSuccessful,
-  notificationFailed,
-  notificationWarn
-} from '@/utils/notification'
+import { notificationInfo, notificationSuccessful, notificationFailed } from '@/utils/notification'
 import { APIgetSwap, APIauthTradeSwap } from '@/api/coinWalletDetails'
 import { customMessage } from '@/utils/message'
 
@@ -278,19 +271,13 @@ const handelCustomTradeSwap = async (selectSellCoin: any, selectBuyCoin: any, ty
     price: pairInfo.value.price,
     profitFlag: parseFloat(localStorage.getItem('increaseSet') || '0') / 100
   })
-  if (res) {
-    const result =
-      selectSellCoin.chainCode == 'SOLANA'
-        ? await solanaTransactionReceipt(res.tx, mainNetworkCurrency(selectSellCoin.chainCode).rpc)
-        : await evmTransactionReceipt(res.tx, mainNetworkCurrency(selectSellCoin.chainCode).rpc)
-
-    if (result === true) {
-      notificationSuccessful({
-        title: `${selectBuyCoin.baseSymbol}：买入成功`,
-        message: `<div class='display-flex flex-direction-col notification-box'>
+  if (res.code == 200) {
+    notificationSuccessful({
+      title: `${selectBuyCoin.baseSymbol}：买入成功`,
+      message: `<div class='display-flex flex-direction-col notification-box'>
                     <div class='display-flex align-items-center'>
                         <span class='notification-txt'>买入</span>
-                        <span class='up-color'>${numberFormat(res.fromTokenAmount) + ' ' + selectSellCoin.baseSymbol}</span>
+                        <span class='up-color'>${numberFormat(res.data.fromTokenAmount) + ' ' + selectSellCoin.baseSymbol}</span>
                     </div>
                     <div class='display-flex align-items-center'>
                         <span class='notification-txt'>成交市值</span>
@@ -298,26 +285,15 @@ const handelCustomTradeSwap = async (selectSellCoin: any, selectBuyCoin: any, ty
                     </div>
                     <div class='display-flex align-items-center'>
                         <span class='notification-txt'>获得</span>
-                        <span class='up-color'>${numberFormat(res.toTokenAmount) + ' ' + selectBuyCoin.baseSymbol}</span>
+                        <span class='up-color'>${numberFormat(res.data.toTokenAmount) + ' ' + selectBuyCoin.baseSymbol}</span>
                     </div>
                   </div>`
-      })
-    } else if (result === false) {
-      notificationFailed({
-        title: `${selectBuyCoin.baseSymbol}：买入失败`,
-        message: `${i18n.t('TransactionFailed')}`
-      })
-    } else {
-      notificationWarn({
-        title: `${selectBuyCoin.baseSymbol}`,
-        message: `${result}`
-      })
-    }
+    })
     loading.value = false
   } else {
     notificationFailed({
       title: `${selectBuyCoin.baseSymbol}：买入失败`,
-      message: `${i18n.t('TransactionFailed')}`
+      message: `${res.msg}`
     })
     loading.value = false
   }

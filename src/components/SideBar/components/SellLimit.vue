@@ -213,18 +213,8 @@
 import BigNumber from 'bignumber.js'
 import { ref, reactive, computed, watch, onMounted } from 'vue'
 import type { CSSProperties } from 'vue'
-import {
-  balanceFormat,
-  resetAddress,
-  solanaTransactionReceipt,
-  evmTransactionReceipt
-} from '@/utils/transition'
-import {
-  notificationInfo,
-  notificationSuccessful,
-  notificationFailed,
-  notificationWarn
-} from '@/utils/notification'
+import { balanceFormat, resetAddress } from '@/utils/transition'
+import { notificationInfo, notificationSuccessful, notificationFailed } from '@/utils/notification'
 import { APIauthTradeSwap } from '@/api/coinWalletDetails'
 import { APIcreateOrder } from '@/api'
 import { useI18n } from 'vue-i18n'
@@ -535,18 +525,13 @@ const handelMarketSell = async () => {
     profitFlag: 0
   })
 
-  if (res) {
-    const result =
-      sellInfo.value.chainCode == 'SOLANA'
-        ? await solanaTransactionReceipt(res.tx, mainNetworkCurrency(sellInfo.value.chainCode).rpc)
-        : await evmTransactionReceipt(res.tx, mainNetworkCurrency(sellInfo.value.chainCode).rpc)
-    if (result === true) {
-      notificationSuccessful({
-        title: `${sellInfo.value.baseSymbol}：卖出成功`,
-        message: `<div class='display-flex flex-direction-col notification-box'>
+  if (res.code == 200) {
+    notificationSuccessful({
+      title: `${sellInfo.value.baseSymbol}：卖出成功`,
+      message: `<div class='display-flex flex-direction-col notification-box'>
                     <div class='display-flex align-items-center'>
                         <span class='notification-txt'>卖出</span>
-                        <span class='down-color'>${numberFormat(res.fromTokenAmount) + ' ' + sellInfo.value.baseSymbol}</span>
+                        <span class='down-color'>${numberFormat(res.data.fromTokenAmount) + ' ' + sellInfo.value.baseSymbol}</span>
                     </div>
                     <div class='display-flex align-items-center'>
                         <span class='notification-txt'>成交市值</span>
@@ -554,27 +539,16 @@ const handelMarketSell = async () => {
                     </div>
                     <div class='display-flex align-items-center'>
                         <span class='notification-txt'>获得</span>
-                        <span class='down-color'>${numberFormat(res.toTokenAmount) + ' ' + buyInfo.value.baseSymbol}</span>
+                        <span class='down-color'>${numberFormat(res.data.toTokenAmount) + ' ' + buyInfo.value.baseSymbol}</span>
                     </div>
                   </div>`
-      })
-      formDataClear()
-    } else if (result === false) {
-      notificationFailed({
-        title: `${sellInfo.value.baseSymbol}：卖出失败`,
-        message: `${i18n.t('TransactionFailed')}`
-      })
-    } else {
-      notificationWarn({
-        title: `${sellInfo.value.baseSymbol}`,
-        message: `${result}`
-      })
-    }
+    })
+    formDataClear()
     marketLoading.value = false
   } else {
     notificationFailed({
       title: `${sellInfo.value.baseSymbol}：卖出失败`,
-      message: `${i18n.t('TransactionFailed')}`
+      message: `${res.msg}`
     })
     marketLoading.value = false
   }
@@ -765,9 +739,9 @@ const handelLimitSell = async () => {
     profitFlag: 0
   }
   console.log(params)
-  const res = await APIcreateOrder(params)
+  const res: any = await APIcreateOrder(params)
   limitLoading.value = false
-  if (res) {
+  if (res.code == 200) {
     notificationSuccessful({
       title: `${sellInfo.value.baseSymbol}：${title}`,
       message: `创建成功`
@@ -776,7 +750,7 @@ const handelLimitSell = async () => {
   } else {
     notificationFailed({
       title: `${sellInfo.value.baseSymbol}：${title}`,
-      message: `创建失败`
+      message: `${res.msg}`
     })
   }
 }
@@ -883,6 +857,12 @@ defineExpose({
       color: var(--font-color-default);
       font-size: 12px;
       cursor: pointer;
+      transition: all 0.3s;
+    }
+    .submit-btn:active {
+      transition: all 0.3s;
+      outline: none;
+      box-shadow: 0 0 0 6px rgba(246, 70, 93, 0.1);
     }
   }
   :deep(.el-popper) {

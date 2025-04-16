@@ -269,28 +269,17 @@ import { ref, watchEffect, computed, onMounted, onUnmounted, reactive, watch } f
 import { useRoute, useRouter } from 'vue-router'
 import type { CSSProperties } from 'vue'
 import { MAIN_COIN } from '@/types'
-import {
-  balanceFormat,
-  resetAddress,
-  solanaTransactionReceipt,
-  evmTransactionReceipt,
-  decimalsFormat,
-  getEvmGasGwei
-} from '@/utils/transition'
+import { balanceFormat, resetAddress, decimalsFormat, getEvmGasGwei } from '@/utils/transition'
 import { numberFormat, mainNetworkCurrency, isAllSpaces } from '@/utils'
 import { useGlobalStore } from '@/stores/global'
 import { APIauthTradeSwap } from '@/api/coinWalletDetails'
 import { APIcreateOrder } from '@/api'
 import { showToast } from 'vant'
-import {
-  notificationInfo,
-  notificationSuccessful,
-  notificationFailed,
-  notificationWarn
-} from '@/utils/notification'
+import { notificationInfo, notificationSuccessful, notificationFailed } from '@/utils/notification'
 import { useI18n } from 'vue-i18n'
 import DoubleCost from '@/components/DoubleCost.vue'
 import SlideSettingPopup from '../Dialogs/SlideSettingPopup.vue'
+import type { AnyAaaaRecord } from 'dns'
 
 const i18n = useI18n()
 const route = useRoute()
@@ -854,18 +843,13 @@ const marketTradeSwap = async (params: any) => {
   const res: any = await APIauthTradeSwap({
     ...params
   })
-  if (res) {
-    const result =
-      buyInfo.value.chainCode == 'SOLANA'
-        ? await solanaTransactionReceipt(res.tx, mainNetworkCurrency(buyInfo.value.chainCode).rpc)
-        : await evmTransactionReceipt(res.tx, mainNetworkCurrency(buyInfo.value.chainCode).rpc)
-    if (result === true) {
-      notificationSuccessful({
-        title: `${sellInfo.value.baseSymbol}：买入交易成功`,
-        message: `<div class='display-flex flex-direction-col notification-box'>
+  if (res.code == 200) {
+    notificationSuccessful({
+      title: `${sellInfo.value.baseSymbol}：买入交易成功`,
+      message: `<div class='display-flex flex-direction-col notification-box'>
                     <div class='display-flex align-items-center'>
                         <span class='notification-txt'>买入</span>
-                        <span class='up-color'>${numberFormat(res.fromTokenAmount) + ' ' + buyInfo.value.baseSymbol}</span>
+                        <span class='up-color'>${numberFormat(res.data.fromTokenAmount) + ' ' + buyInfo.value.baseSymbol}</span>
                     </div>
                     <div class='display-flex align-items-center'>
                         <span class='notification-txt'>成交市值</span>
@@ -873,28 +857,15 @@ const marketTradeSwap = async (params: any) => {
                     </div>
                     <div class='display-flex align-items-center'>
                         <span class='notification-txt'>获得</span>
-                        <span class='up-color'>${numberFormat(res.toTokenAmount) + ' ' + sellInfo.value.baseSymbol}</span>
+                        <span class='up-color'>${numberFormat(res.data.toTokenAmount) + ' ' + sellInfo.value.baseSymbol}</span>
                     </div>
                   </div>`,
-        customClass: 'notification-h5'
-      })
-    } else if (result === false) {
-      notificationFailed({
-        title: `${sellInfo.value.baseSymbol}：买入交易失败`,
-        message: `${i18n.t('TransactionFailed')}`,
-        customClass: 'notification-h5'
-      })
-    } else {
-      notificationWarn({
-        title: `${sellInfo.value.baseSymbol}`,
-        message: `${result}`,
-        customClass: 'notification-h5'
-      })
-    }
+      customClass: 'notification-h5'
+    })
   } else {
     notificationFailed({
       title: `${sellInfo.value.baseSymbol}：买入交易失败`,
-      message: `${i18n.t('TransactionFailed')}`,
+      message: `${res.msg}`,
       customClass: 'notification-h5'
     })
   }
@@ -916,8 +887,8 @@ const limitTradeSwap = async (params: any) => {
             <div class='notification-step-line-up'></div>
             `
   })
-  const res = await APIcreateOrder(params)
-  if (res) {
+  const res: any = await APIcreateOrder(params)
+  if (res.code == 200) {
     notificationSuccessful({
       title: `${sellInfo.value.baseSymbol}：${title}`,
       message: `创建成功`,
@@ -927,7 +898,7 @@ const limitTradeSwap = async (params: any) => {
     notificationFailed({
       title: `${sellInfo.value.baseSymbol}：${title}`,
       customClass: 'notification-h5',
-      message: `创建失败`
+      message: `${res.msg}`
     })
   }
 }

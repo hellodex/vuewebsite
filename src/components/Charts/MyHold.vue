@@ -142,13 +142,8 @@ import { numberFormat } from '@/utils'
 import { APIauthTradeSwap } from '@/api/coinWalletDetails'
 import { useGlobalStore } from '@/stores/global'
 import { USDT_CONFIG } from '@/types'
-import { resetAddress, evmTransactionReceipt, solanaTransactionReceipt } from '@/utils/transition'
-import {
-  notificationInfo,
-  notificationSuccessful,
-  notificationFailed,
-  notificationWarn
-} from '@/utils/notification'
+import { resetAddress } from '@/utils/transition'
+import { notificationInfo, notificationSuccessful, notificationFailed } from '@/utils/notification'
 import { useChainConfigsStore } from '@/stores/chainConfigs'
 import { useSubscribeKChartInfo } from '@/stores/subscribeKChartInfo'
 import PercentageNotbg from '@/components/Percentage/PercentageNotbg.vue'
@@ -236,31 +231,15 @@ const handelCustomTradeSwap = async (row: any) => {
     price: price.value,
     profitFlag: 0
   })
-  if (res) {
-    const result =
-      row.chainCode == 'SOLANA'
-        ? await solanaTransactionReceipt(res.tx, chainConfig.rpc)
-        : await evmTransactionReceipt(res.tx, chainConfig.rpc)
-    if (result === true) {
-      notificationSuccessful({
-        title: `${row.symbol}：一键清仓交易成功`,
-        message: `${i18n.t('TransactionSuccessful')}`
-      })
-    } else if (result === false) {
-      notificationFailed({
-        title: `${row.symbol}：一键清仓交易失败`,
-        message: `${i18n.t('TransactionFailed')}`
-      })
-    } else {
-      notificationWarn({
-        title: `${row.symbol}`,
-        message: `${result}`
-      })
-    }
+  if (res.code == 200) {
+    notificationSuccessful({
+      title: `${row.symbol}：一键清仓交易成功`,
+      message: `${i18n.t('TransactionSuccessful')}`
+    })
   } else {
     notificationFailed({
       title: `${row.symbol}：一键清仓交易失败`,
-      message: `${i18n.t('TransactionFailed')}`
+      message: `${res.msg}`
     })
   }
 }

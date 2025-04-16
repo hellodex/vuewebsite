@@ -56,6 +56,17 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   async (response: AxiosResponse) => {
     // 对响应数据做点什么
+
+    // 交易，转出特殊处理
+    if (
+      response.config.url?.indexOf('/api/auth/trade/transferTo') !== -1 ||
+      response.config.url?.indexOf('/api/auth/trade/transferToV2') !== -1 ||
+      response.config.url?.indexOf('/api/auth/trade/swap') !== -1 ||
+      response.config.url?.indexOf('/api/auth/trade/createOrder') !== -1
+    ) {
+      return response.data
+    }
+
     if (response.data.code == 200) {
       return response.data.data || response.data.msg
     } else if (response.data.code == 1 && response.data.message.toLocaleLowerCase() == 'ok') {
@@ -98,10 +109,17 @@ axiosInstance.interceptors.response.use(
         window.location.href = '/'
       }, 1000)
     } else {
-      customMessage({
-        type: 'error',
-        title: response.data.msg
-      })
+      if (
+        response.config.url?.indexOf('/api/auth/trade/transferTo') == -1 ||
+        response.config.url?.indexOf('/api/auth/trade/transferToV2') == -1 ||
+        response.config.url?.indexOf('/api/auth/trade/swap') == -1 ||
+        response.config.url?.indexOf('/api/auth/trade/createOrder') == -1
+      ) {
+        customMessage({
+          type: 'error',
+          title: response.data.msg
+        })
+      }
     }
   },
   (error: any) => {

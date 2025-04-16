@@ -351,19 +351,8 @@ import QRCode from 'qrcode'
 import BigNumber from 'bignumber.js'
 import { useGlobalStore } from '@/stores/global'
 import { numberFormat, isAllSpaces, shortifyAddress } from '@/utils'
-import {
-  decimalsFormat,
-  evmTransactionReceipt,
-  solanaTransactionReceipt,
-  isEvmAddress,
-  isSolanaAddress
-} from '@/utils/transition'
-import {
-  notificationInfo,
-  notificationSuccessful,
-  notificationFailed,
-  notificationWarn
-} from '@/utils/notification'
+import { decimalsFormat, isEvmAddress, isSolanaAddress } from '@/utils/transition'
+import { notificationInfo, notificationSuccessful, notificationFailed } from '@/utils/notification'
 
 import {
   APItransferToV2,
@@ -641,31 +630,15 @@ const handelSubmitForm = async (formEl: FormInstance | undefined) => {
       })
       transfeOutVisible.value = false
       loading.value = false
-      if (res) {
-        const result =
-          customWalletInfo.value.chainCode == 'SOLANA'
-            ? await solanaTransactionReceipt(res.tx, chainConfig.rpc)
-            : await evmTransactionReceipt(res.tx, chainConfig.rpc)
-        if (result === true) {
-          notificationSuccessful({
-            title: `${transfeOutInfo.value.symbol}：转出成功`,
-            message: `${i18n.t('TransactionSuccessful')}`
-          })
-        } else if (result === false) {
-          notificationFailed({
-            title: `${transfeOutInfo.value.symbol}：转出失败`,
-            message: `${i18n.t('TransactionFailed')}`
-          })
-        } else {
-          notificationWarn({
-            title: `${transfeOutInfo.value.symbol}`,
-            message: `${result}`
-          })
-        }
+      if (res.code == 200) {
+        notificationSuccessful({
+          title: `${transfeOutInfo.value.symbol}：转出成功`,
+          message: `${i18n.t('TransactionSuccessful')}`
+        })
       } else {
         notificationFailed({
           title: `${transfeOutInfo.value.symbol}：转出失败`,
-          message: `${i18n.t('TransactionFailed')}`
+          message: `${res.msg}`
         })
       }
     } else {
