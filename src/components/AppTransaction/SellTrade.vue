@@ -820,7 +820,7 @@ const authTradeSwap = async (params: any) => {
   })
   if (res.code == 200) {
     notificationSuccessful({
-      title: `${sellInfo.value.baseSymbol}：卖出交易成功`,
+      title: `${sellInfo.value.baseSymbol}：卖出成功`,
       message: `<div class='display-flex flex-direction-col notification-box'>
                     <div class='display-flex align-items-center'>
                         <span class='notification-txt'>卖出</span>
@@ -839,7 +839,7 @@ const authTradeSwap = async (params: any) => {
     })
   } else {
     notificationFailed({
-      title: `${sellInfo.value.baseSymbol}：卖出交易失败`,
+      title: `${sellInfo.value.baseSymbol}：卖出失败`,
       message: `${res.msg}`,
       customClass: 'notification-h5'
     })

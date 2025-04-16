@@ -321,7 +321,7 @@ const handleTrade = async (selectSellCoin: any, selectBuyCoin: any, type: any) =
         )
         if (!approveResult) {
           notificationFailed({
-            title: `${sellInfo.value.baseSymbol}：${type == 'buy' ? '买入' : '卖出'}交易授权失败`,
+            title: `${sellInfo.value.baseSymbol}：${type == 'buy' ? '买入' : '卖出'}授权失败`,
             message: `授权失败`
           })
           return false
@@ -374,13 +374,13 @@ const handleTrade = async (selectSellCoin: any, selectBuyCoin: any, type: any) =
   }
   if (result) {
     notificationSuccessful({
-      title: `${sellInfo.value.baseSymbol}：${type == 'buy' ? '买入' : '卖出'}交易成功`,
-      message: `${i18n.t('TransactionSuccessful')}`
+      title: `${sellInfo.value.baseSymbol}：${type == 'buy' ? '买入' : '卖出'}成功`,
+      message: `${type == 'buy' ? '买入' : '卖出'}成功`
     })
   } else {
     notificationFailed({
-      title: `${sellInfo.value.baseSymbol}：${type == 'buy' ? '买入' : '卖出'}交易失败`,
-      message: `${i18n.t('TransactionFailed')}`
+      title: `${sellInfo.value.baseSymbol}：${type == 'buy' ? '买入' : '卖出'}失败`,
+      message: `${type == 'buy' ? '买入' : '卖出'}失败`
     })
   }
 }
@@ -428,7 +428,7 @@ const handelCustomTradeSwap = async (selectSellCoin: any, selectBuyCoin: any, ty
   })
   if (res.code == 200) {
     notificationSuccessful({
-      title: `${sellInfo.value.baseSymbol}：${type == 'buy' ? '买入' : '卖出'}交易成功`,
+      title: `${sellInfo.value.baseSymbol}：${type == 'buy' ? '买入' : '卖出'}成功`,
       message:
         type == 'buy'
           ? `<div class='display-flex flex-direction-col notification-box'>
@@ -462,7 +462,7 @@ const handelCustomTradeSwap = async (selectSellCoin: any, selectBuyCoin: any, ty
     })
   } else {
     notificationFailed({
-      title: `${sellInfo.value.baseSymbol}：${type == 'buy' ? '买入' : '卖出'}交易失败`,
+      title: `${sellInfo.value.baseSymbol}：${type == 'buy' ? '买入' : '卖出'}失败`,
       message: `${res.msg}`
     })
   }
@@ -498,12 +498,12 @@ const handelRecovery = async () => {
   if (res) {
     notificationSuccessful({
       title: `${sellInfo.value.baseSymbol}：一键回本`,
-      message: `${i18n.t('TransactionSuccessful')}`
+      message: `一键回本成功`
     })
   } else {
     notificationFailed({
       title: `${sellInfo.value.baseSymbol}：一键回本`,
-      message: `${i18n.t('TransactionFailed')}`
+      message: `一键回本失败`
     })
   }
 }

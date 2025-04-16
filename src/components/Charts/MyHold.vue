@@ -233,12 +233,12 @@ const handelCustomTradeSwap = async (row: any) => {
   })
   if (res.code == 200) {
     notificationSuccessful({
-      title: `${row.symbol}：一键清仓交易成功`,
-      message: `${i18n.t('TransactionSuccessful')}`
+      title: `${row.symbol}：一键清仓成功`,
+      message: `一键清仓交易成功`
     })
   } else {
     notificationFailed({
-      title: `${row.symbol}：一键清仓交易失败`,
+      title: `${row.symbol}：一键清仓失败`,
       message: `${res.msg}`
     })
   }

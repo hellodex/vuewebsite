@@ -213,12 +213,12 @@ const handleTrade = async (selectSellCoin: any, selectBuyCoin: any, type: any) =
   if (result) {
     notificationSuccessful({
       title: `${selectBuyCoin.baseSymbol}：买入成功`,
-      message: `${i18n.t('TransactionSuccessful')}`
+      message: `买入成功`
     })
   } else {
     notificationFailed({
       title: `${selectBuyCoin.baseSymbol}：买入失败`,
-      message: `${i18n.t('TransactionFailed')}`
+      message: `买入失败`
     })
   }
   loading.value = false
