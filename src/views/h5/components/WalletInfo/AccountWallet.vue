@@ -431,24 +431,13 @@ import { useGlobalStore } from '@/stores/global'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
-import {
-  decimalsFormat,
-  evmTransactionReceipt,
-  solanaTransactionReceipt,
-  isEvmAddress,
-  isSolanaAddress
-} from '@/utils/transition'
+import { decimalsFormat, isEvmAddress, isSolanaAddress } from '@/utils/transition'
 
 import PercentageNotbg from '@/components/Percentage/PercentageNotbg.vue'
 import WalletListPopup from '@/components/Dialogs/WalletListPopup.vue'
 import { APIlistTransferHistory, APItransferToV2, APItransferEstimateGas } from '@/api'
 import { showToast } from 'vant'
-import {
-  notificationInfo,
-  notificationSuccessful,
-  notificationFailed,
-  notificationWarn
-} from '@/utils/notification'
+import { notificationInfo, notificationSuccessful, notificationFailed } from '@/utils/notification'
 
 const i18n = useI18n()
 const router = useRouter()
@@ -631,35 +620,17 @@ const handelConfirm = async () => {
     createAccountInfo: transferEstimateGas.value.createAccountInfo
   })
 
-  if (res) {
-    const result =
-      customWalletInfo.value.chainCode == 'SOLANA'
-        ? await solanaTransactionReceipt(res.tx, chainConfig.rpc)
-        : await evmTransactionReceipt(res.tx, chainConfig.rpc)
-    if (result === true) {
-      notificationSuccessful({
-        title: `${coinInfo.value.symbol}`,
-        customClass: 'notification-h5',
-        message: `发送成功`
-      })
-    } else if (result === false) {
-      notificationFailed({
-        title: `${coinInfo.value.symbol}`,
-        customClass: 'notification-h5',
-        message: `发送失败`
-      })
-    } else {
-      notificationWarn({
-        title: `${coinInfo.value.symbol}`,
-        customClass: 'notification-h5',
-        message: `${result}`
-      })
-    }
+  if (res.code == 200) {
+    notificationSuccessful({
+      title: `${coinInfo.value.symbol}`,
+      customClass: 'notification-h5',
+      message: `发送成功`
+    })
   } else {
     notificationFailed({
       title: `${coinInfo.value.symbol}`,
       customClass: 'notification-h5',
-      message: `发送失败`
+      message: `${res.msg}`
     })
   }
 }
