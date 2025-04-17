@@ -4,7 +4,7 @@
       <div class="smartMoneyDetails-info display-flex align-items-center justify-content-sp">
         <div class="display-flex flex-direction-col">
           <div class="display-flex align-items-center">
-            <img src="https://ipfs.io/ipfs/QmZqMneqDQ6dkFSq7SHtWtcT8BaBLoupQUksxsS4UTsnyD" alt="" />
+            <svg-icon name="logo1" class="img"></svg-icon>
             <div class="info display-flex flex-direction-col">
               <div class="edit-address display-flex align-items-center">
                 <span class="shortifyAddress">{{ shortifyAddress(route.params.address) }}</span>
@@ -370,7 +370,7 @@
                 </template>
               </el-table-column>
               <el-table-column label="已实现利润" sortable sort-by="date">
-                <template #default="scope">
+                <template>
                   <div class="display-flex flex-direction-col up-color">持有</div>
                 </template>
               </el-table-column>
@@ -437,8 +437,8 @@
               <el-table-column label="币种/最后活跃" sortable sort-by="date">
                 <template #default="scope">
                   <div class="logo-item display-flex align-items-center">
-                    <span>{{ scope.row.tokenName }}</span>
-                    <svg-icon name="copy" class="copy" v-copy="scope.row.token"></svg-icon>
+                    <span>{{ scope.row.symbol }}</span>
+                    <svg-icon name="copy" class="copy" v-copy="scope.row.tokenAddress"></svg-icon>
                     <el-icon size="13"><Search /></el-icon>
                   </div>
                   <span class="timeago-txt">{{ timeago(scope.row.lastTime || 0) }}</span>
@@ -548,8 +548,8 @@
               <el-table-column label="币种">
                 <template #default="scope">
                   <div class="logo-item display-flex align-items-center">
-                    <span>{{ scope.row.tokenName }}</span>
-                    <svg-icon name="copy" class="copy" v-copy="scope.row.token"></svg-icon>
+                    <span>{{ scope.row.symbol }}</span>
+                    <svg-icon name="copy" class="copy" v-copy="scope.row.tokenAddress"></svg-icon>
                   </div>
                 </template>
               </el-table-column>
@@ -684,23 +684,23 @@ const getWalletAnalysisToken = async () => {
 }
 
 const getWalletAnalysisHoldings = async () => {
-  const res = await APIwalletAnalysisHoldings({
+  const res: any = await APIwalletAnalysisHoldings({
     chainCode: route.params.chain,
     walletAddress: route.params.address,
     direction: 'asc'
   })
 
-  walletAnalysisHoldings.value = res || []
+  walletAnalysisHoldings.value = res?.list || []
   console.log(res)
 }
 
 const getWalletAnalysisRecentPL = async () => {
-  const res = await APIwalletAnalysisRecentPL({
+  const res: any = await APIwalletAnalysisRecentPL({
     chainCode: route.params.chain,
     walletAddress: route.params.address,
     direction: 'asc'
   })
-  walletAnalysisRecentPL.value = res || []
+  walletAnalysisRecentPL.value = res?.list || []
   console.log(res)
 }
 
@@ -736,7 +736,7 @@ onMounted(() => {
     color: var(--dex-color-4);
     font-size: 14px;
     line-height: 1.2;
-    img {
+    .img {
       width: 48px;
       height: 48px;
       border-radius: 50%;
