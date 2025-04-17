@@ -37,7 +37,10 @@
                 ></svg-icon>
               </div>
               <div class="display-flex align-items-center">
-                <span class="wallet-to-out" @click="handelTransfeIn(null, customWalletInfo)"
+                <span
+                  class="wallet-to-out"
+                  v-if="customWalletInfo.walletInfo?.vaultType !== 1"
+                  @click="handelTransfeIn(null, customWalletInfo)"
                   >转入</span
                 >
                 <span
@@ -45,7 +48,7 @@
                   @click="
                     handelTransfeOut({
                       symbol: customWalletInfo.symbol,
-                      token: customWalletInfo.symbolAddress,
+                      token: '',
                       walletId: customWalletInfo.walletInfo?.walletId,
                       walletKey: customWalletInfo.walletInfo?.walletKey,
                       decimals: customWalletInfo.decimals
@@ -148,6 +151,7 @@
                   <div class="display-flex align-items-center justify-content-fd">
                     <span
                       class="wallet-to-out"
+                      v-if="customWalletInfo.walletInfo?.vaultType !== 1"
                       @click.stop="handelTransfeIn(scope.row, customWalletInfo)"
                       >转入</span
                     >
@@ -156,7 +160,7 @@
                       @click.stop="
                         handelTransfeOut({
                           symbol: scope.row.symbol,
-                          token: scope.row.address,
+                          token: scope.$index == 0 ? '' : scope.row.address,
                           walletId: customWalletInfo.walletInfo?.walletId,
                           walletKey: customWalletInfo.walletInfo?.walletKey,
                           decimals: scope.row.decimals
@@ -496,6 +500,7 @@ const handelSendU = async () => {
 
 const handelRefundSol = async () => {
   refundSolVisible.value = true
+  allAta.value = []
   const res = await APIgetAllAta({
     wallet: customWalletInfo.value.walletInfo?.wallet,
     walletId: customWalletInfo.value.walletInfo?.walletId
