@@ -157,7 +157,12 @@
                     </div>
                   </div>
                 </div>
-                <span class="icon-add" @click="handelTransfeIn">充值</span>
+                <span
+                  class="icon-add"
+                  @click="handelTransfeIn"
+                  v-if="customWalletInfo.walletInfo?.vaultType !== 1"
+                  >充值</span
+                >
               </div>
               <div class="display-flex align-items-center justify-content-sp coin-hold">
                 <div class="display-flex flex-direction-col">
