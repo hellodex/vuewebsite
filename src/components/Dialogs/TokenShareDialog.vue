@@ -36,7 +36,22 @@
                     <img src="@/assets/icons/logo1.svg" alt="" class="img" />
                   </template>
                 </el-image>
-                <img :src="chainLogoObj[shareCoinInfo.chainCode]" alt="" class="chainCode" />
+                <img
+                  :src="SOLANA"
+                  alt=""
+                  class="chainCode"
+                  v-if="shareCoinInfo.chainCode === 'SOLANA'"
+                />
+                <img :src="BSC" alt="" class="chainCode" v-if="shareCoinInfo.chainCode === 'BSC'" />
+                <img :src="ETH" alt="" class="chainCode" v-if="shareCoinInfo.chainCode === 'ETH'" />
+                <img
+                  :src="BASE"
+                  alt=""
+                  class="chainCode"
+                  v-if="shareCoinInfo.chainCode === 'BASE'"
+                />
+                <img :src="OP" alt="" class="chainCode" v-if="shareCoinInfo.chainCode === 'OP'" />
+                <img :src="ARB" alt="" class="chainCode" v-if="shareCoinInfo.chainCode === 'ARB'" />
               </div>
               <span class="symbol-txt">{{ shareCoinInfo.symbol }}</span>
             </div>
@@ -80,6 +95,12 @@ import { numberFormat } from '@/utils'
 import { useI18n } from 'vue-i18n'
 import { useGlobalStore } from '@/stores/global'
 import PercentageNotbg from '@/components/Percentage/PercentageNotbg.vue'
+import SOLANA from '@/assets/icons/coinSOLANA.svg'
+import BSC from '@/assets/icons/coinBSC.svg'
+import ETH from '@/assets/icons/coinETH.svg'
+import BASE from '@/assets/icons/coinBASE.svg'
+import OP from '@/assets/icons/coinOP.svg'
+import ARB from '@/assets/icons/coinARB.svg'
 
 const globalStore = useGlobalStore()
 

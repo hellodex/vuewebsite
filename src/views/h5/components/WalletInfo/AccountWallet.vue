@@ -51,7 +51,7 @@
       <div class="wallet-operate display-flex align-items-center justify-content-sp">
         <div
           class="display-flex flex-direction-col align-items-center"
-          @click="handelSend(listModel[0])"
+          @click="handelSend(listModel[0], 0)"
         >
           <span>
             <svg-icon name="arrow-up" class="operate-icon"></svg-icon>
@@ -142,7 +142,7 @@
               class="list-item display-flex align-items-center justify-content-sp"
               v-for="(item, index) in listModel"
               :key="index"
-              @click="handelSend(item)"
+              @click="handelSend(item, index)"
             >
               <div class="list-item-left display-flex align-items-center">
                 <div class="logo">
@@ -188,8 +188,15 @@
           </template>
         </el-image>
         <span>{{ coinInfo.symbol }}</span>
-        <span class="address">({{ shortifyAddress(coinInfo.address) }})</span>
-        <svg-icon name="copy" class="copy" v-copy="coinInfo.address"></svg-icon>
+        <span class="address" v-if="coinInfo.address"
+          >({{ shortifyAddress(coinInfo.address) }})</span
+        >
+        <svg-icon
+          v-if="coinInfo.address"
+          name="copy"
+          class="copy"
+          v-copy="coinInfo.address"
+        ></svg-icon>
       </div>
     </div>
     <div class="send-coin-info">
@@ -509,8 +516,11 @@ const listTransferHistory = ref<any>([])
 const listTransferHistorySkeleton = ref(false)
 const transferEstimateGas = ref<any>({})
 
-const handelSend = (item: any) => {
+const handelSend = (item: any, index: number) => {
   sendPopupRight.value = true
+  if (index == 0) {
+    item.address = ''
+  }
   coinInfo.value = item
   getListTransferHistory(coinInfo.value.chainCode, coinInfo.value.address)
 }
