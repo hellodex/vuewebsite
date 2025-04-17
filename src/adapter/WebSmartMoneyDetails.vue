@@ -349,8 +349,8 @@
               <el-table-column label="币种/最后活跃" sortable sort-by="date">
                 <template #default="scope">
                   <div class="logo-item display-flex align-items-center">
-                    <span>{{ scope.row.tokenName }}</span>
-                    <svg-icon name="copy" class="copy" v-copy="scope.row.token"></svg-icon>
+                    <span>{{ scope.row.symbol }}</span>
+                    <svg-icon name="copy" class="copy" v-copy="scope.row.tokenAddress"></svg-icon>
                     <el-icon size="13"><Search /></el-icon>
                   </div>
                   <span class="timeago-txt">{{ timeago(scope.row.lastTime || 0) }}</span>
@@ -370,8 +370,14 @@
                 </template>
               </el-table-column>
               <el-table-column label="已实现利润" sortable sort-by="date">
-                <template>
-                  <div class="display-flex flex-direction-col up-color">持有</div>
+                <template #default="scope">
+                  <div
+                    class="display-flex flex-direction-col"
+                    :class="scope.row.realizedProfitPercentage < 0 ? 'down-color' : 'up-color'"
+                  >
+                    <span>{{ priceNumFormat(scope.row.realizedProfit || 0) }}</span>
+                    <span>{{ scope.row.realizedProfitPercentage || 0 }}%</span>
+                  </div>
                 </template>
               </el-table-column>
               <el-table-column label="总利润" sortable sort-by="date">
