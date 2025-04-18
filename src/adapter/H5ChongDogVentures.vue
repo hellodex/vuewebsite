@@ -11,8 +11,8 @@
       <div class="display-flex flex-direction-col align-items-center txt-main">
         <h1>冲狗基金 - 第一期</h1>
         <p class="display-flex flex-direction-col p-txt1">
-          <strong>每天随机免费获得1-5U&nbsp;&nbsp;</strong>
-          <span>冲狗基金(亏损至0.5U后获得)</span>
+          <strong>每天随机免费获得1.5U以上&nbsp;&nbsp;</strong>
+          <span>冲狗基金(亏损至1U后获得)</span>
         </p>
         <p class="p-txt2">
           普通用户撑起整个Web3、却被明里暗里抢钱、没有普通用户就没有Web3<br />开创和主导Web3变革、任何平台从用户身上赚的钱要80%分给用户
@@ -23,7 +23,7 @@
     </div>
     <div class="chong-dog-txt">
       <h3>参与资格</h3>
-      <p>在活动期间满足下列任意条件，即可获得 1-5 USDT 奖励。本次活动对所有用户开放。</p>
+      <p>在活动期间满足下列任意条件，即可获得最低1.5U以上 USDT。本次活动对所有用户开放。</p>
       <div class="chong-dog-txt-items">
         <div class="chong-dog-txt-item display-flex align-items-center flex-direction-col">
           <svg-icon name="dog-ido" class="dog-img"></svg-icon>
@@ -75,7 +75,7 @@
         <div class="display-flex flex-direction-col">
           <i>1.平台币IDO参与>1000U以上，可累计需要同一个钱包地址</i>
           <i>2.推特抽奖或其他活动中奖者</i>
-          <i>3.盈利的60%归属于冲狗基金，40%归属于个人，扩大基金占比让更多人参与</i>
+          <i>3.盈利的50%归属于冲狗基金，50%归属于个人，扩大基金占比让更多人参与</i>
           <i>4.如有任何疑问，请联系Telegram中文社区。</i>
         </div>
       </div>
