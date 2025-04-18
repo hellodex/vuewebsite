@@ -3,7 +3,7 @@
     <template #reference>
       <div class="address-poper-btn display-flex align-items-center">
         <svg-icon name="logo1" class="user-icon"></svg-icon>
-        <span class="address-txt">{{ shortifyAddress(customWalletInfo.walletInfo?.wallet) }}</span>
+        <span class="address-txt">{{ customWalletInfo.walletInfo?.groupName }}</span>
         <svg-icon name="copy" class="copy" v-copy="customWalletInfo.walletInfo?.wallet"></svg-icon>
         <img :src="customWalletInfo.logo" alt="" class="chain-icon" v-if="customWalletInfo.logo" />
         <span class="price-txt">${{ numberFormat(total || 0) }}</span>
@@ -17,9 +17,7 @@
             <div class="display-flex align-items-center">
               <svg-icon name="logo1" class="user-icon"></svg-icon>
               <div class="display-flex flex-direction-col">
-                <span class="address-txt">{{
-                  shortifyAddress(customWalletInfo.walletInfo?.wallet)
-                }}</span>
+                <span class="address-txt">{{ customWalletInfo.walletInfo?.groupName }}</span>
                 <div class="display-flex align-items-center">
                   <img
                     :src="customWalletInfo.logo"
