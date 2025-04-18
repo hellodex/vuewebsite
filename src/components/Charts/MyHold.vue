@@ -11,7 +11,7 @@
       </template>
       <template #default>
         <el-table :data="list" style="width: 100%" max-height="890px" @row-click="handelTableRow">
-          <el-table-column label="币种">
+          <el-table-column label="币种" min-width="150">
             <template #default="scope">
               <div class="display-flex align-items-center coin-box" style="flex-wrap: wrap">
                 <span class="logo">
@@ -93,14 +93,23 @@
               <PercentageNotbg :value="scope.row?.totalEarnRate || 0" class="font-family-Medium" />
             </template>
           </el-table-column>
-          <el-table-column label="操作" width="280" align="right">
+          <el-table-column label="操作" width="150" align="right">
             <template #default="scope">
-              <span class="hold-btn" @click.stop="handelShare(scope.row)">分享</span>
-              <span class="hold-btn" @click.stop="handelSellLimit(scope.row)">止盈</span>
-              <span class="hold-btn" @click.stop="handelStopLimit(scope.row)">止损</span>
-              <span class="hold-btn btn-trade" @click.stop="handelCustomTradeSwap(scope.row)"
-                >一键清仓</span
-              >
+              <div class="display-flex align-items-center justify-content-fd">
+                <span class="hold-btn" @click.stop="handelShare(scope.row)">分享</span>
+
+                <span class="hold-btn btn-trade" @click.stop="handelCustomTradeSwap(scope.row)"
+                  >一键清仓</span
+                >
+                <div class="display-flex flex-direction-col">
+                  <span class="hold-btn btn-buy" @click.stop="handelSellLimit(scope.row)"
+                    >止盈</span
+                  >
+                  <span class="hold-btn btn-trade" @click.stop="handelStopLimit(scope.row)"
+                    >止损</span
+                  >
+                </div>
+              </div>
             </template>
           </el-table-column>
           <template #empty>
@@ -332,10 +341,20 @@ const handelShare = async (row: any) => {
   .btn-trade {
     background: rgba(246, 70, 93, 0.1);
     color: var(--down-color);
+    transition: all 0.3s;
   }
   .btn-trade:hover {
     color: red;
   }
+  .btn-buy {
+    background: rgba(46, 189, 133, 0.1);
+    color: green;
+    transition: all 0.3s;
+  }
+  .btn-buy:hover {
+    color: var(--up-color);
+  }
+
   .coin-box {
     .logo {
       width: 24px;

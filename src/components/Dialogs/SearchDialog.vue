@@ -1,31 +1,17 @@
 <template>
   <div class="search-dialog">
-    <div class="search-history">
-      <div class="search-history-title display-flex align-items-center justify-content-sp">
-        <span>搜索记录</span>
-        <el-icon @click.stop="handelDelHistory" color="#848E9C" class="trash-icon"
-          ><Delete
-        /></el-icon>
-      </div>
-      <div class="display-flex align-items-center search-history-items">
-        <div
-          class="display-flex align-items-center search-history-item"
-          v-for="(token, index) in historyList"
-          :key="index"
-          @click.stop="handleHistory(token)"
-        >
-          <el-image :src="token.logo" alt="" class="coin-icon">
-            <template #error>
-              <svg-icon name="logo1" class="coin-icon"></svg-icon>
-            </template>
-          </el-image>
-          <span>{{ token.baseToken }}</span>
-        </div>
-      </div>
-    </div>
     <div class="search-content">
-      <div class="search-label display-flex align-items-center">
+      <div class="search-label display-flex align-items-center justify-content-sp">
         <span>{{ i18n.t('searchResult') }}</span>
+        <div class="search-switch display-flex align-items-center">
+          <span style="margin-right: 4px">搜索记录底部</span>
+          <el-switch
+            v-model="searchSwitch"
+            @change="handelSearchSwitch"
+            size="small"
+            style="--el-switch-on-color: #13ce66; --el-switch-off-color: #26282c"
+          />
+        </div>
       </div>
       <div class="search-result">
         <el-table
@@ -84,6 +70,29 @@
         </el-table>
       </div>
     </div>
+    <div class="search-history" v-if="searchSwitch">
+      <div class="search-history-title display-flex align-items-center justify-content-sp">
+        <span>搜索记录</span>
+        <el-icon @click.stop="handelDelHistory" color="#848E9C" class="trash-icon"
+          ><Delete
+        /></el-icon>
+      </div>
+      <div class="display-flex align-items-center search-history-items">
+        <div
+          class="display-flex align-items-center search-history-item"
+          v-for="(token, index) in historyList"
+          :key="index"
+          @click.stop="handleHistory(token)"
+        >
+          <el-image :src="token.logo" alt="" class="coin-icon">
+            <template #error>
+              <svg-icon name="logo1" class="coin-icon"></svg-icon>
+            </template>
+          </el-image>
+          <span>{{ token.baseToken }}</span>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 <script lang="ts" setup>
@@ -115,6 +124,7 @@ defineProps({
 const emit = defineEmits(['close'])
 
 const historyList = ref<any>([])
+const searchSwitch = ref<boolean>(eval(localStorage.getItem('searchSwitch') || 'false'))
 
 const handelTableRow = (row: any) => {
   const token = {
@@ -161,6 +171,11 @@ const handelClose = () => {
   emit('close', false)
 }
 
+const handelSearchSwitch = (val: boolean) => {
+  searchSwitch.value = val
+  localStorage.setItem('searchSwitch', String(searchSwitch.value))
+}
+
 onMounted(() => {
   const searchHistory: any = localStorage.getItem('searchHistory')
   searchHistory
@@ -183,19 +198,20 @@ onMounted(() => {
   padding: 17px;
   .search-label {
     font-size: 14px;
-    margin-top: 15px;
-    margin-bottom: 18px;
+    margin-bottom: 12px;
     color: #f5f5f5;
     font-family: 'PingFangSC-Medium';
   }
 
   .search-history {
     font-size: 14px;
-    margin-bottom: 4px;
+
     .search-history-title {
       color: #9aa0aa;
       font-family: 'PingFangSC-Medium';
       font-size: 14px;
+      margin-top: 12px;
+      margin-bottom: 4px;
     }
     .coin-icon {
       width: 20px;

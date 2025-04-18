@@ -345,7 +345,7 @@
         </div>
         <div class="table-box">
           <template v-if="listTabIndex == 1">
-            <el-table :data="walletAnalysisRecentPL" scrollbar-always-on>
+            <el-table :data="walletAnalysisRecentPL" height="800">
               <el-table-column label="币种/最后活跃" sortable sort-by="date">
                 <template #default="scope">
                   <div class="logo-item display-flex align-items-center">
@@ -439,7 +439,7 @@
             </el-table>
           </template>
           <template v-else-if="listTabIndex == 2">
-            <el-table :data="walletAnalysisHoldings" scrollbar-always-on>
+            <el-table :data="walletAnalysisHoldings" height="800">
               <el-table-column label="币种/最后活跃" sortable sort-by="date">
                 <template #default="scope">
                   <div class="logo-item display-flex align-items-center">
@@ -533,13 +533,18 @@
             </el-table>
           </template>
           <template v-else-if="listTabIndex == 3">
-            <el-table :data="walletAnalysisActivity" scrollbar-always-on>
+            <el-table :data="walletAnalysisActivity" height="800">
               <el-table-column label="类型">
                 <template #default="scope">
                   <div class="display-flex align-items-center">
-                    <span :class="scope.row.transactionType == 1 ? 'up-color' : 'down-color'">{{
-                      scope.row.transactionType == 1 ? '买入' : '卖出'
-                    }}</span>
+                    <span
+                      :class="
+                        scope.row.transactionType == 1
+                          ? 'up-color type-up-btn'
+                          : 'down-color type-down-btn'
+                      "
+                      >{{ scope.row.transactionType == 1 ? '买入' : '卖出' }}</span
+                    >
                     <el-tooltip content="✨ 首次购买该代币的钱包" effect="light">
                       <svg-icon
                         name="first-buy-star"
@@ -559,10 +564,10 @@
                   </div>
                 </template>
               </el-table-column>
-              <el-table-column prop="name" label="总额">
+              <el-table-column prop="name" label="价格">
                 <template #default="scope">
                   <span :class="scope.row.transactionType == 1 ? 'up-color' : 'down-color'">{{
-                    priceNumFormat(scope.row.transactionAmount || 0)
+                    priceNumFormat(scope.row.transactionPrice || 0)
                   }}</span>
                 </template>
               </el-table-column>
@@ -573,10 +578,10 @@
                   }}</span>
                 </template>
               </el-table-column>
-              <el-table-column prop="name" label="价格">
+              <el-table-column prop="name" label="总额">
                 <template #default="scope">
                   <span :class="scope.row.transactionType == 1 ? 'up-color' : 'down-color'">{{
-                    priceNumFormat(scope.row.transactionPrice || 0)
+                    priceNumFormat(scope.row.transactionAmount || 0)
                   }}</span>
                 </template>
               </el-table-column>
@@ -592,11 +597,12 @@
                   <span>{{ timeago(scope.row.transactionTime || 0) }}</span>
                 </template>
               </el-table-column>
-              <el-table-column>
+              <el-table-column width="100">
                 <template #default>
                   <div class="display-flex align-items-center justify-content-center">
-                    <svg-icon name="share-04" class="icon-user"></svg-icon>
-                    <span>分享</span>
+                    <!-- <a :href="CHAIN_URL[chainInfo.chainCode] + scope.row.tx" target="_blank"> -->
+                    <svg-icon name="ethscan" class="icon-user"></svg-icon>
+                    <!-- </a> -->
                   </div>
                 </template>
               </el-table-column>
@@ -609,7 +615,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, onMounted } from 'vue'
+import { computed, ref, onMounted, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { numberFormat, shortifyAddress, priceNumFormat, timeago } from '@/utils'
 import {
@@ -621,7 +627,7 @@ import {
 } from '@/api'
 
 const route = useRoute()
-
+const timer = ref<any>(null)
 const walletAnalysisSummary = ref<any>({})
 const walletAnalysisHoldings = ref<any>([])
 const walletAnalysisRecentPL = ref<any>([])
@@ -693,6 +699,8 @@ const getWalletAnalysisHoldings = async () => {
   const res: any = await APIwalletAnalysisHoldings({
     chainCode: route.params.chain,
     walletAddress: route.params.address,
+    pageNo: 1,
+    pageSize: 20,
     direction: 'asc'
   })
 
@@ -704,6 +712,8 @@ const getWalletAnalysisRecentPL = async () => {
   const res: any = await APIwalletAnalysisRecentPL({
     chainCode: route.params.chain,
     walletAddress: route.params.address,
+    pageNo: 1,
+    pageSize: 20,
     direction: 'asc'
   })
   walletAnalysisRecentPL.value = res?.list || []
@@ -713,19 +723,31 @@ const getWalletAnalysisRecentPL = async () => {
 const getWalletAnalysisActivity = async () => {
   const res: any = await APIwalletAnalysisActivity({
     chainCode: route.params.chain,
-    walletAddress: route.params.address
+    walletAddress: route.params.address,
+    pageNo: 1,
+    pageSize: 20
   })
 
   walletAnalysisActivity.value = res?.list || []
   console.log(res)
 }
-
-onMounted(() => {
+const initData = () => {
   getWalletAnalysisSummary()
   getWalletAnalysisToken()
   getWalletAnalysisHoldings()
   getWalletAnalysisRecentPL()
   getWalletAnalysisActivity()
+}
+onMounted(() => {
+  initData()
+  timer.value = setInterval(() => {
+    initData()
+  }, 3000)
+})
+
+onUnmounted(() => {
+  clearInterval(timer.value)
+  timer.value = null
 })
 </script>
 
