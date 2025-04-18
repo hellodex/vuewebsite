@@ -436,12 +436,11 @@
                   </div>
                 </template>
               </el-table-column>
-              <el-table-column label="Tx" align="center" width="100">
-                <template #default="scope">
+              <el-table-column align="center" width="100">
+                <template #default>
                   <div class="display-flex align-items-center justify-content-center">
-                    <a :href="CHAIN_URL[chainCode] + scope.row.transactionHash" target="_blank">
-                      <svg-icon name="ethscan" class="icon-user"></svg-icon>
-                    </a>
+                    <svg-icon name="share-04" class="icon-user"></svg-icon>
+                    <span>分享</span>
                   </div>
                 </template>
               </el-table-column>
@@ -539,12 +538,11 @@
                   </div>
                 </template>
               </el-table-column>
-              <el-table-column label="Tx" align="center" width="100">
-                <template #default="scope">
+              <el-table-column align="center" width="100">
+                <template #default>
                   <div class="display-flex align-items-center justify-content-center">
-                    <a :href="CHAIN_URL[chainCode] + scope.row.transactionHash" target="_blank">
-                      <svg-icon name="ethscan" class="icon-user"></svg-icon>
-                    </a>
+                    <svg-icon name="share-04" class="icon-user"></svg-icon>
+                    <span>分享</span>
                   </div>
                 </template>
               </el-table-column>
@@ -1038,6 +1036,7 @@ onUnmounted(() => {
     }
     .logo-img {
       border-radius: 50%;
+      background-color: var(--font-color-default);
     }
 
     .chainCode {
