@@ -278,13 +278,17 @@ const handelSaveImage = async () => {
   downLoading.value = true
   await html2canvas(shareImg.value, {
     backgroundColor: '#000000',
-    useCORS: true // 启用 CORS 支持
+    width: 800,
+    height: 475,
+    scale: 1, // 设置缩放比例
+    useCORS: true, // 启用 CORS 支持
+    allowTaint: false // 禁止污染
   }).then((canvas) => {
     downLoading.value = false
-    let url = canvas.toDataURL('image/png')
+    let url = canvas.toDataURL('image/jpeg')
     const a = document.createElement('a')
     a.href = url
-    a.download = `${props.shareCoinInfo.symbol}.png`
+    a.download = `${props.shareCoinInfo.symbol}.jpeg`
     a.click()
   })
 }
