@@ -158,16 +158,16 @@ export default class CustomDataFeed {
         id: info[i].timestamp,
         time: info[i].timestamp * 1000,
         close: showMarket
-          ? parseFloat(info[i].C) * parseFloat(pairInfo.baseAmount)
+          ? parseFloat(info[i].C) * parseFloat(pairInfo.totalSupply)
           : parseFloat(info[i].C),
         high: showMarket
-          ? parseFloat(info[i].C) * parseFloat(pairInfo.baseAmount)
+          ? parseFloat(info[i].H) * parseFloat(pairInfo.totalSupply)
           : parseFloat(info[i].H),
         low: showMarket
-          ? parseFloat(info[i].C) * parseFloat(pairInfo.baseAmount)
+          ? parseFloat(info[i].L) * parseFloat(pairInfo.totalSupply)
           : parseFloat(info[i].L),
         open: showMarket
-          ? parseFloat(info[i].C) * parseFloat(pairInfo.baseAmount)
+          ? parseFloat(info[i].O) * parseFloat(pairInfo.totalSupply)
           : parseFloat(info[i].O),
         volume: parseFloat(info[i].volume)
       }
@@ -236,16 +236,16 @@ export default class CustomDataFeed {
       const bar = {
         time: data.txTime * 1000,
         close: showMarket
-          ? parseFloat(data.price) * parseFloat(res.baseAmount)
+          ? parseFloat(data.price) * parseFloat(res.totalSupply)
           : parseFloat(data.price),
         open: showMarket
-          ? parseFloat(data.price) * parseFloat(res.baseAmount)
+          ? parseFloat(data.price) * parseFloat(res.totalSupply)
           : parseFloat(data.price),
         high: showMarket
-          ? parseFloat(data.price) * parseFloat(res.baseAmount)
+          ? parseFloat(data.price) * parseFloat(res.totalSupply)
           : parseFloat(data.price),
         low: showMarket
-          ? parseFloat(data.price) * parseFloat(res.baseAmount)
+          ? parseFloat(data.price) * parseFloat(res.totalSupply)
           : parseFloat(data.price),
         volume: parseFloat(data.orderAmount)
       }
