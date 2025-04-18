@@ -2,7 +2,7 @@
   <div id="tv_chart_container"></div>
 </template>
 <script setup>
-import { onMounted, onUnmounted } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
 import { useTokenInfoStore } from '@/stores/tokenInfo'
 import { useChainInfoStore } from '@/stores/chainInfo'
 import CustomDataFeed from '@/utils/customDataFeed'
@@ -17,6 +17,7 @@ const useTokenInfo = useTokenInfoStore()
 const tokenInfo = useTokenInfo.tokenInfo // 解构变量 通过 storeToRefs 变成响应式
 const precision = formatDecimals(sessionStorage.getItem('basePrice')).precision
 console.log('小数位', precision)
+const showMarket = ref(eval(localStorage.getItem('showMarket')) || false)
 
 function initOnReady() {
   var widget = (window.tvWidget = new TradingView.widget({
@@ -96,9 +97,21 @@ function initOnReady() {
     }
   }))
 
-  widget.onChartReady(function () {
-    // widget.chart().createStudy('Volume', false, false)
-  }) // end of widget.onChartReady
+  widget.headerReady().then(function () {
+    const btn = widget.createButton()
+    btn.innerHTML = showMarket.value
+      ? '<span style="font-size: 12px;cursor: pointer;">Price / <span style="color:#2ebd85">MCap</span></span>'
+      : '<span style="font-size: 12px;cursor: pointer;"><span style="color:#2ebd85">Price</span> / MCap</span>'
+
+    btn.onclick = () => {
+      showMarket.value = !showMarket.value
+      localStorage.setItem('showMarket', showMarket.value)
+      btn.innerHTML = showMarket.value
+        ? '<span style="font-size: 12px;cursor: pointer;">Price / <span style="color:#2ebd85">MCap</span></span>'
+        : '<span style="font-size: 12px;cursor: pointer;"><span style="color:#2ebd85">Price</span> / MCap</span>'
+      initOnReady()
+    }
+  })
 } // end of TradingView.onready
 
 onMounted(() => {
