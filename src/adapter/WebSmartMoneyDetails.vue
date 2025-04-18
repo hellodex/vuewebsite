@@ -349,7 +349,15 @@
               <el-table-column label="币种/最后活跃" sortable sort-by="date">
                 <template #default="scope">
                   <div class="logo-item display-flex align-items-center">
-                    <span>{{ scope.row.symbol }}</span>
+                    <div class="logo">
+                      <el-image :src="scope.row.logo" alt="" class="logo-img">
+                        <template #error>
+                          <svg-icon name="logo1" class="logo-img"></svg-icon>
+                        </template>
+                      </el-image>
+                      <img :src="chainLogoObj[chainCode]" alt="" class="chainCode" />
+                    </div>
+                    <span class="symbol-txt">{{ scope.row.symbol }}</span>
                     <svg-icon name="copy" class="copy" v-copy="scope.row.tokenAddress"></svg-icon>
                     <el-icon size="13"><Search /></el-icon>
                   </div>
@@ -428,11 +436,12 @@
                   </div>
                 </template>
               </el-table-column>
-              <el-table-column>
-                <template #default>
+              <el-table-column label="Tx" align="center" width="100">
+                <template #default="scope">
                   <div class="display-flex align-items-center justify-content-center">
-                    <svg-icon name="share-04" class="icon-user"></svg-icon>
-                    <span>分享</span>
+                    <a :href="CHAIN_URL[chainCode] + scope.row.transactionHash" target="_blank">
+                      <svg-icon name="ethscan" class="icon-user"></svg-icon>
+                    </a>
                   </div>
                 </template>
               </el-table-column>
@@ -443,7 +452,15 @@
               <el-table-column label="币种/最后活跃" sortable sort-by="date">
                 <template #default="scope">
                   <div class="logo-item display-flex align-items-center">
-                    <span>{{ scope.row.symbol }}</span>
+                    <div class="logo">
+                      <el-image :src="scope.row.logo" alt="" class="logo-img">
+                        <template #error>
+                          <svg-icon name="logo1" class="logo-img"></svg-icon>
+                        </template>
+                      </el-image>
+                      <img :src="chainLogoObj[chainCode]" alt="" class="chainCode" />
+                    </div>
+                    <span class="symbol-txt">{{ scope.row.symbol }}</span>
                     <svg-icon name="copy" class="copy" v-copy="scope.row.tokenAddress"></svg-icon>
                     <el-icon size="13"><Search /></el-icon>
                   </div>
@@ -522,11 +539,12 @@
                   </div>
                 </template>
               </el-table-column>
-              <el-table-column>
-                <template #default>
+              <el-table-column label="Tx" align="center" width="100">
+                <template #default="scope">
                   <div class="display-flex align-items-center justify-content-center">
-                    <svg-icon name="share-04" class="icon-user"></svg-icon>
-                    <span>分享</span>
+                    <a :href="CHAIN_URL[chainCode] + scope.row.transactionHash" target="_blank">
+                      <svg-icon name="ethscan" class="icon-user"></svg-icon>
+                    </a>
                   </div>
                 </template>
               </el-table-column>
@@ -559,7 +577,15 @@
               <el-table-column label="币种">
                 <template #default="scope">
                   <div class="logo-item display-flex align-items-center">
-                    <span>{{ scope.row.symbol }}</span>
+                    <div class="logo">
+                      <el-image :src="scope.row.logo" alt="" class="logo-img">
+                        <template #error>
+                          <svg-icon name="logo1" class="logo-img"></svg-icon>
+                        </template>
+                      </el-image>
+                      <img :src="chainLogoObj[chainCode]" alt="" class="chainCode" />
+                    </div>
+                    <span class="symbol-txt">{{ scope.row.symbol }}</span>
                     <svg-icon name="copy" class="copy" v-copy="scope.row.tokenAddress"></svg-icon>
                   </div>
                 </template>
@@ -597,12 +623,12 @@
                   <span>{{ timeago(scope.row.transactionTime || 0) }}</span>
                 </template>
               </el-table-column>
-              <el-table-column width="100">
-                <template #default>
+              <el-table-column width="100" label="Tx" align="center">
+                <template #default="scope">
                   <div class="display-flex align-items-center justify-content-center">
-                    <!-- <a :href="CHAIN_URL[chainInfo.chainCode] + scope.row.tx" target="_blank"> -->
-                    <svg-icon name="ethscan" class="icon-user"></svg-icon>
-                    <!-- </a> -->
+                    <a :href="CHAIN_URL[chainCode] + scope.row.transactionHash" target="_blank">
+                      <svg-icon name="ethscan" class="icon-user"></svg-icon>
+                    </a>
                   </div>
                 </template>
               </el-table-column>
@@ -625,14 +651,20 @@ import {
   APIwalletAnalysisRecentPL,
   APIwalletAnalysisActivity
 } from '@/api'
+import { CHAIN_URL } from '@/types'
+import { useGlobalStore } from '@/stores/global'
 
 const route = useRoute()
+const globalStore = useGlobalStore()
+const { chainLogoObj } = globalStore
+
 const timer = ref<any>(null)
 const walletAnalysisSummary = ref<any>({})
 const walletAnalysisHoldings = ref<any>([])
 const walletAnalysisRecentPL = ref<any>([])
 const walletAnalysisActivity = ref<any>([])
 
+const chainCode = ref<any>(route.params.chain)
 const timeTabIndex = ref<string>('7d')
 const timeTabList = [
   {
@@ -676,7 +708,7 @@ const handelListTab = (item: any) => {
 
 const getWalletAnalysisSummary = async () => {
   const res = await APIwalletAnalysisSummary({
-    chainCode: route.params.chain,
+    chainCode: chainCode.value,
     walletAddress: route.params.address,
     period: timeTabIndex.value
   })
@@ -687,7 +719,7 @@ const getWalletAnalysisSummary = async () => {
 
 const getWalletAnalysisToken = async () => {
   const res = await APIwalletAnalysisToken({
-    chainCode: route.params.chain,
+    chainCode: chainCode.value,
     walletAddress: route.params.address,
     period: timeTabIndex.value
   })
@@ -697,7 +729,7 @@ const getWalletAnalysisToken = async () => {
 
 const getWalletAnalysisHoldings = async () => {
   const res: any = await APIwalletAnalysisHoldings({
-    chainCode: route.params.chain,
+    chainCode: chainCode.value,
     walletAddress: route.params.address,
     pageNo: 1,
     pageSize: 20,
@@ -710,7 +742,7 @@ const getWalletAnalysisHoldings = async () => {
 
 const getWalletAnalysisRecentPL = async () => {
   const res: any = await APIwalletAnalysisRecentPL({
-    chainCode: route.params.chain,
+    chainCode: chainCode.value,
     walletAddress: route.params.address,
     pageNo: 1,
     pageSize: 20,
@@ -722,7 +754,7 @@ const getWalletAnalysisRecentPL = async () => {
 
 const getWalletAnalysisActivity = async () => {
   const res: any = await APIwalletAnalysisActivity({
-    chainCode: route.params.chain,
+    chainCode: chainCode.value,
     walletAddress: route.params.address,
     pageNo: 1,
     pageSize: 20
@@ -990,6 +1022,31 @@ onUnmounted(() => {
   .table-box {
     border-radius: 8px;
     overflow: hidden;
+    .symbol-txt {
+      color: var(--font-color-default);
+      font-family: 'PingFangSC-Medium';
+    }
+    .logo {
+      position: relative;
+      margin-right: 8px;
+    }
+
+    .logo,
+    .logo-img {
+      width: 26px;
+      height: 26px;
+    }
+    .logo-img {
+      border-radius: 50%;
+    }
+
+    .chainCode {
+      width: 12px;
+      height: 12px;
+      position: absolute;
+      right: 0px;
+      bottom: 1px;
+    }
     .logo-item {
       .copy {
         width: 12px;
