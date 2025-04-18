@@ -280,12 +280,16 @@ onUnmounted(() => {
     margin: 0 24px;
   }
   .link-block {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
     a .link {
       margin-left: 15px;
       color: #aaa;
       font-size: 14px;
       font-style: normal;
       font-family: 'PingFangSC-Medium';
+      white-space: nowrap;
     }
     .router-link-active.router-link-exact-active .link {
       color: var(--font-color-default);
@@ -297,6 +301,7 @@ onUnmounted(() => {
       font-size: 14px;
       color: #f5f5f5;
       margin-left: 20px;
+      white-space: nowrap;
     }
   }
   .seach-block {
@@ -354,6 +359,7 @@ onUnmounted(() => {
     font-weight: normal;
     cursor: pointer;
     margin-left: 10px;
+    white-space: nowrap;
     .icon-invite {
       width: 24px;
       height: 24px;

@@ -93,7 +93,7 @@
               <PercentageNotbg :value="scope.row?.totalEarnRate || 0" class="font-family-Medium" />
             </template>
           </el-table-column>
-          <el-table-column label="操作" width="150" align="right">
+          <el-table-column label="操作" width="200" align="right">
             <template #default="scope">
               <div class="display-flex align-items-center justify-content-fd">
                 <span class="hold-btn" @click.stop="handelShare(scope.row)">分享</span>

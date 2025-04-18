@@ -191,6 +191,7 @@ const handelLogon = async () => {
       color: #f5f5f5;
       font-size: 14px;
       font-family: 'PingFangSC-Heavy';
+      white-space: nowrap;
     }
     .chain-icon {
       width: 12px;
