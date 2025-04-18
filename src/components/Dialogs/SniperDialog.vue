@@ -12,8 +12,8 @@
           class="sniper-item"
           v-for="(item, index) in earliest100TraderData?.traders || []"
           :key="index"
-          @click="handelRouter(item)"
         >
+          <!-- @click="handelRouter(item)" -->
           <el-tooltip :content="tips(item)" effect="light" placement="bottom">
             <div class="sniper-info">
               <span class="scale-in" v-if="item.sellState == 0 && item.buyAgain == 1"></span>
