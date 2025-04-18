@@ -36,6 +36,8 @@ export default class CustomDataFeed {
         supports_timescale_marks: true // 是否支持时间轴标记
       })
     )
+
+    console.log('CustomDataFeed--onReady')
   }
   // 搜索符号
   searchSymbols(userInput: any, exchange: any, symbolType: any, onResultReadyCallback: any) {
@@ -103,6 +105,7 @@ export default class CustomDataFeed {
     console.log(symbolInfo, resolution, periodParams, onErrorCallback)
 
     localStorage.setItem('kchart_tradingTime', resolution)
+    const showMarket = eval(localStorage.getItem('showMarket') || 'false')
 
     if (this._intervalId) {
       clearInterval(this._intervalId)
@@ -121,6 +124,11 @@ export default class CustomDataFeed {
       return
     }
     // periodParams = {from: 1716366543, to: 1716384543, countBack: 300, firstDataRequest: true}
+    const pairInfo: any = await APIpairInfo({
+      pairAddress: chainInfo?.pairAddress,
+      baseAddress: tokenInfo?.baseAddress,
+      chainCode: chainInfo?.chainCode
+    })
 
     const res: any = await APIkCharts({
       kchart: {
@@ -149,10 +157,18 @@ export default class CustomDataFeed {
       const obj = {
         id: info[i].timestamp,
         time: info[i].timestamp * 1000,
-        close: parseFloat(info[i].C),
-        high: parseFloat(info[i].H),
-        low: parseFloat(info[i].L),
-        open: parseFloat(info[i].O),
+        close: showMarket
+          ? parseFloat(info[i].C) * parseFloat(pairInfo.baseAmount)
+          : parseFloat(info[i].C),
+        high: showMarket
+          ? parseFloat(info[i].C) * parseFloat(pairInfo.baseAmount)
+          : parseFloat(info[i].H),
+        low: showMarket
+          ? parseFloat(info[i].C) * parseFloat(pairInfo.baseAmount)
+          : parseFloat(info[i].L),
+        open: showMarket
+          ? parseFloat(info[i].C) * parseFloat(pairInfo.baseAmount)
+          : parseFloat(info[i].O),
         volume: parseFloat(info[i].volume)
       }
       bars.push(obj)
@@ -169,6 +185,8 @@ export default class CustomDataFeed {
     subscriberUID: string,
     onResetCacheNeededCallback: Function
   ) {
+    const showMarket = eval(localStorage.getItem('showMarket') || 'false')
+
     const useSubscribeKChart = useSubscribeKChartInfo()
     const chainInfo = useChainInfoStore().chainInfo
     const tokenInfo = useTokenInfoStore().tokenInfo
@@ -217,10 +235,18 @@ export default class CustomDataFeed {
       useSubscribeKChart.createSubscribeSwapInfo(data)
       const bar = {
         time: data.txTime * 1000,
-        close: parseFloat(data.price),
-        open: parseFloat(data.price),
-        high: parseFloat(data.price),
-        low: parseFloat(data.price),
+        close: showMarket
+          ? parseFloat(data.price) * parseFloat(res.baseAmount)
+          : parseFloat(data.price),
+        open: showMarket
+          ? parseFloat(data.price) * parseFloat(res.baseAmount)
+          : parseFloat(data.price),
+        high: showMarket
+          ? parseFloat(data.price) * parseFloat(res.baseAmount)
+          : parseFloat(data.price),
+        low: showMarket
+          ? parseFloat(data.price) * parseFloat(res.baseAmount)
+          : parseFloat(data.price),
         volume: parseFloat(data.orderAmount)
       }
       onRealtimeCallback(bar)
