@@ -69,6 +69,10 @@ export const useGlobalStore = defineStore('global', () => {
   const currencyDashboardSwitch = ref(Number(DashboardSwitch) ?? 0)
 
   const tokenList = ref<any>([])
+
+  // 点击链接web3钱包的位置 例：登录、ido
+  const clickLocation = ref<string>(localStorage.getItem('clickLocation') ?? 'login')
+
   /** 处置操作 */
 
   // 修改语言
@@ -165,6 +169,11 @@ export const useGlobalStore = defineStore('global', () => {
     tokenList.value = val
   }
 
+  function setClickLocation(val: string) {
+    localStorage.setItem('clickLocation', val)
+    clickLocation.value = val
+  }
+
   return {
     theme,
     language,
@@ -181,6 +190,7 @@ export const useGlobalStore = defineStore('global', () => {
     currencyDashboard,
     currencyDashboardSwitch,
     tokenList,
+    clickLocation,
     setDanmaku,
     setTheme,
     setLanguage,
@@ -195,6 +205,7 @@ export const useGlobalStore = defineStore('global', () => {
     setCurrencyDashboard,
     delCurrencyDashboard,
     setCurrencyDashboardSwitch,
-    setTokenList
+    setTokenList,
+    setClickLocation
   }
 })
