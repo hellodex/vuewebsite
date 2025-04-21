@@ -84,8 +84,16 @@
                 <el-progress :stroke-width="20" :percentage="idoInfo.percentage" />
               </div>
               <div class="ido-btn">
-                <WalletConnect v-if="!isConnected" class="presale">参与预售</WalletConnect>
-                <span @click="handelPresale" class="presale" v-else>参与预售</span>
+                <div class="ido-num">
+                  <!-- <img src="@/assets/img/tips.png" alt="" /> -->
+                  <!-- <strong>恭喜，已累计参与6800U</strong> -->
+                </div>
+                <div class="display-flex align-items-center">
+                  <WalletConnect v-if="!isConnected" class="presale">参与预售</WalletConnect>
+                  <span @click="handelPresale" class="presale" v-else>参与预售</span>
+                  <!-- <span class="presale" @click="handelBindAccount">绑定冲狗基金</span> -->
+                </div>
+                <div></div>
               </div>
             </div>
           </div>
@@ -96,6 +104,81 @@
         <h1>里程碑事件</h1>
         <img src="@/assets/icons/ido-img.svg" alt="" class="ido-img" />
       </div>
+      <van-popup v-model:show="dialogIdoVisible" round class="ido-dialog">
+        <div class="ido-dialog-content">
+          <h5>查询ido额度</h5>
+          <div class="ido-progress-box">
+            <img src="../assets/img/ido-progress.png" alt="" />
+            <div class="ido-progress-content">
+              <div class="first-step">
+                <div class="first-step-num">1</div>
+                <div class="first-step-content display-flex align-items-center">
+                  <img src="../assets/img/0xSun.png" alt="" class="nick-img" />
+                  <div class="first-step-info display-flex flex-direction-col">
+                    <span>{{ accountInfo.nickname }}</span>
+                    <span>UUID：{{ customWalletInfo?.walletInfo?.uuid }}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="second-step">
+                <div
+                  class="second-step-content display-flex align-items-center"
+                  @click="web3AccountInfo?.isConnected ? null : connectWeb3Wallet()"
+                >
+                  <img src="../assets/img/wallet.png" alt="" class="wallet-img" />
+                  <div
+                    class="second-step-info display-flex flex-direction-col"
+                    v-if="web3AccountInfo?.isConnected"
+                  >
+                    <span>钱包</span>
+                    <span>{{ shortifyAddress(web3AccountInfo?.address) }}</span>
+                  </div>
+                  <div class="second-step-wallet" v-else>Connect Wallet</div>
+                </div>
+                <div class="second-step-num">2</div>
+              </div>
+              <div class="third-step">
+                <div class="third-step-num">3</div>
+                <div class="third-step-content display-flex align-items-center">
+                  <img src="https://img.apihellodex.lol/quoteToken/usdt.png" alt="" class="img" />
+                  <div class="third-step-info">参与金额：5000</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="btn-box display-flex flex-direction-col align-items-center">
+            <p>绑定冲狗基金后无法修改，和接收平台币无关。</p>
+            <div class="display-flex align-items-center">
+              <span class="cancel-btn" @click="dialogIdoVisible = false">取消</span>
+              <span class="confirm-btn" v-if="isSignature">确认绑定</span>
+              <span class="confirm-btn-disabled" v-else>确认绑定</span>
+            </div>
+          </div>
+        </div>
+      </van-popup>
+
+      <van-popup
+        v-model:show="dialogIdoListVisible"
+        closeable
+        round
+        class="ido-list-dialog"
+        @click-close-icon="dialogIdoListVisible = false"
+      >
+        <div class="ido-list-content">
+          <h5>交易额兑换冲狗基金活动排行榜</h5>
+          <p class="txt">参与IDO自动加入冲狗基金</p>
+          <el-table :data="list" style="width: 100%" height="320px">
+            <el-table-column label="排行"></el-table-column>
+            <el-table-column label="账户"></el-table-column>
+            <el-table-column label="交易额"></el-table-column>
+            <el-table-column label="进度"></el-table-column>
+            <el-table-column></el-table-column>
+            <template #empty>
+              <empty-data></empty-data>
+            </template>
+          </el-table>
+        </div>
+      </van-popup>
     </div>
   </el-scrollbar>
 </template>
@@ -105,11 +188,20 @@ import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import BigNumber from 'bignumber.js'
 import { useI18n } from 'vue-i18n'
 import { USDT_CONFIG } from '@/types'
-import { isAllSpaces } from '@/utils'
+import { isAllSpaces, shortifyAddress } from '@/utils'
 import { useGlobalStore } from '@/stores/global'
 import { useChainConfigsStore } from '@/stores/chainConfigs'
 import { numberFormat } from '@/utils'
-import { decimalsFormat, evmTransfer, solanaTransfer } from '@/utils/transition'
+import {
+  decimalsFormat,
+  evmTransfer,
+  solanaTransfer,
+  evmSignature,
+  solanaSignature,
+  evmSignatureVerify,
+  solanaSignatureVerify
+} from '@/utils/transition'
+
 import { notificationInfo, notificationSuccessful, notificationFailed } from '@/utils/notification'
 
 import { customMessage } from '@/utils/message'
@@ -117,6 +209,19 @@ import { customMessage } from '@/utils/message'
 import { APItransferTo, APIgetidoInfo } from '@/api'
 
 import WalletConnect from '@/components/Wallet/WalletConnect.vue'
+import { useAppKitAccount, useAppKit } from '@reown/appkit/vue'
+
+const modal = useAppKit()
+const web3Account = useAppKitAccount()
+const web3AccountInfo = ref<any>({
+  isConnected: false,
+  address: '',
+  walletType: ''
+})
+const dialogIdoVisible = ref<boolean>(false)
+const isSignature = ref<boolean>(false)
+const dialogIdoListVisible = ref<boolean>(false)
+const list = ref([])
 
 const i18n = useI18n()
 const globalStore = useGlobalStore()
@@ -129,7 +234,7 @@ const walletType = computed(() => globalStore.walletInfo.walletType)
 const isConnected = computed(() => globalStore.walletInfo.isConnected)
 const address = computed(() => globalStore.walletInfo.address)
 const tokenList = computed(() => globalStore.tokenList)
-
+const accountInfo = computed(() => globalStore.accountInfo)
 const customWalletInfo = computed(() => globalStore.customWalletInfo)
 
 const chain_Stablecoins = computed(() => {
@@ -152,6 +257,11 @@ const chain_Stablecoins = computed(() => {
     }
   }
 })
+
+const connectWeb3Wallet = () => {
+  globalStore.setClickLocation('clickIdo')
+  modal.open()
+}
 
 const amount = ref('')
 const deductionInfo = ref<any>({})
@@ -203,9 +313,89 @@ const handelPresale = () => {
   }
 }
 
+const handelBindAccount = () => {
+  if (!isConnected.value) {
+    customMessage({
+      type: 'error',
+      title: '请先登录账户'
+    })
+    return false
+  }
+
+  if (isConnected.value && walletType.value !== 'Email') {
+    customMessage({
+      type: 'error',
+      title: '请断开web3链接，登录账户'
+    })
+    return false
+  }
+
+  dialogIdoVisible.value = true
+}
+
 watch(tokenList, () => {
   tokensByWalletAddr()
 })
+
+watch(
+  [
+    () => web3Account.value.address,
+    () => web3Account.value.isConnected,
+    () => web3Account.value.caipAddress
+  ],
+  () => {
+    console.log('account updated:', web3Account.value.address)
+    console.log('account updated:', web3Account.value.isConnected)
+    console.log('account updated:', web3Account.value.caipAddress)
+
+    web3AccountInfo.value.address = web3Account.value.address
+    web3AccountInfo.value.isConnected = web3Account.value.isConnected
+    web3AccountInfo.value.walletType =
+      web3Account.value.caipAddress?.split(':')[0].toLocaleLowerCase() == 'solana'
+        ? 'Solana'
+        : 'Evm'
+  }
+)
+
+watch(web3AccountInfo.value, async (newValue, oldValue) => {
+  const signature = localStorage.getItem('signature')
+  const isvalid = signature ? await signatureVerifyFun(signature) : false
+  isSignature.value = isvalid
+  if (!isvalid) {
+    localStorage.removeItem('signature')
+    signatureFun()
+  }
+})
+
+const signatureFun = async () => {
+  if (web3AccountInfo.value.isConnected) {
+    if (web3AccountInfo.value.walletType == 'Evm') {
+      const signature = await evmSignature()
+      console.log('signature', signature)
+      localStorage.setItem('signature', signature)
+      isSignature.value = true
+    } else if (web3AccountInfo.value.walletType == 'Solana') {
+      const signature = await solanaSignature()
+      console.log('signature', signature)
+      localStorage.setItem('signature', signature)
+      isSignature.value = true
+    }
+  }
+}
+
+const signatureVerifyFun = async (signature: string) => {
+  if (web3AccountInfo.value.isConnected) {
+    if (web3AccountInfo.value.walletType == 'Evm') {
+      const res = await evmSignatureVerify(web3AccountInfo.value.address, signature)
+      return res
+    } else if (web3AccountInfo.value.walletType == 'Solana') {
+      const res = await solanaSignatureVerify(web3AccountInfo.value.address, signature)
+      return res
+    }
+    return false
+  }
+  return false
+}
 
 const tokensByWalletAddr = () => {
   const res: any = tokenList.value
@@ -469,7 +659,7 @@ onUnmounted(() => {
     }
   }
   .progress-main {
-    margin: 18px 0 15px 0;
+    margin: 18px 0;
     position: relative;
     span {
       font-size: 18px;
@@ -498,7 +688,16 @@ onUnmounted(() => {
   }
   .ido-btn {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
+    .ido-num {
+      display: flex;
+      align-items: center;
+      color: var(--font-color-default) !important;
+      font-size: 16px;
+      img {
+        width: 30px;
+      }
+    }
     :deep(.presale) {
       background-color: var(--font-color-default);
       color: var(--bg-color);
@@ -508,10 +707,9 @@ onUnmounted(() => {
       padding: 5px 29px;
       display: inline-block;
       text-align: center;
-      line-height: 1;
       cursor: pointer;
       border-radius: 12px;
-      margin: 0 auto;
+      margin-left: 20px;
     }
   }
   .ido-img-box {
@@ -524,6 +722,248 @@ onUnmounted(() => {
     width: 100%;
     height: auto;
     display: block;
+  }
+
+  .ido-dialog,
+  .ido-list-dialog {
+    border-radius: 12px;
+    background: #181818;
+  }
+  .ido-dialog-content {
+    width: 1000px;
+    height: 450px;
+    padding: 18px;
+    h5 {
+      text-align: center;
+      color: #fff;
+      font-size: 16px;
+      line-height: 1.2;
+      font-weight: 400;
+    }
+    .ido-progress-box {
+      position: relative;
+      margin-top: 35px;
+      margin-left: 56px;
+      margin-right: 110px;
+      .ido-progress-content {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+      .first-step {
+        position: absolute;
+        left: 29px;
+        top: 88px;
+        .first-step-num {
+          width: 24px;
+          height: 24px;
+          background: #7a5af8;
+          border: 2px solid #fff;
+          border-radius: 50%;
+          font-size: 14px;
+          color: #fff;
+          font-weight: 600;
+          text-align: center;
+          line-height: 20px;
+          margin-left: 80px;
+        }
+        .first-step-content {
+          height: 80px;
+          border-radius: 8px;
+          background: rgba(42, 42, 42, 0.5);
+          padding: 12px;
+          margin-top: 19px;
+          .nick-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 8px;
+          }
+          .first-step-info {
+            span:first-child {
+              color: #fff;
+              font-size: 16px;
+              font-weight: 600;
+            }
+            span:last-child {
+              color: #fff;
+              font-size: 12px;
+              font-weight: 400;
+            }
+          }
+        }
+      }
+      .second-step {
+        position: absolute;
+        left: 307px;
+        top: 20px;
+        .second-step-content {
+          width: 208px;
+          height: 88px;
+          border-radius: 8px;
+          background: rgba(42, 42, 42, 0.5);
+          padding: 24px 18px;
+          margin-bottom: 21px;
+          cursor: pointer;
+          .wallet-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 9px;
+            margin-right: 8px;
+          }
+          .second-step-wallet {
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+          }
+          .second-step-info {
+            span:first-child {
+              color: #fff;
+              font-size: 16px;
+              font-weight: 400;
+            }
+            span:last-child {
+              color: #fff;
+              font-size: 12px;
+            }
+          }
+        }
+        .second-step-num {
+          width: 24px;
+          height: 24px;
+          background: #2e90fa;
+          border: 2px solid #fff;
+          border-radius: 50%;
+          font-size: 14px;
+          color: #fff;
+          font-weight: 600;
+          text-align: center;
+          line-height: 20px;
+          margin-left: 50px;
+        }
+      }
+      .third-step {
+        position: absolute;
+        right: -71px;
+        top: 74px;
+        .third-step-num {
+          width: 24px;
+          height: 24px;
+          background: #19fb9b;
+          border: 2px solid #fff;
+          border-radius: 50%;
+          font-size: 14px;
+          color: #fff;
+          font-weight: 600;
+          text-align: center;
+          line-height: 20px;
+          margin-left: 6px;
+        }
+        .third-step-content {
+          width: 226px;
+          height: 88px;
+          border-radius: 8px;
+          background: rgba(42, 42, 42, 0.5);
+          padding: 24px 18px;
+          margin-top: 21px;
+          .img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 8px;
+          }
+          .third-step-info {
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+          }
+        }
+      }
+    }
+    .btn-box {
+      margin-top: 110px;
+      p {
+        color: #fff;
+        font-size: 14px;
+        line-height: 33px;
+        margin-bottom: 10px;
+      }
+      .cancel-btn {
+        display: flex;
+        width: 92px;
+        height: 32px;
+        padding: 10px 12px;
+        justify-content: center;
+        align-items: center;
+        border-radius: 8px;
+        background: #5f6368;
+        color: #fff;
+        font-size: 14px;
+        font-weight: 400;
+        cursor: pointer;
+        margin-right: 38px;
+      }
+      .confirm-btn-disabled {
+        display: flex;
+        width: 92px;
+        height: 32px;
+        padding: 10px 12px;
+        justify-content: center;
+        align-items: center;
+        border-radius: 8px;
+        background: #333;
+        color: #8c8c8c;
+        font-size: 14px;
+        font-weight: 400;
+        cursor: not-allowed;
+      }
+      .confirm-btn {
+        display: flex;
+        width: 92px;
+        height: 32px;
+        padding: 10px 12px;
+        justify-content: center;
+        align-items: center;
+        border-radius: 8px;
+        background: #0aa76f;
+        color: #fff;
+        font-size: 14px;
+        font-weight: 400;
+        cursor: pointer;
+      }
+    }
+  }
+  .ido-list-content {
+    width: 646px;
+    height: 440px;
+    padding: 18px 39px 38px;
+    h5 {
+      text-align: center;
+      color: #fff;
+      font-size: 16px;
+      line-height: 1.2;
+      font-weight: 400;
+    }
+    p.txt {
+      color: #828282;
+      font-size: 12px;
+      font-weight: 400;
+      margin: 5px 0 15px;
+      text-align: center;
+    }
+    :deep(.el-table) {
+      border-radius: 12px;
+      background: #242424 !important;
+      .el-table__cell {
+        background: #242424 !important;
+        padding: 15px 0 !important;
+      }
+    }
+  }
+  :deep(.van-popup__close-icon) {
+    font-size: 14px;
   }
 }
 </style>
