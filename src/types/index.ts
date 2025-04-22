@@ -26,6 +26,11 @@ export const CHAIN_URL: any = {
   SOLANA: 'https://solscan.io/tx/'
 }
 
+export const CHIP_ANALYSIS_CHAIN: any = {
+  BSC: 'bsc',
+  SOLANA: 'sol'
+}
+
 /**
  * 区块链的 chain_id
  * “1”表示以太坊；
