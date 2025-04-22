@@ -12,7 +12,8 @@ import {
   DatasetComponent,
   TransformComponent,
   ToolboxComponent,
-  LegendComponent
+  LegendComponent,
+  MarkPointComponent
 } from 'echarts/components'
 
 // 标签自动布局，全局过渡动画等特性
@@ -30,6 +31,7 @@ echarts.use([
   TransformComponent,
   ToolboxComponent,
   LegendComponent,
+  MarkPointComponent,
   LabelLayout,
   UniversalTransition,
   CanvasRenderer,
