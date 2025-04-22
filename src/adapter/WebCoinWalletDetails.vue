@@ -46,6 +46,12 @@
                     @click="handleTabClick(item)"
                     >{{ item.name }}</span
                   >
+
+                  <span
+                    @click="dialogChipVisible = true"
+                    v-if="CHIP_ANALYSIS_CHAIN[baseInfo.chainInfo?.chainCode]"
+                    >筹码分析</span
+                  >
                 </div>
                 <div class="refresh-box">
                   <RefreshHold v-if="activeName == 'seven'" />
@@ -204,6 +210,21 @@
         @close="handelClose"
       />
     </div>
+    <el-dialog v-model="dialogChipVisible" title="筹码分析" width="80%" show-close align-center>
+      <div style="height: 78vh">
+        <iframe
+          title="筹码分析"
+          :src="
+            language == 'zh'
+              ? `https://faster100x.com/zh/lite/embedded?tokenChain=${CHIP_ANALYSIS_CHAIN[baseInfo.chainInfo?.chainCode]}&tokenAddress=${baseInfo.tokenInfo?.baseAddress}&platform=hellodex`
+              : `https://faster100x.com/en/lite/embedded?tokenChain=${CHIP_ANALYSIS_CHAIN[baseInfo.chainInfo?.chainCode]}&tokenAddress=${baseInfo.tokenInfo?.baseAddress}&platform=hellodex`
+          "
+          width="100%"
+          height="100%"
+          style="border: none"
+        ></iframe>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script lang="ts" setup>
@@ -247,7 +268,7 @@ import { useFlowGroup, useListPeriod } from '@/hooks/useFundTab'
 import { useSubscribeKChartInfo } from '@/stores/subscribeKChartInfo'
 import { numberFormat, handleCoinPairInfo } from '@/utils'
 import { socket } from '@/utils/socket'
-
+import { CHIP_ANALYSIS_CHAIN } from '@/types'
 const useSubscribeKChart = useSubscribeKChartInfo()
 
 const i18n = useI18n()
@@ -264,6 +285,7 @@ const globalStore = useGlobalStore()
 const walletType = computed(() => globalStore.walletInfo.walletType)
 const isConnected = computed(() => globalStore.walletInfo.isConnected)
 const customWalletInfo = computed(() => globalStore.customWalletInfo)
+const language = computed(() => globalStore.language)
 
 const dashboardSwitch = ref(Number(localStorage.getItem('currencyDashboardSwitch')) ?? 0)
 
@@ -273,6 +295,7 @@ const danmaku = ref(
     : Number(localStorage.getItem('danmaku'))
 )
 
+const dialogChipVisible = ref<boolean>(false)
 const skeleton = ref<boolean>(false)
 const initLimitedOrders = ref<any>({})
 const currentTokenHoldInfo = ref<any>({})
