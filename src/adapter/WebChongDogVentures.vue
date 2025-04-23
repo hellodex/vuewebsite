@@ -62,7 +62,7 @@
             <svg-icon name="dog-top" class="dog-img"></svg-icon>
             <div class="display-flex flex-direction-col">
               <strong>条件4</strong>
-              <span>每日交易排名前三</span>
+              <span>交易额送冲狗基金</span>
             </div>
           </div>
           <a href="https://t.me/HelloDex_cn" target="_blank" class="participate-btn">
