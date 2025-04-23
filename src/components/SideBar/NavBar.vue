@@ -10,10 +10,10 @@
           </div>
         </RouterLink>
         <div class="link-block">
-          <a href="javascript:;" class="platform-revenue">
+          <!-- <a href="javascript:;" class="platform-revenue">
             <span>平台收入：</span>
             <span>${{ numberFormat(feeVolume) }}</span>
-          </a>
+          </a> -->
           <a href="https://hellodex.gitbook.io/hellodex" target="_blank" class="link">
             <span class="link">白皮书</span>
           </a>

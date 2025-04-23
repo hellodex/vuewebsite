@@ -16,7 +16,8 @@ const handelRefresh = async () => {
   loading.value = true
   const res = await APIrefreshhold({
     walletAddress: customWalletInfo.value.walletInfo?.wallet,
-    chainCode: customWalletInfo.value.walletInfo?.chainCode
+    chainCode: customWalletInfo.value.walletInfo?.chainCode,
+    walletId: customWalletInfo.value.walletInfo?.walletId,
   })
   console.log(res)
   loading.value = false
