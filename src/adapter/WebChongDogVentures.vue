@@ -36,7 +36,7 @@
             <svg-icon name="dog-twitter" class="dog-img"></svg-icon>
             <div class="display-flex flex-direction-col">
               <strong>条件2</strong>
-              <span>推特抽奖或其他活动中奖者</span>
+              <span>交易额送冲狗基金</span>
             </div>
           </div>
           <a href="https://x.com/HelloDex_io" target="_blank" class="participate-btn">
@@ -62,7 +62,7 @@
             <svg-icon name="dog-top" class="dog-img"></svg-icon>
             <div class="display-flex flex-direction-col">
               <strong>条件4</strong>
-              <span>交易额送冲狗基金</span>
+              <span>推特抽奖或其他活动中奖者</span>
             </div>
           </div>
           <a href="https://t.me/HelloDex_cn" target="_blank" class="participate-btn">
