@@ -209,6 +209,11 @@ const router = createRouter({
       path: '/TelegramLogin',
       name: 'TelegramLogin',
       component: () => import('@/views/TelegramLogin.vue')
+    },
+    {
+      path: '/Follow',
+      name: 'Follow',
+      component: () => import('@/views/follow.vue')
     }
   ]
 })
