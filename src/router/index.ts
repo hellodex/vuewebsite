@@ -222,9 +222,7 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   console.log(to)
 
-  document.title = to.meta?.title
-    ? (to.meta.title as string)
-    : 'HelloDex——开创和主导Web3变革，利润80%分给用户'
+  document.title = to.meta?.title ? (to.meta.title as string) : 'HelloDex:交易快人一步'
   if (to.meta?.description) {
     // 假设我们要修改description meta标签
     const descriptionMeta = document.querySelector('meta[name="description"]')
