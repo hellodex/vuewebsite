@@ -664,7 +664,8 @@ onUnmounted(() => {
     }
     .table-noun-screen {
       flex-wrap: nowrap;
-      span {
+      span,
+      a {
         padding: 5px 10px;
         border-radius: 4px;
         background: rgba(33, 33, 33, 0.3);

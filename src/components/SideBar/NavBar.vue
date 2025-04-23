@@ -181,6 +181,7 @@ const navList = computed(() => {
   return [
     { name: '送U-冲狗基金', to: '/ChongDogVentures' },
     { name: 'AI监控', to: '/Monitor/Strategy' }
+    // { name: '关注', to: '/Follow' }
     // { name: i18n.t('tabbar.smart'), to: '/Smartmoney' },
     // { name: i18n.t('tabbar.tools'), to: '/Tools' },
     // { name: '质押', to: '/Staking' }
