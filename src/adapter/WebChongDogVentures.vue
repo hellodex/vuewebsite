@@ -1,5 +1,12 @@
 <template>
   <section class="chong-dog-ventures">
+    <!-- <div class="chong-dog—progress">
+      <div class="img-cup-bac"></div>
+      <img src="../assets/img/img-cup.png" alt="" class="img-cup" />
+
+      <div class="trade-now" v-if="isConnected" @click="router.push('/')">立即交易</div>
+      <WalletConnect v-else class="trade-now">立即交易</WalletConnect>
+    </div> -->
     <div class="chong-dog-content display-flex align-items-center justify-content-sp">
       <div class="display-flex flex-direction-col txt-main">
         <h1>冲狗基金 - 第一期</h1>
@@ -85,14 +92,57 @@
 </template>
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
+import { useGlobalStore } from '@/stores/global'
+import { computed } from 'vue'
+import WalletConnect from '@/components/Wallet/WalletConnect.vue'
 const router = useRouter()
+const globalStore = useGlobalStore()
+
+const isConnected = computed(() => globalStore.walletInfo.isConnected)
 </script>
 
 <style lang="scss" scoped>
 .chong-dog-ventures {
   width: 1200px;
   margin: 0 auto;
-  padding: 70px 0 40px 0;
+  padding: 100px 0 40px 0;
+  .chong-dog—progress {
+    height: 390px;
+    margin-bottom: 60px;
+    border-radius: 12px 56px 12px 12px;
+    background: rgba(255, 255, 255, 0.05);
+    position: relative;
+    padding: 28px 28px 17px 28px;
+    .img-cup {
+      position: absolute;
+      top: -64px;
+      right: -20px;
+      width: 147.5px;
+      height: 150px;
+      z-index: 3;
+    }
+    .img-cup-bac {
+      width: 130px;
+      height: 130px;
+      position: absolute;
+      right: -10px;
+      top: -60px;
+      background: rgba(176, 151, 10, 0.3);
+      filter: blur(50px);
+    }
+    :deep(.trade-now) {
+      width: 92px;
+      height: 32px;
+      border-radius: 8px;
+      background: #0ab075;
+      color: #fff;
+      text-align: center;
+      font-size: 14px;
+      line-height: 32px;
+      margin: 12px auto 0;
+      cursor: pointer;
+    }
+  }
   .chong-dog-content {
     .txt-main {
       width: 527px;
