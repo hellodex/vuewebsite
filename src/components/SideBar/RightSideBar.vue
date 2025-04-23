@@ -10,10 +10,10 @@
           <div class="publicize-main align-items-center justify-content-sp">
             <div class="publicize-content">
               <div class="display-flex align-items-center">
-                <span class="txt">交易额送冲狗基金</span>
+                <span class="txt">你冲币、我冲你、亏了送U</span>
               </div>
               <a href="https://t.me/HelloDex_cn" target="_blank" class="arrow-down-info">
-                <span>免费送U</span>
+                <span>不离不弃💘</span>
               </a>
             </div>
             <div class="menu-box display-flex">
