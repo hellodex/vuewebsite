@@ -14,10 +14,10 @@
           <strong>每天随机免费获得1.5U以上&nbsp;&nbsp;</strong>
           <span>冲狗基金(亏损至1U后获得)</span>
         </p>
-        <p class="p-txt2">
-          普通用户撑起整个Web3、却被明里暗里抢钱、没有普通用户就没有Web3<br />开创和主导Web3变革、任何平台从用户身上赚的钱要80%分给用户
-        </p>
-        <div class="chong-dog-btn">已开始</div>
+<!--        <p class="p-txt2">-->
+<!--          普通用户撑起整个Web3、却被明里暗里抢钱、没有普通用户就没有Web3<br />开创和主导Web3变革、任何平台从用户身上赚的钱要80%分给用户-->
+<!--        </p>-->
+<!--        <div class="chong-dog-btn">已开始</div>-->
       </div>
       <img src="@/assets/img/dog-gif.gif" alt="" class="dog-gif" />
     </div>
