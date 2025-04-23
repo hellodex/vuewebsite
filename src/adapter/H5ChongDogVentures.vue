@@ -42,8 +42,8 @@
             <strong>条件2</strong>
             <span>交易额送冲狗基金</span>
           </div>
-          <a href="https://x.com/HelloDex_io" target="_blank" class="participate-btn">
-            <span>关注Twitter</span>
+          <a href="https://hellodex.io" target="_blank" class="participate-btn">
+            <span>已开始</span>
             <svg-icon name="arrow-up" class="arrow-up"></svg-icon>
           </a>
         </div>
@@ -64,8 +64,8 @@
             <strong>条件4</strong>
             <span>推特抽奖或其他活动中奖者</span>
           </div>
-          <a href="https://t.me/HelloDex_cn" target="_blank" class="participate-btn">
-            <span>即将开始</span>
+          <a href="https://x.com/HelloDex_io" target="_blank" class="participate-btn">
+            <span>关注推特</span>
             <svg-icon name="arrow-up" class="arrow-up"></svg-icon>
           </a>
         </div>
