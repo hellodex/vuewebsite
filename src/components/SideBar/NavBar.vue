@@ -10,10 +10,10 @@
           </div>
         </RouterLink>
         <div class="link-block">
-          <a href="javascript:;" class="platform-revenue">
+          <!-- <a href="javascript:;" class="platform-revenue">
             <span>平台收入：</span>
             <span>${{ numberFormat(feeVolume) }}</span>
-          </a>
+          </a> -->
           <a href="https://hellodex.gitbook.io/hellodex" target="_blank" class="link">
             <span class="link">白皮书</span>
           </a>
@@ -181,6 +181,7 @@ const navList = computed(() => {
   return [
     { name: '送U-冲狗基金', to: '/ChongDogVentures' },
     { name: 'AI监控', to: '/Monitor/Strategy' }
+    // { name: '关注', to: '/Follow' }
     // { name: i18n.t('tabbar.smart'), to: '/Smartmoney' },
     // { name: i18n.t('tabbar.tools'), to: '/Tools' },
     // { name: '质押', to: '/Staking' }
