@@ -17,7 +17,14 @@
               <i>邀请链接</i>
               <p class="display-flex align-items-center">
                 <span>{{ urlRefer }}</span>
-                <svg-icon name="copy" class="copy" v-copy="urlRefer"></svg-icon>
+                <svg-icon
+                  name="copy"
+                  class="copy"
+                  v-copy="[
+                    `冲狗用HelloDex、代码已开源快速又安全\n\nAI抓金狗、止盈止损全都有。\n\n下载链接：${urlRefer}\n\n💘你冲币、我冲你、亏了送U不离不弃💘`,
+                    `冲狗用HelloDex、代码已开源快速又安全<br/><br/>AI抓金狗、止盈止损全都有。<br/><br/>下载链接：${urlRefer}<br/><br/>💘你冲币、我冲你、亏了送U不离不弃💘`
+                  ]"
+                ></svg-icon>
               </p>
             </div>
           </div>
@@ -37,7 +44,15 @@
               </p>
             </div>
           </div>
-          <div class="rebate-btn">立即邀请</div>
+          <div
+            class="rebate-btn"
+            v-copy="[
+              `冲狗用HelloDex、代码已开源快速又安全\n\nAI抓金狗、止盈止损全都有。\n\n下载链接：${urlRefer}\n\n💘你冲币、我冲你、亏了送U不离不弃💘`,
+              `冲狗用HelloDex、代码已开源快速又安全<br/><br/>AI抓金狗、止盈止损全都有。<br/><br/>下载链接：${urlRefer}<br/><br/>💘你冲币、我冲你、亏了送U不离不弃💘`
+            ]"
+          >
+            立即邀请
+          </div>
         </div>
         <div class="qrcode">
           <el-skeleton style="width: 100%; height: 100%" :loading="loading" animated>
