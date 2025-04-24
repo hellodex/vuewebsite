@@ -214,6 +214,11 @@ const router = createRouter({
       path: '/Follow',
       name: 'Follow',
       component: () => import('@/views/follow.vue')
+    },
+    {
+      path: '/AiSignals',
+      name: 'AiSignals',
+      component: () => import('@/views/AiSignals.vue')
     }
   ]
 })
