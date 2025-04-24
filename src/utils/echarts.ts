@@ -2,7 +2,14 @@
 import * as echarts from 'echarts/core'
 
 /** 引入柱状图 + 折线图 + 饼图，图表后缀都为 Chart，一般常用的就这三个，如果还需要其他的，就自行添加  */
-import { BarChart, LineChart, PieChart, GaugeChart } from 'echarts/charts'
+import {
+  BarChart,
+  LineChart,
+  PieChart,
+  GaugeChart,
+  EffectScatterChart,
+  CustomChart
+} from 'echarts/charts'
 
 // 引入提示框，标题，直角坐标系，数据集，内置数据转换器组件，组件后缀都为 Component
 import {
@@ -39,7 +46,9 @@ echarts.use([
   BarChart,
   LineChart,
   PieChart,
-  GaugeChart
+  GaugeChart,
+  EffectScatterChart,
+  CustomChart
 ])
 
 // 导出

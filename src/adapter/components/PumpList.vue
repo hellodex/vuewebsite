@@ -413,11 +413,12 @@ onUnmounted(() => {
 
 .pump-table {
   border-radius: 12px;
-  padding-top: 10;
+  padding-top: 10px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-gap: 20px;
   .pump-list {
+    min-width: 0;
     padding: 12px 0px;
     border-radius: 12px;
     background: rgba(23, 24, 27, 0.3);
