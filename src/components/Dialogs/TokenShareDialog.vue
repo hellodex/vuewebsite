@@ -111,7 +111,7 @@ const emit = defineEmits(['close'])
 
 const downLoading = ref<boolean>(false)
 const shareImg = ref()
-
+const imgUrl = ref('')
 const props: any = defineProps({
   tokenShareVisible: {
     type: [Boolean],
@@ -274,28 +274,26 @@ watch(
   { deep: true }
 )
 
-const handelSaveImage = async () => {
-  downLoading.value = true
-  await html2canvas(shareImg.value, {
-    backgroundColor: '#000000',
-    width: 800,
-    height: 475,
-    scale: 1, // 设置缩放比例
-    useCORS: true, // 启用 CORS 支持
-    allowTaint: false // 禁止污染
-  }).then((canvas) => {
-    downLoading.value = false
-    let url = canvas.toDataURL('image/jpeg')
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `${props.shareCoinInfo.symbol}.jpeg`
-    a.click()
-  })
+const handelSaveImage = () => {
+  const a = document.createElement('a')
+  a.href = imgUrl.value
+  a.download = `${props.shareCoinInfo.symbol}.jpeg`
+  a.click()
 }
 
 onMounted(() => {
   nextTick(() => {
     initEcharts()
+    html2canvas(shareImg.value, {
+      backgroundColor: '#000000',
+      width: 800,
+      height: 475,
+      scale: 1, // 设置缩放比例
+      useCORS: true, // 启用 CORS 支持
+      allowTaint: false // 禁止污染
+    }).then((canvas) => {
+      imgUrl.value = canvas.toDataURL('image/jpeg')
+    })
   })
 })
 
