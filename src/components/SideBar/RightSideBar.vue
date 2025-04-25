@@ -8,14 +8,14 @@
       <el-skeleton style="width: 100%" :loading="props.loadRightSideBar" animated :rows="28">
         <div class="pond-main">
           <div class="publicize-main align-items-center justify-content-sp">
-            <div class="publicize-content">
+            <!-- <div class="publicize-content">
               <div class="display-flex align-items-center">
                 <span class="txt">你冲币、我冲你、亏了送U</span>
               </div>
               <a href="https://t.me/HelloDex_cn" target="_blank" class="arrow-down-info">
                 <span>不离不弃💘</span>
               </a>
-            </div>
+            </div> -->
             <div class="menu-box display-flex">
               <div class="menu-item" @click.stop="handelRouter(baseInfo?.tokenInfo?.twitter)">
                 <svg-icon name="x" class="x-icon menu-icon"></svg-icon>
@@ -43,7 +43,7 @@
                 <span>搜索合约</span>
               </a>
             </div>
-            <img src="@/assets/img/rocket-logo.svg" alt="" class="rocket-logo" />
+            <!-- <img src="@/assets/img/rocket-logo.svg" alt="" class="rocket-logo" /> -->
           </div>
           <div class="pond-info" style="margin: 18px 0 12px 0">
             <div class="display-flex align-items-center justify-content-sp">
