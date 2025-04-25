@@ -34,6 +34,8 @@
         <span style="color: #a0a0a0; margin-left: 4px">联系客服</span>
       </a>
     </div>
+
+    <div class="txt">💘你冲币、我冲你、亏了送U不离不弃💘</div>
   </footer>
 </template>
 <script lang="ts" setup>
@@ -56,11 +58,11 @@ const othersLink = ref<{ icon: string; to: string; txt: string }[]>([
     to: 'https://t.me/hellodexbot?start=start',
     txt: '交易机器人'
   },
-  {
-    icon: 'bot',
-    to: 'https://t.me/HelloDex_cn',
-    txt: '报单机器人'
-  },
+  // {
+  //   icon: 'bot',
+  //   to: 'https://t.me/HelloDex_cn',
+  //   txt: '报单机器人'
+  // },
   {
     icon: 'twitter',
     to: 'https://x.com/HelloDex_io',
@@ -86,6 +88,15 @@ const othersLink = ref<{ icon: string; to: string; txt: string }[]>([
   bottom: 0;
   left: 0;
   z-index: 9;
+  .txt {
+    width: 100%;
+    text-align: center;
+    line-height: 40px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+  }
   .other-link {
     display: flex;
     align-items: center;
