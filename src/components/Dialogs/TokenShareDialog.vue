@@ -75,7 +75,7 @@
           </div>
         </div>
         <p class="display-flex align-items-center flex-direction-col txt">
-          普通用户撑起整个Web3，教育平台要把80%利润分给用户
+          💘你冲币、我冲你、亏了送U不离不弃💘
         </p>
       </div>
     </div>
