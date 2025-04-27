@@ -21,8 +21,8 @@
                   name="copy"
                   class="copy"
                   v-copy="[
-                    `冲狗用HelloDex、代码已开源快速又安全\n\nAI抓金狗、止盈止损全都有。\n\n下载链接：${urlRefer}\n\n💘你冲币、我冲你、亏了送U不离不弃💘`,
-                    `冲狗用HelloDex、代码已开源快速又安全<br/><br/>AI抓金狗、止盈止损全都有。<br/><br/>下载链接：<a href='${urlRefer}' target='_blank' style='color:rgb(86, 156, 238);border-bottom: 1px solid rgb(86, 156, 238);'>${urlRefer}</a><br/><br/>💘你冲币、我冲你、亏了送U不离不弃💘`
+                    `${urlRefer}`,
+                    `邀请链接已复制`
                   ]"
                 ></svg-icon>
               </p>
@@ -47,8 +47,8 @@
           <div
             class="rebate-btn"
             v-copy="[
-              `冲狗用HelloDex、代码已开源快速又安全\n\nAI抓金狗、止盈止损全都有。\n\n下载链接：${urlRefer}\n\n💘你冲币、我冲你、亏了送U不离不弃💘`,
-              `冲狗用HelloDex、代码已开源快速又安全<br/><br/>AI抓金狗、止盈止损全都有。<br/><br/>下载链接：<a href='${urlRefer}' target='_blank' style='color:rgb(86, 156, 238);border-bottom: 1px solid rgb(86, 156, 238);'>${urlRefer}</a><br/><br/>💘你冲币、我冲你、亏了送U不离不弃💘`
+              `${urlRefer}`,
+              `邀请链接已复制`
             ]"
           >
             立即邀请
