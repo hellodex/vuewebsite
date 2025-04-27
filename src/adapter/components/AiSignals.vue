@@ -1,6 +1,6 @@
 <template>
   <div class="ai-signals">
-    <div class="ai-signals-item" v-for="item in 9" :key="item">
+    <div class="ai-signals-item" v-for="(item, index) in signalDataList" :key="index">
       <div class="coin-info">
         <div class="coin-type display-flex align-items-center justify-content-sp">
           <div class="display-flex align-items-center">
@@ -11,46 +11,53 @@
           <div class="display-flex align-items-center">
             <div class="coin-type-item display-flex align-items-center">
               <span>Mint权限</span>
-              <svg-icon name="check-mark" class="check-mark"></svg-icon>
+              <el-icon class="check-mark" v-if="item.mintable == 2"><Check /></el-icon>
+              <el-icon class="close-mark" v-else><Close /></el-icon>
             </div>
             <div class="coin-type-item display-flex align-items-center">
               <span>黑名单</span>
-              <svg-icon name="check-mark" class="check-mark"></svg-icon>
+              <el-icon class="check-mark" v-if="item.blacklist == 2"><Check /></el-icon>
+              <el-icon class="close-mark" v-else><Close /></el-icon>
             </div>
             <div class="coin-type-item display-flex align-items-center">
               <span>烧池子</span>
-              <svg-icon name="check-mark" class="check-mark"></svg-icon>
+              <el-icon class="check-mark" v-if="item.burn == 2"><Check /></el-icon>
+              <el-icon class="close-mark" v-else><Close /></el-icon>
             </div>
             <div class="coin-type-item display-flex align-items-center">
               <span>Top10</span>
-              <strong>86.7%</strong>
+              <strong>{{ item.top10Percent ? item.top10Percent.toFixed(2) : 0 }}%</strong>
             </div>
           </div>
         </div>
         <div class="coin-text display-flex align-items-center justify-content-sp">
           <div class="display-flex align-items-center">
-            <img src="../assets/img/0xSun.png" alt="" class="logo" />
+            <el-image :src="item.baseToken?.logo" alt="" class="logo">
+              <template #error>
+                <svg-icon name="logo1" class="logo"></svg-icon>
+              </template>
+            </el-image>
             <div class="display-flex flex-direction-col">
               <div class="display-flex align-items-center">
-                <span class="symbol-txt">signal</span>
+                <span class="symbol-txt">{{ item.baseToken?.symbol }}</span>
                 <div class="display-flex align-items-center">
                   <svg-icon name="time" class="time-icon"></svg-icon>
                   <span class="time-label">创建时间</span>
-                  <span class="time-value">24秒前</span>
+                  <span class="time-value">{{ timeago(item.startTime * 1000) }}</span>
                 </div>
               </div>
               <div class="address-txt display-flex align-items-center">
-                <span>pump....pnmp</span>
-                <svg-icon name="copy" class="copy" v-copy="'pump'"></svg-icon>
+                <span>{{ shortifyAddress(item.baseToken?.address) }}</span>
+                <svg-icon name="copy" class="copy" v-copy="item.baseToken?.address"></svg-icon>
               </div>
               <div class="display-flex align-items-center">
                 <div class="price-txt display-flex align-items-center" style="margin-right: 24px">
                   <span>池子</span>
-                  <strong>$4.7K</strong>
+                  <strong>${{ numberFormat(item.tvl) }}</strong>
                 </div>
                 <div class="price-txt display-flex align-items-center">
                   <span>24h交易额</span>
-                  <strong>$1.79m</strong>
+                  <strong>${{ numberFormat(item.volume1d) }}</strong>
                 </div>
               </div>
             </div>
@@ -65,62 +72,94 @@
                 <i></i>
               </strong>
             </div>
-            <div class="num">2.4X</div>
+            <div class="num">{{ item.times }}X</div>
           </div>
         </div>
         <div class="kline-chart">
-          <KlineChart />
+          <KlineChart :lineData="item.kcharts" />
         </div>
       </div>
       <div class="push-box display-flex align-items-center justify-content-sp">
         <div class="push-txt">
           <i></i>
           <span>推送次数</span>
-          <strong>12</strong>
+          <strong>{{ item.pushCount }}</strong>
         </div>
         <div class="push-txt">
           <i></i>
           <span>买入金额</span>
-          <strong>76.98</strong>
+          <strong>${{ numberFormat(item.buyAmount) }}</strong>
         </div>
         <div class="push-txt">
           <i></i>
           <span>买入地址</span>
-          <strong>12</strong>
+          <strong>{{ item.buyAddressCount }}</strong>
         </div>
         <div class="push-txt">
           <i></i>
           <span>买入次数</span>
-          <strong>12</strong>
+          <strong>{{ item.buyCount }}</strong>
         </div>
       </div>
-      <el-table :data="tableData" style="width: 100%">
-        <el-table-column prop="date" label="时间" />
-        <el-table-column prop="name" label="价格" />
-        <el-table-column prop="name" label="市值" />
-        <el-table-column prop="name" label="持币地址" />
-        <el-table-column prop="name" label="前排聪明钱" />
-      </el-table>
+      <div class="table-box">
+        <div class="table-tr display-flex align-items-center">
+          <span>时间</span>
+          <span>价格</span>
+          <span>市值</span>
+          <span>持币地址</span>
+          <span>前排聪明钱</span>
+        </div>
+        <div class="table-tr display-flex align-items-center">
+          <span>第一次推送</span>
+          <span>${{ numberFormat(item.firstPrice) }}</span>
+          <span>{{ numberFormat(item.firstMarketCap) }}</span>
+          <span>{{ item.firstTvl }}</span>
+          <span>{{ item.firstHolder }}</span>
+        </div>
+        <div
+          class="table-tr display-flex align-items-center"
+          v-for="item1 in item.pushRecords"
+          :key="item1.id"
+        >
+          <span>当前</span>
+          <span>${{ numberFormat(item1.price) }}</span>
+          <span>{{ numberFormat(item1.marketCap) }}</span>
+          <span>{{ item1.tvl }}</span>
+          <span>{{ item.holders }}</span>
+        </div>
+      </div>
       <div class="buy-sell-box">
         <div class="buy-box">
-          <span>0.1</span>
-          <span>0.1</span>
-          <span>0.1</span>
-          <span>0.1</span>
+          <span v-for="item in buyList" :key="item.value">{{ item.label }}</span>
+          <span>买入{{ numberFormat(amount) }}</span>
         </div>
         <div class="sell-box">
-          <span>0.1</span>
-          <span>0.1</span>
-          <span>0.1</span>
-          <span>0.1</span>
+          <span v-for="item in sellList" :key="item.value">{{ item.label }}</span>
         </div>
       </div>
     </div>
+    <AiSignalsShareDialog :aiSignalsShareVisible="aiSignalsShareVisible" @close="handleClose" />
   </div>
 </template>
 
 <script lang="ts" setup>
+import { ref, onMounted } from 'vue'
+import { shortifyAddress, numberFormat, timeago } from '@/utils'
+import { APIgetSmartKchart } from '@/api'
 import KlineChart from '@/components/Charts/KlineChart.vue'
+import AiSignalsShareDialog from '@/components/Dialogs/AiSignalsShareDialog.vue'
+
+const aiSignalsShareVisible = ref<boolean>(false)
+
+const signalDataList = ref<any>([])
+
+defineProps({
+  amount: {
+    required: true,
+    type: String
+  }
+})
+
 const tableData = [
   {
     date: '2016-05-03',
@@ -133,15 +172,61 @@ const tableData = [
     address: 'No. 189, Grove St, Los Angeles'
   }
 ]
+
+const buyList = [
+  {
+    label: '0.1',
+    value: 0.1
+  },
+  {
+    label: '0.5',
+    value: 0.5
+  },
+  {
+    label: '1',
+    value: 1
+  }
+]
+
+const sellList = [
+  {
+    label: '25%',
+    value: 0.25
+  },
+  {
+    label: '50%',
+    value: 0.5
+  },
+  {
+    label: '75%',
+    value: 0.75
+  },
+  {
+    label: '100%',
+    value: 1
+  }
+]
+const handleClose = (val: boolean) => {
+  aiSignalsShareVisible.value = val
+}
+
+const initData = async () => {
+  const res = await APIgetSmartKchart()
+
+  console.log('APIgetSmartKchart', res)
+
+  signalDataList.value = res || []
+}
+
+onMounted(() => {
+  initData()
+})
 </script>
 
 <style lang="scss" scoped>
 .ai-signals {
-  padding: 20px;
+  padding: 10px 0 20px;
   width: 100%;
-  height: calc(100vh - 95px);
-  overflow: hidden;
-  overflow-y: scroll;
   background-color: var(--bg-color);
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -173,10 +258,14 @@ const tableData = [
       margin-left: 6px;
     }
     .check-mark {
-      width: 18px;
-      height: 18px;
+      font-size: 18px;
       margin-left: 2px;
       color: var(--up-color);
+    }
+    .close-mark {
+      font-size: 18px;
+      margin-left: 2px;
+      color: var(--down-color);
     }
     .coin-type-item {
       margin-left: 9px;
@@ -249,6 +338,7 @@ const tableData = [
         width: 3px;
         background-color: #d9d9d9;
         margin-right: 1.5px;
+        border-radius: 1.5px;
       }
 
       i:nth-child(1) {
@@ -308,35 +398,26 @@ const tableData = [
       }
     }
   }
-  :deep(.el-table) {
-    background-color: transparent !important;
-    tr {
-      background-color: transparent !important;
-    }
-    td.el-table__cell {
+  .table-box {
+    .table-tr {
       background: #1b1b1b;
-      border-bottom: 1px solid rgba(23, 24, 27, 0.3) !important;
-      padding: 15px 0 !important;
+      border-bottom: 1px solid rgba(23, 24, 27, 0.3);
+      padding: 15px 12px;
       font-size: 14px;
-      .cell {
-        color: #828282 !important;
+      span {
+        flex: 1;
+        color: #828282;
       }
     }
-    td.el-table__cell:first-child {
-      border-radius: 6px 0 0 6px;
+    .table-tr:first-child {
+      background-color: transparent;
     }
 
-    td.el-table__cell:last-child {
-      border-radius: 0 6px 6px 0;
+    .table-tr:nth-child(2) {
+      border-radius: 6px 6px 0 0;
     }
-    th.el-table__cell.is-leaf {
-      background-color: transparent !important;
-      border-bottom: 1px solid rgba(23, 24, 27, 0.3) !important;
-      padding: 15px 0 !important;
-      font-size: 14px;
-      .cell {
-        color: #828282 !important;
-      }
+    .table-tr:nth-child(3) {
+      border-radius: 0 0 6px 6px;
     }
   }
   .buy-sell-box {
