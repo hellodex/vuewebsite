@@ -6,7 +6,7 @@
           <div class="display-flex align-items-center">
             <svg-icon name="pin" class="ai-icon"></svg-icon>
             <svg-icon name="ai" class="ai-icon"></svg-icon>
-            <svg-icon name="share" class="ai-icon"></svg-icon>
+            <svg-icon name="share" class="ai-icon" @click="aiSignalsShareVisible = true"></svg-icon>
           </div>
           <div class="display-flex align-items-center">
             <div class="coin-type-item display-flex align-items-center">
@@ -235,23 +235,23 @@ onMounted(() => {
     min-width: 0;
     border-radius: 24px;
     background: rgba(23, 24, 27, 0.3);
-    padding: 24px 18px;
+    padding: 16px;
     line-height: 1.2;
   }
   .coin-info {
-    height: 540px;
     border-radius: 18px;
     background: #101114;
   }
   .coin-type {
-    padding: 18px;
+    padding: 12px 16px;
     color: #f5f5f5;
     font-size: 14px;
     .ai-icon {
-      width: 24px;
-      height: 24px;
+      width: 16px;
+      height: 16px;
       color: #fff;
       margin-right: 8px;
+      cursor: pointer;
     }
     strong {
       color: var(--down-color);
@@ -269,44 +269,45 @@ onMounted(() => {
     }
     .coin-type-item {
       margin-left: 9px;
+      font-size: 12px;
       span {
         white-space: nowrap;
       }
     }
   }
   .coin-text {
-    padding: 38px 24px;
+    padding: 12px 16px;
     border-top: 1px solid #1f2225;
     border-bottom: 1px solid #1f2225;
     .logo {
-      width: 72px;
-      height: 72px;
+      width: 66px;
+      height: 66px;
       margin-right: 12px;
       border-radius: 50%;
     }
     .symbol-txt {
       color: #fff;
-      font-size: 22px;
-      margin-right: 16px;
+      font-size: 16px;
+      margin-right: 8px;
     }
     .time-icon {
-      width: 18px;
-      height: 18px;
+      width: 16px;
+      height: 16px;
       color: #71777a;
       margin-right: 2px;
     }
     .time-label {
       color: #71777a;
-      font-size: 15px;
+      font-size: 12px;
     }
     .time-value {
-      font-size: 15px;
+      font-size: 12px;
       color: var(--up-color);
       margin-left: 4px;
     }
     .address-txt {
       color: #e8e8e8;
-      font-size: 15px;
+      font-size: 14px;
       margin: 6px 0;
       .copy {
         width: 13px;
@@ -316,8 +317,7 @@ onMounted(() => {
     }
     .price-txt {
       color: #71777a;
-      font-family: 'PingFang SC';
-      font-size: 15px;
+      font-size: 12px;
       white-space: nowrap;
       strong {
         color: #b4b4b4;
@@ -330,7 +330,7 @@ onMounted(() => {
       }
       span {
         color: #f5f5f5;
-        font-size: 14px;
+        font-size: 12px;
         margin-right: 6px;
       }
       i {
@@ -357,8 +357,8 @@ onMounted(() => {
 
       .num {
         display: flex;
-        width: 86px;
-        height: 36px;
+        width: 80px;
+        height: 32px;
         padding: 2px 4px;
         justify-content: center;
         align-items: center;
@@ -373,11 +373,11 @@ onMounted(() => {
   }
   .kline-chart {
     height: 330px;
-    padding: 15px 24px;
+    padding: 8px 16px;
   }
   .push-box {
-    margin: 16px 0;
-    font-size: 16px;
+    margin: 8px 0;
+    font-size: 12px;
     .push-txt {
       display: flex;
       align-items: center;
@@ -402,8 +402,8 @@ onMounted(() => {
     .table-tr {
       background: #1b1b1b;
       border-bottom: 1px solid rgba(23, 24, 27, 0.3);
-      padding: 15px 12px;
-      font-size: 14px;
+      padding: 10px;
+      font-size: 12px;
       span {
         flex: 1;
         color: #828282;
@@ -421,8 +421,8 @@ onMounted(() => {
     }
   }
   .buy-sell-box {
-    margin-top: 16px;
-    font-size: 18px;
+    margin-top: 12px;
+    font-size: 12px;
     font-family: 'PingFangSC-Medium';
     .buy-box {
       display: grid;
@@ -431,14 +431,14 @@ onMounted(() => {
       margin-bottom: 12px;
       span {
         min-width: 0;
-        height: 44px;
-        border-radius: 8px;
+        height: 32px;
+        border-radius: 6px;
         background: rgba(9, 182, 120, 0.16);
         cursor: pointer;
         color: var(--up-color);
 
         text-align: center;
-        line-height: 44px;
+        line-height: 32px;
       }
     }
     .sell-box {
@@ -447,13 +447,13 @@ onMounted(() => {
       grid-gap: 12px;
       span {
         min-width: 0;
-        height: 44px;
-        border-radius: 8px;
+        height: 32px;
+        border-radius: 6px;
         background: rgba(239, 88, 88, 0.16);
         cursor: pointer;
         color: var(--down-color);
         text-align: center;
-        line-height: 44px;
+        line-height: 32px;
       }
     }
   }
