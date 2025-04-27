@@ -2,32 +2,27 @@
   <div class="echarts" ref="echartContainer"></div>
 </template>
 <script setup lang="ts">
-import { inject, onMounted, ref } from 'vue'
+import { inject, markRaw, nextTick, onMounted, ref } from 'vue'
+import { numberFormat } from '@/utils'
+const props: any = defineProps({
+  lineData: {
+    type: Array,
+    default: () => {
+      return []
+    }
+  }
+})
 
+const date: any = props.lineData?.map((item: any) => item.time) ?? []
+const xData: any = props.lineData?.map((item: any) => item.C) ?? []
 // 获取 echart 挂载的DOM节点
 const echartContainer = ref()
 const lineEchart = ref<any>(null)
 // 通过 inject 接收 Echarts
 const Echarts = inject('$echarts')
-const base = +new Date(2021, 1, 1)
-const oneDay = 24 * 3600 * 1000
-const date: Date[] = []
-const xData: any = []
+
 const Iq =
   'M0 1C0 0.447716 0.447715 0 1 0H27C27.5523 0 28 0.447715 28 1V17.0513C28 17.6036 27.5523 18.0513 27 18.0513H21H17.9499C17.6638 18.0513 17.3914 18.1739 17.2016 18.388L14 22L10.7984 18.388C10.6086 18.1739 10.3362 18.0513 10.0501 18.0513H7H1C0.447715 18.0513 0 17.6036 0 17.0513V1Z'
-let now: any = new Date(base)
-function addData(shift: boolean) {
-  now = [now.getFullYear(), now.getMonth() + 1, now.getDate()].join('/')
-  date.push(now)
-  xData.push(
-    (Math.random() - 0.4) * 10 + (xData.length == 0 ? Math.random() * 150 : xData[xData.length - 1])
-  )
-
-  now = new Date(+new Date(now) + oneDay)
-}
-for (let i = 1; i < 20; i++) {
-  addData(false)
-}
 
 function Eq(r: any, t: any) {
   const n: any = document.createElement('canvas').getContext('2d')
@@ -39,8 +34,9 @@ let M = function (W: any, F: any) {
     q = [],
     fe = 12,
     ke = 10,
-    ue = `$0.001282/$1.28M`,
+    ue = `$${numberFormat(props.lineData.at(-1).C)}/$${numberFormat(props.lineData.at(-1).volumeUsd)}`,
     Z = Eq(ue, fe) + ke
+
   return (
     q.push({
       type: 'rect',
@@ -142,16 +138,32 @@ const O = (W: any, F: any) => {
 }
 
 const initEcharts = () => {
-  lineEchart.value = (Echarts as any).init(echartContainer.value, null, { renderer: 'svg' })
+  lineEchart.value = markRaw(
+    (Echarts as any).init(echartContainer.value, null, { renderer: 'svg' })
+  )
   const options = {
     tooltip: {
-      trigger: 'axis'
+      trigger: 'axis',
+      padding: 0,
+      borderWidth: 0,
+      borderRadius: 8,
+      confine: true,
+      extraCssText: 'z-index: 10;',
+      formatter: function (params: any) {
+        const { dataIndex } = params[0]
+        const item = props.lineData.at(dataIndex)
+        return `<div style="padding: 10px;border-radius: 6px;line-height: 1.5;font-size: 12px;background:#2c2f42;color:#eaecf5;">
+                时间: ${item.time} <br/>
+					      价格:  ${numberFormat(item.C)}<br/>
+								市值:  ${numberFormat(item.volumeUsd)}
+                </div>`
+      }
     },
     grid: {
       left: '2%',
-      right: '3%',
-      top: '2%',
-      bottom: '1%',
+      right: '2%',
+      top: 35,
+      bottom: '2%',
       containLabel: true
     },
     xAxis: {
@@ -175,15 +187,15 @@ const initEcharts = () => {
         show: false
       },
       splitLine: {
-        show: false,
-        lineStyle: {
-          type: 'dotted'
-        }
+        show: false
       },
       axisLabel: {
         show: false
       },
       axisLine: {
+        show: false
+      },
+      axisPointer: {
         show: false
       }
     },
@@ -203,13 +215,9 @@ const initEcharts = () => {
       {
         type: 'custom',
         renderItem: O,
-        data: [
-          [date.at(1), xData.at(1)],
-          [date.at(2), xData.at(2)],
-          [date.at(8), xData.at(8)]
-        ],
+        data: [[date.at(0), xData.at(0)]],
         tooltip: {
-          show: !1
+          show: false
         },
         z: 3
       },
@@ -249,57 +257,59 @@ const resizeChart = () => {
 }
 
 onMounted(() => {
-  initEcharts()
-  // 图表
-  setInterval(function () {
-    addData(true)
-    lineEchart.value.setOption({
-      xAxis: {
-        data: date
-      },
-      series: [
-        {
-          data: xData
-        },
-        {
-          type: 'custom',
-          renderItem: O,
-          data: [
-            [date.at(1), xData.at(1)],
-            [date.at(2), xData.at(2)],
-            [date.at(8), xData.at(8)]
-          ],
-          tooltip: {
-            show: !1
-          },
-          z: 3
-        },
-        {
-          type: 'custom',
-          renderItem: M,
-          data: [[date.at(-1), xData.at(-1)]],
-          silent: true,
-          z: 4
-        },
-        {
-          type: 'effectScatter',
-          data: [[date.at(-1), xData.at(-1)]],
-          coordinateSystem: 'cartesian2d',
-          symbolSize: 10,
-          silent: false,
-          itemStyle: {
-            color: '#2ebd85'
-          },
-          rippleEffect: {
-            number: 1,
-            scale: 2.5,
-            period: 1.2
-          },
-          z: 2
-        }
-      ]
-    })
-  }, 2000)
+  nextTick(() => {
+    initEcharts()
+  })
+  // // 图表
+  // setInterval(function () {
+  //   addData(true)
+  //   lineEchart.value.setOption({
+  //     xAxis: {
+  //       data: date
+  //     },
+  //     series: [
+  //       {
+  //         data: xData
+  //       },
+  //       {
+  //         type: 'custom',
+  //         renderItem: O,
+  //         data: [
+  //           [date.at(1), xData.at(1)],
+  //           [date.at(2), xData.at(2)],
+  //           [date.at(8), xData.at(8)]
+  //         ],
+  //         tooltip: {
+  //           show: !1
+  //         },
+  //         z: 3
+  //       },
+  //       {
+  //         type: 'custom',
+  //         renderItem: M,
+  //         data: [[date.at(-1), xData.at(-1)]],
+  //         silent: true,
+  //         z: 4
+  //       },
+  //       {
+  //         type: 'effectScatter',
+  //         data: [[date.at(-1), xData.at(-1)]],
+  //         coordinateSystem: 'cartesian2d',
+  //         symbolSize: 10,
+  //         silent: false,
+  //         itemStyle: {
+  //           color: '#2ebd85'
+  //         },
+  //         rippleEffect: {
+  //           number: 1,
+  //           scale: 2.5,
+  //           period: 1.2
+  //         },
+  //         z: 2
+  //       }
+  //     ]
+  //   })
+  // }, 2000)
 })
 
 window.addEventListener('resize', resizeChart)
@@ -308,5 +318,6 @@ window.addEventListener('resize', resizeChart)
 .echarts {
   width: 100%;
   height: 100%;
+  overflow: visible;
 }
 </style>
