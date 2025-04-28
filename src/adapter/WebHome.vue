@@ -60,8 +60,16 @@
             >
               <template #prefix>
                 <img
-                  v-if="nounScreenId != 13 ? chainLogoObj[chainCode] : chainLogoObj['SOLANA']"
-                  :src="nounScreenId != 13 ? chainLogoObj[chainCode] : chainLogoObj['SOLANA']"
+                  v-if="
+                    ![13, 99].includes(nounScreenId)
+                      ? chainLogoObj[chainCode]
+                      : chainLogoObj['SOLANA']
+                  "
+                  :src="
+                    ![13, 99].includes(nounScreenId)
+                      ? chainLogoObj[chainCode]
+                      : chainLogoObj['SOLANA']
+                  "
                   alt=""
                   class="icon-svg"
                 />
@@ -75,7 +83,7 @@
             :visible="popperVisible"
             popper-class="table-network-popper"
             ref="popoverRef"
-            v-if="nounScreenId != 13"
+            v-if="![13, 99].includes(nounScreenId)"
           >
             <template #reference>
               <div

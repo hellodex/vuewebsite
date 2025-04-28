@@ -130,11 +130,21 @@
       </div>
       <div class="buy-sell-box">
         <div class="buy-box">
-          <span v-for="item in buyList" :key="item.value">{{ item.label }}</span>
-          <span>买入{{ numberFormat(amount) }}</span>
+          <span
+            v-for="item1 in buyList"
+            :key="item1.value"
+            @click="handelBuySell(item, item1.value, 'buy')"
+            >{{ item1.label }}</span
+          >
+          <span @click="handelBuySell(item, amount, 'buy')">买入{{ numberFormat(amount) }}</span>
         </div>
         <div class="sell-box">
-          <span v-for="item in sellList" :key="item.value">{{ item.label }}</span>
+          <span
+            v-for="item1 in sellList"
+            :key="item1.value"
+            @click="handelBuySell(item, item1.value, 'sell')"
+            >{{ item1.label }}</span
+          >
         </div>
       </div>
     </div>
@@ -143,15 +153,30 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue'
-import { shortifyAddress, numberFormat, timeago } from '@/utils'
+import { ref, onMounted, computed } from 'vue'
+import { shortifyAddress, numberFormat, timeago, handleCoinPairInfo } from '@/utils'
+import { notificationInfo, notificationSuccessful, notificationFailed } from '@/utils/notification'
 import { APIgetSmartKchart } from '@/api'
+import { APIauthTradeSwap } from '@/api/coinWalletDetails'
+import { useGlobalStore } from '@/stores/global'
+import { balanceFormat, resetAddress } from '@/utils/transition'
+import BigNumber from 'bignumber.js'
 import KlineChart from '@/components/Charts/KlineChart.vue'
 import AiSignalsShareDialog from '@/components/Dialogs/AiSignalsShareDialog.vue'
 
-const aiSignalsShareVisible = ref<boolean>(false)
+const globalStore = useGlobalStore()
 
+const tokenList = computed(() => globalStore.tokenList)
+const customWalletInfo = computed(() => globalStore.customWalletInfo)
+
+const aiSignalsShareVisible = ref<boolean>(false)
+const account: any = localStorage.getItem('accountInfo')
+const slippage = ref<any>(account ? JSON.parse(account).slippage : '0.03') // 滑点
 const signalDataList = ref<any>([])
+
+const buyInfo = ref<any>(null)
+const sellInfo = ref<any>(null)
+const pairInfo = ref<any>(null)
 
 defineProps({
   amount: {
@@ -160,50 +185,37 @@ defineProps({
   }
 })
 
-const tableData = [
-  {
-    date: '2016-05-03',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles'
-  },
-  {
-    date: '2016-05-02',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles'
-  }
-]
-
 const buyList = [
   {
     label: '0.1',
-    value: 0.1
+    value: '0.1'
   },
   {
     label: '0.5',
-    value: 0.5
+    value: '0.5'
   },
   {
     label: '1',
-    value: 1
+    value: '1'
   }
 ]
 
 const sellList = [
   {
     label: '25%',
-    value: 0.25
+    value: '0.25'
   },
   {
     label: '50%',
-    value: 0.5
+    value: '0.5'
   },
   {
     label: '75%',
-    value: 0.75
+    value: '0.75'
   },
   {
     label: '100%',
-    value: 1
+    value: '1'
   }
 ]
 const handleClose = (val: boolean) => {
@@ -212,12 +224,144 @@ const handleClose = (val: boolean) => {
 
 const initData = async () => {
   const res = await APIgetSmartKchart()
-
-  console.log('APIgetSmartKchart', res)
-
   signalDataList.value = res || []
 }
 
+const handelBuySell = (item: any, amount: string, type: string) => {
+  const coinInfo = getCoinInfo(item)
+
+  buyInfo.value = coinInfo.buyCoin
+  sellInfo.value = coinInfo.sellCoin
+  pairInfo.value = {
+    tvl: item.pushRecords.at(-1)?.tvl || 0,
+    circulationVol: item.pushRecords.at(-1)?.marketCap || 0,
+    price: item.pushRecords.at(-1)?.price || 0
+  }
+  const tokenData: any = tokenList.value
+
+  if (sellInfo.value.baseAddress) {
+    const obj = tokenData?.find(
+      (item: { address: any }) => item.address == sellInfo.value.baseAddress
+    )
+    sellInfo.value.balance = obj?.amount || 0
+    sellInfo.value.totalAmount = obj?.totalAmount || 0
+  }
+  if (buyInfo.value.baseAddress) {
+    const obj = tokenData?.find(
+      (item: { address: any }) => item.address == buyInfo.value.baseAddress
+    )
+    buyInfo.value.balance = obj?.amount || 0
+    buyInfo.value.totalAmount = obj?.totalAmount || 0
+  }
+
+  console.log('buyInfo', buyInfo.value)
+  console.log('sellInfo', sellInfo.value)
+
+  if (type == 'buy') {
+    handelCustomTradeSwap(buyInfo.value, sellInfo.value, amount, type)
+  } else {
+    handelCustomTradeSwap(sellInfo.value, buyInfo.value, amount, type)
+  }
+}
+
+const handelCustomTradeSwap = async (
+  selectSellCoin: any,
+  selectBuyCoin: any,
+  amount: string,
+  type: string
+) => {
+  notificationInfo({
+    title: `${sellInfo.value.baseSymbol}：${type == 'buy' ? '买入' : '卖出'}处理中`,
+    message: `<div class="display-flex align-items-center notification-box">
+                <span class='notification-txt'>${type == 'buy' ? '买入' : '卖出'}</span>
+                <span class=${type == 'buy' ? 'up-color' : 'down-color'}>${type == 'buy' ? numberFormat(amount) + ' ' + buyInfo.value.baseSymbol : numberFormat(balanceFormat(sellInfo.value) * Number(amount)) + ' ' + sellInfo.value.baseSymbol}</span>
+                <i></i>
+                <span class='notification-txt'>成交市值</span>
+                <span class='up-color'>${numberFormat(pairInfo.value.circulationVol)}</span>
+                </div>
+              <div class=${type == 'buy' ? 'notification-step-line-up' : 'notification-step-line-down'}></div>
+              `
+  })
+
+  let spendAmount: any = 0
+  if (type == 'buy') {
+    const num = 10 ** Number(buyInfo.value.baseTokenDecimals)
+    spendAmount = new BigNumber(amount).times(num).integerValue(BigNumber.ROUND_DOWN)
+  } else {
+    spendAmount =
+      Number(amount) === 1
+        ? sellInfo.value.balance
+        : Math.floor(sellInfo.value.balance * Number(amount))
+  }
+
+  const res: any = await APIauthTradeSwap({
+    amount: new BigNumber(spendAmount).toString(10),
+    walletId: customWalletInfo.value.walletInfo?.walletId,
+    walletKey: customWalletInfo.value.walletInfo?.walletKey,
+    fromTokenAddress: resetAddress(selectSellCoin.baseAddress),
+    toTokenAddress: resetAddress(selectBuyCoin.baseAddress),
+    fromTokenDecimals: Number(selectSellCoin.baseTokenDecimals),
+    toTokenDecimals: Number(selectBuyCoin.baseTokenDecimals),
+    slippage: slippage.value.toString(),
+    type: type == 'buy' ? '0' : '1',
+    tradeType: 'F',
+    price: pairInfo.value.price,
+    profitFlag: type == 'buy' ? parseFloat(localStorage.getItem('increaseSet') || '0') / 100 : 0
+  })
+  if (res.code == 200) {
+    notificationSuccessful({
+      title: `${sellInfo.value.baseSymbol}：${type == 'buy' ? '买入' : '卖出'}成功`,
+      message:
+        type == 'buy'
+          ? `<div class='display-flex flex-direction-col notification-box'>
+                    <div class='display-flex align-items-center'>
+                        <span class='notification-txt'>买入</span>
+                        <span class='up-color'>${numberFormat(res.data.fromTokenAmount) + ' ' + selectSellCoin.baseSymbol}</span>
+                    </div>
+                    <div class='display-flex align-items-center'>
+                        <span class='notification-txt'>成交市值</span>
+                        <span class='up-color'>${numberFormat(pairInfo.value.circulationVol)}</span>
+                    </div>
+                    <div class='display-flex align-items-center'>
+                        <span class='notification-txt'>获得</span>
+                        <span class='up-color'>${numberFormat(res.data.toTokenAmount) + ' ' + selectBuyCoin.baseSymbol}</span>
+                    </div>
+                  </div>`
+          : `<div class='display-flex flex-direction-col notification-box'>
+                    <div class='display-flex align-items-center'>
+                        <span class='notification-txt'>卖出</span>
+                        <span class='down-color'>${numberFormat(res.data.fromTokenAmount) + ' ' + selectSellCoin.baseSymbol}</span>
+                    </div>
+                    <div class='display-flex align-items-center'>
+                        <span class='notification-txt'>成交市值</span>
+                        <span class='up-color'>${numberFormat(pairInfo.value.circulationVol)}</span>
+                    </div>
+                    <div class='display-flex align-items-center'>
+                        <span class='notification-txt'>获得</span>
+                        <span class='down-color'>${numberFormat(res.data.toTokenAmount) + ' ' + selectBuyCoin.baseSymbol}</span>
+                    </div>
+                  </div>`
+    })
+  } else {
+    notificationFailed({
+      title: `${sellInfo.value.baseSymbol}：${type == 'buy' ? '买入' : '卖出'}失败`,
+      message: `${res.msg}`
+    })
+  }
+}
+
+const getCoinInfo = (params: any) => {
+  return handleCoinPairInfo({
+    logo: params.baseToken.logo,
+    baseAddress: params.baseToken.address,
+    quoteAddress: params.quoteToken.address,
+    baseSymbol: params.baseToken.symbol,
+    quoteSymbol: params.quoteToken.symbol,
+    baseDecimal: params.baseToken.decimals,
+    quoteDecimal: params.quoteToken.decimals,
+    chainCode: params.baseToken.chainCode
+  })
+}
 onMounted(() => {
   initData()
 })
@@ -233,22 +377,22 @@ onMounted(() => {
   grid-gap: 20px;
   .ai-signals-item {
     min-width: 0;
-    border-radius: 24px;
+    border-radius: 12px;
     background: rgba(23, 24, 27, 0.3);
     padding: 16px;
     line-height: 1.2;
   }
   .coin-info {
-    border-radius: 18px;
+    border-radius: 12px;
     background: #101114;
   }
   .coin-type {
-    padding: 12px 16px;
+    padding: 20px 16px;
     color: #f5f5f5;
     font-size: 14px;
     .ai-icon {
-      width: 16px;
-      height: 16px;
+      width: 18px;
+      height: 18px;
       color: #fff;
       margin-right: 8px;
       cursor: pointer;
@@ -258,12 +402,12 @@ onMounted(() => {
       margin-left: 6px;
     }
     .check-mark {
-      font-size: 18px;
+      font-size: 14px;
       margin-left: 2px;
       color: var(--up-color);
     }
     .close-mark {
-      font-size: 18px;
+      font-size: 14px;
       margin-left: 2px;
       color: var(--down-color);
     }
@@ -276,48 +420,48 @@ onMounted(() => {
     }
   }
   .coin-text {
-    padding: 12px 16px;
+    padding: 20px 16px;
     border-top: 1px solid #1f2225;
     border-bottom: 1px solid #1f2225;
     .logo {
-      width: 66px;
-      height: 66px;
-      margin-right: 12px;
+      width: 48px;
+      height: 48px;
+      margin-right: 8px;
       border-radius: 50%;
     }
     .symbol-txt {
       color: #fff;
-      font-size: 16px;
-      margin-right: 8px;
+      font-size: 14px;
+      margin-right: 4px;
     }
     .time-icon {
-      width: 16px;
-      height: 16px;
+      width: 12px;
+      height: 12px;
       color: #71777a;
       margin-right: 2px;
     }
     .time-label {
       color: #71777a;
-      font-size: 12px;
+      font-size: 10px;
     }
     .time-value {
-      font-size: 12px;
+      font-size: 10px;
       color: var(--up-color);
       margin-left: 4px;
     }
     .address-txt {
       color: #e8e8e8;
-      font-size: 14px;
+      font-size: 10px;
       margin: 6px 0;
       .copy {
-        width: 13px;
-        height: 13px;
+        width: 10px;
+        height: 10px;
         margin-left: 3px;
       }
     }
     .price-txt {
       color: #71777a;
-      font-size: 12px;
+      font-size: 10px;
       white-space: nowrap;
       strong {
         color: #b4b4b4;
@@ -330,67 +474,66 @@ onMounted(() => {
       }
       span {
         color: #f5f5f5;
-        font-size: 12px;
+        font-size: 10px;
         margin-right: 6px;
       }
       i {
         display: block;
-        width: 3px;
+        width: 2px;
         background-color: #d9d9d9;
         margin-right: 1.5px;
         border-radius: 1.5px;
       }
 
       i:nth-child(1) {
-        height: 5px;
+        height: 4px;
       }
       i:nth-child(2) {
-        height: 8px;
+        height: 6px;
       }
       i:nth-child(3) {
-        height: 10px;
+        height: 8px;
       }
       i:nth-child(4) {
-        height: 13px;
+        height: 11px;
         margin-right: 0;
       }
 
       .num {
         display: flex;
-        width: 80px;
-        height: 32px;
+        width: 56px;
+        height: 28px;
         padding: 2px 4px;
         justify-content: center;
         align-items: center;
         border-radius: 6px;
         background: rgba(239, 88, 88, 0.16);
         color: var(--down-color);
-        font-size: 20px;
+        font-size: 18px;
         font-weight: 600;
-        margin-top: 6px;
       }
     }
   }
   .kline-chart {
-    height: 330px;
+    height: 340px;
     padding: 8px 16px;
   }
   .push-box {
-    margin: 8px 0;
+    margin: 18px 0 11px;
     font-size: 12px;
     .push-txt {
       display: flex;
       align-items: center;
       i {
-        width: 6px;
-        height: 6px;
+        width: 4px;
+        height: 4px;
         display: block;
         background-color: var(--up-color);
         border-radius: 50%;
       }
       span {
         color: #71777a;
-        margin: 0 4px;
+        margin: 0 2px;
         white-space: nowrap;
       }
       strong {
@@ -402,7 +545,7 @@ onMounted(() => {
     .table-tr {
       background: #1b1b1b;
       border-bottom: 1px solid rgba(23, 24, 27, 0.3);
-      padding: 10px;
+      padding: 15px;
       font-size: 12px;
       span {
         flex: 1;
@@ -421,39 +564,38 @@ onMounted(() => {
     }
   }
   .buy-sell-box {
-    margin-top: 12px;
-    font-size: 12px;
+    margin-top: 16px;
+    font-size: 16px;
     font-family: 'PingFangSC-Medium';
     .buy-box {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      grid-gap: 12px;
-      margin-bottom: 12px;
+      grid-gap: 10px;
+      margin-bottom: 10px;
       span {
         min-width: 0;
-        height: 32px;
+        height: 44px;
         border-radius: 6px;
         background: rgba(9, 182, 120, 0.16);
         cursor: pointer;
         color: var(--up-color);
-
         text-align: center;
-        line-height: 32px;
+        line-height: 44px;
       }
     }
     .sell-box {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      grid-gap: 12px;
+      grid-gap: 10px;
       span {
         min-width: 0;
-        height: 32px;
+        height: 44px;
         border-radius: 6px;
         background: rgba(239, 88, 88, 0.16);
         cursor: pointer;
         color: var(--down-color);
         text-align: center;
-        line-height: 32px;
+        line-height: 44px;
       }
     }
   }
