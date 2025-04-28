@@ -10,6 +10,12 @@ const props: any = defineProps({
     default: () => {
       return []
     }
+  },
+  pushRecords: {
+    type: Array,
+    default: () => {
+      return []
+    }
   }
 })
 
@@ -75,7 +81,7 @@ function N(D: string) {
   )
 }
 
-const O = (W: any, F: any) => {
+const O = (params: any, F: any) => {
   const G = F.coord([F.value(0), F.value(1)]),
     q = true,
     fe = [],
@@ -91,6 +97,8 @@ const O = (W: any, F: any) => {
     Je = q
       ? G[1] + xe.width - ((N(Ce) * xe.width) / 2) * 1.08 + (Ff - 4)
       : G[1] - xe.width - ((N(Ce) * xe.width) / 2) * 0.86 - (Ff - 4)
+
+  console.log(F.value(2))
   return (
     fe.push(
       {
@@ -318,6 +326,5 @@ window.addEventListener('resize', resizeChart)
 .echarts {
   width: 100%;
   height: 100%;
-  overflow: visible;
 }
 </style>

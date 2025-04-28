@@ -275,25 +275,25 @@ watch(
 )
 
 const handelSaveImage = () => {
-  const a = document.createElement('a')
-  a.href = imgUrl.value
-  a.download = `${props.shareCoinInfo.symbol}.jpeg`
-  a.click()
+  html2canvas(shareImg.value, {
+    backgroundColor: '#000000',
+    width: 800,
+    height: 475,
+    scale: 1, // 设置缩放比例
+    useCORS: true, // 启用 CORS 支持
+    allowTaint: false // 禁止污染
+  }).then((canvas) => {
+    imgUrl.value = canvas.toDataURL('image/jpeg')
+    const a = document.createElement('a')
+    a.href = imgUrl.value
+    a.download = `${props.shareCoinInfo.symbol}.jpeg`
+    a.click()
+  })
 }
 
 onMounted(() => {
-  nextTick(() => {
-    initEcharts()
-    html2canvas(shareImg.value, {
-      backgroundColor: '#000000',
-      width: 800,
-      height: 475,
-      scale: 1, // 设置缩放比例
-      useCORS: true, // 启用 CORS 支持
-      allowTaint: false // 禁止污染
-    }).then((canvas) => {
-      imgUrl.value = canvas.toDataURL('image/jpeg')
-    })
+  nextTick(async () => {
+    await initEcharts()
   })
 })
 
