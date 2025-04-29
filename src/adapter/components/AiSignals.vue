@@ -6,7 +6,7 @@
           <div class="display-flex align-items-center">
             <svg-icon name="pin" class="ai-icon"></svg-icon>
             <svg-icon name="ai" class="ai-icon"></svg-icon>
-            <svg-icon name="share" class="ai-icon" @click="aiSignalsShareVisible = true"></svg-icon>
+            <svg-icon name="share" class="ai-icon" @click="handelShare(item)"></svg-icon>
           </div>
           <div class="display-flex align-items-center">
             <div class="coin-type-item display-flex align-items-center">
@@ -26,7 +26,9 @@
             </div>
             <div class="coin-type-item display-flex align-items-center">
               <span>Top10</span>
-              <strong>{{ item.top10Percent ? item.top10Percent.toFixed(2) : 0 }}%</strong>
+              <strong
+                >{{ item.top10Percent ? parseFloat(item.top10Percent).toFixed(2) : 0 }}%</strong
+              >
             </div>
           </div>
         </div>
@@ -76,7 +78,7 @@
           </div>
         </div>
         <div class="kline-chart">
-          <KlineChart :lineData="item.kcharts" />
+          <KlineChart :lineData="item.kcharts" :pushRecords="item.pushRecords" />
         </div>
       </div>
       <div class="push-box display-flex align-items-center justify-content-sp">
@@ -116,7 +118,7 @@
           <span>{{ item.firstTvl }}</span>
           <span>{{ item.firstHolder }}</span>
         </div>
-        <div
+        <!-- <div
           class="table-tr display-flex align-items-center"
           v-for="item1 in item.pushRecords"
           :key="item1.id"
@@ -126,7 +128,7 @@
           <span>{{ numberFormat(item1.marketCap) }}</span>
           <span>{{ item1.tvl }}</span>
           <span>{{ item.holders }}</span>
-        </div>
+        </div> -->
       </div>
       <div class="buy-sell-box">
         <div class="buy-box">
@@ -146,9 +148,52 @@
             >{{ item1.label }}</span
           >
         </div>
+        <WalletConnect v-if="!isConnected" class="mask" />
       </div>
     </div>
-    <AiSignalsShareDialog :aiSignalsShareVisible="aiSignalsShareVisible" @close="handleClose" />
+    <AiSignalsShareDialog
+      :aiSignalsShareVisible="aiSignalsShareVisible"
+      :aiSignalsShareData="aiSignalsShareData"
+      v-if="aiSignalsShareVisible"
+      @close="handleClose"
+    />
+
+    <van-popup v-model:show="dialogVisible" round class="activity-dialog" closeable>
+      <div class="activity-title">聪明钱活动</div>
+      <div class="activity-content">
+        <p>第3次推送 (2025/04/28 15:23:12)</p>
+        <p class="display-flex align-items-center">
+          <svg-icon name="icon-clever" class="icon-clever"></svg-icon>
+          <span>0分钟内，聪明钱买入次数新增 1 次</span>
+        </p>
+        <div class="num-items display-flex align-items-center justify-content-sp">
+          <div class="display-flex align-items-center">
+            <span>总量</span>
+            <strong>3.09M</strong>
+          </div>
+          <div class="display-flex align-items-center">
+            <span>总金额</span>
+            <strong>0.99</strong>
+          </div>
+          <div class="display-flex align-items-center">
+            <span>平均价格</span>
+            <strong>$0.0₄4845</strong>
+          </div>
+          <div class="display-flex align-items-center">
+            <span>平均市值</span>
+            <strong>$48.4K</strong>
+          </div>
+        </div>
+        <el-table :data="tableData" style="width: 100%">
+          <el-table-column prop="date" label="时间" width="110" />
+          <el-table-column prop="name" label="聪明钱" width="230" />
+          <el-table-column prop="name" label="价格" />
+          <el-table-column prop="name" label="市值" />
+          <el-table-column prop="name" label="数量" />
+          <el-table-column prop="name" label="金额" />
+        </el-table>
+      </div>
+    </van-popup>
   </div>
 </template>
 
@@ -163,13 +208,41 @@ import { balanceFormat, resetAddress } from '@/utils/transition'
 import BigNumber from 'bignumber.js'
 import KlineChart from '@/components/Charts/KlineChart.vue'
 import AiSignalsShareDialog from '@/components/Dialogs/AiSignalsShareDialog.vue'
+import WalletConnect from '@/components/Wallet/WalletConnect.vue'
+
+const tableData = [
+  {
+    date: '2016-05-03',
+    name: 'Tom',
+    address: 'No. 189, Grove St, Los Angeles'
+  },
+  {
+    date: '2016-05-02',
+    name: 'Tom',
+    address: 'No. 189, Grove St, Los Angeles'
+  },
+  {
+    date: '2016-05-04',
+    name: 'Tom',
+    address: 'No. 189, Grove St, Los Angeles'
+  },
+  {
+    date: '2016-05-01',
+    name: 'Tom',
+    address: 'No. 189, Grove St, Los Angeles'
+  }
+]
 
 const globalStore = useGlobalStore()
 
 const tokenList = computed(() => globalStore.tokenList)
 const customWalletInfo = computed(() => globalStore.customWalletInfo)
+const isConnected = computed(() => globalStore.walletInfo.isConnected)
+
+const dialogVisible = ref<boolean>(false)
 
 const aiSignalsShareVisible = ref<boolean>(false)
+const aiSignalsShareData = ref<any>({})
 const account: any = localStorage.getItem('accountInfo')
 const slippage = ref<any>(account ? JSON.parse(account).slippage : '0.03') // 滑点
 const signalDataList = ref<any>([])
@@ -218,6 +291,11 @@ const sellList = [
     value: '1'
   }
 ]
+const handelShare = (item: any) => {
+  aiSignalsShareData.value = item
+  aiSignalsShareVisible.value = true
+}
+
 const handleClose = (val: boolean) => {
   aiSignalsShareVisible.value = val
 }
@@ -369,7 +447,7 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .ai-signals {
-  padding: 10px 0 20px;
+  padding: 10px 0 25px;
   width: 100%;
   background-color: var(--bg-color);
   display: grid;
@@ -567,6 +645,15 @@ onMounted(() => {
     margin-top: 16px;
     font-size: 16px;
     font-family: 'PingFangSC-Medium';
+    position: relative;
+    :deep(.mask) {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      opacity: 0;
+    }
     .buy-box {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -596,6 +683,41 @@ onMounted(() => {
         color: var(--down-color);
         text-align: center;
         line-height: 44px;
+      }
+    }
+  }
+  .activity-dialog {
+    width: 730px;
+    border-radius: 12px;
+    background: #181818;
+    padding: 18px;
+    .activity-title {
+      color: #eaecf5;
+      font-size: 20px;
+      line-height: 1;
+    }
+    .activity-content {
+      padding-top: 24px;
+      p {
+        font-size: 12px;
+        color: #eaecf5;
+        margin-bottom: 12px;
+      }
+      .icon-clever {
+        width: 16px;
+        height: 16px;
+      }
+      .num-items {
+        margin: 20px 0;
+        font-size: 14px;
+        span {
+          color: #8b8e96;
+          margin-right: 4px;
+        }
+
+        strong {
+          color: var(--up-color);
+        }
       }
     }
   }
