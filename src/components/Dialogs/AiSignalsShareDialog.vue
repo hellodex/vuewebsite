@@ -116,13 +116,21 @@
           </div>
           <span>分享到TG</span>
         </div>
-        <div class="share-item display-flex flex-direction-col">
+        <div
+          class="share-item display-flex flex-direction-col"
+          :style="{ cursor: imgUrl ? 'pointer' : 'not-allowed' }"
+          @click="imgUrl ? copyImageToClipboard(imgUrl) : null"
+        >
           <div class="img-box">
             <img src="@/assets/icons/copy1.svg" alt="" />
           </div>
           <span>复制图片</span>
         </div>
-        <div class="share-item display-flex flex-direction-col" @click="handelSaveImage">
+        <div
+          class="display-flex flex-direction-col"
+          :style="{ cursor: imgUrl ? 'pointer' : 'not-allowed' }"
+          @click="imgUrl ? handelSaveImage() : null"
+        >
           <div class="img-box">
             <img src="@/assets/icons/img-none.svg" alt="" />
           </div>
@@ -135,8 +143,9 @@
 
 <script lang="ts" setup>
 import html2canvas from 'html2canvas'
-import { computed, inject, nextTick, onMounted, ref } from 'vue'
+import { computed, inject, nextTick, onMounted, onUnmounted, ref } from 'vue'
 import { shortifyAddress, numberFormat } from '@/utils'
+import { customMessage } from '@/utils/message'
 
 const emit = defineEmits(['close'])
 
@@ -330,17 +339,23 @@ const initEcharts = () => {
 }
 
 const handelSaveImage = () => {
-  html2canvas(shareImg.value, {
-    backgroundColor: '#181818',
-    useCORS: true, // 启用 CORS 支持
-    allowTaint: false // 禁止污染
-  }).then((canvas) => {
+  const a = document.createElement('a')
+  a.href = imgUrl.value
+  a.download = `${props.aiSignalsShareData.baseToken?.symbol}.jpg`
+  a.click()
+}
+
+const htmlToImage = async () => {
+  try {
+    const canvas = await html2canvas(shareImg.value, {
+      backgroundColor: '#181818',
+      useCORS: true, // 启用 CORS 支持
+      allowTaint: false // 禁止污染
+    })
     imgUrl.value = canvas.toDataURL('image/jpeg')
-    const a = document.createElement('a')
-    a.href = imgUrl.value
-    a.download = `${props.aiSignalsShareData.baseToken?.symbol}.jpeg`
-    a.click()
-  })
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 const resizeChart = () => {
@@ -349,13 +364,48 @@ const resizeChart = () => {
   }
 }
 
-onMounted(() => {
-  nextTick(() => {
-    initEcharts()
-  })
+// 复制图片到剪贴板的函数
+function copyImageToClipboard(imgUrl: string) {
+  var img = new Image()
+  img.src = imgUrl
+  img.onload = function () {
+    var canvas = document.createElement('canvas')
+    var context: any = canvas.getContext('2d')
+    canvas.width = img.width
+    canvas.height = img.height
+    context.drawImage(img, 0, 0)
+
+    canvas.toBlob(function (blob: any) {
+      var item = new ClipboardItem({ 'image/png': blob })
+      navigator.clipboard
+        .write([item])
+        .then(function () {
+          customMessage({
+            type: 'success',
+            title: '图片已复制到剪贴板'
+          })
+        })
+        .catch(function (err) {
+          console.error('复制图片失败：', err)
+        })
+    })
+  }
+}
+
+onMounted(async () => {
+  await nextTick()
+  await initEcharts()
+
+  setTimeout(() => {
+    htmlToImage()
+  }, 1000)
 })
 
 window.addEventListener('resize', resizeChart)
+
+onUnmounted(() => {
+  window.removeEventListener('resize', resizeChart)
+})
 </script>
 <style scoped lang="scss">
 .aisignals-dialog {
@@ -556,7 +606,6 @@ window.addEventListener('resize', resizeChart)
       color: #e8e8e8;
       font-size: 10px;
       .share-item {
-        cursor: pointer;
         align-items: center;
       }
       .img-box {

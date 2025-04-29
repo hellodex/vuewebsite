@@ -261,6 +261,14 @@ export function APIgetSmartKchart() {
   })
 }
 
+export function APIgetSmartFlow(data: object) {
+  return http({
+    url: WEB_URL + '/api/webv2/index/getSmartFlow',
+    method: 'POST',
+    data
+  })
+}
+
 /**
  * @description web 前100买入接口
  * @param data

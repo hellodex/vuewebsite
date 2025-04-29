@@ -26,7 +26,9 @@
             </div>
             <div class="coin-type-item display-flex align-items-center">
               <span>Top10</span>
-              <strong>{{ item.top10Percent ? item.top10Percent.toFixed(2) : 0 }}%</strong>
+              <strong
+                >{{ item.top10Percent ? parseFloat(item.top10Percent).toFixed(2) : 0 }}%</strong
+              >
             </div>
           </div>
         </div>
