@@ -74,9 +74,9 @@
             <div id="token-echarts" ref="echartContainer"></div>
           </div>
         </div>
-        <p class="display-flex align-items-center flex-direction-col txt">
-          💘你冲币、我冲你、亏了送U不离不弃💘
-        </p>
+<!--        <p class="display-flex align-items-center flex-direction-col txt">-->
+<!--          💘你冲币、我冲你、亏了送U不离不弃💘-->
+<!--        </p>-->
       </div>
     </div>
     <p

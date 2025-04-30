@@ -3,8 +3,8 @@
     <div class="web-ido-content">
       <div class="ido-title display-flex align-items-center justify-content-sp">
         <div class="ido-text display-flex align-items-center">
-          <span>平台币IDO预售中🔥 利润80%分给用户</span>
-          <strong>链上交易工具</strong>
+          <span>平台币IDO预售中</span>
+          <strong>链上交易平台</strong>
         </div>
         <a
           href="https://hellodex.gitbook.io/hellodex"
@@ -71,7 +71,7 @@
                   <span>已获得：{{ numberFormat(idoInfo.nowAmount) }}U</span>
                 </div>
                 <div class="display-flex flex-direction-col">
-                  <span>持有平台币分80%收益</span>
+<!--                  <span>持有平台币分80%收益</span>-->
                   <a
                     href="https://hellodex.gitbook.io/hellodex/hellodex_cn/whitepaper"
                     target="_blank"
