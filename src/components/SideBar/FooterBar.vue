@@ -35,7 +35,7 @@
       </a>
     </div>
 
-    <div class="txt">💘你冲币、我冲你、亏了送U不离不弃💘</div>
+<!--    <div class="txt">💘你冲币、我冲你、亏了送U不离不弃💘</div>-->
   </footer>
 </template>
 <script lang="ts" setup>
