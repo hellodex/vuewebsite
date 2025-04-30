@@ -106,8 +106,10 @@ const O = (params: any, F: any) => {
   } else if (tipsObj.pushRecords?.length > 1) {
     Ce = `+${tipsObj.pushRecords.length}`
   }
+
+  const klineMaxMin = xZ(props.lineData)
   const G = F.coord([F.value(0), F.value(1)]),
-    q = true,
+    q = F.value(1) > klineMaxMin.mid,
     fe = [],
     Ff = 12,
     xe = {
@@ -171,6 +173,14 @@ const O = (params: any, F: any) => {
   )
 }
 
+/**
+ * 自定义弹窗坐标
+ * @param r clientWidth
+ * @param t clientHeight
+ * @param e target.x
+ * @param n target.y
+ * @param i 窗口子元素长度
+ */
 function bZ(r: number, t: number, e: number, n: number, i: number) {
   const a = Math.ceil(i / 10),
     o = 20,
@@ -193,6 +203,22 @@ function bZ(r: number, t: number, e: number, n: number, i: number) {
       y: m
     }
   )
+}
+
+/**
+ * 拿到每条k线的最大值及最小值
+ * @param r k线数据
+ */
+function xZ(r: any[]) {
+  const t = r.map((a: { C: any }) => a.C).sort((a: number, o: number) => a - o),
+    e = t[0],
+    n = t.at(-1),
+    i = n - e
+  return {
+    min: e - i * 0.3,
+    mid: (e + n) / 2,
+    max: n + i * 0.3
+  }
 }
 
 const createElementFun = (info: any, event: any) => {
