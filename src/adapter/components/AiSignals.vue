@@ -78,14 +78,14 @@
           </div>
         </div>
         <div class="kline-chart">
-          <KlineChart :lineData="item.kcharts" :pushRecords="item.pushRecords" />
+          <KlineChart :lineData="item.kcharts" @show="handleShowShareDialog" />
         </div>
       </div>
       <div class="push-box display-flex align-items-center justify-content-sp">
         <div class="push-txt">
           <i></i>
           <span>推送次数</span>
-          <strong>{{ item.pushCount }}</strong>
+          <strong>{{ numberFormat(item.pushCount) }}</strong>
         </div>
         <div class="push-txt">
           <i></i>
@@ -95,12 +95,12 @@
         <div class="push-txt">
           <i></i>
           <span>买入地址</span>
-          <strong>{{ item.buyAddressCount }}</strong>
+          <strong>{{ numberFormat(item.buyAddressCount) }}</strong>
         </div>
         <div class="push-txt">
           <i></i>
           <span>买入次数</span>
-          <strong>{{ item.buyCount }}</strong>
+          <strong>{{ numberFormat(item.buyCount) }}</strong>
         </div>
       </div>
       <div class="table-box">
@@ -115,20 +115,16 @@
           <span>第一次推送</span>
           <span>${{ numberFormat(item.firstPrice) }}</span>
           <span>{{ numberFormat(item.firstMarketCap) }}</span>
-          <span>{{ item.firstTvl }}</span>
-          <span>{{ item.firstHolder }}</span>
+          <span>{{ numberFormat(item.firstTvl) }}</span>
+          <span>{{ numberFormat(item.firstHolder) }}</span>
         </div>
-        <!-- <div
-          class="table-tr display-flex align-items-center"
-          v-for="item1 in item.pushRecords"
-          :key="item1.id"
-        >
+        <div class="table-tr display-flex align-items-center">
           <span>当前</span>
-          <span>${{ numberFormat(item1.price) }}</span>
-          <span>{{ numberFormat(item1.marketCap) }}</span>
-          <span>{{ item1.tvl }}</span>
-          <span>{{ item.holders }}</span>
-        </div> -->
+          <span>${{ numberFormat(item.currentPrice) }}</span>
+          <span>{{ numberFormat(item.currentMarketCap) }}</span>
+          <span>{{ numberFormat(item.currentTvl) }}</span>
+          <span>{{ numberFormat(item.currentHolder) }}</span>
+        </div>
       </div>
       <div class="buy-sell-box">
         <div class="buy-box">
@@ -201,7 +197,7 @@
 import { ref, onMounted, computed } from 'vue'
 import { shortifyAddress, numberFormat, timeago, handleCoinPairInfo } from '@/utils'
 import { notificationInfo, notificationSuccessful, notificationFailed } from '@/utils/notification'
-import { APIgetSmartKchart } from '@/api'
+import { APIgetSmartKchart, APIgetSmartFlow } from '@/api'
 import { APIauthTradeSwap } from '@/api/coinWalletDetails'
 import { useGlobalStore } from '@/stores/global'
 import { balanceFormat, resetAddress } from '@/utils/transition'
@@ -311,9 +307,9 @@ const handelBuySell = (item: any, amount: string, type: string) => {
   buyInfo.value = coinInfo.buyCoin
   sellInfo.value = coinInfo.sellCoin
   pairInfo.value = {
-    tvl: item.pushRecords.at(-1)?.tvl || 0,
-    circulationVol: item.pushRecords.at(-1)?.marketCap || 0,
-    price: item.pushRecords.at(-1)?.price || 0
+    tvl: item.currentTvl || 0,
+    circulationVol: item.currentMarketCap || 0,
+    price: item.currentPrice || 0
   }
   const tokenData: any = tokenList.value
 
@@ -440,6 +436,15 @@ const getCoinInfo = (params: any) => {
     chainCode: params.baseToken.chainCode
   })
 }
+
+const handleShowShareDialog = async (val: any) => {
+  console.log(val)
+  dialogVisible.value = true
+  const res = await APIgetSmartFlow({
+    pushId: val.id
+  })
+  console.log(res)
+}
 onMounted(() => {
   initData()
 })
@@ -457,15 +462,10 @@ onMounted(() => {
     min-width: 0;
     border-radius: 12px;
     background: rgba(23, 24, 27, 0.3);
-    padding: 16px;
     line-height: 1.2;
   }
-  .coin-info {
-    border-radius: 12px;
-    background: #101114;
-  }
   .coin-type {
-    padding: 20px 16px;
+    padding: 15px 16px;
     color: #f5f5f5;
     font-size: 14px;
     .ai-icon {
@@ -593,11 +593,12 @@ onMounted(() => {
     }
   }
   .kline-chart {
-    height: 340px;
+    height: 300px;
     padding: 8px 16px;
   }
   .push-box {
-    margin: 18px 0 11px;
+    margin: 16px 0;
+    padding: 0 16px;
     font-size: 12px;
     .push-txt {
       display: flex;
@@ -620,6 +621,7 @@ onMounted(() => {
     }
   }
   .table-box {
+    padding: 0 16px;
     .table-tr {
       background: #1b1b1b;
       border-bottom: 1px solid rgba(23, 24, 27, 0.3);
@@ -630,11 +632,8 @@ onMounted(() => {
         color: #828282;
       }
     }
-    .table-tr:first-child {
-      background-color: transparent;
-    }
 
-    .table-tr:nth-child(2) {
+    .table-tr:nth-child(1) {
       border-radius: 6px 6px 0 0;
     }
     .table-tr:nth-child(3) {
@@ -642,8 +641,9 @@ onMounted(() => {
     }
   }
   .buy-sell-box {
+    padding: 0 16px;
     margin-top: 16px;
-    font-size: 16px;
+    font-size: 14px;
     font-family: 'PingFangSC-Medium';
     position: relative;
     :deep(.mask) {
@@ -658,7 +658,7 @@ onMounted(() => {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       grid-gap: 10px;
-      margin-bottom: 10px;
+      margin-bottom: 9px;
       span {
         min-width: 0;
         height: 44px;
