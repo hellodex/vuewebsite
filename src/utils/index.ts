@@ -63,6 +63,23 @@ export function formatHourMinDate(time: any) {
  * @param time
  * @returns
  */
+export function formatHourMinSecDate(time: any) {
+  if (!time) {
+    return time
+  }
+  const date = new Date(parseFloat(time))
+  const hour = repair(date.getHours()),
+    min = repair(date.getMinutes()),
+    sec = repair(date.getSeconds())
+  const formatedDate = `${hour}:${min}:${sec}`
+  return formatedDate
+}
+
+/**
+ * @description 时间格式化
+ * @param time
+ * @returns
+ */
 export function formatDate(time: any) {
   if (!time) {
     return time
