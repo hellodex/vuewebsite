@@ -157,36 +157,78 @@
     <van-popup v-model:show="dialogVisible" round class="activity-dialog" closeable>
       <div class="activity-title">聪明钱活动</div>
       <div class="activity-content">
-        <p>第3次推送 (2025/04/28 15:23:12)</p>
+        <p>第{{ pushData.num }}次推送 ({{ formatDate(pushData.pushTimeStamp) }})</p>
         <p class="display-flex align-items-center">
           <svg-icon name="icon-clever" class="icon-clever"></svg-icon>
-          <span>0分钟内，聪明钱买入次数新增 1 次</span>
+          <span>0分钟内，聪明钱买入次数新增 {{ smartFlowData?.list?.length || 0 }} 次</span>
         </p>
         <div class="num-items display-flex align-items-center justify-content-sp">
           <div class="display-flex align-items-center">
             <span>总量</span>
-            <strong>3.09M</strong>
+            <strong>{{ numberFormat(smartFlowData?.totalAmount) }}</strong>
           </div>
           <div class="display-flex align-items-center">
             <span>总金额</span>
-            <strong>0.99</strong>
+            <strong>${{ numberFormat(smartFlowData?.totalVolume) }}</strong>
           </div>
           <div class="display-flex align-items-center">
             <span>平均价格</span>
-            <strong>$0.0₄4845</strong>
+            <strong>${{ numberFormat(smartFlowData?.averagePrice) }}</strong>
           </div>
           <div class="display-flex align-items-center">
             <span>平均市值</span>
-            <strong>$48.4K</strong>
+            <strong>${{ numberFormat(smartFlowData?.averageMarketCap) }}</strong>
           </div>
         </div>
-        <el-table :data="tableData" style="width: 100%">
-          <el-table-column prop="date" label="时间" width="110" />
-          <el-table-column prop="name" label="聪明钱" width="230" />
-          <el-table-column prop="name" label="价格" />
-          <el-table-column prop="name" label="市值" />
-          <el-table-column prop="name" label="数量" />
-          <el-table-column prop="name" label="金额" />
+        <el-table :data="smartFlowData?.list || []" style="width: 100%">
+          <el-table-column label="时间" width="110">
+            <template #default="scope">
+              <span style="color: #f5f5f5">
+                {{ formatHourMinSecDate(scope.row.txTime * 1000) }}
+              </span>
+            </template>
+          </el-table-column>
+          <el-table-column label="聪明钱" width="230">
+            <template #default="scope">
+              <div class="activity-logo display-flex align-items-center">
+                <el-image :src="scope.row.avatar" alt="" class="logo">
+                  <template #error>
+                    <svg-icon name="logo1" class="logo"></svg-icon>
+                  </template>
+                </el-image>
+                <span>{{ scope.row.twitterName }}</span>
+                <svg-icon name="copy" class="copy" v-copy="scope.row.sender"></svg-icon>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column label="价格">
+            <template #default="scope">
+              <span style="color: var(--up-color)">
+                {{ numberFormat(scope.row.price) }}
+              </span>
+            </template>
+          </el-table-column>
+          <el-table-column label="市值">
+            <template #default="scope">
+              <span style="color: var(--up-color)">
+                {{ numberFormat(scope.row.marketCap) }}
+              </span>
+            </template>
+          </el-table-column>
+          <el-table-column label="数量">
+            <template #default="scope">
+              <span style="color: var(--up-color)">
+                {{ numberFormat(scope.row.baseAmount) }}
+              </span>
+            </template>
+          </el-table-column>
+          <el-table-column label="金额">
+            <template #default="scope">
+              <span style="color: var(--up-color)">
+                {{ numberFormat(scope.row.volume) }}
+              </span>
+            </template>
+          </el-table-column>
         </el-table>
       </div>
     </van-popup>
@@ -195,7 +237,14 @@
 
 <script lang="ts" setup>
 import { ref, onMounted, computed } from 'vue'
-import { shortifyAddress, numberFormat, timeago, handleCoinPairInfo } from '@/utils'
+import {
+  shortifyAddress,
+  numberFormat,
+  timeago,
+  handleCoinPairInfo,
+  formatHourMinSecDate,
+  formatDate
+} from '@/utils'
 import { notificationInfo, notificationSuccessful, notificationFailed } from '@/utils/notification'
 import { APIgetSmartKchart, APIgetSmartFlow } from '@/api'
 import { APIauthTradeSwap } from '@/api/coinWalletDetails'
@@ -236,6 +285,8 @@ const customWalletInfo = computed(() => globalStore.customWalletInfo)
 const isConnected = computed(() => globalStore.walletInfo.isConnected)
 
 const dialogVisible = ref<boolean>(false)
+const smartFlowData = ref<any>(null)
+const pushData = ref<any>({})
 
 const aiSignalsShareVisible = ref<boolean>(false)
 const aiSignalsShareData = ref<any>({})
@@ -438,12 +489,14 @@ const getCoinInfo = (params: any) => {
 }
 
 const handleShowShareDialog = async (val: any) => {
-  console.log(val)
+  smartFlowData.value = {}
   dialogVisible.value = true
+  pushData.value = val
   const res = await APIgetSmartFlow({
-    pushId: val.id
+    pushId: pushData.value.id
   })
   console.log(res)
+  smartFlowData.value = res || {}
 }
 onMounted(() => {
   initData()
@@ -718,6 +771,22 @@ onMounted(() => {
         strong {
           color: var(--up-color);
         }
+      }
+    }
+    .activity-logo {
+      .logo {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+      }
+      span {
+        margin: 0 4px;
+        color: #f5f5f5;
+      }
+      .copy {
+        width: 12px;
+        height: 12px;
+        cursor: pointer;
       }
     }
   }
