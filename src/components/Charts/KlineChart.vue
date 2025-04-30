@@ -4,7 +4,6 @@
 <script setup lang="ts">
 import { inject, markRaw, nextTick, onMounted, ref } from 'vue'
 import { numberFormat, formatHourMinDate } from '@/utils'
-import choseImg from '@/assets/icons/close.svg'
 const props: any = defineProps({
   lineData: {
     type: Array,
@@ -237,7 +236,7 @@ const createElementFun = (info: any, event: any) => {
 
   popup.innerHTML = `
               <div class='custom-popup-title'>
-                <img src='${choseImg}' class='img' onclick='handelClose(${info.timestamp})'/>
+                <div class='chose' onclick='handelClose(${info.timestamp})'></div>
               </div>
               <div class='custom-popup-box'>
                 ${info.pushRecords
@@ -497,11 +496,10 @@ window.addEventListener('resize', resizeChart)
       align-items: center;
       justify-content: end;
       margin-bottom: 6px;
-      .img {
-        width: 12px;
-        height: 12px;
-        color: #f5f5f5;
+      .chose::before {
         cursor: pointer;
+        content: '✕';
+        display: inline-block;
       }
     }
   }
