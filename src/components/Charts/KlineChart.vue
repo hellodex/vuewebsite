@@ -3,7 +3,8 @@
 </template>
 <script setup lang="ts">
 import { inject, markRaw, nextTick, onMounted, ref } from 'vue'
-import { numberFormat } from '@/utils'
+import { numberFormat, formatHourMinDate } from '@/utils'
+import choseImg from '@/assets/icons/close.svg'
 const props: any = defineProps({
   lineData: {
     type: Array,
@@ -18,8 +19,9 @@ const props: any = defineProps({
     }
   }
 })
+const emit = defineEmits(['show'])
 
-const date: any = props.lineData?.map((item: any) => item.time) ?? []
+const date: any = props.lineData?.map((item: any) => item.timestamp.toString()) ?? []
 const xData: any = props.lineData?.map((item: any) => item.C) ?? []
 // 获取 echart 挂载的DOM节点
 const echartContainer = ref()
@@ -81,11 +83,32 @@ function N(D: string) {
   )
 }
 
+const customDataFilter = () => {
+  const arrFilter = props.lineData?.filter(
+    (item: { pushRecords: any }) => item.pushRecords?.length > 0
+  )
+
+  const arrMap = arrFilter?.map((item: { time: string; C: string; timestamp: number }) => {
+    return [item.timestamp.toString(), item.C, item.timestamp]
+  })
+
+  return arrMap || []
+}
+
 const O = (params: any, F: any) => {
+  const timestamp = F.value(2)
+  let Ce = ''
+  const tipsObj = props.lineData?.find(
+    (item: { timestamp: number }) => item.timestamp === timestamp
+  )
+  if (tipsObj.pushRecords?.length == 1) {
+    Ce = `#${tipsObj.pushRecords[0].num}`
+  } else if (tipsObj.pushRecords?.length > 1) {
+    Ce = `+${tipsObj.pushRecords.length}`
+  }
   const G = F.coord([F.value(0), F.value(1)]),
     q = true,
     fe = [],
-    Ce = `+5`,
     Ff = 12,
     xe = {
       width: 17.5,
@@ -98,7 +121,6 @@ const O = (params: any, F: any) => {
       ? G[1] + xe.width - ((N(Ce) * xe.width) / 2) * 1.08 + (Ff - 4)
       : G[1] - xe.width - ((N(Ce) * xe.width) / 2) * 0.86 - (Ff - 4)
 
-  console.log(F.value(2))
   return (
     fe.push(
       {
@@ -122,6 +144,10 @@ const O = (params: any, F: any) => {
         position: [G[0], Ue],
         rotation: q ? Math.PI : 0,
         silent: false,
+        info: {
+          pushRecords: tipsObj.pushRecords,
+          timestamp: tipsObj.timestamp
+        },
         z: 10
       },
       {
@@ -145,6 +171,69 @@ const O = (params: any, F: any) => {
   )
 }
 
+function bZ(r: number, t: number, e: number, n: number, i: number) {
+  const a = Math.ceil(i / 10),
+    o = 20,
+    s = 30,
+    l = 6,
+    u = 18,
+    c = 18,
+    h = (i > 10 ? 10 : i) * (u + l) + o - l,
+    v = a * (c + l) + s - l,
+    d = 12,
+    p = 12
+  let g = e + 12,
+    m = n - v / 2
+  return (
+    r - e - p < h && (g = e - 12 - h),
+    v / 2 + n + d > t && (m = n - v + 8),
+    m < 0 && (m = n - 8),
+    {
+      x: g,
+      y: m
+    }
+  )
+}
+
+const createElementFun = (info: any, event: any) => {
+  const popup = document.createElement('div')
+  popup.className = 'custom-popup'
+  popup.id = 'custom' + info.timestamp
+  const obj = bZ(
+    echartContainer.value.clientWidth,
+    echartContainer.value.clientHeight,
+    event.target.x,
+    event.target.y,
+    info.pushRecords?.length ?? 0
+  )
+  popup.style.left = obj.x + 'px'
+  popup.style.top = obj.y + 'px'
+
+  popup.innerHTML = `
+              <div class='custom-popup-title'>
+                <img src='${choseImg}' class='img' onclick='handelClose(${info.timestamp})'/>
+              </div>
+              <div class='custom-popup-box'>
+                ${info.pushRecords
+                  ?.map(
+                    (item: { num: any }) =>
+                      `<div class='custom-popup-item' onclick='handelDialogShow(${JSON.stringify(item)})'>#${item.num}</div>`
+                  )
+                  .join('')}
+              </div`
+
+  echartContainer.value.appendChild(popup)
+}
+
+const handelClose = (timestamp: string) => {
+  const node = document.getElementById('custom' + timestamp)
+  node?.remove()
+}
+
+const handelDialogShow = (params: any) => {
+  emit('show', typeof params == 'string' ? JSON.parse(params) : params)
+}
+
 const initEcharts = () => {
   lineEchart.value = markRaw(
     (Echarts as any).init(echartContainer.value, null, { renderer: 'svg' })
@@ -160,7 +249,7 @@ const initEcharts = () => {
       formatter: function (params: any) {
         const { dataIndex } = params[0]
         const item = props.lineData.at(dataIndex)
-        return `<div style="padding: 10px;border-radius: 6px;line-height: 1.5;font-size: 12px;background:#2c2f42;color:#eaecf5;">
+        return `<div style="padding: 10px;border-radius: 6px;line-height: 1.5;font-size: 12px;background:#181818;color:#f5f5f5;">
                 时间: ${item.time} <br/>
 					      价格:  ${numberFormat(item.C)}<br/>
 								市值:  ${numberFormat(item.volumeUsd)}
@@ -185,7 +274,10 @@ const initEcharts = () => {
       },
       axisLabel: {
         textStyle: {
-          color: '#999'
+          color: '#393939'
+        },
+        formatter: function (value: string) {
+          return formatHourMinDate(value)
         }
       }
     },
@@ -223,7 +315,7 @@ const initEcharts = () => {
       {
         type: 'custom',
         renderItem: O,
-        data: [[date.at(0), xData.at(0)]],
+        data: customDataFilter(),
         tooltip: {
           show: false
         },
@@ -256,6 +348,19 @@ const initEcharts = () => {
   }
 
   lineEchart.value.setOption(options)
+  lineEchart.value.off('click')
+
+  lineEchart.value.on('click', (params: any) => {
+    console.log(params)
+    const { componentSubType, info, event } = params || {}
+    if (componentSubType === 'custom') {
+      if (info.pushRecords?.length > 1) {
+        createElementFun(info, event)
+      } else if (info.pushRecords?.length == 1) {
+        handelDialogShow(info.pushRecords[0])
+      }
+    }
+  })
 }
 
 const resizeChart = () => {
@@ -265,6 +370,9 @@ const resizeChart = () => {
 }
 
 onMounted(() => {
+  const global: any = window
+  global['handelDialogShow'] = handelDialogShow
+  global['handelClose'] = handelClose
   nextTick(() => {
     initEcharts()
   })
@@ -322,9 +430,54 @@ onMounted(() => {
 
 window.addEventListener('resize', resizeChart)
 </script>
-<style scoped>
+<style lang="scss" scoped>
 .echarts {
   width: 100%;
   height: 100%;
+  :deep(.custom-popup) {
+    position: absolute;
+    border-radius: 6px;
+    background-color: #181818;
+    padding: 6px 10px 10px;
+    box-sizing: border-box;
+    z-index: 20;
+    .custom-popup-box {
+      display: flex;
+      flex-wrap: wrap;
+      row-gap: 6px;
+      column-gap: 6px;
+      max-height: 114px;
+      max-width: 234px;
+      min-width: 60px;
+      overflow-y: auto;
+    }
+    .custom-popup-item {
+      cursor: pointer !important;
+      font-size: 9px;
+      width: 28px;
+      height: 18px;
+      color: #f5f5f5;
+      background-color: var(--up-color);
+      border-radius: 1px;
+      box-sizing: border-box;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1.5px solid transparent;
+      font-size: 10px;
+    }
+    .custom-popup-title {
+      display: flex;
+      align-items: center;
+      justify-content: end;
+      margin-bottom: 6px;
+      .img {
+        width: 12px;
+        height: 12px;
+        color: #f5f5f5;
+        cursor: pointer;
+      }
+    }
+  }
 }
 </style>

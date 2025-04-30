@@ -52,9 +52,7 @@
             </div>
             <div class="display-flex align-items-center">
               <span>推送后最高市值</span>
-              <strong
-                >${{ numberFormat(aiSignalsShareData.pushRecords.at(-1)?.marketCap || 0) }}</strong
-              >
+              <strong>${{ numberFormat(aiSignalsShareData.currentMarketCap) }}</strong>
             </div>
           </div>
         </div>
