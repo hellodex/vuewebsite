@@ -128,6 +128,15 @@ const router = createRouter({
             description: '可添加代币、钱包、推特帖子任何异动第一时间推送给用户'
           },
           component: () => import('@/views/monitor/strategy.vue')
+        },
+        {
+          path: 'ObserveGroup',
+          name: 'ObserveGroup',
+          meta: {
+            title: 'HelloDex-AI监控',
+            description: '可添加代币、钱包、推特帖子任何异动第一时间推送给用户'
+          },
+          component: () => import('@/views/monitor/observeGroup.vue')
         }
       ]
     },
