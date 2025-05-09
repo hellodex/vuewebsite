@@ -173,6 +173,12 @@
       @refresh="handelRefresh"
       v-if="monitorFormDialogVisible"
     />
+    <MonitorObserveGroupDialog
+      :monitorObserveGroupDialogVisible="monitorObserveGroupDialogVisible"
+      @close="handelMonitorObserveGroupClose"
+      @refresh="handelObserveGroupRefresh"
+      v-if="monitorObserveGroupDialogVisible"
+    />
   </div>
 </template>
 <script setup lang="ts">
@@ -191,6 +197,7 @@ import { useI18n } from 'vue-i18n'
 import WalletConnect from '@/components/Wallet/WalletConnect.vue'
 import MonitorTypeDialog from '@/components/Dialogs/MonitorTypeDialog.vue'
 import MonitorFormDialog from '@/components/Dialogs/MonitorFormDialog.vue'
+import MonitorObserveGroupDialog from '@/components/Dialogs/MonitorObserveGroupDialog.vue'
 import { customMessage } from '@/utils/message'
 import { typeList, noticeTypeList } from '@/types'
 
@@ -243,6 +250,9 @@ const handelTab = (item: any) => {
 const monitorChainCode = ref<string>('DEX')
 const monitorTypeDialogVisible = ref<boolean>(false)
 const monitorFormDialogVisible = ref<boolean>(false)
+
+const monitorObserveGroupDialogVisible = ref<boolean>(false)
+
 const dialogType = ref<string>('add')
 
 const formInfo = ref<any>({
@@ -271,26 +281,36 @@ const handelMonitorFormClose = (val: boolean) => {
   monitorFormDialogVisible.value = val
 }
 
+const handelMonitorObserveGroupClose = (val: boolean) => {
+  monitorObserveGroupDialogVisible.value = val
+}
+
 const handelRefresh = () => {
   getTableData()
   monitorFormDialogVisible.value = false
 }
 
+const handelObserveGroupRefresh = () => {}
+
 const handelDialog = (type: string) => {
   monitorTypeDialogVisible.value = false
-  monitorFormDialogVisible.value = true
-  formInfo.value = {
-    type: type,
-    coin: 'Single',
-    chainCode: 'SOLANA',
-    baseAddress: '',
-    symbol: '',
-    data: '',
-    noticeType: [1],
-    startPrice: '',
-    targetPrice: '',
-    status: 1,
-    logo: ''
+  if (type == 'group') {
+    monitorObserveGroupDialogVisible.value = true
+  } else {
+    monitorFormDialogVisible.value = true
+    formInfo.value = {
+      type: type,
+      coin: 'Single',
+      chainCode: 'SOLANA',
+      baseAddress: '',
+      symbol: '',
+      data: '',
+      noticeType: [1],
+      startPrice: '',
+      targetPrice: '',
+      status: 1,
+      logo: ''
+    }
   }
 }
 
