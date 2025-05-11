@@ -172,6 +172,16 @@ const router = createRouter({
       component: () => import('@/views/ido.vue')
     },
     {
+      path: '/airdrop',
+      name: 'airdrop',
+      component: () => import('@/views/airdrop.vue')
+    },
+    {
+      path: '/pricing',
+      name: 'pricing',
+      component: () => import('@/views/pricing.vue')
+    },
+    {
       path: '/Download',
       name: 'Download',
       meta: {

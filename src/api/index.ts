@@ -789,6 +789,20 @@ export function APItokenEstimateGas(data: object) {
   })
 }
 
+
+/**
+ * @description 空投查询
+ * @param data
+ * @returns
+ */
+export function airdropQuery(data: object) {
+  return http({
+    url: WEB_URL + '/api/appv2/airdrop/query',
+    method: 'POST',
+    data
+  })
+}
+
 /**
  * @description 创建或更新用户token订阅
  * @param data
