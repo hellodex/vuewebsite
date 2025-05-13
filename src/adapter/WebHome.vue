@@ -56,11 +56,20 @@
               oninput="value=value.replace(/[^0-9.]/g,'')"
               style="width: 80px"
               size="small"
+              placeholder="请输入"
             >
               <template #prefix>
                 <img
-                  v-if="nounScreenId != 13 ? chainLogoObj[chainCode] : chainLogoObj['SOLANA']"
-                  :src="nounScreenId != 13 ? chainLogoObj[chainCode] : chainLogoObj['SOLANA']"
+                  v-if="
+                    ![13, 99].includes(nounScreenId)
+                      ? chainLogoObj[chainCode]
+                      : chainLogoObj['SOLANA']
+                  "
+                  :src="
+                    ![13, 99].includes(nounScreenId)
+                      ? chainLogoObj[chainCode]
+                      : chainLogoObj['SOLANA']
+                  "
                   alt=""
                   class="icon-svg"
                 />
@@ -74,7 +83,7 @@
             :visible="popperVisible"
             popper-class="table-network-popper"
             ref="popoverRef"
-            v-if="nounScreenId != 13"
+            v-if="![13, 99].includes(nounScreenId)"
           >
             <template #reference>
               <div
@@ -114,14 +123,15 @@
           </el-popover>
         </div>
       </div>
+      <AiSignals :amount="amount" v-if="nounScreenId == 99" />
+      <PumpList :amount="amount" v-else-if="nounScreenId == 13" />
       <HotList
         :tableLoading="tableLoading"
         :timeTabIndex="timeTabIndex"
         :chainIdDataList="chainIdDataList"
         :amount="amount"
-        v-if="nounScreenId !== 13"
+        v-else
       />
-      <PumpList :amount="amount" v-if="nounScreenId == 13" />
     </div>
   </section>
 </template>
@@ -139,16 +149,14 @@ import {
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { ClickOutside as vClickOutside } from 'element-plus'
-import PercentageChange from '@/components/Percentage/PercentageChange.vue'
+
 import DoubleCost from '@/components/DoubleCost.vue'
-import CoinsAreaChart from '@/adapter/components/CoinsAreaChart.vue'
-import DashboardChart from '@/adapter/components/DashboardChart.vue'
+import AiSignals from '@/adapter/components/AiSignals.vue'
 import HotList from '@/adapter/components/HotList.vue'
 import PumpList from '@/adapter/components/PumpList.vue'
 import { APIinitTokenInfo, APIfreshPriceList, ApiGetRankings } from '@/api'
 import { useGlobalStore } from '@/stores/global'
 import { numberFormat, dataAssembly, numFormat } from '@/utils'
-import { MAIN_COIN } from '@/types'
 
 const router = useRouter()
 const i18n = useI18n()
@@ -268,6 +276,16 @@ async function getInitTokenInfo() {
 
   nounScreenList.value =
     [
+      {
+        createTime: '2024-07-01 02:50:42',
+        id: 99,
+        location: 0,
+        logo: '',
+        name: 'AI 信号',
+        sort: 0,
+        type: '',
+        updateTime: '2024-08-19 07:59:23'
+      },
       ...(tokenInfoByChainData?.rankingInfo?.filter((item: { id: number }) => item.id == 13) || []),
       ...(tokenInfoByChainData?.rankingInfo?.filter((item: { id: number }) => item.id != 13) || [])
     ].map((item: { name: any; id: string | number }) => {

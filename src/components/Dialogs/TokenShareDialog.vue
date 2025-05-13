@@ -79,10 +79,11 @@
 <!--        </p>-->
       </div>
     </div>
-    <p class="share-down" @click="downLoading ? null : handelSaveImage()">
-      <el-icon class="is-loading" :size="14" v-if="downLoading">
-        <Loading />
-      </el-icon>
+    <p
+      class="share-down"
+      :style="{ cursor: imgUrl ? 'pointer' : 'not-allowed' }"
+      @click="imgUrl ? handelSaveImage() : null"
+    >
       分享收益
     </p>
   </van-popup>
@@ -277,30 +278,39 @@ watch(
 const handelSaveImage = () => {
   const a = document.createElement('a')
   a.href = imgUrl.value
-  a.download = `${props.shareCoinInfo.symbol}.jpeg`
+  a.download = `${props.shareCoinInfo.symbol}.jpg`
   a.click()
 }
 
-onMounted(() => {
-  nextTick(() => {
-    initEcharts()
-    html2canvas(shareImg.value, {
+const htmlToImage = async () => {
+  try {
+    const canvas = await html2canvas(shareImg.value, {
       backgroundColor: '#000000',
       width: 800,
       height: 475,
       scale: 1, // 设置缩放比例
       useCORS: true, // 启用 CORS 支持
       allowTaint: false // 禁止污染
-    }).then((canvas) => {
-      imgUrl.value = canvas.toDataURL('image/jpeg')
     })
-  })
+    imgUrl.value = canvas.toDataURL('image/jpeg')
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+onMounted(async () => {
+  await nextTick()
+  await initEcharts()
+
+  setTimeout(() => {
+    htmlToImage()
+  }, 1000)
 })
 
 window.addEventListener('resize', resizeChart)
 
 onUnmounted(() => {
-  window.removeEventListener('resize', initEcharts)
+  window.removeEventListener('resize', resizeChart)
 })
 </script>
 <style lang="scss" scoped>

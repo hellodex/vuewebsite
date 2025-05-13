@@ -7,6 +7,12 @@
           <i>监控配置</i>
         </span>
       </RouterLink>
+      <RouterLink to="/Monitor/ObserveGroup">
+        <span class="user-item display-flex align-items-center">
+          <svg-icon name="observe-group" class="icon-user-item"></svg-icon>
+          <i>观察分组</i>
+        </span>
+      </RouterLink>
     </div>
     <div class="monitor-right">
       <router-view></router-view>

@@ -250,6 +250,26 @@ export function APIlistSmartWallet(data: object) {
 }
 
 /**
+ * ai 信号
+ * @returns
+ */
+
+export function APIgetSmartKchart() {
+  return http({
+    url: WEB_URL + '/api/webv2/index/getSmartKchart',
+    method: 'POST'
+  })
+}
+
+export function APIgetSmartFlow(data: object) {
+  return http({
+    url: WEB_URL + '/api/webv2/index/getSmartFlow',
+    method: 'POST',
+    data
+  })
+}
+
+/**
  * @description web 前100买入接口
  * @param data
  * @returns
