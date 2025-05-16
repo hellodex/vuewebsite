@@ -995,3 +995,80 @@ export function APIcloseAllAta(data: object) {
     }
   })
 }
+
+
+/**
+ * @description 添加分组
+ * @param data
+ * @returns
+ */
+
+export function addWalletWatchGroup(data: object) {
+  const account: any = localStorage.getItem('accountInfo')
+  return http({
+    url: WEB_URL + '/api/auth/user/addWalletWatchGroup',
+    method: 'POST',
+    data,
+    headers: {
+      [`${JSON.parse(account)?.tokenInfo.tokenName}`]: `Bearer ${JSON.parse(account)?.tokenInfo.tokenValue}`
+    }
+  })
+}
+
+/**
+ * @description 添加分组
+ * @param data
+ * @returns
+ */
+
+export function walletWatchGroupList(data: object) {
+  const account: any = localStorage.getItem('accountInfo')
+  return http({
+    url: WEB_URL + '/api/auth/user/walletWatchGroupList',
+    method: 'POST',
+    data,
+    headers: {
+      [`${JSON.parse(account)?.tokenInfo.tokenName}`]: `Bearer ${JSON.parse(account)?.tokenInfo.tokenValue}`
+    }
+  })
+}
+
+
+/**
+ * @description 添加分组
+ * @param data
+ * @returns
+ */
+
+export function updateWalletGroup(data: object) {
+  const account: any = localStorage.getItem('accountInfo')
+  return http({
+    url: WEB_URL + '/api/auth/user/updateWalletWatchGroup',
+    method: 'POST',
+    data,
+    headers: {
+      [`${JSON.parse(account)?.tokenInfo.tokenName}`]: `Bearer ${JSON.parse(account)?.tokenInfo.tokenValue}`
+    }
+  })
+}
+
+
+/**
+ * @description 添加分组
+ * @param data
+ * @returns
+ */
+
+export function deleteWalletGroup(data: object) {
+  const account: any = localStorage.getItem('accountInfo')
+  return http({
+    url: WEB_URL + '/api/auth/user/deleteWalletWatchGroup',
+    method: 'POST',
+    data,
+    headers: {
+      [`${JSON.parse(account)?.tokenInfo.tokenName}`]: `Bearer ${JSON.parse(account)?.tokenInfo.tokenValue}`
+    }
+  })
+}
+
+
