@@ -254,6 +254,7 @@ import BigNumber from 'bignumber.js'
 import KlineChart from '@/components/Charts/KlineChart.vue'
 import AiSignalsShareDialog from '@/components/Dialogs/AiSignalsShareDialog.vue'
 import WalletConnect from '@/components/Wallet/WalletConnect.vue'
+import { socket } from '@/utils/socket'
 
 const globalStore = useGlobalStore()
 
@@ -325,8 +326,48 @@ const handleClose = (val: boolean) => {
 }
 
 const initData = async () => {
+  socket.off('smartKchart')
+  socket.off('smartPush')
   const res = await APIgetSmartKchart()
   signalDataList.value = res || []
+
+  socket.emit(
+    'smartKchart-on',
+    JSON.stringify({
+      pair: signalDataList.value.map((item: { pairAddress: string }) => item.pairAddress)
+    })
+  )
+
+  socket.on('smartKchart', (message: string) => {
+    const data = JSON.parse(message)
+    signalDataList.value.forEach((item: any) => {
+      if (data.pairAddress == item.pairAddress) {
+        item.kcharts.push({
+          C: data.currentPrice,
+          volumeUsd: data.currentMarketCap,
+          time: data.time,
+          timestamp: data.timeStamp * 1000,
+          pushRecords: []
+        })
+
+        item.currentPrice = data.currentPrice
+        item.currentMarketCap = data.currentMarketCap
+        item.currentHolder = data.currentHolder
+        item.currentTvl = data.currentTvl || 0
+      }
+    })
+  })
+
+  socket.on('smartPush', (message: string) => {
+    const data = JSON.parse(message)
+    console.log(`smartPush:`, data)
+    signalDataList.value.forEach((item: any) => {
+      if (data.pairAddress == item.pairAddress) {
+        item.kcharts.at(-1).pushRecords.push(data)
+      }
+      console.log('smartPushItem:', item)
+    })
+  })
 }
 
 const handelBuySell = (item: any, amount: string, type: string) => {
