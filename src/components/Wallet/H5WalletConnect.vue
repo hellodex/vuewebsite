@@ -27,7 +27,7 @@
           <svg-icon name="walletconnect" class="icon-logo"></svg-icon>
           <div class="display-flex flex-direction-col">
             <span>WalletConnect (MetaMask)</span>
-            <span>点击连接 WalletConnect (MetaMask) 钱包</span>
+            <span>使用 WalletConnect 连接</span>
           </div>
         </div>
         <svg-icon name="chevron-right" class="chevron-right"></svg-icon>
@@ -40,7 +40,7 @@
           <svg-icon name="OKX" class="icon-logo"></svg-icon>
           <div class="display-flex flex-direction-col">
             <span>OKX Wallet (EVM) </span>
-            <span>点击连接 OKX 钱包</span>
+            <span>使用 WalletConnect 连接</span>
           </div>
         </div>
         <svg-icon name="chevron-right" class="chevron-right"></svg-icon>
@@ -53,7 +53,7 @@
           <svg-icon name="coinSOLANA" class="icon-logo"></svg-icon>
           <div class="display-flex flex-direction-col">
             <span>Solana Wallet</span>
-            <span>点击连接 Solana 钱包</span>
+            <span>使用 WalletConnect 连接</span>
           </div>
         </div>
         <svg-icon name="chevron-right" class="chevron-right"></svg-icon>

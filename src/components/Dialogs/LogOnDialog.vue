@@ -133,7 +133,7 @@
                 <svg-icon name="icon-metamask" class="icon-logo"></svg-icon>
                 <div class="display-flex flex-direction-col">
                   <span>MetaMask</span>
-                  <span>点击连接 MetaMask 钱包</span>
+                  <span>使用 WalletConnect 连接</span>
                 </div>
               </div>
               <div
@@ -143,7 +143,7 @@
                 <svg-icon name="icon-sol" class="icon-sol"></svg-icon>
                 <div class="display-flex flex-direction-col">
                   <span>Solana Wallet</span>
-                  <span>点击连接 Solana 钱包</span>
+                  <span>使用 WalletConnect 连接</span>
                 </div>
               </div>
               <div
@@ -153,7 +153,7 @@
                 <svg-icon name="icon-okx" class="icon-logo"></svg-icon>
                 <div class="display-flex flex-direction-col">
                   <span>OKX Wallet</span>
-                  <span>点击连接 OKX 钱包</span>
+                  <span>使用 WalletConnect 连接</span>
                 </div>
               </div>
               <div
@@ -204,7 +204,7 @@ const tabList = [
     icon: 'icon-google'
   },
   {
-    label: 'Web3钱包',
+    label: 'WalletConnect',
     value: 3,
     icon: 'walletconnect'
   }
