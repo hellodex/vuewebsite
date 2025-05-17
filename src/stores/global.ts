@@ -73,6 +73,7 @@ export const useGlobalStore = defineStore('global', () => {
   // 点击链接web3钱包的位置 例：登录、ido
   const clickLocation = ref<string>(localStorage.getItem('clickLocation') ?? 'login')
 
+  const socketConnectType = ref('')
   /** 处置操作 */
 
   // 修改语言
@@ -174,6 +175,10 @@ export const useGlobalStore = defineStore('global', () => {
     clickLocation.value = val
   }
 
+  function setSocketConnectType(val: string) {
+    socketConnectType.value = val
+  }
+
   return {
     theme,
     language,
@@ -191,6 +196,7 @@ export const useGlobalStore = defineStore('global', () => {
     currencyDashboardSwitch,
     tokenList,
     clickLocation,
+    socketConnectType,
     setDanmaku,
     setTheme,
     setLanguage,
@@ -206,6 +212,7 @@ export const useGlobalStore = defineStore('global', () => {
     delCurrencyDashboard,
     setCurrencyDashboardSwitch,
     setTokenList,
-    setClickLocation
+    setClickLocation,
+    setSocketConnectType
   }
 })

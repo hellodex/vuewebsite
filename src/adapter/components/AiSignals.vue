@@ -236,7 +236,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
 import {
   shortifyAddress,
   numberFormat,
@@ -261,6 +261,7 @@ const globalStore = useGlobalStore()
 const tokenList = computed(() => globalStore.tokenList)
 const customWalletInfo = computed(() => globalStore.customWalletInfo)
 const isConnected = computed(() => globalStore.walletInfo.isConnected)
+const socketConnectType = computed(() => globalStore.walletInfo.socketConnectType)
 
 const dialogVisible = ref<boolean>(false)
 const smartFlowData = ref<any>(null)
@@ -332,6 +333,13 @@ const initData = async () => {
   signalDataList.value = res || []
 
   socket.emit(
+    'smartKchart-off',
+    JSON.stringify({
+      pair: signalDataList.value.map((item: { pairAddress: string }) => item.pairAddress)
+    })
+  )
+
+  socket.emit(
     'smartKchart-on',
     JSON.stringify({
       pair: signalDataList.value.map((item: { pairAddress: string }) => item.pairAddress)
@@ -340,7 +348,7 @@ const initData = async () => {
 
   socket.on('smartKchart', (message: string) => {
     const data = JSON.parse(message)
-    signalDataList.value.forEach((item: any) => {
+    signalDataList.value.forEach((item: any, index: number) => {
       if (data.pairAddress == item.pairAddress) {
         item.kcharts.push({
           C: data.currentPrice,
@@ -364,11 +372,28 @@ const initData = async () => {
     signalDataList.value.forEach((item: any) => {
       if (data.pairAddress == item.pairAddress) {
         item.kcharts.at(-1).pushRecords.push(data)
+        console.log('smartPushItem:', item.kcharts.at(-1))
       }
-      console.log('smartPushItem:', item)
     })
   })
 }
+
+watch(socketConnectType, () => {
+  if (socketConnectType.value == 'socket_connect' && signalDataList.value?.length > 0) {
+    socket.emit(
+      'smartKchart-off',
+      JSON.stringify({
+        pair: signalDataList.value.map((item: { pairAddress: string }) => item.pairAddress)
+      })
+    )
+    socket.emit(
+      'smartKchart-on',
+      JSON.stringify({
+        pair: signalDataList.value.map((item: { pairAddress: string }) => item.pairAddress)
+      })
+    )
+  }
+})
 
 const handelBuySell = (item: any, amount: string, type: string) => {
   const coinInfo = getCoinInfo(item)

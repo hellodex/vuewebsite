@@ -324,6 +324,7 @@ socket.on('connect', () => {
       socketOffMonitor(globalStore.accountInfo.uuid, globalStore.accountInfo.tokenInfo.tokenValue)
       socketOnMonitor(globalStore.accountInfo.uuid, globalStore.accountInfo.tokenInfo.tokenValue)
     }
+    globalStore.setSocketConnectType('socket_connect')
   }, 3000)
 
   console.log('socket connect 🔥🔥🔥🔥🔥🔥')
@@ -331,6 +332,7 @@ socket.on('connect', () => {
 
 socket.on('disconnect', () => {
   const globalStore = useGlobalStore()
+  globalStore.setSocketConnectType('socket_disconnect')
   if (globalStore.socketKchartConnectType) {
     globalStore.SetSocketKchartConnectType('kChart_disconnect')
   }
