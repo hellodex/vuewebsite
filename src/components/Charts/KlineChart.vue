@@ -292,6 +292,16 @@ const options = {
       textStyle: {
         color: '#393939'
       },
+      interval: function (index: number, value: any) {
+        if (index === 0) {
+          return true
+        } else if (index == props.lineData?.length - 1) {
+          return true
+        } else {
+          const interval = Math.ceil(props.lineData?.length / 4)
+          return index % interval == 0
+        }
+      },
       formatter: function (value: string) {
         return formatHourMinDate(value)
       }
@@ -395,7 +405,19 @@ watch(props.lineData, (newValue) => {
   xData.value = newValue?.map((item: any) => item.C) ?? []
   lineEchart.value.setOption({
     xAxis: {
-      data: date.value
+      data: date.value,
+      axisLabel: {
+        interval: function (index: number, value: any) {
+          if (index === 0) {
+            return true
+          } else if (index == newValue.length - 1) {
+            return true
+          } else {
+            const interval = Math.ceil(newValue.length / 4)
+            return index % interval == 0
+          }
+        }
+      }
     },
     series: [
       {
