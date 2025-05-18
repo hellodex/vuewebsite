@@ -84,7 +84,61 @@
       </div>
     </div>
     <div class="table-box">
-      <el-skeleton style="width: 100%" :loading="skeleton" animated>
+      <el-skeleton v-if="strategyIndex == 2" style="width: 100%" :loading="skeleton" animated>
+        <template #template>
+          <el-skeleton-item
+            variant="text"
+            style="height: 30px; margin: 4.4px 0"
+            v-for="item in 12"
+            :key="item"
+          />
+        </template>
+        <template #default>
+          <el-table :data="walletTableData" style="width: 100%" max-height="calc(100vh - 190px)">
+            <el-table-column label="监控名称">
+              <template #default="scope">
+                <span>{{ scope.row.name }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="钱包数/交易额">
+              <template #default="scope">
+                <span>{{ scope.row.walletCountInWindow || scope.row.totalAmountInWindow  }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="状态">
+              <template #default="scope">
+                <el-text v-if="scope.row.status == 0" type="success">监控中</el-text>
+                <el-text v-else type="danger">已暂停</el-text>
+              </template>
+            </el-table-column>
+            <!-- <el-table-column label="通知频率">
+              <template #default="scope">
+                <span>{{
+                  noticeTypeList.find((item: any) => item.value == scope.row.noticeType)?.label
+                }}</span>
+              </template>
+            </el-table-column> -->
+          
+            <el-table-column label="操作" width="240">
+              <template #default="scope">
+                <span
+                  class="monitor-btn"
+                  @click="handelStartOrPause(scope.row,0)"
+                  v-if="scope.row.status == 1"
+                  >启动监控</span
+                >
+                <span class="monitor-btn" @click="handelStartOrPause(scope.row,1)" v-else>暂停监控</span>
+                <span class="monitor-btn" @click="handelEditWallet(scope.row)">编辑</span>
+                <span class="monitor-btn btn-del" @click.stop="handelDelWallet(scope.row)">删除</span>
+              </template>
+            </el-table-column>
+            <template #empty>
+              <empty-data></empty-data>
+            </template>
+          </el-table>
+        </template>
+      </el-skeleton>
+      <el-skeleton v-else style="width: 100%" :loading="skeleton" animated>
         <template #template>
           <el-skeleton-item
             variant="text"
@@ -174,6 +228,7 @@
       v-if="monitorFormDialogVisible"
     />
     <MonitorObserveGroupDialog
+      :info="currentMonitorObserve"
       :monitorObserveGroupDialogVisible="monitorObserveGroupDialogVisible"
       @close="handelMonitorObserveGroupClose"
       @refresh="handelObserveGroupRefresh"
@@ -190,7 +245,10 @@ import {
   APIupdateUserSubscribeSetting,
   APIdeleteUserTokenSubscribe,
   APIpauseUserTokenSubscribe,
-  APIresumeUserTokenSubscribe
+  APIresumeUserTokenSubscribe,
+  walletWatchStrategyList,
+  startWalletWatchStrategy,
+  deleteWalletWatchStrategy
 } from '@/api'
 import { timeago, numberFormat } from '@/utils'
 import { useI18n } from 'vue-i18n'
@@ -234,17 +292,24 @@ const handleCheckedChannel = async (val: any) => {
 }
 
 const strategyList = [
+{
+    label: '钱包监控',
+    value: 2,
+    icon: 'icon-coin-strategy'
+  },
   {
-    label: '监控列表',
+    label: '代币监控',
     value: 1,
     icon: 'icon-coin-strategy'
   }
+  
 ]
 
-const strategyIndex = ref(1)
-
+const strategyIndex = ref(2)
+const testref  = ref()
 const handelTab = (item: any) => {
   strategyIndex.value = item.value
+  getTableData()
 }
 
 const monitorChainCode = ref<string>('DEX')
@@ -252,6 +317,7 @@ const monitorTypeDialogVisible = ref<boolean>(false)
 const monitorFormDialogVisible = ref<boolean>(false)
 
 const monitorObserveGroupDialogVisible = ref<boolean>(false)
+const currentMonitorObserve = ref<any>({})
 
 const dialogType = ref<string>('add')
 
@@ -288,13 +354,19 @@ const handelMonitorObserveGroupClose = (val: boolean) => {
 const handelRefresh = () => {
   getTableData()
   monitorFormDialogVisible.value = false
+  monitorObserveGroupDialogVisible.value = false
 }
 
-const handelObserveGroupRefresh = () => {}
+const handelObserveGroupRefresh = () => {
+  getTableData()
+  monitorObserveGroupDialogVisible.value = false
+  currentMonitorObserve.value = {}
+}
 
 const handelDialog = (type: string) => {
   monitorTypeDialogVisible.value = false
   if (type == 'group') {
+    currentMonitorObserve.value = {}
     monitorObserveGroupDialogVisible.value = true
   } else {
     monitorFormDialogVisible.value = true
@@ -315,16 +387,29 @@ const handelDialog = (type: string) => {
 }
 
 const tableData = ref<any>([])
+const walletTableData = ref<any>([])
 const skeleton = ref(false)
 
 const getTableData = async () => {
-  const res: any = await APIlistUserTokenSubscribe({
-    chainCode: monitorChainCode.value == 'DEX' ? '' : monitorChainCode.value
-  })
-  tableData.value = res?.subscribeList || []
-  checkedChannel.value = res?.subscribeSetting || []
+  skeleton.value = true
+  if(strategyIndex.value == 2){
+    const res: any = await walletWatchStrategyList({})
+    walletTableData.value = res || []
+    // checkedChannel.value = res?.subscribeSetting || []
+  }else{
+    const res: any = await APIlistUserTokenSubscribe({
+      chainCode: monitorChainCode.value == 'DEX' ? '' : monitorChainCode.value
+    })
+    tableData.value = res?.subscribeList || []
+    checkedChannel.value = res?.subscribeSetting || []
+  }
+  skeleton.value = false
 }
-
+monitorObserveGroupDialogVisible
+const handelEditWallet = (row: any) => {
+  monitorObserveGroupDialogVisible.value = true
+  currentMonitorObserve.value = row
+}
 const handelEdit = (row: any) => {
   dialogType.value = 'edit'
   for (const key in formInfo.value) {
@@ -365,6 +450,27 @@ const handelDel = async (row: any) => {
     .catch(() => {})
 }
 
+const handelDelWallet = async (row: any) => {
+  ElMessageBox.confirm('确定要删除此条监控', i18n.t('Tips'), {
+    confirmButtonText: i18n.t('Confirm'),
+    cancelButtonText: i18n.t('Cancel'),
+    type: 'info'
+  })
+    .then(async () => {
+      const res = await deleteWalletWatchStrategy({
+        id: row.id
+      })
+      if (res) {
+        getTableData()
+        customMessage({
+          type: 'success',
+          title: `删除成功`
+        })
+      }
+    })
+    .catch(() => {})
+}
+
 const handelPause = async (row: any) => {
   const params = row
   const res = await APIpauseUserTokenSubscribe({
@@ -379,6 +485,27 @@ const handelPause = async (row: any) => {
       title: `${typeList.find((item) => item.value == params.type)?.label}已暂停！`
     })
   }
+}
+const handelStartOrPause = async (row: any,status: number) => {
+  const message = status == 0?'确定要启动此条监控':'确定要暂停此条监控'
+  ElMessageBox.confirm(message, i18n.t('Tips'), {
+    confirmButtonText: i18n.t('Confirm'),
+    cancelButtonText: i18n.t('Cancel'),
+    type: 'info'
+  })
+    .then(async () => {
+      const res = await startWalletWatchStrategy({
+        id: row.id,
+        status:status
+      })
+      if (res) {
+        getTableData()
+        customMessage({
+          type: 'success',
+          title: '操作成功'
+        })
+      }
+    })
 }
 
 const handelPlay = async (row: any) => {
@@ -410,9 +537,9 @@ watch(accountInfo, (newValue) => {
 
 const initData = async () => {
   if (accountInfo.value) {
-    skeleton.value = true
+   
     await getTableData()
-    skeleton.value = false
+
   }
 }
 onMounted(() => {

@@ -335,3 +335,42 @@ export const noticeTypeList = [
     label: '暂停监控'
   }
 ]
+
+export const timeTypeList = [
+  {
+    value: 1,
+    label: '1分钟'
+  },
+  {
+    value: 3,
+    label: '3分钟'
+  },
+  {
+    value: 5,
+    label: '5分钟'
+  },
+  {
+    value: 10,
+    label: '10分钟'
+  },
+  {
+    value: 15,
+    label: '15分钟'
+  },
+  {
+    value: 30,
+    label: '30分钟'
+  },
+  {
+    value: 60,
+    label: '60分钟'
+  },
+  {
+    value: 90,
+    label: '90分钟'
+  },
+  {
+    value: 180,
+    label: '180分钟'
+  }
+]

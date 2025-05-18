@@ -68,35 +68,37 @@
         @click="importDrawer = true"
       >
         <el-icon><Plus /></el-icon>
-        <span>导入导出钱包</span>
+        <span>导入钱包</span>
       </div>
       <div class="display-flex align-items-center">
-        <div class="group-btn">隐藏观察钱包</div>
-        <div class="group-btn">批量删除(0)</div>
+        <div class="group-btn" @click="setWalletVisibility">{{isWalletVisibility ? '隐藏' : '显示'}}观察钱包</div>
+        <div class="group-btn" :class="{ disable: chooseWalletList.length == 0 }"  @click="deleteWalletList">批量删除({{ chooseWalletList.length}})</div>
       </div>
     </div>
 
     <!-- 钱包表格 -->
-    <el-table :data="filteredTableData" style="width: 100%">
+    <el-table v-if="isWalletVisibility" v-loading="isLoadingTableData" :data="tableData" @selection-change="handleSelectionChange" style="width: 100%">
       <el-table-column type="selection" width="30" />
-      <el-table-column prop="address" label="钱包" />
+      <el-table-column label="钱包" >
+        <template #default="scope">{{ scope.row.name || scope.row.walletAddress }}</template>
+      </el-table-column>
       <el-table-column label="24h 交易数">
-        <template #default="scope">{{ scope.row.dailyTransactions }}</template>
+        <template #default="scope">{{ scope.row.dailyTransactions || '--' }}</template>
       </el-table-column>
       <el-table-column label="24h Pnl">
-        <template #default="scope">{{ scope.row.dailyPnl }}</template>
+        <template #default="scope">{{ scope.row.dailyPnl || '--' }}</template>
       </el-table-column>
       <el-table-column label="24h 胜率">
-        <template #default="scope">{{ scope.row.dailyWinRate }}%</template>
+        <template #default="scope">{{ scope.row.dailyWinRate || '--'}}%</template>
       </el-table-column>
       <el-table-column label="7D 交易数">
-        <template #default="scope">{{ scope.row.weeklyTransactions }}</template>
+        <template #default="scope">{{ scope.row.weeklyTransactions || '--' }}</template>
       </el-table-column>
       <el-table-column label="7D Pnl">
-        <template #default="scope">{{ scope.row.weeklyPnl }}</template>
+        <template #default="scope">{{ scope.row.weeklyPnl || '--' }}</template>
       </el-table-column>
       <el-table-column label="7D 胜率">
-        <template #default="scope">{{ scope.row.weeklyWinRate }}%</template>
+        <template #default="scope">{{ scope.row.weeklyWinRate || '--' }}%</template>
       </el-table-column>
     </el-table>
 
@@ -154,13 +156,13 @@
             clearable
           />
         </el-form-item>
-        <el-form-item label="分组类型" prop="type">
+        <!-- <el-form-item label="分组类型" prop="type">
           <el-radio-group v-model="currentGroupForm.type">
             <el-radio :label="0">正常</el-radio>
             <el-radio :label="1">暂停</el-radio>
             <el-radio :label="2" :disabled="isEditing">默认</el-radio>
           </el-radio-group>
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
       <template #footer>
         <span class="dialog-footer">
@@ -189,8 +191,8 @@
         </div>
         <template v-if="importTabIndex == 0">
           <div class="import-content">
-            <el-input v-model="textarea" :rows="8" type="textarea" placeholder="暂无钱包" />
-            <div class="import-btn">复制(0)</div>
+            <el-input v-model="walletOutput" :rows="8" type="textarea" placeholder="暂无钱包" />
+            <div class="import-btn" @click="copyWallet">复制({{  tableData.length }})</div>
           </div>
         </template>
         <template v-if="importTabIndex == 1">
@@ -206,10 +208,11 @@
 
             <!-- 输入框 -->
             <el-input
-              v-model="textarea"
+              v-model="walletInput"
               :rows="8"
               type="textarea"
               placeholder="请输入批量导入的钱包地址，多个钱包使用换行分隔，钱包与别名之间用空格隔开"
+              @input="parseInput"
             />
 
             <!-- 预览列表 -->
@@ -232,15 +235,17 @@
 
             <!-- 操作按钮 -->
             <div class="preview-actions">
-              <el-button type="primary" @click="removeDuplicates" style="width: 100%">一键去重复</el-button>
-              <el-button type="primary" @click="removeInvalids" style="width: 100%">去除无效地址</el-button>
+              <el-button type="primary" @click="removeDuplicates" style="width: 100%">一键去重复、去除无效地址</el-button>
+              <!-- <el-button type="primary" @click="removeInvalids" style="width: 100%">去除无效地址</el-button> -->
 
               <!-- 导入钱包按钮（灰色） -->
               <el-button
-                :disabled="true"
-                style="width: 100%; margin-top: 10px; background-color: #50535a; color: #292424;"
+                style="width: 100%; margin-top: 10px; background-color: #50535a; color: #fff;;"
+                 @click="submitWalletList"
+                :loading="submitting"
               >
-                导入钱包（还可以导入 {{ importableCount }} 个，总共 {{ totalAddresses }} 个）
+                导入钱包
+                <!-- 导入钱包（还可以导入 {{ importableCount }} 个，总共 {{ totalAddresses }} 个） -->
               </el-button>
             </div>
           </div>
@@ -248,6 +253,11 @@
       </div>
     </el-drawer>
   </section>
+  <WalletConnect ref="walletConnectRef" v-if="!accountInfo">
+    <div class="display-flex align-items-center add-btn">
+      <span>前往登录</span>
+    </div>
+  </WalletConnect>
 </template>
 
 <script setup lang="ts">
@@ -255,8 +265,11 @@ import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import type { FormInstance, FormRules } from 'element-plus'
 import { Plus, Tickets, EditPen, Setting, Select, WarnTriangleFilled } from '@element-plus/icons-vue'
-import { addWalletWatchGroup, walletWatchGroupList, updateWalletGroup, deleteWalletGroup } from '@/api'
+import { addWalletWatchGroup, walletWatchGroupList, updateWalletGroup, deleteWalletGroup, walletWatchList, deleteWalletWatch, addWalletWatch } from '@/api'
 import { useGlobalStore } from '@/stores/global'
+import WalletConnect from '@/components/Wallet/WalletConnect.vue'
+import { isEvmAddress, isSolanaAddress} from '@/utils/transition'
+
 
 const globalStore = useGlobalStore()
 const accountInfo = computed(() => globalStore.accountInfo)
@@ -265,17 +278,29 @@ const accountInfo = computed(() => globalStore.accountInfo)
 const groupManagementDialogVisible = ref(false)
 const editGroupDialogVisible = ref(false)
 const isEditing = ref(false)
-const walletGroups = ref<any[]>([])
+const walletGroups = ref<any[]>([{
+  id: 0,
+  name: '示例数据',
+  type: 2
+}])
 const submitting = ref(false)
-const activeGroupId = ref<number | null>(null)
+const activeGroupId = ref<number | null>(0)
 const selectedGroup = ref<any>(null)
+// 钱包可见状态
+const isWalletVisibility = ref(true)
+const chooseWalletList = ref<any[]>([])
 
+const walletConnectRef = ref()
+const canSumbit = ref(false)
+
+// 是否在加载数据
+const isLoadingTableData = ref(false)
 // 表单相关
 const groupFormRef = ref<FormInstance>()
 const currentGroupForm = ref({
-  id: null as number | null,
+  id: 0 as number | null,
   name: '',
-  type: 0 // 0:正常, 1:暂停, 2:默认
+  // type: 0 // 0:正常, 1:暂停, 2:默认
 })
 
 const groupRules = ref<FormRules>({
@@ -292,7 +317,8 @@ const groupRules = ref<FormRules>({
 const tableData = ref([
   {
     id: 1,
-    address: '0x71C7656EC7ab88b098defB751B7401B5f6d8976F',
+    walletAddress: '0x71C7656EC7ab88b098defB751B7401B5f6d8976F',
+    name:'',
     groupId: 1,
     dailyTransactions: 12,
     dailyPnl: '+0.25 ETH',
@@ -303,8 +329,9 @@ const tableData = ref([
   },
   {
     id: 2,
-    address: '0xEA674fdDe714fd979de3EdF0F56AA9716B898ec8',
+    walletAddress: '0xEA674fdDe714fd979de3EdF0F56AA9716B898ec8',
     groupId: 1,
+    name:'',
     dailyTransactions: 8,
     dailyPnl: '-0.12 ETH',
     dailyWinRate: 62,
@@ -314,8 +341,9 @@ const tableData = ref([
   },
   {
     id: 3,
-    address: '0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B',
-    groupId: 2,
+    walletAddress: '0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B',
+    groupId: 1,
+    name:'',
     dailyTransactions: 15,
     dailyPnl: '+0.42 ETH',
     dailyWinRate: 81,
@@ -324,12 +352,49 @@ const tableData = ref([
     weeklyWinRate: 73
   }
 ])
+watch(accountInfo, (newValue) => {
+  fetchWalletGroups()
+})
 
 // 筛选后的表格数据
 const filteredTableData = computed(() => {
   if (!activeGroupId.value) return tableData.value
   return tableData.value.filter(item => item.groupId === activeGroupId.value)
 })
+
+const setWalletVisibility = () => {
+  isWalletVisibility.value = !isWalletVisibility.value
+}
+
+const handleSelectionChange = (val:any[]) => {
+  debugger
+  chooseWalletList.value = val
+}
+
+// 批量删除钱包
+const deleteWalletList = () => {
+  if(chooseWalletList.value.length == 0 || !verifyLoginInfo()){
+    return
+  }
+  ElMessageBox.confirm(
+    `确定删除这${chooseWalletList.value.length}个钱包吗？`,
+    'Warning',
+    {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    }
+  )
+  .then(() =>deleteWalletWatch({ ids: JSON.stringify( chooseWalletList.value.map(item => item.id) )}))
+  .then((data) => {
+    if(!data){
+       throw new Error('删除失败，请重试') 
+    }
+    ElMessage.success('删除成功')
+    fetchWalletList()
+  })
+ 
+}
 
 // 获取分组类型文本
 const getGroupTypeText = (type: number) => {
@@ -339,8 +404,11 @@ const getGroupTypeText = (type: number) => {
 
 // 获取分组列表
 const fetchWalletGroups = async () => {
+  if(!accountInfo.value){
+    return
+  }
   try {
-    const data = await walletWatchGroupList(currentGroupForm.value)
+    const data = await walletWatchGroupList({})
     walletGroups.value = Array.isArray(data) ? data : []
 
     // 如果有默认分组，自动选中
@@ -348,15 +416,46 @@ const fetchWalletGroups = async () => {
     if (defaultGroup) {
       activeGroupId.value = defaultGroup.id
       selectedGroup.value = defaultGroup
+    } else if(walletGroups.value.length > 0){ // 没有默认选第一个
+      activeGroupId.value = walletGroups.value[0].id
+      selectedGroup.value = walletGroups.value[0]
     }
+    fetchWalletList()
   } catch (error) {
     console.error('获取分组列表错误:', error)
     ElMessage.error('获取分组列表失败，请重试')
   }
 }
 
+// 按目前选中的分组获取钱包数据
+const fetchWalletList = async () => {
+  try {
+    isLoadingTableData.value = true
+    const params = activeGroupId.value ? {groupId : activeGroupId.value} : {}
+    const data = await walletWatchList(params)
+    tableData.value = Array.isArray(data) ? data : []
+    tableData.value.forEach(item => {
+      walletOutput.value = `${walletOutput.value}${item.walletAddress} ${item.name}\n`
+    })
+    isLoadingTableData.value = false
+  } catch (error) {
+    isLoadingTableData.value = false
+    console.error('获取钱包列表错误:', error)
+    ElMessage.error('获取钱包列表失败，请重试')
+  }
+}
+
+const verifyLoginInfo = () => {
+  if(!accountInfo.value){ 
+    walletConnectRef.value.loginRef.click()
+    return false
+  }
+  return true
+}
+
 // 显示分组管理
 const showGroupManagement = () => {
+  if(!verifyLoginInfo()) return
   groupManagementDialogVisible.value = true
 }
 
@@ -366,7 +465,7 @@ const handleEditGroup = (group: any) => {
   currentGroupForm.value = {
     id: group.id,
     name: group.name,
-    type: group.type
+    // type: parseInt(group.type)
   }
   editGroupDialogVisible.value = true
 }
@@ -380,15 +479,20 @@ const handleDeleteGroup = async (group: any) => {
       type: 'warning'
     })
 
-    await deleteWalletGroup(group.id)
-    ElMessage.success('删除分组成功')
-    await fetchWalletGroups()
-
-    // 如果删除的是当前选中的分组，则重置选中状态
-    if (activeGroupId.value === group.id) {
-      activeGroupId.value = null
-      selectedGroup.value = null
+    let data = await deleteWalletGroup({id:group.id})
+    if(data){
+      ElMessage.success('删除分组成功')
+      await fetchWalletGroups()
+       // 如果删除的是当前选中的分组，则重置选中状态
+      if (activeGroupId.value === group.id) {
+        activeGroupId.value = null
+        selectedGroup.value = null
+      }
+    }else{
+      ElMessage.error('删除分组失败')
     }
+
+   
   } catch (error) {
     console.error('删除分组失败:', error)
   }
@@ -396,11 +500,12 @@ const handleDeleteGroup = async (group: any) => {
 
 // 显示添加分组对话框
 const showAddGroupDialog = () => {
+  if(!verifyLoginInfo()) return
   isEditing.value = false
   currentGroupForm.value = {
     id: null,
     name: '',
-    type: 0
+    // type: 0
   }
   editGroupDialogVisible.value = true
   groupManagementDialogVisible.value = false
@@ -464,11 +569,13 @@ const selectGroup = (group: any) => {
   selectedGroup.value = group
   activeGroupId.value = group.id
   isDropdownVisible.value = false
+  fetchWalletList()
 }
 
 const handleGroupClick = (group: any) => {
   activeGroupId.value = group.id
   selectedGroup.value = group
+  fetchWalletList()
 }
 
 // 点击外部关闭下拉菜单
@@ -496,7 +603,8 @@ const observeTabList = [
 const observeTabIndex = ref(1)
 const importDrawer = ref(false)
 const importTabIndex = ref(1)
-const textarea = ref('')
+const walletInput = ref('')
+const walletOutput = ref('')
 
 const handelTab = (item: { value: number }) => {
   observeTabIndex.value = item.value
@@ -507,10 +615,10 @@ const handelImportTab = (item: { value: number }) => {
 }
 
 const importTabList = [
-  { label: '导出钱包', value: 0 },
+  // { label: '导出钱包', value: 0 },
   { label: '导入钱包', value: 1 },
-  { label: '导入GMGN格式', value: 2 },
-  { label: '导入Axiom格式', value: 3 }
+  //{ label: '导入GMGN格式', value: 2 },
+  //{ label: '导入Axiom格式', value: 3 }
 ]
 
 
@@ -522,7 +630,8 @@ const CURRENT_COUNT = 20 // 当前已有钱包数
 
 // 解析文本为对象数组
 const parseInput = () => {
-  const lines = textarea.value.trim().split('\n')
+  console.log(walletInput.value)
+  const lines = walletInput.value.trim().split('\n')
   const list: any[] = []
 
   for (let line of lines) {
@@ -537,6 +646,7 @@ const parseInput = () => {
   }
 
   parsedList.value = list
+  canSumbit.value = false
 }
 
 // 地址验证（根据你的实际规则修改）
@@ -545,7 +655,7 @@ const validateAddress = (addr: string): boolean => {
 }
 
 // 监听 textarea 变化并自动解析
-watch(textarea, parseInput, { immediate: true })
+// watch(walletInput, parseInput, { immediate: true })
 
 // 计算总数
 const totalAddresses = computed(() => parsedList.value.length)
@@ -559,16 +669,82 @@ const importableCount = computed(() => {
 // 一键去重复
 const removeDuplicates = () => {
   const seen = new Set()
+  const lines: string[] = []
   parsedList.value = parsedList.value.filter(item => {
     const duplicate = seen.has(item.address)
     seen.add(item.address)
-    return !duplicate
+    if(!duplicate && (isEvmAddress(item.address) || isSolanaAddress(item.address))){
+      lines.push(`${item.address} ${ item.alias || '' }` )
+      return true
+    } else {
+      return false
+    }
   })
+  if(lines.length > 0 ){
+
+    walletInput.value = lines.join('\n')
+  }
+  canSumbit.value = true
 }
 
 // 去除无效地址
 const removeInvalids = () => {
-  parsedList.value = parsedList.value.filter(item => item.valid)
+  const solReg = new RegExp('^[1-9A-HJ-NP-Za-km-z]{32,44}$')
+  const ethReg = new RegExp('^0x[a-fA-F0-9]{40}$')
+
+  parsedList.value = parsedList.value.filter(item => solReg.test(item.address) || ethReg.test(item.address) )
+}
+
+const submitWalletList = () => {
+  if(!canSumbit.value){
+    ElMessage.error('请先校验地址')
+    return
+  }
+  submitting.value = true
+  
+  ElMessageBox.confirm(
+    `确定导入这 ${parsedList.value.length} 个钱包到 ${selectedGroup.value.name} 分组吗？`,
+    'Warning',
+    {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    }
+  )
+  .then(() => {
+    submitting.value = true
+    return addWalletWatch({ 
+      addressList: parsedList.value.map(item => {
+        return {
+          address:item.address,
+          name:item.alias
+        }
+      }),
+      groupId: selectedGroup.value.id
+    }) 
+  })
+  .then((data) => {
+    if(!data){
+       throw new Error('导入失败，请重试') 
+    }
+    submitting.value = false
+    canSumbit.value = false
+    importDrawer.value = false
+    fetchWalletList()
+  })
+  .catch(error=>{
+    submitting.value = false
+  })
+}
+
+const copyWallet = () => {
+  navigator.clipboard.writeText(walletOutput.value)
+  .then(() => {
+    ElMessage.success('复制成功')
+  })
+  .catch(err => {
+    console.error('复制失败', err);
+  });
 }
 
 </script>
@@ -605,6 +781,9 @@ const removeInvalids = () => {
       font-weight: 500;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
+  }
+  .disable {
+    cursor: not-allowed;;
   }
 
   .group-btn-filled {
@@ -855,6 +1034,12 @@ const removeInvalids = () => {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  margin-top: 10px;
+  :deep(){
+    .el-button {
+      margin-left: 0;
+    }
+  }
 }
 
 .import-count {
