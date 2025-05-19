@@ -65,15 +65,7 @@
             </div>
           </div>
           <div class="signal-box display-flex flex-direction-col justify-content-sp">
-            <div class="signal-txt display-flex align-items-center justify-content-fd">
-              <span>信号强度</span>
-              <strong class="display-flex align-items-fd">
-                <i></i>
-                <i></i>
-                <i></i>
-                <i></i>
-              </strong>
-            </div>
+
             <div class="num">{{ item.times }}X</div>
           </div>
         </div>
@@ -561,7 +553,7 @@ onMounted(() => {
     line-height: 1.2;
   }
   .coin-type {
-    padding: 15px 16px;
+    padding: 15px 15px;
     color: #f5f5f5;
     font-size: 14px;
     .ai-icon {
@@ -594,7 +586,7 @@ onMounted(() => {
     }
   }
   .coin-text {
-    padding: 20px 16px;
+    padding: 8px 16px;
     border-top: 1px solid #1f2225;
     border-bottom: 1px solid #1f2225;
     .logo {
@@ -609,23 +601,23 @@ onMounted(() => {
       margin-right: 4px;
     }
     .time-icon {
-      width: 12px;
-      height: 12px;
+      width: 13px;
+      height: 13px;
       color: #71777a;
       margin-right: 2px;
     }
     .time-label {
       color: #71777a;
-      font-size: 10px;
+      font-size: 11px;
     }
     .time-value {
-      font-size: 10px;
+      font-size: 11px;
       color: var(--up-color);
       margin-left: 4px;
     }
     .address-txt {
       color: #e8e8e8;
-      font-size: 10px;
+      font-size: 11px;
       margin: 6px 0;
       .copy {
         width: 10px;
@@ -635,7 +627,7 @@ onMounted(() => {
     }
     .price-txt {
       color: #71777a;
-      font-size: 10px;
+      font-size: 11px;
       white-space: nowrap;
       strong {
         color: #b4b4b4;
@@ -648,7 +640,7 @@ onMounted(() => {
       }
       span {
         color: #f5f5f5;
-        font-size: 10px;
+        font-size: 13px;
         margin-right: 6px;
       }
       i {
@@ -689,7 +681,7 @@ onMounted(() => {
     }
   }
   .kline-chart {
-    height: 300px;
+    height: 200px;
     padding: 8px 16px;
   }
   .push-box {
@@ -754,16 +746,16 @@ onMounted(() => {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       grid-gap: 10px;
-      margin-bottom: 9px;
+      margin-bottom: 5px;
       span {
         min-width: 0;
-        height: 44px;
+        height: 30px;
         border-radius: 6px;
         background: rgba(9, 182, 120, 0.16);
         cursor: pointer;
         color: var(--up-color);
         text-align: center;
-        line-height: 44px;
+        line-height: 30px;
       }
     }
     .sell-box {
@@ -772,13 +764,13 @@ onMounted(() => {
       grid-gap: 10px;
       span {
         min-width: 0;
-        height: 44px;
+        height: 30px;
         border-radius: 6px;
         background: rgba(239, 88, 88, 0.16);
         cursor: pointer;
         color: var(--down-color);
         text-align: center;
-        line-height: 44px;
+        line-height: 30px;
       }
     }
   }
