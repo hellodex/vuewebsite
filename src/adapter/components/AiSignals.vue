@@ -236,7 +236,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
 import {
   shortifyAddress,
   numberFormat,
@@ -254,12 +254,14 @@ import BigNumber from 'bignumber.js'
 import KlineChart from '@/components/Charts/KlineChart.vue'
 import AiSignalsShareDialog from '@/components/Dialogs/AiSignalsShareDialog.vue'
 import WalletConnect from '@/components/Wallet/WalletConnect.vue'
+import { socket } from '@/utils/socket'
 
 const globalStore = useGlobalStore()
 
 const tokenList = computed(() => globalStore.tokenList)
 const customWalletInfo = computed(() => globalStore.customWalletInfo)
 const isConnected = computed(() => globalStore.walletInfo.isConnected)
+const socketConnectType = computed(() => globalStore.walletInfo.socketConnectType)
 
 const dialogVisible = ref<boolean>(false)
 const smartFlowData = ref<any>(null)
@@ -325,9 +327,73 @@ const handleClose = (val: boolean) => {
 }
 
 const initData = async () => {
+  socket.off('smartKchart')
+  socket.off('smartPush')
   const res = await APIgetSmartKchart()
   signalDataList.value = res || []
+
+  socket.emit(
+    'smartKchart-off',
+    JSON.stringify({
+      pair: signalDataList.value.map((item: { pairAddress: string }) => item.pairAddress)
+    })
+  )
+
+  socket.emit(
+    'smartKchart-on',
+    JSON.stringify({
+      pair: signalDataList.value.map((item: { pairAddress: string }) => item.pairAddress)
+    })
+  )
+
+  socket.on('smartKchart', (message: string) => {
+    const data = JSON.parse(message)
+    signalDataList.value.forEach((item: any, index: number) => {
+      if (data.pairAddress == item.pairAddress) {
+        item.kcharts.push({
+          C: data.currentPrice,
+          volumeUsd: data.currentMarketCap,
+          time: data.time,
+          timestamp: data.timeStamp * 1000,
+          pushRecords: []
+        })
+
+        item.currentPrice = data.currentPrice
+        item.currentMarketCap = data.currentMarketCap
+        item.currentHolder = data.currentHolder
+        item.currentTvl = data.currentTvl || 0
+      }
+    })
+  })
+
+  socket.on('smartPush', (message: string) => {
+    const data = JSON.parse(message)
+    console.log(`smartPush:`, data)
+    signalDataList.value.forEach((item: any) => {
+      if (data.pairAddress == item.pairAddress) {
+        item.kcharts.at(-1).pushRecords.push(data)
+        console.log('smartPushItem:', item.kcharts.at(-1))
+      }
+    })
+  })
 }
+
+watch(socketConnectType, () => {
+  if (socketConnectType.value == 'socket_connect' && signalDataList.value?.length > 0) {
+    socket.emit(
+      'smartKchart-off',
+      JSON.stringify({
+        pair: signalDataList.value.map((item: { pairAddress: string }) => item.pairAddress)
+      })
+    )
+    socket.emit(
+      'smartKchart-on',
+      JSON.stringify({
+        pair: signalDataList.value.map((item: { pairAddress: string }) => item.pairAddress)
+      })
+    )
+  }
+})
 
 const handelBuySell = (item: any, amount: string, type: string) => {
   const coinInfo = getCoinInfo(item)

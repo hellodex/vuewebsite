@@ -286,8 +286,8 @@ const projectId = '0994d604ea8f67806c1604de2ab87feb' // projectId
 
 // 3. Set up the metadata - Optional
 const metadata = {
-  name: 'Hello Dex',
-  description: 'Hello Dex!',
+  name: 'HelloDex',
+  description: 'HelloDex',
   url: 'https://hellodex.io',
   icons: ['@/assets/icons/logo.svg']
 }
@@ -299,7 +299,7 @@ createAppKit({
   adapters: [ethersAdapter, solanaWeb3JsAdapter],
   networks: [mainnet, bsc, arbitrum, xLayer, base, optimism, solana],
   allWallets: 'SHOW',
-  enableWalletConnect: false,
+  enableWalletConnect: true,
   features: {
     analytics: true,
     socials: false,

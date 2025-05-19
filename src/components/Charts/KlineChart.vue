@@ -2,16 +2,11 @@
   <div class="echarts" ref="echartContainer"></div>
 </template>
 <script setup lang="ts">
-import { inject, markRaw, nextTick, onMounted, ref } from 'vue'
+import { inject, markRaw, nextTick, onMounted, ref, watch } from 'vue'
 import { numberFormat, formatHourMinDate } from '@/utils'
+
 const props: any = defineProps({
   lineData: {
-    type: Array,
-    default: () => {
-      return []
-    }
-  },
-  pushRecords: {
     type: Array,
     default: () => {
       return []
@@ -20,8 +15,8 @@ const props: any = defineProps({
 })
 const emit = defineEmits(['show'])
 
-const date: any = props.lineData?.map((item: any) => item.timestamp.toString()) ?? []
-const xData: any = props.lineData?.map((item: any) => item.C) ?? []
+const date = ref<any>(props.lineData?.map((item: any) => item.timestamp.toString()) ?? [])
+const xData = ref<any>(props.lineData?.map((item: any) => item.C) ?? [])
 // 获取 echart 挂载的DOM节点
 const echartContainer = ref()
 const lineEchart = ref<any>(null)
@@ -259,118 +254,129 @@ const handelDialogShow = (params: any) => {
   emit('show', typeof params == 'string' ? JSON.parse(params) : params)
 }
 
-const initEcharts = () => {
-  lineEchart.value = markRaw(
-    (Echarts as any).init(echartContainer.value, null, { renderer: 'svg' })
-  )
-  const options = {
-    tooltip: {
-      trigger: 'axis',
-      padding: 0,
-      borderWidth: 0,
-      borderRadius: 8,
-      confine: true,
-      extraCssText: 'z-index: 10;',
-      formatter: function (params: any) {
-        const { dataIndex } = params[0]
-        const item = props.lineData.at(dataIndex)
-        return `<div style="padding: 10px;border-radius: 6px;line-height: 1.5;font-size: 12px;background:#181818;color:#f5f5f5;">
+const options = {
+  tooltip: {
+    trigger: 'axis',
+    padding: 0,
+    borderWidth: 0,
+    borderRadius: 8,
+    confine: true,
+    extraCssText: 'z-index: 10;',
+    formatter: function (params: any) {
+      const { dataIndex } = params[0]
+      const item = props.lineData.at(dataIndex)
+      return `<div style="padding: 10px;border-radius: 6px;line-height: 1.5;font-size: 12px;background:#181818;color:#f5f5f5;">
                 时间: ${item.time} <br/>
 					      价格:  ${numberFormat(item.C)}<br/>
 								市值:  ${numberFormat(item.volumeUsd)}
                 </div>`
-      }
+    }
+  },
+  grid: {
+    left: '2%',
+    right: '2%',
+    top: 35,
+    bottom: '2%',
+    containLabel: true
+  },
+  xAxis: {
+    type: 'category',
+    data: date.value,
+    axisTick: {
+      show: false
     },
-    grid: {
-      left: '2%',
-      right: '2%',
-      top: 35,
-      bottom: '2%',
-      containLabel: true
+    axisLine: {
+      show: false
     },
-    xAxis: {
-      type: 'category',
-      data: date,
-      axisTick: {
-        show: false
+    axisLabel: {
+      textStyle: {
+        color: '#393939'
       },
-      axisLine: {
-        show: false
-      },
-      axisLabel: {
-        textStyle: {
-          color: '#393939'
-        },
-        formatter: function (value: string) {
-          return formatHourMinDate(value)
+      interval: function (index: number, value: any) {
+        if (index === 0) {
+          return true
+        } else if (index == props.lineData?.length - 1) {
+          return true
+        } else {
+          const interval = Math.ceil(props.lineData?.length / 4)
+          return index % interval == 0
         }
+      },
+      formatter: function (value: string) {
+        return formatHourMinDate(value)
       }
+    }
+  },
+  yAxis: {
+    type: 'value',
+    axisTick: {
+      show: false
     },
-    yAxis: {
-      type: 'value',
-      axisTick: {
-        show: false
-      },
-      splitLine: {
-        show: false
-      },
-      axisLabel: {
-        show: false
-      },
-      axisLine: {
-        show: false
-      },
-      axisPointer: {
-        show: false
-      }
+    splitLine: {
+      show: false
     },
-    series: [
-      {
-        type: 'line',
-        data: xData,
-        smooth: true,
-        symbolSize: 0,
-        lineStyle: {
-          width: 3,
-          color: '#2ebd85',
-          shadowBlur: 8
-        },
-        z: 1
+    axisLabel: {
+      show: false
+    },
+    axisLine: {
+      show: false
+    },
+    axisPointer: {
+      show: false
+    }
+  },
+  series: [
+    {
+      type: 'line',
+      data: xData.value,
+      smooth: true,
+      symbolSize: 0,
+      lineStyle: {
+        width: 3,
+        color: '#2ebd85',
+        shadowBlur: 8
       },
-      {
-        type: 'custom',
-        renderItem: O,
-        data: customDataFilter(),
-        tooltip: {
-          show: false
-        },
-        z: 3
+      z: 1
+    },
+    {
+      type: 'custom',
+      renderItem: O,
+      data: customDataFilter(),
+      tooltip: {
+        show: false
       },
-      {
-        type: 'custom',
-        renderItem: M,
-        data: [[date.at(-1), xData.at(-1)]],
-        silent: true,
-        z: 4
+      z: 3
+    },
+    {
+      type: 'custom',
+      renderItem: M,
+      data: [[date.value.at(-1), xData.value.at(-1)]],
+      silent: true,
+      z: 4
+    },
+    {
+      type: 'effectScatter',
+      data: [[date.value.at(-1), xData.value.at(-1)]],
+      coordinateSystem: 'cartesian2d',
+      symbolSize: 10,
+      silent: true,
+      itemStyle: {
+        color: '#2ebd85'
       },
-      {
-        type: 'effectScatter',
-        data: [[date.at(-1), xData.at(-1)]],
-        coordinateSystem: 'cartesian2d',
-        symbolSize: 10,
-        silent: true,
-        itemStyle: {
-          color: '#2ebd85'
-        },
-        rippleEffect: {
-          number: 1,
-          scale: 2.5,
-          period: 1.2
-        },
-        z: 4
-      }
-    ]
-  }
+      rippleEffect: {
+        number: 1,
+        scale: 2.5,
+        period: 1.2
+      },
+      z: 4
+    }
+  ]
+}
+
+const initEcharts = () => {
+  lineEchart.value = markRaw(
+    (Echarts as any).init(echartContainer.value, null, { renderer: 'svg' })
+  )
 
   lineEchart.value.setOption(options)
   lineEchart.value.off('click')
@@ -394,6 +400,65 @@ const resizeChart = () => {
   }
 }
 
+watch(props.lineData, (newValue) => {
+  date.value = newValue?.map((item: any) => item.timestamp.toString()) ?? []
+  xData.value = newValue?.map((item: any) => item.C) ?? []
+  lineEchart.value.setOption({
+    xAxis: {
+      data: date.value,
+      axisLabel: {
+        interval: function (index: number, value: any) {
+          if (index === 0) {
+            return true
+          } else if (index == newValue.length - 1) {
+            return true
+          } else {
+            const interval = Math.ceil(newValue.length / 4)
+            return index % interval == 0
+          }
+        }
+      }
+    },
+    series: [
+      {
+        data: xData.value
+      },
+      {
+        type: 'custom',
+        renderItem: O,
+        data: customDataFilter(),
+        tooltip: {
+          show: false
+        },
+        z: 3
+      },
+      {
+        type: 'custom',
+        renderItem: M,
+        data: [[date.value.at(-1), xData.value.at(-1)]],
+        silent: true,
+        z: 4
+      },
+      {
+        type: 'effectScatter',
+        data: [[date.value.at(-1), xData.value.at(-1)]],
+        coordinateSystem: 'cartesian2d',
+        symbolSize: 10,
+        silent: true,
+        itemStyle: {
+          color: '#2ebd85'
+        },
+        rippleEffect: {
+          number: 1,
+          scale: 2.5,
+          period: 1.2
+        },
+        z: 4
+      }
+    ]
+  })
+})
+
 onMounted(() => {
   const global: any = window
   global['handelDialogShow'] = handelDialogShow
@@ -401,56 +466,6 @@ onMounted(() => {
   nextTick(() => {
     initEcharts()
   })
-  // // 图表
-  // setInterval(function () {
-  //   addData(true)
-  //   lineEchart.value.setOption({
-  //     xAxis: {
-  //       data: date
-  //     },
-  //     series: [
-  //       {
-  //         data: xData
-  //       },
-  //       {
-  //         type: 'custom',
-  //         renderItem: O,
-  //         data: [
-  //           [date.at(1), xData.at(1)],
-  //           [date.at(2), xData.at(2)],
-  //           [date.at(8), xData.at(8)]
-  //         ],
-  //         tooltip: {
-  //           show: !1
-  //         },
-  //         z: 3
-  //       },
-  //       {
-  //         type: 'custom',
-  //         renderItem: M,
-  //         data: [[date.at(-1), xData.at(-1)]],
-  //         silent: true,
-  //         z: 4
-  //       },
-  //       {
-  //         type: 'effectScatter',
-  //         data: [[date.at(-1), xData.at(-1)]],
-  //         coordinateSystem: 'cartesian2d',
-  //         symbolSize: 10,
-  //         silent: false,
-  //         itemStyle: {
-  //           color: '#2ebd85'
-  //         },
-  //         rippleEffect: {
-  //           number: 1,
-  //           scale: 2.5,
-  //           period: 1.2
-  //         },
-  //         z: 2
-  //       }
-  //     ]
-  //   })
-  // }, 2000)
 })
 
 window.addEventListener('resize', resizeChart)
