@@ -487,25 +487,14 @@ const handelPause = async (row: any) => {
   }
 }
 const handelStartOrPause = async (row: any,status: number) => {
-  const message = status == 0?'确定要启动此条监控':'确定要暂停此条监控'
-  ElMessageBox.confirm(message, i18n.t('Tips'), {
-    confirmButtonText: i18n.t('Confirm'),
-    cancelButtonText: i18n.t('Cancel'),
-    type: 'info'
+  const res = await startWalletWatchStrategy({
+    id: row.id,
+    status:status
   })
-    .then(async () => {
-      const res = await startWalletWatchStrategy({
-        id: row.id,
-        status:status
-      })
-      if (res) {
-        getTableData()
-        customMessage({
-          type: 'success',
-          title: '操作成功'
-        })
-      }
-    })
+  if (res) {
+    walletTableData.value = res || []
+  }
+    
 }
 
 const handelPlay = async (row: any) => {
