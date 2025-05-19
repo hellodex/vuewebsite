@@ -682,12 +682,12 @@ onMounted(() => {
   }
   .kline-chart {
     height: 200px;
-    padding: 8px 16px;
+    padding: 8px 8px;
   }
   .push-box {
-    margin: 16px 0;
+    margin: 10px 0px;
     padding: 0 16px;
-    font-size: 12px;
+    font-size: 11px;
     .push-txt {
       display: flex;
       align-items: center;
@@ -700,6 +700,7 @@ onMounted(() => {
       }
       span {
         color: #71777a;
+        padding: 4px;
         margin: 0 2px;
         white-space: nowrap;
       }
@@ -713,11 +714,11 @@ onMounted(() => {
     .table-tr {
       background: #1b1b1b;
       border-bottom: 1px solid rgba(23, 24, 27, 0.3);
-      padding: 15px;
+      padding: 12px;
       font-size: 12px;
       span {
         flex: 1;
-        color: #828282;
+        color: #737373;
       }
     }
 
@@ -731,7 +732,7 @@ onMounted(() => {
   .buy-sell-box {
     padding: 0 16px;
     margin-top: 16px;
-    font-size: 14px;
+    font-size: 13px;
     font-family: 'PingFangSC-Medium';
     position: relative;
     :deep(.mask) {
