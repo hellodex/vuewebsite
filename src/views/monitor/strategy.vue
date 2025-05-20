@@ -107,8 +107,8 @@
             </el-table-column>
             <el-table-column label="状态">
               <template #default="scope">
-                <el-text v-if="scope.row.status == 0" type="success">监控中</el-text>
-                <el-text v-else type="danger">已暂停</el-text>
+                <el-text v-if="scope.row.status == 0" style="font-size: 12px" type="success">监控中</el-text>
+                <el-text v-else style="font-size: 12px" type="danger">已暂停</el-text>
               </template>
             </el-table-column>
             <!-- <el-table-column label="通知频率">

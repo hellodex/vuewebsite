@@ -1,5 +1,11 @@
 <template>
-  <el-dialog v-model="dialogVisible" :before-close="handleClose" :title="isUpdate? `更新 ${info.name} 监控`:'创建监控'" width="600" >
+  <el-dialog v-model="dialogVisible"  :before-close="handleClose"  width="600" >
+
+    <template #header>
+      <div style="font-size: 13px; color: #ffffff; font-weight: bold;">
+        {{ isUpdate ? '修改监控' : '创建监控' }}
+      </div>
+    </template>
     <div class="monitorForm-dialog-content">
       <el-form
         class="monitorForm-dialog-form"
@@ -486,6 +492,8 @@ const submitForm = async (formEl: FormInstance | undefined) => {
   .trigger-condition-label {
     :deep(){
       label,.el-form-item__label{
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.5);
         border-radius: 8px;
         padding-left: 16px;
         border: 1px solid rgba(255, 255, 255, 0.3);
