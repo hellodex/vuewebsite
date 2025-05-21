@@ -46,8 +46,14 @@
         <template v-if="ruleForm.watchType == 0">
           <el-form-item class="trigger-condition-label"  label="操作类型" prop="actionType"  label-position="left" label-width="180px">
             <el-select v-model="ruleForm.actionType" :teleported="false" multiple placeholder="请选择操作类型">
-              <el-option label="买入" :value="1" />
-              <el-option label="卖出" :value="2" />
+              <el-option label="买入" :value="1" >
+                <el-checkbox :model-value="ruleForm.actionType && ruleForm.actionType.includes(1)" disabled></el-checkbox>
+                <span>买入</span>
+              </el-option>
+              <el-option label="卖出" :value="2" >
+                <el-checkbox :model-value="ruleForm.actionType && ruleForm.actionType.includes(2)" disabled></el-checkbox> 
+                <span>卖出</span>
+              </el-option>
             </el-select>
           </el-form-item>
           <el-form-item class="trigger-condition-label"  label="交易额大于" prop="type" label-position="left" label-width="180px">
@@ -133,9 +139,18 @@
         </el-form-item>
         <el-form-item class="trigger-condition-label" label="公链列表" prop="chainCode" label-position="left" label-width="180px">
           <el-select v-model="ruleForm.chainCode" :teleported="false" multiple placeholder="请选择公链列表">
-            <el-option label="ETH" value="ETH" />
-            <el-option label="Solana" value="Solana" />
-            <el-option label="BSC" value="BSC" />
+            <el-option label="ETH" value="ETH">
+              <el-checkbox :model-value="ruleForm.chainCode && ruleForm.chainCode.includes('ETH')" disabled></el-checkbox>
+              <span>ETH</span>
+            </el-option>
+            <el-option label="Solana" value="Solana">
+              <el-checkbox :model-value="ruleForm.chainCode && ruleForm.chainCode.includes('Solana')" disabled></el-checkbox>
+              <span>Solana</span>
+            </el-option>
+            <el-option label="BSC" value="BSC">
+              <el-checkbox :model-value="ruleForm.chainCode && ruleForm.chainCode.includes('BSC')" disabled></el-checkbox>
+              <span>BSC</span>
+            </el-option>
           </el-select>
         </el-form-item>
         <el-form-item class="trigger-condition-label"  label="黑名单" prop="type" label-position="left" label-width="180px">
@@ -552,6 +567,26 @@ const submitForm = async (formEl: FormInstance | undefined) => {
     border-radius: 6px;
     white-space: nowrap;
     cursor: pointer;
+  }
+  
+  // 添加选项内容的样式
+  :deep(.el-select-dropdown__item) {
+    display: flex;
+    align-items: center;
+  }
+  
+  // 自定义el-option内部的布局
+  :deep(.el-option__content) {
+    display: flex;
+    align-items: center;
+    width: 100%;
+  }
+  
+  // 复选框样式
+  :deep(.el-checkbox) {
+    margin-right: 8px;
+    display: flex;
+    align-items: center;
   }
 }
 </style>
