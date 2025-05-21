@@ -16,6 +16,7 @@
         :size="formSize"
         label-position="top"
         :hide-required-asterisk="true"
+        :scroll-into-view-options="{behavior: 'smooth', block: 'center'}"
       >
         <el-form-item label="监控名称" prop="name">
           <el-input
@@ -234,7 +235,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, reactive,  onMounted,watch } from 'vue'
+import { ref, computed, reactive,  onMounted,watch, nextTick } from 'vue'
 import type { ComponentSize, FormInstance, FormRules } from 'element-plus'
 import { timeTypeList, noticeTypeList } from '@/types'
 import { walletWatchGroupList, addWalletWatchStrategy,updateWalletWatchStrategy, getWalletWatchStrategy } from '@/api'
@@ -474,6 +475,14 @@ const submitForm = async (formEl: FormInstance | undefined) => {
       emit('refresh', ruleForm.value)
     } else {
       console.log('error submit!', fields)
+      if (fields) {
+        const firstErrorField = Object.keys(fields)[0];
+        if (firstErrorField) {
+          nextTick(() => {
+            formEl.scrollToField(firstErrorField);
+          });
+        }
+      }
     }
   })
 }
