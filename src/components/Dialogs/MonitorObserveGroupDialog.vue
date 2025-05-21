@@ -39,7 +39,10 @@
               :key="item.id"
               :label="item.name"
               :value="item.id"
-            />
+            >
+              <el-checkbox :model-value="ruleForm.groupIds && ruleForm.groupIds.includes(item.id)" disabled></el-checkbox>
+              <span>{{ item.name }}</span>
+            </el-option>
           </el-select>
         </el-form-item>
         
