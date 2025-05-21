@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="dialogVisible"  :before-close="handleClose"  width="600" >
+  <el-dialog v-model="dialogVisible"  :before-close="handleClose"  width="600" v-loading="dialogLoading" element-loading-text="加载中..." element-loading-background="rgba(0, 0, 0, 0.7)" >
 
     <template #header>
       <div style="font-size: 13px; color: #ffffff; font-weight: bold;">
@@ -338,12 +338,27 @@ const rules = reactive<FormRules<any>>({
       trigger: ['blur', 'change']
     }
   ],
+  notificationType: [
+    {
+      validator: (rule: any, value: any, callback: any) => {
+        if (!value || value.length === 0) {
+          callback(new Error('请选择通知频率'))
+        } else {
+          callback()
+        }
+      },
+      trigger: ['blur', 'change']
+    }
+  ],
 })
 const isLoading = ref(false)
+const dialogLoading = ref(false)
+
 // 初始化
 onMounted(() => {
   fetchWalletGroups()
   if(props.info.id){
+    dialogLoading.value = true
     isLoading.value = true
     isUpdate.value = true
     fetchWalletData()
@@ -372,7 +387,6 @@ const fetchWalletGroups = async () => {
 const fetchWalletData = async () => {
   try {
     const data = await getWalletWatchStrategy({id: props.info.id})
-    isLoading.value = false
     ruleForm.value = {...data}
     ruleForm.value.groupIds = ruleForm.value.selectGroupList.map((e:any) => e.id)
     ruleForm.value.actionType = JSON.parse(ruleForm.value.actionType)
@@ -388,6 +402,9 @@ const fetchWalletData = async () => {
 
   } catch (error) {
     console.error('获取监控详情出错:', error)
+  } finally {
+    isLoading.value = false
+    dialogLoading.value = false
   }
 }
 
@@ -493,8 +510,10 @@ const submitForm = async (formEl: FormInstance | undefined) => {
 <style lang="scss" scoped>
 .monitorForm-dialog-content {
   height: 60vh;
-   overflow-y: auto;
-   padding: 1px;
+  overflow-y: auto;
+  padding: 1px;
+  margin-top: 16px;
+  
   .center{
     :deep(){
       label{
@@ -594,11 +613,59 @@ const submitForm = async (formEl: FormInstance | undefined) => {
     width: 100%;
   }
   
-  // 复选框样式
+  // 复选框样式调整
   :deep(.el-checkbox) {
-    margin-right: 8px;
-    display: flex;
-    align-items: center;
+    margin-right: 20px;
+    
+    .el-checkbox__input {
+      .el-checkbox__inner {
+        background-color: transparent;
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        
+        &::after {
+          border-color: #ffffff;
+        }
+      }
+      
+      &.is-checked {
+        .el-checkbox__inner {
+          background-color: #409EFF;
+          border-color: #409EFF;
+        }
+      }
+    }
+    
+    .el-checkbox__label {
+      color: #ffffff;
+      padding-left: 8px;
+    }
   }
+  
+  // 特别针对通知频率复选框组的样式
+  .checkbox-notice {
+    :deep(.el-checkbox-group) {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+    
+    :deep(.el-checkbox) {
+      margin-right: 0;
+    }
+  }
+  
+  // 添加全局表单标签样式
+  :deep(.el-form-item__label) {
+    color: #ffffff; // 设置标签为白色
+    font-weight: bolder;
+  }
+}
+
+:deep(.el-dialog__header) {
+  margin-bottom: 10px;
+}
+
+:deep(.el-dialog__body) {
+  padding-top: 20px;
 }
 </style>
