@@ -27,9 +27,9 @@
         </el-form-item>
         <el-form-item label="监控类型" prop="watchType">
           <el-select v-model="ruleForm.watchType" :teleported="false" placeholder="请选择监控类型" @change="windowTypeChange" >
-            <el-option label="钱包监控" :value="0" />
-            <el-option label="N时间内多钱包买入监控" :value="1" />
-            <el-option label="N时间内多钱包卖出监控" :value="2" />
+            <el-option label="钱包监控" value="0" />
+            <el-option label="N时间内多钱包买入监控" value="1" />
+            <el-option label="N时间内多钱包卖出监控" value="2" />
           </el-select>
         </el-form-item>
         <el-form-item label="选择分组" prop="groupIds">
@@ -131,14 +131,14 @@
         </template>
         <el-form-item class="trigger-condition-label" label="过滤非主动交易&空投" prop="type" label-position="left" label-width="180px">
           <el-select v-model="ruleForm.tradeType" :teleported="false">
-            <el-option label="是" :value="1" />
-            <el-option label="否" :value="0" />
+            <el-option label="是" value="1" />
+            <el-option label="否" value="0" />
           </el-select>
         </el-form-item>
         <el-form-item class="trigger-condition-label" label="忽略平台币" prop="type" label-position="left" label-width="180px">
           <el-select v-model="ruleForm.tokenType" :teleported="false"> 
-            <el-option label="是" :value="1" />
-            <el-option label="否" :value="0" />
+            <el-option label="是" value="1" />
+            <el-option label="否" value="0" />
           </el-select>
         </el-form-item>
         <el-form-item class="trigger-condition-label" label="公链列表" prop="chainCode" label-position="left" label-width="180px">
@@ -220,7 +220,7 @@
           <el-checkbox-group v-model="ruleForm.notificationType" @change="handleChange">
             <el-checkbox
               v-for="item in noticeTypeList"
-              :value="item.value"
+              :value="String(item.value)"
               :label="item.label"
               :key="item.value"
               >{{ item.label }}</el-checkbox
