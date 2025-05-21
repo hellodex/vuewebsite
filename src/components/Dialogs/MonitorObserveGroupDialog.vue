@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="dialogVisible"  :before-close="handleClose"  width="600" >
+  <el-dialog v-model="dialogVisible"  :before-close="handleClose"  width="600" v-loading="dialogLoading" element-loading-text="加载中..." element-loading-background="rgba(0, 0, 0, 0.7)" >
 
     <template #header>
       <div style="font-size: 13px; color: #ffffff; font-weight: bold;">
@@ -16,6 +16,7 @@
         :size="formSize"
         label-position="top"
         :hide-required-asterisk="true"
+        :scroll-into-view-options="{behavior: 'smooth', block: 'center'}"
       >
         <el-form-item label="监控名称" prop="name">
           <el-input
@@ -26,9 +27,9 @@
         </el-form-item>
         <el-form-item label="监控类型" prop="watchType">
           <el-select v-model="ruleForm.watchType" :teleported="false" placeholder="请选择监控类型" @change="windowTypeChange" >
-            <el-option label="钱包监控" :value="0" />
-            <el-option label="N时间内多钱包买入监控" :value="1" />
-            <el-option label="N时间内多钱包卖出监控" :value="2" />
+            <el-option label="钱包监控" value="0" />
+            <el-option label="N时间内多钱包买入监控" value="1" />
+            <el-option label="N时间内多钱包卖出监控" value="2" />
           </el-select>
         </el-form-item>
         <el-form-item label="选择分组" prop="groupIds">
@@ -38,7 +39,10 @@
               :key="item.id"
               :label="item.name"
               :value="item.id"
-            />
+            >
+              <el-checkbox :model-value="ruleForm.groupIds && ruleForm.groupIds.includes(item.id)" disabled></el-checkbox>
+              <span>{{ item.name }}</span>
+            </el-option>
           </el-select>
         </el-form-item>
         
@@ -46,8 +50,14 @@
         <template v-if="ruleForm.watchType == 0">
           <el-form-item class="trigger-condition-label"  label="操作类型" prop="actionType"  label-position="left" label-width="180px">
             <el-select v-model="ruleForm.actionType" :teleported="false" multiple placeholder="请选择操作类型">
-              <el-option label="买入" :value="1" />
-              <el-option label="卖出" :value="2" />
+              <el-option label="买入" :value="1" >
+                <el-checkbox :model-value="ruleForm.actionType && ruleForm.actionType.includes(1)" disabled></el-checkbox>
+                <span>买入</span>
+              </el-option>
+              <el-option label="卖出" :value="2" >
+                <el-checkbox :model-value="ruleForm.actionType && ruleForm.actionType.includes(2)" disabled></el-checkbox> 
+                <span>卖出</span>
+              </el-option>
             </el-select>
           </el-form-item>
           <el-form-item class="trigger-condition-label"  label="交易额大于" prop="type" label-position="left" label-width="180px">
@@ -121,21 +131,30 @@
         </template>
         <el-form-item class="trigger-condition-label" label="过滤非主动交易&空投" prop="type" label-position="left" label-width="180px">
           <el-select v-model="ruleForm.tradeType" :teleported="false">
-            <el-option label="是" :value="1" />
-            <el-option label="否" :value="0" />
+            <el-option label="是" value="1" />
+            <el-option label="否" value="0" />
           </el-select>
         </el-form-item>
         <el-form-item class="trigger-condition-label" label="忽略平台币" prop="type" label-position="left" label-width="180px">
           <el-select v-model="ruleForm.tokenType" :teleported="false"> 
-            <el-option label="是" :value="1" />
-            <el-option label="否" :value="0" />
+            <el-option label="是" value="1" />
+            <el-option label="否" value="0" />
           </el-select>
         </el-form-item>
         <el-form-item class="trigger-condition-label" label="公链列表" prop="chainCode" label-position="left" label-width="180px">
           <el-select v-model="ruleForm.chainCode" :teleported="false" multiple placeholder="请选择公链列表">
-            <el-option label="ETH" value="ETH" />
-            <el-option label="Solana" value="Solana" />
-            <el-option label="BSC" value="BSC" />
+            <el-option label="ETH" value="ETH">
+              <el-checkbox :model-value="ruleForm.chainCode && ruleForm.chainCode.includes('ETH')" disabled></el-checkbox>
+              <span>ETH</span>
+            </el-option>
+            <el-option label="Solana" value="Solana">
+              <el-checkbox :model-value="ruleForm.chainCode && ruleForm.chainCode.includes('Solana')" disabled></el-checkbox>
+              <span>Solana</span>
+            </el-option>
+            <el-option label="BSC" value="BSC">
+              <el-checkbox :model-value="ruleForm.chainCode && ruleForm.chainCode.includes('BSC')" disabled></el-checkbox>
+              <span>BSC</span>
+            </el-option>
           </el-select>
         </el-form-item>
         <el-form-item class="trigger-condition-label"  label="黑名单" prop="type" label-position="left" label-width="180px">
@@ -201,7 +220,7 @@
           <el-checkbox-group v-model="ruleForm.notificationType" @change="handleChange">
             <el-checkbox
               v-for="item in noticeTypeList"
-              :value="item.value"
+              :value="String(item.value)"
               :label="item.label"
               :key="item.value"
               >{{ item.label }}</el-checkbox
@@ -219,7 +238,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, reactive,  onMounted,watch } from 'vue'
+import { ref, computed, reactive,  onMounted,watch, nextTick } from 'vue'
 import type { ComponentSize, FormInstance, FormRules } from 'element-plus'
 import { timeTypeList, noticeTypeList } from '@/types'
 import { walletWatchGroupList, addWalletWatchStrategy,updateWalletWatchStrategy, getWalletWatchStrategy } from '@/api'
@@ -319,12 +338,27 @@ const rules = reactive<FormRules<any>>({
       trigger: ['blur', 'change']
     }
   ],
+  notificationType: [
+    {
+      validator: (rule: any, value: any, callback: any) => {
+        if (!value || value.length === 0) {
+          callback(new Error('请选择通知频率'))
+        } else {
+          callback()
+        }
+      },
+      trigger: ['blur', 'change']
+    }
+  ],
 })
 const isLoading = ref(false)
+const dialogLoading = ref(false)
+
 // 初始化
 onMounted(() => {
   fetchWalletGroups()
   if(props.info.id){
+    dialogLoading.value = true
     isLoading.value = true
     isUpdate.value = true
     fetchWalletData()
@@ -353,7 +387,6 @@ const fetchWalletGroups = async () => {
 const fetchWalletData = async () => {
   try {
     const data = await getWalletWatchStrategy({id: props.info.id})
-    isLoading.value = false
     ruleForm.value = {...data}
     ruleForm.value.groupIds = ruleForm.value.selectGroupList.map((e:any) => e.id)
     ruleForm.value.actionType = JSON.parse(ruleForm.value.actionType)
@@ -369,6 +402,9 @@ const fetchWalletData = async () => {
 
   } catch (error) {
     console.error('获取监控详情出错:', error)
+  } finally {
+    isLoading.value = false
+    dialogLoading.value = false
   }
 }
 
@@ -459,6 +495,14 @@ const submitForm = async (formEl: FormInstance | undefined) => {
       emit('refresh', ruleForm.value)
     } else {
       console.log('error submit!', fields)
+      if (fields) {
+        const firstErrorField = Object.keys(fields)[0];
+        if (firstErrorField) {
+          nextTick(() => {
+            formEl.scrollToField(firstErrorField);
+          });
+        }
+      }
     }
   })
 }
@@ -466,8 +510,10 @@ const submitForm = async (formEl: FormInstance | undefined) => {
 <style lang="scss" scoped>
 .monitorForm-dialog-content {
   height: 60vh;
-   overflow-y: auto;
-   padding: 1px;
+  overflow-y: auto;
+  padding: 1px;
+  margin-top: 16px;
+  
   .center{
     :deep(){
       label{
@@ -553,5 +599,73 @@ const submitForm = async (formEl: FormInstance | undefined) => {
     white-space: nowrap;
     cursor: pointer;
   }
+  
+  // 添加选项内容的样式
+  :deep(.el-select-dropdown__item) {
+    display: flex;
+    align-items: center;
+  }
+  
+  // 自定义el-option内部的布局
+  :deep(.el-option__content) {
+    display: flex;
+    align-items: center;
+    width: 100%;
+  }
+  
+  // 复选框样式调整
+  :deep(.el-checkbox) {
+    margin-right: 20px;
+    
+    .el-checkbox__input {
+      .el-checkbox__inner {
+        background-color: transparent;
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        
+        &::after {
+          border-color: #ffffff;
+        }
+      }
+      
+      &.is-checked {
+        .el-checkbox__inner {
+          background-color: #409EFF;
+          border-color: #409EFF;
+        }
+      }
+    }
+    
+    .el-checkbox__label {
+      color: #ffffff;
+      padding-left: 8px;
+    }
+  }
+  
+  // 特别针对通知频率复选框组的样式
+  .checkbox-notice {
+    :deep(.el-checkbox-group) {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+    
+    :deep(.el-checkbox) {
+      margin-right: 0;
+    }
+  }
+  
+  // 添加全局表单标签样式
+  :deep(.el-form-item__label) {
+    color: #ffffff; // 设置标签为白色
+    font-weight: bolder;
+  }
+}
+
+:deep(.el-dialog__header) {
+  margin-bottom: 10px;
+}
+
+:deep(.el-dialog__body) {
+  padding-top: 20px;
 }
 </style>
