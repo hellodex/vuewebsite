@@ -69,7 +69,7 @@
             </el-input>
           </el-form-item>
         </template>
-        <template v-if="ruleForm.watchType == 1">
+        <template v-if="ruleForm.watchType === '1'">
           <el-form-item class="trigger-condition-label"  label="N时间内多钱包买入" prop="actionType" label-position="left" label-width="180px">
             <div class="trigger-condition display-flex align-items-center">
               <el-select v-model="ruleForm.buyInWindow" style="flex: 1;"  :teleported="false">
@@ -99,7 +99,7 @@
             </el-input>
           </el-form-item>
         </template>
-        <template v-if="ruleForm.watchType == 2">
+        <template v-if="ruleForm.watchType === '2'">
           <el-form-item  class="trigger-condition-label" label="N时间内多钱包卖出" prop="actionType" label-position="left" label-width="180px">
             <div class="trigger-condition display-flex align-items-center">
               <el-select v-model="ruleForm.sellInWindow" style="flex: 1;"  :teleported="false">
@@ -230,7 +230,9 @@
 
         <div class="display-flex align-items-center justify-content-fd btn">
           <!-- <span class="delete">上一步</span> -->
-          <span class="submit" @click="submitForm(ruleFormRef)">提交</span>
+          <span class="submit" @click="submitForm(ruleFormRef)" :class="{ 'disabled': submitting }" v-loading="submitting">
+            {{ submitting ? '提交中...' : '提交' }}
+          </span>
         </div>
       </el-form>
     </div>
@@ -242,9 +244,7 @@ import { ref, computed, reactive,  onMounted,watch, nextTick } from 'vue'
 import type { ComponentSize, FormInstance, FormRules } from 'element-plus'
 import { timeTypeList, noticeTypeList } from '@/types'
 import { walletWatchGroupList, addWalletWatchStrategy,updateWalletWatchStrategy, getWalletWatchStrategy } from '@/api'
-import { numberFormat } from '@/utils'
 import { customMessage } from '@/utils/message'
-import { isArray } from 'element-plus/es/utils/types.mjs'
 
 
 const emit = defineEmits(['refresh', 'close'])
@@ -280,7 +280,7 @@ const formSize = ref<ComponentSize>('large')
 const ruleForm = ref<any>({
   name: '',
   type: 'group',
-  watchType: 0,
+  watchType: '0',
   status:0,
   groupIds: [],
   actionType:[1,2],
@@ -292,10 +292,10 @@ const ruleForm = ref<any>({
   walletCountInWindow:'',
   totalAmountInWindow:'',
   walletAmountThreshold:0,
-  tradeType:1,
-  tokenType:1,
+  tradeType:'1',
+  tokenType:'1',
   chainCode:['ETH'], 
-  notificationType:[1],
+  notificationType:['1'],
   marketcapThreshold:'',
   marketcapLimit:'',
   token5minTradeAmount:'',
@@ -341,6 +341,8 @@ const rules = reactive<FormRules<any>>({
   notificationType: [
     {
       validator: (rule: any, value: any, callback: any) => {
+        console.log('value', value)
+
         if (!value || value.length === 0) {
           callback(new Error('请选择通知频率'))
         } else {
@@ -353,6 +355,7 @@ const rules = reactive<FormRules<any>>({
 })
 const isLoading = ref(false)
 const dialogLoading = ref(false)
+const submitting = ref(false)
 
 // 初始化
 onMounted(() => {
@@ -432,10 +435,12 @@ const handleChange = (value: any) => {
 }
 
 const submitForm = async (formEl: FormInstance | undefined) => {
-  if (!formEl) return
+  if (!formEl || submitting.value) return
   await formEl.validate(async (valid, fields) => {
     if (valid) {
-      /*
+      try {
+        submitting.value = true
+        /*
   'name': '', // 策略名称
   'watchType': '', // 监控类型：0=钱包监控，1=N时间内多钱包买入监控，2=N时间内多钱包卖出监控
   'status': '', // 状态：0=正常监控，1=暂停
@@ -459,40 +464,48 @@ const submitForm = async (formEl: FormInstance | undefined) => {
   'launchTimeExceed': '', // 开盘时间大于，单位：分钟
   'launchTimeBelow': '', // 开盘时间小于，单位：分钟
        */
-      const params = { ...ruleForm.value}
-      if(params.windowType == 1){
-        params.totalAmountInWindow = null
-      } else {
-         params.walletCountInWindow = null
-      }
-      params.notificationType = params.notificationType.join()
-      // params.status = params.notificationType == '4' ? 1 : 0
-      params.actionType = JSON.stringify(params.actionType)
-      params.chainCode =  JSON.stringify(params.chainCode)
-      if(params.blockedList.trim()){
-        params.blockedList =JSON.stringify(params.blockedList.split('\n'))
-      }
-      params.launchTimeBelow =  params.launchTimeBelow ? parseInt(params.launchTimeBelow): 0
-      params.launchTimeExceed =  params.launchTimeExceed ? parseInt(params.launchTimeExceed): 0
-      params.token1minTradeAmount =  params.token1minTradeAmount ? parseInt(params.token1minTradeAmount): 0
-      params.token5minTradeAmount =  params.token5minTradeAmount ? parseInt(params.token5minTradeAmount): 0
-      params.marketcapLimit =  params.marketcapLimit ? parseInt(params.marketcapLimit): 0
-      params.marketcapThreshold =  params.marketcapThreshold ? parseInt(params.marketcapThreshold): 0
-      if(isUpdate.value && params.id){
-        await updateWalletWatchStrategy(params)
+        const params = { ...ruleForm.value}
+        if(params.windowType == 1){
+          params.totalAmountInWindow = null
+        } else {
+           params.walletCountInWindow = null
+        }
+        params.notificationType = params.notificationType.join()
+        // params.status = params.notificationType == '4' ? 1 : 0
+        params.actionType = JSON.stringify(params.actionType)
+        params.chainCode =  JSON.stringify(params.chainCode)
+        if(params.blockedList.trim()){
+          params.blockedList =JSON.stringify(params.blockedList.split('\n'))
+        }
+        params.launchTimeBelow =  params.launchTimeBelow ? parseInt(params.launchTimeBelow): 0
+        params.launchTimeExceed =  params.launchTimeExceed ? parseInt(params.launchTimeExceed): 0
+        params.token1minTradeAmount =  params.token1minTradeAmount ? parseInt(params.token1minTradeAmount): 0
+        params.token5minTradeAmount =  params.token5minTradeAmount ? parseInt(params.token5minTradeAmount): 0
+        params.marketcapLimit =  params.marketcapLimit ? parseInt(params.marketcapLimit): 0
+        params.marketcapThreshold =  params.marketcapThreshold ? parseInt(params.marketcapThreshold): 0
+        if(isUpdate.value && params.id){
+          await updateWalletWatchStrategy(params)
+          customMessage({
+            type: 'success',
+            title: `${params.name} 监控更新成功`
+          })
+        }else{
+          await addWalletWatchStrategy(params)
+          customMessage({
+            type: 'success',
+            title: `${params.name} 监控创建成功`
+          })
+        }
+        emit('refresh', ruleForm.value)
+      } catch (error) {
+        console.error('提交表单出错:', error)
         customMessage({
-          type: 'success',
-          title: `${params.name} 监控更新成功`
+          type: 'error',
+          title: '操作失败，请稍后重试'
         })
-      }else{
-
-        await addWalletWatchStrategy(params)
-        customMessage({
-          type: 'success',
-          title: `${params.name} 监控创建成功`
-        })
+      } finally {
+        submitting.value = false
       }
-      emit('refresh', ruleForm.value)
     } else {
       console.log('error submit!', fields)
       if (fields) {
@@ -579,6 +592,10 @@ const submitForm = async (formEl: FormInstance | undefined) => {
     .submit {
       color: #000;
       background-color: #f5f5f5;
+    }
+    .submit.disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
     }
     .delete {
       background-color: transparent;

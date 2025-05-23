@@ -306,7 +306,6 @@ const strategyList = [
 ]
 
 const strategyIndex = ref(2)
-const testref  = ref()
 const handelTab = (item: any) => {
   strategyIndex.value = item.value
   getTableData()
@@ -391,21 +390,41 @@ const walletTableData = ref<any>([])
 const skeleton = ref(false)
 
 const getTableData = async () => {
-  skeleton.value = true
-  if(strategyIndex.value == 2){
-    const res: any = await walletWatchStrategyList({})
-    walletTableData.value = res || []
-    // checkedChannel.value = res?.subscribeSetting || []
-  }else{
-    const res: any = await APIlistUserTokenSubscribe({
-      chainCode: monitorChainCode.value == 'DEX' ? '' : monitorChainCode.value
+  try {
+    skeleton.value = true
+    
+    // 获取渠道设置和代币监控数据
+    const chainCodeParam = monitorChainCode.value === 'DEX' ? '' : monitorChainCode.value
+    const subscribeChannelRes: any = await APIlistUserTokenSubscribe({ 
+      chainCode: chainCodeParam 
     })
-    tableData.value = res?.subscribeList || []
-    checkedChannel.value = res?.subscribeSetting || []
+    
+    // 设置渠道和代币数据
+    checkedChannel.value = subscribeChannelRes?.subscribeSetting || []
+    
+    // 根据监控类型设置数据
+    if (strategyIndex.value === 2) {
+      // 钱包监控数据
+      const walletWatchStrategyListRes: any = await walletWatchStrategyList({})
+      walletTableData.value = walletWatchStrategyListRes || []
+      
+      // 代币数据只在代币监控时使用
+      tableData.value = []
+    } else {
+      // 代币监控数据
+      tableData.value = subscribeChannelRes?.subscribeList || []
+    }
+  } catch (error) {
+    console.error('Failed to fetch monitoring data:', error)
+    customMessage({
+      type: 'error',
+      title: '获取数据失败'
+    })
+  } finally {
+    skeleton.value = false
   }
-  skeleton.value = false
 }
-monitorObserveGroupDialogVisible
+
 const handelEditWallet = (row: any) => {
   monitorObserveGroupDialogVisible.value = true
   currentMonitorObserve.value = row
