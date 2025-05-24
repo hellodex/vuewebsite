@@ -284,7 +284,7 @@ const handleCheckedChannel = async (val: any) => {
     channels: val
   })
 
-  getTableData()
+  getTableData(false)
   customMessage({
     type: 'success',
     title: `渠道设置成功`
@@ -389,8 +389,10 @@ const tableData = ref<any>([])
 const walletTableData = ref<any>([])
 const skeleton = ref(false)
 
-const getTableData = async () => {
-  skeleton.value = true
+const getTableData = async (showSkeleton = true) => {
+  if(showSkeleton){
+    skeleton.value = true
+  }
   if(strategyIndex.value == 2){
     const res: any = await walletWatchStrategyList({})
     walletTableData.value = res || []
@@ -402,7 +404,9 @@ const getTableData = async () => {
     tableData.value = res?.subscribeList || []
     checkedChannel.value = res?.subscribeSetting || []
   }
-  skeleton.value = false
+  if(showSkeleton){
+    skeleton.value = false
+  }
 }
 const handelEditWallet = (row: any) => {
   monitorObserveGroupDialogVisible.value = true
