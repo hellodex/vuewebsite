@@ -4,7 +4,7 @@
       <RouterLink to="/Monitor/ObserveGroup">
         <span class="user-item display-flex align-items-center">
           <svg-icon name="observe-group" class="icon-user-item"></svg-icon>
-          <i>观察分组</i>
+          <i>监控列表</i>
         </span>
       </RouterLink>
       <RouterLink to="/Monitor/Strategy">
@@ -27,6 +27,7 @@ const router = useRouter()
 <style scoped lang="scss">
 .monitor-main {
   padding: 12px;
+
   .monitor-left {
     font-size: 12px;
     width: 200px;
@@ -37,6 +38,7 @@ const router = useRouter()
     font-style: normal;
     background-color: rgba(23, 24, 27, 0.3);
     height: calc(-120px + 100vh);
+
     a {
       display: block;
       color: #5c6068;
@@ -46,10 +48,12 @@ const router = useRouter()
       padding: 6px 12px;
       border-radius: 12px;
       font-style: normal;
+
       .user-item {
         i {
           font-style: normal;
         }
+
         .icon-user-item {
           width: 20px;
           height: 21px;
@@ -58,12 +62,15 @@ const router = useRouter()
         }
       }
     }
+
     a:hover {
       background: rgba(58, 60, 64, 0.4);
     }
+
     .router-link-active.router-link-exact-active {
       background: rgba(58, 60, 64, 0.4);
       color: #f5f5f5;
+
       .user-item {
         .icon-user-item {
           color: #f5f5f5;
@@ -71,6 +78,7 @@ const router = useRouter()
       }
     }
   }
+
   .monitor-right {
     width: calc(100vw - 200px);
     height: calc(-144px + 100vh);
