@@ -134,6 +134,62 @@ function sendOrderMessage(data: any) {
   })
 }
 
+function sendWalletMessage(data: any) {
+  const tokenInfo = useTokenInfoStore().tokenInfo
+  const notification = ElNotification({
+    dangerouslyUseHTMLString: true,
+    duration: 3000,
+    position: 'bottom-right',
+    customClass:
+      data.payload.actionType == 1
+        ? 'socket-elMessage socket-elMessage_success'
+        : 'socket-elMessage socket-elMessage_error',
+    message: `<div class='display-flex flex-direction-col'>
+                <div class='display-flex align-items-center'>
+                  ${(() => {
+                    if (data.payload.actionType == 1) {
+                      return `<img src='${BuyImg}'/>`
+                    } else {
+                      return `<img src='${SellImg}'/>`
+                    }
+                  })()}
+                  <strong class='title'>${data.title}</strong>
+                </div>
+                <div class='sun-title display-flex align-items-center'>
+                  <div>
+                    <span>钱包:</span>
+                    <strong>${data.payload.walletAddress?.slice(0, 6) + '...' + data.payload.walletAddress?.slice(-4)}</strong>
+                  </div>
+                  <div style='margin:0 14px;'>
+                    <span>代币:</span>
+                    <strong>${data.payload.symbol || 'Unknown'}</strong>
+                  </div>
+                  <div style='margin:0 14px;'>
+                    <span>交易额:</span>
+                    <strong>${'$' + (data.payload.amount || '0')}</strong>
+                  </div>
+                  <div>
+                    <span>操作:</span>
+                    <strong class='${data.payload.actionType == 1 ? 'up-color' : 'down-color'}'>${data.payload.actionType == 1 ? '买入' : '卖出'}</strong>
+                  </div>
+                </div>
+              </div>`,
+    showClose: true,
+    onClick: () => {
+      notification.close()
+      if (
+        window.location.href.indexOf('/k/') >= 0 &&
+        data.payload.baseAddress == tokenInfo?.baseAddress
+      ) {
+        return false
+      }
+      if (data.payload.pairAddress && data.payload.chainCode) {
+        window.open(`/k/${data.payload.pairAddress}?chainCode=${data.payload.chainCode}`)
+      }
+    }
+  })
+}
+
 const version = '1.0'
 const channel = import.meta.env.VITE_NOT_TG_CHANNEL
 const key = import.meta.env.VITE_NOT_TG_KEY
@@ -158,6 +214,7 @@ export const socketOnMonitor = (uuid: string, token: string) => {
   socket.off('buy')
   socket.off('sell')
   socket.off('order')
+
   // 价格
   socket.emit(
     'price-on',
@@ -275,6 +332,39 @@ export const socketOffMonitor = (uuid: string, token: string) => {
   )
 }
 
+// 钱包监控
+export const socketOnWalletWatch = (uuid: string, token: string) => {
+
+  console.log('socketOnWalletWatch')
+  socket.off('walletWatch')
+  
+  socket.emit(
+    'walletWatch-on',
+    JSON.stringify({
+      uuid,
+      token
+    })
+  )
+
+  socket.on('walletWatch', (message: string) => {
+    const data = JSON.parse(message)
+    console.log(`walletWatch-monitor:`, data)
+    sendWalletMessage(data)
+  })
+}
+
+export const socketOffWalletWatch = (uuid: string, token: string) => {
+  socket.emit(
+    'walletWatch-off',
+    JSON.stringify({
+      uuid,
+      token
+    })
+  )
+  
+  socket.off('walletWatch')
+}
+
 export function socketLogout() {
   socket.off('logout')
   socket.on('logout', (message: string) => {
@@ -286,6 +376,7 @@ export function socketLogout() {
         title: '此账户已在新设备登录，如有问题请尽快联系客服'
       })
       socketOffMonitor(globalStore.accountInfo.uuid, globalStore.accountInfo.tokenInfo.tokenValue)
+      socketOffWalletWatch(globalStore.accountInfo.uuid, globalStore.accountInfo.tokenInfo.tokenValue)
       localStorage.removeItem('accountInfo')
       localStorage.removeItem('customWalletIndex')
       localStorage.removeItem('customWalletIndex1')
@@ -322,7 +413,10 @@ socket.on('connect', () => {
     socketLogout()
     if (globalStore.accountInfo) {
       socketOffMonitor(globalStore.accountInfo.uuid, globalStore.accountInfo.tokenInfo.tokenValue)
+      socketOffWalletWatch(globalStore.accountInfo.uuid, globalStore.accountInfo.tokenInfo.tokenValue)
+      
       socketOnMonitor(globalStore.accountInfo.uuid, globalStore.accountInfo.tokenInfo.tokenValue)
+      socketOnWalletWatch(globalStore.accountInfo.uuid, globalStore.accountInfo.tokenInfo.tokenValue)
     }
     globalStore.setSocketConnectType('socket_connect')
   }, 3000)

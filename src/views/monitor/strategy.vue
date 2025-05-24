@@ -237,7 +237,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, onMounted, computed, watch } from 'vue'
+import { ref, onMounted, computed, watch, onUnmounted } from 'vue'
 import { ElMessageBox } from 'element-plus'
 import { useGlobalStore } from '@/stores/global'
 import {
@@ -258,6 +258,7 @@ import MonitorFormDialog from '@/components/Dialogs/MonitorFormDialog.vue'
 import MonitorObserveGroupDialog from '@/components/Dialogs/MonitorObserveGroupDialog.vue'
 import { customMessage } from '@/utils/message'
 import { typeList, noticeTypeList } from '@/types'
+import { socketOnWalletWatch, socketOffWalletWatch } from '@/utils/socket'
 
 const i18n = useI18n()
 const globalStore = useGlobalStore()
@@ -283,6 +284,19 @@ const handleCheckedChannel = async (val: any) => {
   await APIupdateUserSubscribeSetting({
     channels: val
   })
+
+  // 根据推送渠道控制钱包监控socket
+  if (!val.includes('web') && accountInfo.value) {
+    // 仅当web渠道被取消时，关闭socket
+    const { uuid, tokenInfo } = accountInfo.value
+    socketOffWalletWatch(uuid, tokenInfo.tokenValue)
+    console.log('钱包监控socket已关闭 - 推送渠道变更')
+  } else if (val.includes('web') && accountInfo.value) {
+    // 当web渠道被选中时，开启socket
+    const { uuid, tokenInfo } = accountInfo.value
+    socketOnWalletWatch(uuid, tokenInfo.tokenValue)
+    console.log('钱包监控socket已开启 - 推送渠道变更')
+  }
 
   getTableData(false)
   customMessage({
@@ -393,17 +407,26 @@ const getTableData = async (showSkeleton = true) => {
   if(showSkeleton){
     skeleton.value = true
   }
+
+  // 总是获取推送渠道配置
+  const channelRes: any = await APIlistUserTokenSubscribe({
+    chainCode: monitorChainCode.value == 'DEX' ? '' : monitorChainCode.value
+  })
+  checkedChannel.value = channelRes?.subscribeSetting || []
+
   if(strategyIndex.value == 2){
-    const res: any = await walletWatchStrategyList({})
-    walletTableData.value = res || []
-    // checkedChannel.value = res?.subscribeSetting || []
+    // 钱包监控：获取钱包监控数据
+    const walletRes: any = await walletWatchStrategyList({})
+    walletTableData.value = walletRes || []
+    // 清空代币监控数据
+    tableData.value = []
   }else{
-    const res: any = await APIlistUserTokenSubscribe({
-      chainCode: monitorChainCode.value == 'DEX' ? '' : monitorChainCode.value
-    })
-    tableData.value = res?.subscribeList || []
-    checkedChannel.value = res?.subscribeSetting || []
+    // 代币监控：使用之前获取的数据
+    tableData.value = channelRes?.subscribeList || []
+    // 清空钱包监控数据
+    walletTableData.value = []
   }
+
   if(showSkeleton){
     skeleton.value = false
   }
@@ -520,6 +543,7 @@ const handelChangeChainCode = () => {
   initData()
 }
 
+// 监听账户状态变化
 watch(accountInfo, (newValue) => {
   if (accountInfo.value) {
     getTableData()
@@ -528,11 +552,10 @@ watch(accountInfo, (newValue) => {
 
 const initData = async () => {
   if (accountInfo.value) {
-   
     await getTableData()
-
   }
 }
+
 onMounted(() => {
   initData()
 })
