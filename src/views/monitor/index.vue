@@ -1,16 +1,16 @@
 <template>
   <div class="monitor-main display-flex justify-content-sp">
     <div class="monitor-left display-flex flex-direction-col">
-      <RouterLink to="/Monitor/Strategy">
-        <span class="user-item display-flex align-items-center">
-          <svg-icon name="icon-strategy" class="icon-user-item"></svg-icon>
-          <i>监控配置</i>
-        </span>
-      </RouterLink>
       <RouterLink to="/Monitor/ObserveGroup">
         <span class="user-item display-flex align-items-center">
           <svg-icon name="observe-group" class="icon-user-item"></svg-icon>
           <i>观察分组</i>
+        </span>
+      </RouterLink>
+      <RouterLink to="/Monitor/Strategy">
+        <span class="user-item display-flex align-items-center">
+          <svg-icon name="icon-strategy" class="icon-user-item"></svg-icon>
+          <i>监控配置</i>
         </span>
       </RouterLink>
     </div>
