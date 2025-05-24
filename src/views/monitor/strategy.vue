@@ -73,12 +73,16 @@
         </div>
         <WalletConnect v-if="!accountInfo">
           <div class="display-flex align-items-center add-btn">
-            <el-icon size="14"><Plus /></el-icon>
+            <el-icon size="14">
+              <Plus />
+            </el-icon>
             <span>创建监控</span>
           </div>
         </WalletConnect>
         <div class="display-flex align-items-center add-btn" @click="handelAdd" v-else>
-          <el-icon size="14"><Plus /></el-icon>
+          <el-icon size="14">
+            <Plus />
+          </el-icon>
           <span>创建监控</span>
         </div>
       </div>
@@ -102,7 +106,7 @@
             </el-table-column>
             <el-table-column label="钱包数/交易额">
               <template #default="scope">
-                <span>{{ scope.row.walletCountInWindow || scope.row.totalAmountInWindow  }}</span>
+                <span>{{ scope.row.walletCountInWindow || scope.row.totalAmountInWindow }}</span>
               </template>
             </el-table-column>
             <el-table-column label="状态">
@@ -118,14 +122,14 @@
                 }}</span>
               </template>
             </el-table-column> -->
-          
+
             <el-table-column label="操作" width="240">
               <template #default="scope">
                 <span
                   class="monitor-btn"
                   @click="handelStartOrPause(scope.row,0)"
                   v-if="scope.row.status == 1"
-                  >启动监控</span
+                >启动监控</span
                 >
                 <span class="monitor-btn" @click="handelStartOrPause(scope.row,1)" v-else>暂停监控</span>
                 <span class="monitor-btn" @click="handelEditWallet(scope.row)">编辑</span>
@@ -173,7 +177,7 @@
             <el-table-column label="触发条件">
               <template #default="scope">
                 <span v-if="scope.row.type == 'price'"
-                  >${{ numberFormat(scope.row.targetPrice || 0) }}</span
+                >${{ numberFormat(scope.row.targetPrice || 0) }}</span
                 >
                 <span v-if="scope.row.type == 'chg'">{{ parseFloat(scope.row.data) * 100 }}%</span>
                 <span v-if="scope.row.type == 'buy'">${{ numberFormat(scope.row.data) }}</span>
@@ -183,15 +187,15 @@
             <el-table-column label="通知频率">
               <template #default="scope">
                 <span>{{
-                  noticeTypeList.find((item: any) => item.value == scope.row.noticeType)?.label
-                }}</span>
+                    noticeTypeList.find((item: any) => item.value == scope.row.noticeType)?.label
+                  }}</span>
               </template>
             </el-table-column>
             <el-table-column label="最近通知时间">
               <template #default="scope">
                 <span>{{
-                  scope.row.lastNoticeTime ? timeago(scope.row.lastNoticeTime) : '-'
-                }}</span>
+                    scope.row.lastNoticeTime ? timeago(scope.row.lastNoticeTime) : '-'
+                  }}</span>
               </template>
             </el-table-column>
             <el-table-column label="操作" width="240">
@@ -200,7 +204,7 @@
                   class="monitor-btn"
                   @click="handelPlay(scope.row)"
                   v-if="scope.row.noticeType == 0"
-                  >启动监控</span
+                >启动监控</span
                 >
                 <span class="monitor-btn" @click="handelPause(scope.row)" v-else>暂停监控</span>
                 <span class="monitor-btn" @click="handelEdit(scope.row)">编辑</span>
@@ -258,7 +262,7 @@ import MonitorFormDialog from '@/components/Dialogs/MonitorFormDialog.vue'
 import MonitorObserveGroupDialog from '@/components/Dialogs/MonitorObserveGroupDialog.vue'
 import { customMessage } from '@/utils/message'
 import { typeList, noticeTypeList } from '@/types'
-import { socketOnWalletWatch, socketOffWalletWatch } from '@/utils/socket'
+
 
 const i18n = useI18n()
 const globalStore = useGlobalStore()
@@ -285,19 +289,6 @@ const handleCheckedChannel = async (val: any) => {
     channels: val
   })
 
-  // 根据推送渠道控制钱包监控socket
-  if (!val.includes('web') && accountInfo.value) {
-    // 仅当web渠道被取消时，关闭socket
-    const { uuid, tokenInfo } = accountInfo.value
-    socketOffWalletWatch(uuid, tokenInfo.tokenValue)
-    console.log('钱包监控socket已关闭 - 推送渠道变更')
-  } else if (val.includes('web') && accountInfo.value) {
-    // 当web渠道被选中时，开启socket
-    const { uuid, tokenInfo } = accountInfo.value
-    socketOnWalletWatch(uuid, tokenInfo.tokenValue)
-    console.log('钱包监控socket已开启 - 推送渠道变更')
-  }
-
   getTableData(false)
   customMessage({
     type: 'success',
@@ -306,7 +297,7 @@ const handleCheckedChannel = async (val: any) => {
 }
 
 const strategyList = [
-{
+  {
     label: '钱包监控',
     value: 2,
     icon: 'icon-coin-strategy'
@@ -316,7 +307,7 @@ const strategyList = [
     value: 1,
     icon: 'icon-coin-strategy'
   }
-  
+
 ]
 
 const strategyIndex = ref(2)
@@ -404,7 +395,7 @@ const walletTableData = ref<any>([])
 const skeleton = ref(false)
 
 const getTableData = async (showSkeleton = true) => {
-  if(showSkeleton){
+  if (showSkeleton) {
     skeleton.value = true
   }
 
@@ -414,20 +405,20 @@ const getTableData = async (showSkeleton = true) => {
   })
   checkedChannel.value = channelRes?.subscribeSetting || []
 
-  if(strategyIndex.value == 2){
+  if (strategyIndex.value == 2) {
     // 钱包监控：获取钱包监控数据
     const walletRes: any = await walletWatchStrategyList({})
     walletTableData.value = walletRes || []
     // 清空代币监控数据
     tableData.value = []
-  }else{
+  } else {
     // 代币监控：使用之前获取的数据
     tableData.value = channelRes?.subscribeList || []
     // 清空钱包监控数据
     walletTableData.value = []
   }
 
-  if(showSkeleton){
+  if (showSkeleton) {
     skeleton.value = false
   }
 }
@@ -472,7 +463,8 @@ const handelDel = async (row: any) => {
         })
       }
     })
-    .catch(() => {})
+    .catch(() => {
+    })
 }
 
 const handelDelWallet = async (row: any) => {
@@ -493,7 +485,8 @@ const handelDelWallet = async (row: any) => {
         })
       }
     })
-    .catch(() => {})
+    .catch(() => {
+    })
 }
 
 const handelPause = async (row: any) => {
@@ -511,15 +504,15 @@ const handelPause = async (row: any) => {
     })
   }
 }
-const handelStartOrPause = async (row: any,status: number) => {
+const handelStartOrPause = async (row: any, status: number) => {
   const res = await startWalletWatchStrategy({
     id: row.id,
-    status:status
+    status: status
   })
   if (res) {
     walletTableData.value = res || []
   }
-    
+
 }
 
 const handelPlay = async (row: any) => {
@@ -568,21 +561,27 @@ onMounted(() => {
   background-color: rgba(23, 24, 27, 0.3);
   height: calc(100vh - 120px);
   overflow: hidden;
+
   .checkout-box {
     margin-left: 12px;
+
     :deep(.el-checkbox) {
       margin-right: 15px;
     }
+
     :deep(.el-checkbox__label) {
       font-size: 12px;
     }
+
     :deep(.el-checkbox__input.is-checked + .el-checkbox__label) {
       color: var(--font-color-default);
     }
+
     :deep(.el-checkbox__input.is-checked .el-checkbox__inner) {
       background-color: #2ebd85;
       border-color: #2ebd85;
     }
+
     :deep(.el-checkbox__input.is-checked .el-checkbox__inner:after) {
       border-color: var(--font-color-default);
     }
@@ -596,12 +595,14 @@ onMounted(() => {
     background: rgba(33, 33, 33, 0.3);
     border-radius: 4px;
     cursor: pointer;
+
     .icon {
       width: 14px;
       height: 14px;
       margin-right: 6px;
     }
   }
+
   .active {
     color: #f5f5f5;
     background-color: rgba(58, 60, 64, 0.4);
@@ -615,35 +616,42 @@ onMounted(() => {
     background-color: #f5f5f5;
     color: #5c6068;
     cursor: pointer;
+
     span {
       margin-left: 6px;
     }
   }
+
   .connect-wallet-btn {
     min-width: 0;
     padding: 0;
     background-color: transparent;
   }
+
   .table-box {
     margin-top: 12px;
     height: calc(100% - 40px);
+
     .copy {
       width: 14px;
       height: 14px;
       margin-left: 4px;
       cursor: pointer;
     }
+
     .logo {
       width: 32px;
       height: 32px;
       position: relative;
       margin-right: 10px;
     }
+
     .coin-icon {
       width: 32px;
       height: 32px;
       border-radius: 50%;
     }
+
     .chainCode {
       width: 14px;
       height: 14px;
@@ -666,21 +674,26 @@ onMounted(() => {
       color: #848e9c;
       transition: all 0.2s;
     }
+
     .monitor-btn:hover {
       color: #f5f5f5;
     }
+
     .btn-del {
       background: rgba(246, 70, 93, 0.1);
       color: var(--down-color);
     }
+
     .btn-del:hover {
       color: red;
     }
   }
+
   :deep(.el-popper) {
     .el-select-dropdown__item {
       color: var(--dex-color-4);
     }
+
     .el-select-dropdown__item.is-selected {
       color: var(--font-color-default);
     }
@@ -693,6 +706,7 @@ onMounted(() => {
   display: block;
   border-radius: 50%;
 }
+
 .span-txt {
   margin-left: 6px;
 }

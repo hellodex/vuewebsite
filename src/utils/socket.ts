@@ -34,18 +34,18 @@ function sendMessage(title: string, data: any) {
     message: `<div class='display-flex flex-direction-col'>
                 <div class='display-flex align-items-center'>
                   ${(() => {
-                    if (data.payload.flag == 0) {
-                      return `<img src='${BuyImg}'/>`
-                    } else {
-                      return `<img src='${SellImg}'/>`
-                    }
-                  })()}
+      if (data.payload.flag == 0) {
+        return `<img src='${BuyImg}'/>`
+      } else {
+        return `<img src='${SellImg}'/>`
+      }
+    })()}
                   <strong class='title'>${data.title}</strong>
                 </div>
                 <div class='sun-title display-flex align-items-center'>
                   ${(() => {
-                    if (title == '涨跌幅监控') {
-                      return `<div>
+      if (title == '涨跌幅监控') {
+        return `<div>
                                 <span>涨跌幅已到:</span>
                                 <strong>${data.payload.chg + '%'}</strong>
                               </div>
@@ -53,8 +53,8 @@ function sendMessage(title: string, data: any) {
                                 <span>价格:</span>
                                 <strong>${'$' + data.payload.price}</strong>
                               </div>`
-                    } else {
-                      return `<div>
+      } else {
+        return `<div>
                                 <span>价格已到:</span>
                                 <strong>${'$' + data.payload.price}</strong>
                               </div>
@@ -62,8 +62,8 @@ function sendMessage(title: string, data: any) {
                                 <span>交易额:</span>
                                 <strong>${'$' + data.payload.volume}</strong>
                               </div>`
-                    }
-                  })()}
+      }
+    })()}
                   <div>
                     <span>方向:</span>
                     <strong class='${data.payload.flag == 0 ? 'up-color' : 'down-color'}'>${data.payload.flag == 0 ? '买入' : '卖出'}</strong>
@@ -97,12 +97,12 @@ function sendOrderMessage(data: any) {
     message: `<div class='display-flex flex-direction-col'>
                 <div class='display-flex align-items-center'>
                   ${(() => {
-                    if (data.payload.status == 200) {
-                      return `<img src='${SuccessImg}'/>`
-                    } else {
-                      return `<img src='${ErrorImg}'/>`
-                    }
-                  })()}
+      if (data.payload.status == 200) {
+        return `<img src='${SuccessImg}'/>`
+      } else {
+        return `<img src='${ErrorImg}'/>`
+      }
+    })()}
                   <strong class='title'>${data.title}</strong>
                 </div>
                 <div class='sun-title display-flex align-items-center'>
@@ -147,12 +147,12 @@ function sendWalletMessage(data: any) {
     message: `<div class='display-flex flex-direction-col'>
                 <div class='display-flex align-items-center'>
                   ${(() => {
-                    if (data.payload.actionType == 1) {
-                      return `<img src='${BuyImg}'/>`
-                    } else {
-                      return `<img src='${SellImg}'/>`
-                    }
-                  })()}
+      if (data.payload.actionType == 1) {
+        return `<img src='${BuyImg}'/>`
+      } else {
+        return `<img src='${SellImg}'/>`
+      }
+    })()}
                   <strong class='title'>${data.title}</strong>
                 </div>
                 <div class='sun-title display-flex align-items-center'>
@@ -214,6 +214,7 @@ export const socketOnMonitor = (uuid: string, token: string) => {
   socket.off('buy')
   socket.off('sell')
   socket.off('order')
+  socket.off('walletWatch')
 
   // 价格
   socket.emit(
@@ -244,7 +245,6 @@ export const socketOnMonitor = (uuid: string, token: string) => {
     console.log(`chg-monitor:`, data)
     sendMessage('涨跌幅监控', data)
   })
-
   // 大额买单
   socket.emit(
     'buy-on',
@@ -288,6 +288,20 @@ export const socketOnMonitor = (uuid: string, token: string) => {
     console.log(`order-monitor:`, data)
     sendOrderMessage(data)
   })
+
+  // 多钱包监控
+  socket.emit(
+    'walletWatch-on',
+    JSON.stringify({
+      uuid,
+      token
+    })
+  )
+  socket.on('walletWatch', (message: string) => {
+    const data = JSON.parse(message)
+    console.log(`walletWatch-monitor:`, data)
+    sendWalletMessage(data)
+  })
 }
 
 export const socketOffMonitor = (uuid: string, token: string) => {
@@ -330,30 +344,7 @@ export const socketOffMonitor = (uuid: string, token: string) => {
       token
     })
   )
-}
 
-// 钱包监控
-export const socketOnWalletWatch = (uuid: string, token: string) => {
-
-  console.log('socketOnWalletWatch')
-  socket.off('walletWatch')
-  
-  socket.emit(
-    'walletWatch-on',
-    JSON.stringify({
-      uuid,
-      token
-    })
-  )
-
-  socket.on('walletWatch', (message: string) => {
-    const data = JSON.parse(message)
-    console.log(`walletWatch-monitor:`, data)
-    sendWalletMessage(data)
-  })
-}
-
-export const socketOffWalletWatch = (uuid: string, token: string) => {
   socket.emit(
     'walletWatch-off',
     JSON.stringify({
@@ -361,8 +352,6 @@ export const socketOffWalletWatch = (uuid: string, token: string) => {
       token
     })
   )
-  
-  socket.off('walletWatch')
 }
 
 export function socketLogout() {
@@ -376,7 +365,7 @@ export function socketLogout() {
         title: '此账户已在新设备登录，如有问题请尽快联系客服'
       })
       socketOffMonitor(globalStore.accountInfo.uuid, globalStore.accountInfo.tokenInfo.tokenValue)
-      socketOffWalletWatch(globalStore.accountInfo.uuid, globalStore.accountInfo.tokenInfo.tokenValue)
+
       localStorage.removeItem('accountInfo')
       localStorage.removeItem('customWalletIndex')
       localStorage.removeItem('customWalletIndex1')
@@ -413,10 +402,8 @@ socket.on('connect', () => {
     socketLogout()
     if (globalStore.accountInfo) {
       socketOffMonitor(globalStore.accountInfo.uuid, globalStore.accountInfo.tokenInfo.tokenValue)
-      socketOffWalletWatch(globalStore.accountInfo.uuid, globalStore.accountInfo.tokenInfo.tokenValue)
-      
       socketOnMonitor(globalStore.accountInfo.uuid, globalStore.accountInfo.tokenInfo.tokenValue)
-      socketOnWalletWatch(globalStore.accountInfo.uuid, globalStore.accountInfo.tokenInfo.tokenValue)
+
     }
     globalStore.setSocketConnectType('socket_connect')
   }, 3000)
