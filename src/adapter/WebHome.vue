@@ -271,8 +271,8 @@ function lastComparedToCurrent(currentData: any[] = [], lastData: any[] = []): a
 }
 
 async function getInitTokenInfo() {
-  const tokenInfoByChainData: any = await APIinitTokenInfo()
-  btcFearAndGreed.value = tokenInfoByChainData?.btcFearAndGreed || {}
+  // const tokenInfoByChainData: any = await APIinitTokenInfo()
+  // btcFearAndGreed.value = tokenInfoByChainData?.btcFearAndGreed || {}
 
   nounScreenList.value =
     [
@@ -286,8 +286,18 @@ async function getInitTokenInfo() {
         type: '',
         updateTime: '2024-08-19 07:59:23'
       },
+      {
+        "id": 13,
+        "name": "Pump",
+        "sort": 1,
+        "location": 0,
+        "type": "",
+        "logo": "",
+        "createTime": "2024-08-19 08:31:45",
+        "updateTime": "2025-05-26 13:36:00"
+      },
       // ...(tokenInfoByChainData?.rankingInfo?.filter((item: { id: number }) => item.id != 13) || [])
-      ...(tokenInfoByChainData?.rankingInfo?.filter((item: { id: number }) => item.id == 13) || []),
+      // ...(tokenInfoByChainData?.rankingInfo?.filter((item: { id: number }) => item.id == 13) || []),
     ].map((item: { name: any; id: string | number }) => {
       return {
         name: item.name,
@@ -296,8 +306,8 @@ async function getInitTokenInfo() {
       }
     }) || []
   // hotSearchByChainData.value = tokenInfoByChainData?.pumpFunRanking || []
-  mainstreamCoinsData.value = tokenInfoByChainData?.topRanking || []
-  await getRankings()
+  // mainstreamCoinsData.value = tokenInfoByChainData?.topRanking || []
+  // await getRankings()
   // getFreshPriceList()
 }
 

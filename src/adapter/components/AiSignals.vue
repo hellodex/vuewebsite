@@ -33,8 +33,8 @@
           </div>
         </div>
         <div class="coin-text display-flex align-items-center justify-content-sp">
-          <div class="display-flex align-items-center">
-            <el-image :src="item.baseToken?.logo" alt="" class="logo">
+          <div class="display-flex align-items-center" @click.stop="handelTableRow(item)">
+            <el-image :src="item.baseToken?.logo" alt="" class="logo"  >
               <template #error>
                 <svg-icon name="logo1" class="logo"></svg-icon>
               </template>
@@ -268,7 +268,12 @@ const signalDataList = ref<any>([])
 const buyInfo = ref<any>(null)
 const sellInfo = ref<any>(null)
 const pairInfo = ref<any>(null)
-
+const handelTableRow = (row: any) => {
+  handelJump(row)
+}
+const handelJump = (item: any) => {
+  window.open(`/k/${item.pairAddress}?chainCode=${item.baseToken.chainCode}`)
+}
 defineProps({
   amount: {
     required: true,
@@ -591,6 +596,7 @@ onMounted(() => {
     border-bottom: 1px solid #1f2225;
     .logo {
       width: 48px;
+      cursor: pointer;
       height: 48px;
       margin-right: 8px;
       border-radius: 50%;
@@ -622,6 +628,7 @@ onMounted(() => {
       .copy {
         width: 10px;
         height: 10px;
+        cursor: pointer;
         margin-left: 3px;
       }
     }
