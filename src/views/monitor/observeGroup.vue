@@ -1145,6 +1145,11 @@ const copyWallet = () => {
 }
 
 .address-text{
+  span {
+    color: #ffffff;
+    font-weight: bold;
+  }
+
   .copy{
     width: 12px;
     height: 12px;
