@@ -9,6 +9,7 @@ import BuyImg from '@/assets/img/buy-img.png'
 import SellImg from '@/assets/img/sell-img.png'
 import SuccessImg from '@/assets/img/success-img.png'
 import ErrorImg from '@/assets/img/error-img.png'
+import { numberFormat } from '@/utils/index'
 // const data = {
 //   baseAddress: '6LjccmR327LvnfbabH44xnKUBpDbErzMnbMovL8Kpump',
 //   chainCode: 'SOLANA',
@@ -166,11 +167,11 @@ function sendWalletMessage(data: any) {
                   </div>
                   <div style='margin:0 14px;'>
                     <span>交易额:</span>
-                    <strong>${'$' + (data.payload.amount || '0')}</strong>
+                    <strong>${'$' + ( numberFormat(data.payload.volume)  || '0')}</strong>
                   </div>
                   <div>
                     <span>操作:</span>
-                    <strong class='${data.payload.actionType == 1 ? 'up-color' : 'down-color'}'>${data.payload.actionType == 1 ? '买入' : '卖出'}</strong>
+                    <strong class='${data.payload.flag == 0 ? 'up-color' : 'down-color'}'>${data.payload.flag == 0 ? '买入' : '卖出'}</strong>
                   </div>
                 </div>
               </div>`,
