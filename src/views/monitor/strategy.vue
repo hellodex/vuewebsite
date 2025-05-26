@@ -104,9 +104,9 @@
                 <span>{{ scope.row.name }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="钱包数/交易额">
+            <el-table-column label="钱包分组数">
               <template #default="scope">
-                <span>{{ scope.row.walletCountInWindow || scope.row.totalAmountInWindow }}</span>
+                <span>{{ scope.row.groupCount }}</span>
               </template>
             </el-table-column>
             <el-table-column label="状态">
@@ -134,11 +134,11 @@
               <template #default="scope">
                 <span
                   class="monitor-btn"
-                  @click="handelStartOrPause(scope.row,0)"
+                  @click="handelStartOrPause(scope.row,2)"
                   v-if="scope.row.status == 1"
-                >启动监控</span
+                >暂停监控</span
                 >
-                <span class="monitor-btn" @click="handelStartOrPause(scope.row,1)" v-else>暂停监控</span>
+                <span class="monitor-btn" @click="handelStartOrPause(scope.row,1)" v-else>启动监控</span>
                 <span class="monitor-btn" @click="handelEditWallet(scope.row)">编辑</span>
                 <span class="monitor-btn btn-del" @click.stop="handelDelWallet(scope.row)">删除</span>
               </template>

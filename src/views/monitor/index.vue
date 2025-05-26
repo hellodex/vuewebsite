@@ -4,7 +4,7 @@
       <RouterLink to="/Monitor/ObserveGroup">
         <span class="user-item display-flex align-items-center">
           <svg-icon name="observe-group" class="icon-user-item"></svg-icon>
-          <i>监控列表</i>
+          <i>钱包列表</i>
         </span>
       </RouterLink>
       <RouterLink to="/Monitor/Strategy">

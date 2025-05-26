@@ -1,20 +1,20 @@
 <template>
   <section class="observe-box">
-    <div class="observe-tab display-flex align-items-center">
-      <div
-        class="group-btn display-flex align-items-center"
-        :class="observeTabIndex == item.value ? 'active' : ''"
-        v-for="item in observeTabList"
-        :key="item.value"
-        @click="handelTab(item)"
-      >
-        <el-icon class="tab-icon">
-          <Wallet v-if="item.value === 1" />
-          <Money v-if="item.value === 2" />
-        </el-icon>
-        <span>{{ item.label }}</span>
-      </div>
-    </div>
+<!--    <div class="observe-tab display-flex align-items-center">-->
+<!--      <div-->
+<!--        class="group-btn display-flex align-items-center"-->
+<!--        :class="observeTabIndex == item.value ? 'active' : ''"-->
+<!--        v-for="item in observeTabList"-->
+<!--        :key="item.value"-->
+<!--        @click="handelTab(item)"-->
+<!--      >-->
+<!--        <el-icon class="tab-icon">-->
+<!--          <Wallet v-if="item.value === 1" />-->
+<!--          <Money v-if="item.value === 2" />-->
+<!--        </el-icon>-->
+<!--        <span>{{ item.label }}</span>-->
+<!--      </div>-->
+<!--    </div>-->
     <div class="group-box display-flex align-items-center justify-content-sp">
       <div class="display-flex align-items-center">
         <span
@@ -84,8 +84,8 @@
     </div>
 
     <!-- 钱包表格 -->
-    <el-table v-if="isWalletVisibility" v-loading="isLoadingTableData" :data="tableData" @selection-change="handleSelectionChange" style="width: 100%">
-      <el-table-column type="selection" width="30" />
+    <el-table v-if="isWalletVisibility"  :data="tableData" @selection-change="handleSelectionChange" style="width: 100%">
+      <el-table-column type="selection" width="30"  />
       <el-table-column label="钱包" >
         <template #default="scope">
           <div class="display-flex align-items-center address-text">
@@ -164,7 +164,7 @@
         </el-table-column>
         <el-table-column label="操作" width="180">
           <template #default="{row}">
-            <el-button size="small" @click="handleEditGroup(row)">编辑</el-button>
+            <el-button size="small" @click="handleEditGroup(row)" class="no-hover-button">编辑</el-button>
             <el-button
               size="small"
               type="danger"
@@ -213,7 +213,9 @@
       </el-form>
       <template #footer>
         <span class="dialog-footer">
-          <el-button @click="editGroupDialogVisible = false">取消</el-button>
+        <el-button @click="editGroupDialogVisible = false" class="no-hover-button">
+  取消
+</el-button>
           <el-button
             type="primary"
             @click="submitGroupForm"
@@ -327,7 +329,7 @@ const editGroupDialogVisible = ref(false)
 const isEditing = ref(false)
 const walletGroups = ref<any[]>([{
   id: 0,
-  name: '示例数据',
+  name: '',
   type: 2
 }])
 const submitting = ref(false)
@@ -612,10 +614,10 @@ onUnmounted(() => {
 })
 
 // 其他原有代码
-const observeTabList = [
-  { label: '钱包分组', value: 1 },
-  { label: '代币分组', value: 2 }
-]
+// const observeTabList = [
+//   { label: '钱包分组', value: 1 },
+//    { label: '代币分组', value: 2 }
+// ]
 const observeTabIndex = ref(1)
 const importDrawer = ref(false)
 const importTabIndex = ref(1)
@@ -833,6 +835,27 @@ const copyWallet = () => {
 </script>
 
 <style lang="scss" scoped>
+
+/* 去除按钮的 hover、focus 样式 */
+:deep(.no-hover-button),
+:deep(.no-hover-button:hover),
+
+
+/* 选中状态字体颜色 */
+:deep(.el-checkbox__input.is-checked + .el-checkbox__label) {
+  color: var(--font-color-default);
+}
+
+/* 选中状态背景和边框 */
+:deep(.el-checkbox__input.is-checked .el-checkbox__inner) {
+  background-color: #2ebd85;
+  border-color: #2ebd85;
+}
+
+/* 勾选符号颜色 */
+:deep(.el-checkbox__input.is-checked .el-checkbox__inner::after) {
+  border-color: var(--font-color-default);
+}
 .observe-box {
   padding: 12px;
   border-radius: 12px;
@@ -1227,6 +1250,8 @@ const copyWallet = () => {
         }
       }
     }
+
   }
+
 }
 </style>

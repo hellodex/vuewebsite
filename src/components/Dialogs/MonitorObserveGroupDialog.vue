@@ -169,6 +169,7 @@
             :rows="5"
             type="textarea"
             placeholder="填写Token地址，多个请换行，支持填写BNB、ETH等平台币，可不填"
+            class="custom-textarea"
           >
           </el-input>
         </el-form-item>
@@ -176,8 +177,8 @@
           <el-input
             v-model="ruleForm.marketcapThreshold"
             type="number"
-
             placeholder="市值大于到多少进行通知，单位：美元，可不填"
+            class="custom-input"
           >
           </el-input>
         </el-form-item>
@@ -186,6 +187,7 @@
             v-model="ruleForm.marketcapLimit"
             type="number"
             placeholder="市值小于到多少进行通知，单位：美元，可不填"
+            class="custom-input"
           >
           </el-input>
         </el-form-item>
@@ -194,6 +196,7 @@
             v-model="ruleForm.token5minTradeAmount"
             type="number"
             placeholder="请输入5分钟交易量大于多少警告，可不填"
+            class="custom-input"
           >
           </el-input>
         </el-form-item>
@@ -202,6 +205,7 @@
             v-model="ruleForm.token1minTradeAmount"
             type="number"
             placeholder="请输入1分钟交易量大于多少警告，可不填"
+            class="custom-input"
           >
           </el-input>
         </el-form-item>
@@ -210,6 +214,7 @@
             v-model="ruleForm.launchTimeExceed"
             type="number"
             placeholder="请输入发射时间大于多少告警，可不填"
+            class="custom-input"
           >
           </el-input>
         </el-form-item>
@@ -218,6 +223,7 @@
             v-model="ruleForm.launchTimeBelow"
             type="number"
             placeholder="请输入发射时间小于多少告警，可不填"
+            class="custom-input"
           >
           </el-input>
         </el-form-item>
@@ -606,7 +612,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
 </script>
 <style lang="scss" scoped>
 .monitorForm-dialog-content {
-  height: 60vh;
+  height: 68vh;
   overflow-y: auto;
   padding: 1px;
   margin-top: 16px;
@@ -639,6 +645,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
         color: rgba(255, 255, 255, 0.5);
         border-radius: 8px;
         padding-left: 16px;
+        font-weight: normal;
         border: 1px solid rgba(255, 255, 255, 0.3);
         margin-right: 8px;
       }
@@ -651,6 +658,21 @@ const submitForm = async (formEl: FormInstance | undefined) => {
       input[type='number'] {
         -moz-appearance: textfield;
       }
+    }
+    :deep(.custom-textarea textarea::placeholder) {
+      color: #888888;       /* 浅灰色 */
+
+    }
+    /* 聚焦时边框变绿 */
+    :deep(.custom-textarea .el-textarea__inner:focus) {
+
+      box-shadow: 0 0 0 1px #a5a5a5;   /* 可选，边缘微光 */
+    }
+    /* 穿透 el-input 内部 input 元素的 placeholder 样式 */
+    :deep(.custom-input input::placeholder) {
+      color: #888888;        /* 浅灰色 */
+      opacity: 1;            /* 确保不透明 */
+      font-size: 13px;      /* 你想要的字体大小 */
     }
   }
   .trigger-condition {
@@ -730,8 +752,8 @@ const submitForm = async (formEl: FormInstance | undefined) => {
       
       &.is-checked {
         .el-checkbox__inner {
-          background-color: #409EFF;
-          border-color: #409EFF;
+          background-color: #2ebd85;
+          border-color: #2ebd85;
         }
       }
     }
@@ -758,7 +780,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
   // 添加全局表单标签样式
   :deep(.el-form-item__label) {
     color: #ffffff; // 设置标签为白色
-    font-weight: bolder;
+    //font-weight: bolder;
   }
 }
 
