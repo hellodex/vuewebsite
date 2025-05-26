@@ -156,14 +156,14 @@
                   <div class="operate display-flex flex-direction-col align-items-fd">
                     <span class="price-txt"><i>$</i>{{ numberFormat(item.price || 0) }}</span>
                     <div class="display-flex align-items-center justify-content-fd">
-                      <WalletConnect v-if="!isConnected">
-                        <div class="trade-operate-btn">
-                          <span class="txt">挂单交易</span>
-                        </div>
-                      </WalletConnect>
-                      <div class="trade-operate-btn" @click.stop="handelTrade(item)" v-else>
-                        <span class="txt">挂单交易</span>
-                      </div>
+<!--                      <WalletConnect v-if="!isConnected">-->
+<!--                        <div class="trade-operate-btn">-->
+<!--                          <span class="txt">挂单交易</span>-->
+<!--                        </div>-->
+<!--                      </WalletConnect>-->
+<!--                      <div class="trade-operate-btn" @click.stop="handelTrade(item)" v-else>-->
+<!--                        <span class="txt">挂单交易</span>-->
+<!--                      </div>-->
                       <WalletConnect v-if="!isConnected">
                         <div class="buy-operate-btn">
                           <span class="txt"
