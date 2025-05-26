@@ -8,13 +8,17 @@
         :key="item.value"
         @click="handelTab(item)"
       >
+        <el-icon class="tab-icon">
+          <Wallet v-if="item.value === 1" />
+          <Money v-if="item.value === 2" />
+        </el-icon>
         <span>{{ item.label }}</span>
       </div>
     </div>
     <div class="group-box display-flex align-items-center justify-content-sp">
       <div class="display-flex align-items-center">
         <span
-          class="group-btn"
+          class="group-btn display-flex align-items-center"
           v-for="group in walletGroups"
           :key="group.id"
           @click="handleGroupClick(group)"
@@ -23,7 +27,10 @@
             'group-btn-active': activeGroupId === group.id
           }"
         >
-          {{ group.name }}
+          <el-icon class="group-icon" v-if="group.type === 2">
+            <Star />
+          </el-icon>
+          <span>{{ group.name }}</span>
         </span>
         <div
           class="group-btn group-btn-filled display-flex align-items-center"
@@ -80,7 +87,47 @@
     <el-table v-if="isWalletVisibility" v-loading="isLoadingTableData" :data="tableData" @selection-change="handleSelectionChange" style="width: 100%">
       <el-table-column type="selection" width="30" />
       <el-table-column label="钱包" >
-        <template #default="scope">{{ scope.row.name || scope.row.walletAddress }}</template>
+        <template #default="scope">
+          <div class="display-flex align-items-center address-text">
+            <template v-if="editingRowId !== scope.row.id">
+              <span>{{ scope.row.name || shortifyAddress(scope.row.walletAddress) }}</span>
+              <el-icon class="edit-icon" @click="handleEditRemark(scope.row)"><EditPen /></el-icon>
+            </template>
+            <el-input 
+              v-if="editingRowId === scope.row.id" 
+              v-model="editingName" 
+              @keyup.enter="handleSaveRemark(scope.row)"
+              @keyup.esc="handleCancelEdit"
+              @blur="handleBlurEdit"
+              ref="editInput"
+              size="small"
+              placeholder="输入备注名称"
+              style="width: 200px;"
+            >
+              <template #suffix>
+                <div class="input-actions">
+                  <el-icon 
+                    class="action-icon save-icon" 
+                    @mousedown.prevent
+                    @click="handleSaveRemark(scope.row)"
+                    title="保存"
+                  >
+                    <Check />
+                  </el-icon>
+                  <el-icon 
+                    class="action-icon cancel-icon" 
+                    @mousedown.prevent
+                    @click="handleCancelEdit"
+                    title="取消"
+                  >
+                    <Close />
+                  </el-icon>
+                </div>
+              </template>
+            </el-input>
+            <svg-icon name="copy" class="copy" v-copy="scope.row.walletAddress"></svg-icon>
+          </div>
+        </template>
       </el-table-column>
       <el-table-column label="24h 交易数">
         <template #default="scope">{{ scope.row.dailyTransactions || '--' }}</template>
@@ -261,15 +308,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import type { FormInstance, FormRules } from 'element-plus'
-import { Plus, Tickets, EditPen, Setting, Select, WarnTriangleFilled } from '@element-plus/icons-vue'
-import { addWalletWatchGroup, walletWatchGroupList, updateWalletGroup, deleteWalletGroup, walletWatchList, deleteWalletWatch, addWalletWatch } from '@/api'
+import { Plus, Tickets, EditPen, Setting, Select, WarnTriangleFilled, Check, Delete, Close, Wallet, Money, Star } from '@element-plus/icons-vue'
+import { addWalletWatchGroup, walletWatchGroupList, updateWalletGroup, deleteWalletGroup, walletWatchList, deleteWalletWatch, addWalletWatch, updateWalletWatchRemark } from '@/api'
 import { useGlobalStore } from '@/stores/global'
 import WalletConnect from '@/components/Wallet/WalletConnect.vue'
 import { isEvmAddress, isSolanaAddress} from '@/utils/transition'
-
+import { shortifyAddress } from '@/utils'
 
 const globalStore = useGlobalStore()
 const accountInfo = computed(() => globalStore.accountInfo)
@@ -314,44 +361,11 @@ const groupRules = ref<FormRules>({
 })
 
 // 表格数据
-const tableData = ref([
-  {
-    id: 1,
-    walletAddress: '0x71C7656EC7ab88b098defB751B7401B5f6d8976F',
-    name:'',
-    groupId: 1,
-    dailyTransactions: 12,
-    dailyPnl: '+0.25 ETH',
-    dailyWinRate: 75,
-    weeklyTransactions: 84,
-    weeklyPnl: '+1.82 ETH',
-    weeklyWinRate: 68
-  },
-  {
-    id: 2,
-    walletAddress: '0xEA674fdDe714fd979de3EdF0F56AA9716B898ec8',
-    groupId: 1,
-    name:'',
-    dailyTransactions: 8,
-    dailyPnl: '-0.12 ETH',
-    dailyWinRate: 62,
-    weeklyTransactions: 56,
-    weeklyPnl: '+0.45 ETH',
-    weeklyWinRate: 59
-  },
-  {
-    id: 3,
-    walletAddress: '0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B',
-    groupId: 1,
-    name:'',
-    dailyTransactions: 15,
-    dailyPnl: '+0.42 ETH',
-    dailyWinRate: 81,
-    weeklyTransactions: 105,
-    weeklyPnl: '+2.15 ETH',
-    weeklyWinRate: 73
-  }
-])
+const tableData = ref()
+
+// 编辑状态管理
+const editingRowId = ref(null)
+const editingName = ref('')
 watch(accountInfo, (newValue) => {
   fetchWalletGroups()
 })
@@ -359,7 +373,7 @@ watch(accountInfo, (newValue) => {
 // 筛选后的表格数据
 const filteredTableData = computed(() => {
   if (!activeGroupId.value) return tableData.value
-  return tableData.value.filter(item => item.groupId === activeGroupId.value)
+  return tableData.value.filter((item: any) => item.groupId === activeGroupId.value)
 })
 
 const setWalletVisibility = () => {
@@ -367,7 +381,6 @@ const setWalletVisibility = () => {
 }
 
 const handleSelectionChange = (val:any[]) => {
-  debugger
   chooseWalletList.value = val
 }
 
@@ -434,9 +447,12 @@ const fetchWalletList = async () => {
     const params = activeGroupId.value ? {groupId : activeGroupId.value} : {}
     const data = await walletWatchList(params)
     tableData.value = Array.isArray(data) ? data : []
-    tableData.value.forEach(item => {
+    tableData.value.forEach((item: any) => {
       walletOutput.value = `${walletOutput.value}${item.walletAddress} ${item.name}\n`
     })
+
+    // 
+
     isLoadingTableData.value = false
   } catch (error) {
     isLoadingTableData.value = false
@@ -737,6 +753,73 @@ const submitWalletList = () => {
   })
 }
 
+const handleEditRemark = (row: any) => {
+  editingRowId.value = row.id
+  editingName.value = row.name || ''
+  // 使用 nextTick 确保输入框渲染后再聚焦
+  nextTick(() => {
+    // 查找当前编辑行的输入框
+    const editInputs = document.querySelectorAll('.el-input__inner')
+    const editInput = Array.from(editInputs).find(input => 
+      (input as HTMLInputElement).value === editingName.value
+    ) as HTMLInputElement
+    if (editInput) {
+      editInput.focus()
+      editInput.select()
+    }
+  })
+}
+
+const handleSaveRemark = async (row: any) => {
+  if (editingName.value !== row.name) {
+    try {
+      // 调用 API 保存到服务器
+      await updateWalletWatchRemark({ id: row.id, name: editingName.value })
+      
+      // 更新本地数据
+      row.name = editingName.value
+      ElMessage.success('备注保存成功')
+    } catch (error) {
+      console.error('保存备注失败:', error)
+      ElMessage.error('备注保存失败，请重试')
+      // 保存失败时不退出编辑模式
+      return
+    }
+  }
+  
+  editingRowId.value = null
+  editingName.value = ''
+}
+
+const handleCancelEdit = () => {
+  editingRowId.value = null
+  editingName.value = ''
+}
+
+const handleBlurEdit = () => {
+  // 当输入框失去焦点时取消编辑
+  handleCancelEdit()
+}
+
+const handleDeleteRemark = async (row: any) => {
+  try {
+    // 调用 API 删除备注（设置为空字符串）
+    await updateWalletWatchRemark({ id: row.id, name: '' })
+    
+    // 更新本地数据
+    row.name = ''
+    ElMessage.success('备注删除成功')
+  } catch (error) {
+    console.error('删除备注失败:', error)
+    ElMessage.error('删除备注失败，请重试')
+    // 删除失败时不退出编辑模式
+    return
+  }
+  
+  editingRowId.value = null
+  editingName.value = ''
+}
+
 const copyWallet = () => {
   navigator.clipboard.writeText(walletOutput.value)
   .then(() => {
@@ -798,6 +881,11 @@ const copyWallet = () => {
       background-color: #f5f5f5;
       color: #5c6068;
     }
+
+    .tab-icon {
+      font-size: 14px;
+      margin-right: 6px;
+    }
   }
 
   .group-box {
@@ -811,6 +899,14 @@ const copyWallet = () => {
       .group-icon {
         font-size: 16px;
         margin-right: 4px;
+      }
+    }
+
+    .group-btn {
+      .group-icon {
+        font-size: 14px;
+        margin-right: 4px;
+        color: #ffd700; // 金色星星图标
       }
     }
   }
@@ -1046,5 +1142,86 @@ const copyWallet = () => {
   margin-top: 10px;
   font-size: 14px;
   color: #999;
+}
+
+.address-text{
+  .copy{
+    width: 12px;
+    height: 12px;
+    margin-left: 8px;
+    cursor: pointer;
+    flex-shrink: 0; // 防止图标被压缩
+    color: #909399;
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: #409eff;
+    }
+  }
+
+  .edit{
+    margin-left: 4px;
+  }
+
+  .edit-icon {
+    margin-left: 8px;
+    cursor: pointer;
+    color: #409eff;
+    transition: color 0.3s ease;
+    flex-shrink: 0; // 防止图标被压缩
+
+    &:hover {
+      color: #66b1ff;
+    }
+  }
+
+  .el-input {
+    .el-input__wrapper {
+      background-color: rgba(64, 158, 255, 0.1);
+      border: 1px solid #409eff;
+      border-radius: 4px;
+
+      .el-input__inner {
+        color: var(--font-color-default);
+        font-size: 12px;
+      }
+    }
+
+    &.is-focus .el-input__wrapper {
+      box-shadow: 0 0 0 1px #409eff inset;
+    }
+
+    .input-actions {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding-right: 4px;
+
+      .action-icon {
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        padding: 2px;
+        border-radius: 2px;
+
+        &.save-icon {
+          color: #67c23a;
+          &:hover {
+            color: #85ce61;
+            background-color: rgba(103, 194, 58, 0.1);
+          }
+        }
+
+        //修改成红色
+        &.cancel-icon {
+          color: #f56c6c;
+          &:hover {
+            color: #f78989;
+            background-color: rgba(144, 147, 153, 0.1);
+          }
+        }
+      }
+    }
+  }
 }
 </style>

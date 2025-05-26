@@ -298,6 +298,7 @@ export const socketOnMonitor = (uuid: string, token: string) => {
     })
   )
   socket.on('walletWatch', (message: string) => {
+    console.log('开启walletWatch')
     const data = JSON.parse(message)
     console.log(`walletWatch-monitor:`, data)
     sendWalletMessage(data)

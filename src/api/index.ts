@@ -1,4 +1,5 @@
 import http from './http'
+import type { UpdateWalletWatchRemarkParams } from './types'
 
 // web端 api
 const WEB_URL = import.meta.env.VITE_API_URL
@@ -1190,6 +1191,20 @@ export function deleteWalletWatchStrategy(data: object) {
   const account: any = localStorage.getItem('accountInfo')
   return http({
     url: WEB_URL + '/api/auth/user/deleteWalletWatchStrategy',
+    method: 'POST',
+    data,
+    headers: {
+      [`${JSON.parse(account)?.tokenInfo.tokenName}`]: `Bearer ${JSON.parse(account)?.tokenInfo.tokenValue}`
+    }
+  })
+}
+
+
+// 更新钱包备注
+export function updateWalletWatchRemark (data: UpdateWalletWatchRemarkParams) {
+  const account: any = localStorage.getItem('accountInfo')
+  return http({
+    url: WEB_URL + '/api/auth/user/updateWalletWatch',
     method: 'POST',
     data,
     headers: {
