@@ -312,48 +312,48 @@ async function getInitTokenInfo() {
 }
 
 async function getRankings() {
-  const res: any = await ApiGetRankings({
-    chainCode: chainCode.value == 'DEX' ? null : chainCode.value,
-    type: nounScreenId.value
-  })
+  // const res: any = await ApiGetRankings({
+  //   chainCode: chainCode.value == 'DEX' ? null : chainCode.value,
+  //   type: nounScreenId.value
+  // })
   // console.log(res)
-  chainIdChainData.value = res?.customRank || []
+  // chainIdChainData.value = res?.customRank || []
 }
 
 async function getFreshPriceList() {
-  const mainstreamCoinsPairAddressList = mainstreamCoinsData.value.map(
-    (item: any) => item.pairAddress
-  )
-  const priceList: any = await APIfreshPriceList({
-    price: [...hotSearchByChainData.value.map((item: any) => `${item.searchId}`)],
-    priceAndInfo: [
-      ...chainIdChainData.value.map((item: any) => `${item.searchId}`),
-      ...mainstreamCoinsData.value.map((item: any) => `${item.searchId}`)
-    ],
-    period: timeTabIndex.value
-  })
-
-  const chainIdDataPriceList =
-    (priceList.priceAndInfo &&
-      priceList.priceAndInfo.filter(
-        (item: { pairAddress: any }) => !mainstreamCoinsPairAddressList.includes(item.pairAddress)
-      )) ||
-    []
-  const mainstreamCoinsPriceList =
-    (priceList?.priceAndInfo &&
-      priceList.priceAndInfo.filter((item: { pairAddress: any }) =>
-        mainstreamCoinsPairAddressList.includes(item.pairAddress)
-      )) ||
-    []
-
-  // console.log('chainIdDataPriceList', chainIdDataPriceList)
-  // console.log('mainstreamCoinsPriceList', mainstreamCoinsPriceList)
-
-  hotSearchList.value = dataAssembly(hotSearchByChainData.value, priceList.price)
-  chainIdDataList.value = dataAssembly(chainIdChainData.value, chainIdDataPriceList)
-  mainstreamCoinsList.value = dataAssembly(mainstreamCoinsData.value, mainstreamCoinsPriceList)
-  skeletonLoading.value = false
-  tableLoading.value = false
+  // const mainstreamCoinsPairAddressList = mainstreamCoinsData.value.map(
+  //   (item: any) => item.pairAddress
+  // )
+  // const priceList: any = await APIfreshPriceList({
+  //   price: [...hotSearchByChainData.value.map((item: any) => `${item.searchId}`)],
+  //   priceAndInfo: [
+  //     ...chainIdChainData.value.map((item: any) => `${item.searchId}`),
+  //     ...mainstreamCoinsData.value.map((item: any) => `${item.searchId}`)
+  //   ],
+  //   period: timeTabIndex.value
+  // })
+  //
+  // const chainIdDataPriceList =
+  //   (priceList.priceAndInfo &&
+  //     priceList.priceAndInfo.filter(
+  //       (item: { pairAddress: any }) => !mainstreamCoinsPairAddressList.includes(item.pairAddress)
+  //     )) ||
+  //   []
+  // const mainstreamCoinsPriceList =
+  //   (priceList?.priceAndInfo &&
+  //     priceList.priceAndInfo.filter((item: { pairAddress: any }) =>
+  //       mainstreamCoinsPairAddressList.includes(item.pairAddress)
+  //     )) ||
+  //   []
+  //
+  // // console.log('chainIdDataPriceList', chainIdDataPriceList)
+  // // console.log('mainstreamCoinsPriceList', mainstreamCoinsPriceList)
+  //
+  // hotSearchList.value = dataAssembly(hotSearchByChainData.value, priceList.price)
+  // chainIdDataList.value = dataAssembly(chainIdChainData.value, chainIdDataPriceList)
+  // mainstreamCoinsList.value = dataAssembly(mainstreamCoinsData.value, mainstreamCoinsPriceList)
+  // skeletonLoading.value = false
+  // tableLoading.value = false
 }
 
 async function getChainList() {
