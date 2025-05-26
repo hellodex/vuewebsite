@@ -287,7 +287,7 @@ async function getInitTokenInfo() {
         updateTime: '2024-08-19 07:59:23'
       },
       ...(tokenInfoByChainData?.rankingInfo?.filter((item: { id: number }) => item.id == 13) || []),
-      ...(tokenInfoByChainData?.rankingInfo?.filter((item: { id: number }) => item.id != 13) || [])
+      // ...(tokenInfoByChainData?.rankingInfo?.filter((item: { id: number }) => item.id != 13) || [])
     ].map((item: { name: any; id: string | number }) => {
       return {
         name: item.name,
@@ -296,8 +296,8 @@ async function getInitTokenInfo() {
       }
     }) || []
   hotSearchByChainData.value = tokenInfoByChainData?.pumpFunRanking || []
-  mainstreamCoinsData.value = tokenInfoByChainData?.topRanking || []
-  await getRankings()
+  // mainstreamCoinsData.value = tokenInfoByChainData?.topRanking || []
+  // await getRankings()
   // getFreshPriceList()
 }
 
