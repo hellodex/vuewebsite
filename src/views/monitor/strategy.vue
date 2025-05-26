@@ -111,8 +111,15 @@
             </el-table-column>
             <el-table-column label="状态">
               <template #default="scope">
-                <el-text v-if="scope.row.status == 0" style="font-size: 12px" type="success">监控中</el-text>
+                <el-text v-if="scope.row.status === '1'" style="font-size: 12px" type="success">监控中</el-text>
                 <el-text v-else style="font-size: 12px" type="danger">已暂停</el-text>
+              </template>
+            </el-table-column>
+            <el-table-column label="类别">
+              <template #default="scope">
+                <el-text v-if="scope.row.watchType === '1'" style="font-size: 12px" type="success">钱包监控</el-text>
+                <el-text v-else-if="scope.row.watchType === '2'" style="font-size: 12px" type="warning">N时间内多钱包买入监控</el-text>
+                <el-text v-else style="font-size: 12px" type="danger">N时间内多钱包卖出监控</el-text>
               </template>
             </el-table-column>
             <!-- <el-table-column label="通知频率">
