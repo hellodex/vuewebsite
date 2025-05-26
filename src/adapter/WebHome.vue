@@ -298,7 +298,7 @@ async function getInitTokenInfo() {
   hotSearchByChainData.value = tokenInfoByChainData?.pumpFunRanking || []
   mainstreamCoinsData.value = tokenInfoByChainData?.topRanking || []
   await getRankings()
-  getFreshPriceList()
+  // getFreshPriceList()
 }
 
 async function getRankings() {
@@ -306,7 +306,7 @@ async function getRankings() {
     chainCode: chainCode.value == 'DEX' ? null : chainCode.value,
     type: nounScreenId.value
   })
-  console.log(res)
+  // console.log(res)
   chainIdChainData.value = res?.customRank || []
 }
 
@@ -336,8 +336,8 @@ async function getFreshPriceList() {
       )) ||
     []
 
-  console.log('chainIdDataPriceList', chainIdDataPriceList)
-  console.log('mainstreamCoinsPriceList', mainstreamCoinsPriceList)
+  // console.log('chainIdDataPriceList', chainIdDataPriceList)
+  // console.log('mainstreamCoinsPriceList', mainstreamCoinsPriceList)
 
   hotSearchList.value = dataAssembly(hotSearchByChainData.value, priceList.price)
   chainIdDataList.value = dataAssembly(chainIdChainData.value, chainIdDataPriceList)
@@ -398,9 +398,9 @@ const getHomeData = () => {
 
 const setPolling = () => {
   clearInterval(timer.value)
-  timer.value = setInterval(() => {
-    getFreshPriceList()
-  }, 5000)
+  // timer.value = setInterval(() => {
+  //   getFreshPriceList()
+  // }, 5000)
 }
 watch(
   () => hotSearchList.value,
