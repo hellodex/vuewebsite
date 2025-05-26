@@ -214,9 +214,9 @@ onMounted(async () => {
   theme.value = globalStore.theme === 'dark' ? true : false
 
   document.addEventListener('click', onClickOutSearch)
-  const res: any = await APIgetFeeVolume()
-  console.log(res)
-  feeVolume.value = res?.fee || 0
+  // const res: any = await APIgetFeeVolume()
+  // console.log(res)
+  // feeVolume.value = res?.fee || 0
 })
 
 onUnmounted(() => {

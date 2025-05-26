@@ -286,8 +286,8 @@ async function getInitTokenInfo() {
         type: '',
         updateTime: '2024-08-19 07:59:23'
       },
+      // ...(tokenInfoByChainData?.rankingInfo?.filter((item: { id: number }) => item.id != 13) || [])
       ...(tokenInfoByChainData?.rankingInfo?.filter((item: { id: number }) => item.id == 13) || []),
-      ...(tokenInfoByChainData?.rankingInfo?.filter((item: { id: number }) => item.id != 13) || [])
     ].map((item: { name: any; id: string | number }) => {
       return {
         name: item.name,
@@ -295,10 +295,10 @@ async function getInitTokenInfo() {
         icon: nounScreenIcon[item.id]
       }
     }) || []
-  hotSearchByChainData.value = tokenInfoByChainData?.pumpFunRanking || []
+  // hotSearchByChainData.value = tokenInfoByChainData?.pumpFunRanking || []
   mainstreamCoinsData.value = tokenInfoByChainData?.topRanking || []
   await getRankings()
-  getFreshPriceList()
+  // getFreshPriceList()
 }
 
 async function getRankings() {
@@ -306,7 +306,7 @@ async function getRankings() {
     chainCode: chainCode.value == 'DEX' ? null : chainCode.value,
     type: nounScreenId.value
   })
-  console.log(res)
+  // console.log(res)
   chainIdChainData.value = res?.customRank || []
 }
 
@@ -336,8 +336,8 @@ async function getFreshPriceList() {
       )) ||
     []
 
-  console.log('chainIdDataPriceList', chainIdDataPriceList)
-  console.log('mainstreamCoinsPriceList', mainstreamCoinsPriceList)
+  // console.log('chainIdDataPriceList', chainIdDataPriceList)
+  // console.log('mainstreamCoinsPriceList', mainstreamCoinsPriceList)
 
   hotSearchList.value = dataAssembly(hotSearchByChainData.value, priceList.price)
   chainIdDataList.value = dataAssembly(chainIdChainData.value, chainIdDataPriceList)
@@ -398,9 +398,9 @@ const getHomeData = () => {
 
 const setPolling = () => {
   clearInterval(timer.value)
-  timer.value = setInterval(() => {
-    getFreshPriceList()
-  }, 5000)
+  // timer.value = setInterval(() => {
+  //   getFreshPriceList()
+  // }, 5000)
 }
 watch(
   () => hotSearchList.value,

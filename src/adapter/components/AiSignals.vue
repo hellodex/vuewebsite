@@ -107,14 +107,14 @@
           <span>第一次推送</span>
           <span>${{ numberFormat(item.firstPrice) }}</span>
           <span>{{ numberFormat(item.firstMarketCap) }}</span>
-          <span>{{ numberFormat(item.firstTvl) }}</span>
+          <span>{{ numberFormat(item.firstHolder) }}</span>
           <span>{{ numberFormat(item.firstHolder) }}</span>
         </div>
         <div class="table-tr display-flex align-items-center">
           <span>当前</span>
           <span>${{ numberFormat(item.currentPrice) }}</span>
           <span>{{ numberFormat(item.currentMarketCap) }}</span>
-          <span>{{ numberFormat(item.currentTvl) }}</span>
+          <span>{{ numberFormat(item.currentHolder) }}</span>
           <span>{{ numberFormat(item.currentHolder) }}</span>
         </div>
       </div>
@@ -151,8 +151,8 @@
       <div class="activity-content">
         <p>第{{ pushData.num }}次推送 ({{ formatDate(pushData.pushTimeStamp) }})</p>
         <p class="display-flex align-items-center">
-          <svg-icon name="icon-clever" class="icon-clever"></svg-icon>
-          <span>0分钟内，聪明钱买入次数新增 {{ smartFlowData?.list?.length || 0 }} 次</span>
+<!--          <svg-icon name="icon-clever" class="icon-clever"></svg-icon>-->
+<!--          <span>0分钟内，聪明钱买入次数新增 {{ smartFlowData?.list?.length || 0 }} 次</span>-->
         </p>
         <div class="num-items display-flex align-items-center justify-content-sp">
           <div class="display-flex align-items-center">
@@ -188,7 +188,7 @@
                     <svg-icon name="logo1" class="logo"></svg-icon>
                   </template>
                 </el-image>
-                <span>{{ scope.row.twitterName }}</span>
+                <span>{{ scope.row.twitterName || shortifyAddress(scope.row.sender) }}</span>
                 <svg-icon name="copy" class="copy" v-copy="scope.row.sender"></svg-icon>
               </div>
             </template>
@@ -196,18 +196,18 @@
           <el-table-column label="价格">
             <template #default="scope">
               <span style="color: var(--up-color)">
-                {{ numberFormat(scope.row.price) }}
+                ${{ numberFormat(scope.row.price) }}
               </span>
             </template>
           </el-table-column>
           <el-table-column label="市值">
             <template #default="scope">
               <span style="color: var(--up-color)">
-                {{ numberFormat(scope.row.marketCap) }}
+                 ${{ numberFormat(scope.row.marketCap) }}
               </span>
             </template>
           </el-table-column>
-          <el-table-column label="数量">
+          <el-table-column label="交易量">
             <template #default="scope">
               <span style="color: var(--up-color)">
                 {{ numberFormat(scope.row.baseAmount) }}
@@ -217,7 +217,7 @@
           <el-table-column label="金额">
             <template #default="scope">
               <span style="color: var(--up-color)">
-                {{ numberFormat(scope.row.volume) }}
+                 ${{ numberFormat(scope.row.volume) }}
               </span>
             </template>
           </el-table-column>
