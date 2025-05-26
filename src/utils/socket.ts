@@ -92,13 +92,13 @@ function sendOrderMessage(data: any) {
     duration: 2000,
     position: 'bottom-right',
     customClass:
-      data.payload.status == 200
+      data.payload.flag == 0
         ? 'socket-elMessage socket-elMessage_success'
         : 'socket-elMessage socket-elMessage_error',
     message: `<div class='display-flex flex-direction-col'>
                 <div class='display-flex align-items-center'>
                   ${(() => {
-      if (data.payload.status == 200) {
+      if (data.payload.flag == 0) {
         return `<img src='${SuccessImg}'/>`
       } else {
         return `<img src='${ErrorImg}'/>`
@@ -117,7 +117,7 @@ function sendOrderMessage(data: any) {
                   </div>
                   <div>
                     <span>结果：</span>
-                    <strong class='${data.payload.status == 200 ? 'up-color' : 'down-color'}'>${data.payload.msg}</strong>
+                    <strong class='${data.payload.flag == 0 ? 'up-color' : 'down-color'}'>${data.payload.msg}</strong>
                   </div>
                 </div>
               </div>`,
@@ -142,13 +142,13 @@ function sendWalletMessage(data: any) {
     duration: 3000,
     position: 'bottom-right',
     customClass:
-      data.payload.actionType == 1
+      data.payload.flag == 0
         ? 'socket-elMessage socket-elMessage_success'
         : 'socket-elMessage socket-elMessage_error',
-    message: `<div class='display-flex flex-direction-col'>
-                <div class='display-flex align-items-center'>
+    message: `<div class='display-flex flex-direction-col' style='min-width: 320px;'>
+                <div class='display-flex align-items-center' style='margin-bottom: 8px;'>
                   ${(() => {
-      if (data.payload.actionType == 1) {
+      if (data.payload.flag == 0) {
         return `<img src='${BuyImg}'/>`
       } else {
         return `<img src='${SellImg}'/>`
@@ -156,22 +156,18 @@ function sendWalletMessage(data: any) {
     })()}
                   <strong class='title'>${data.title}</strong>
                 </div>
-                <div class='sun-title display-flex align-items-center'>
-                  <div>
-                    <span>钱包:</span>
-                    <strong>${data.payload.walletAddress?.slice(0, 6) + '...' + data.payload.walletAddress?.slice(-4)}</strong>
-                  </div>
-                  <div style='margin:0 14px;'>
-                    <span>代币:</span>
-                    <strong>${data.payload.symbol || 'Unknown'}</strong>
-                  </div>
-                  <div style='margin:0 14px;'>
-                    <span>交易额:</span>
-                    <strong>${'$' + ( numberFormat(data.payload.volume)  || '0')}</strong>
-                  </div>
-                  <div>
-                    <span>操作:</span>
+                <div class='sun-title' style='display: flex; flex-direction: column; gap: 4px; font-size: 12px;'>
+                  <div style='display: flex; justify-content: space-between;'>
+                    <span>钱包: <strong>${data.payload.walletName || (data.payload.walletAddress?.slice(0, 6) + '...' + data.payload.walletAddress?.slice(-4))}</strong></span>
                     <strong class='${data.payload.flag == 0 ? 'up-color' : 'down-color'}'>${data.payload.flag == 0 ? '买入' : '卖出'}</strong>
+                  </div>
+                  <div style='display: flex; justify-content: space-between;'>
+                    <span>代币: <strong>${data.payload.symbol || 'Unknown'}</strong></span>
+                    <span>价格: <strong>${data.payload.price ? '$' + data.payload.price : 'N/A'}</strong></span>
+                  </div>
+                  <div style='display: flex; justify-content: space-between;'>
+                    <span>交易额: <strong>${'$' + (numberFormat(data.payload.volume) || '0')}</strong></span>
+                    <span>数量: <strong>${data.payload.amount || 'N/A'}</strong></span>
                   </div>
                 </div>
               </div>`,

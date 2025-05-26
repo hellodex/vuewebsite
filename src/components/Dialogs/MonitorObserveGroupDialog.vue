@@ -26,10 +26,16 @@
           </el-input>
         </el-form-item>
         <el-form-item label="监控类型" prop="watchType">
-          <el-select v-model="ruleForm.watchType" :teleported="false" placeholder="请选择监控类型" @change="windowTypeChange" >
-            <el-option label="钱包监控" value="0" />
-            <el-option label="N时间内多钱包买入监控" value="1" />
-            <el-option label="N时间内多钱包卖出监控" value="2" />
+          <el-select 
+            v-model="ruleForm.watchType" 
+            :teleported="false" 
+            :placeholder="isUpdate ? '编辑模式下不可修改监控类型' : '请选择监控类型'" 
+            @change="windowTypeChange" 
+            :disabled="isUpdate"
+          >
+            <el-option label="钱包监控" value="1" />
+            <el-option label="N时间内多钱包买入监控" value="2" />
+            <el-option label="N时间内多钱包卖出监控" value="3" />
           </el-select>
         </el-form-item>
         <el-form-item label="选择分组" prop="groupIds">
@@ -47,7 +53,7 @@
         </el-form-item>
         
         <div class="el-form-item__label">触发条件</div>
-        <template v-if="ruleForm.watchType == 0">
+        <template v-if="ruleForm.watchType == '1'">
           <el-form-item class="trigger-condition-label"  label="操作类型" prop="actionType"  label-position="left" label-width="180px">
             <el-select v-model="ruleForm.actionType" :teleported="false" multiple placeholder="请选择操作类型">
               <el-option label="买入" :value="1" >
@@ -60,7 +66,7 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item class="trigger-condition-label"  label="交易额大于" prop="type" label-position="left" label-width="180px">
+          <el-form-item class="trigger-condition-label"  label="交易额大于" prop="walletAmountThreshold" label-position="left" label-width="180px">
             <el-input
               v-model="ruleForm.walletAmountThreshold"
               type="number"
@@ -69,8 +75,8 @@
             </el-input>
           </el-form-item>
         </template>
-        <template v-if="ruleForm.watchType === '1'">
-          <el-form-item class="trigger-condition-label"  label="N时间内多钱包买入" prop="actionType" label-position="left" label-width="180px">
+        <template v-if="ruleForm.watchType === '2'">
+                      <el-form-item class="trigger-condition-label"  label="N时间内多钱包买入" prop="buyInWindow" label-position="left" label-width="180px">
             <div class="trigger-condition display-flex align-items-center">
               <el-select v-model="ruleForm.buyInWindow" style="flex: 1;"  :teleported="false">
                 <el-option
@@ -90,7 +96,7 @@
 
             </div>
           </el-form-item>
-          <el-form-item class="trigger-condition-label" label="每个钱包交易额大于" prop="type" label-position="left" label-width="180px">
+          <el-form-item class="trigger-condition-label" label="每个钱包交易额大于" prop="walletAmountThreshold" label-position="left" label-width="180px">
             <el-input
               v-model="ruleForm.walletAmountThreshold"
               type="number"
@@ -99,8 +105,8 @@
             </el-input>
           </el-form-item>
         </template>
-        <template v-if="ruleForm.watchType === '2'">
-          <el-form-item  class="trigger-condition-label" label="N时间内多钱包卖出" prop="actionType" label-position="left" label-width="180px">
+        <template v-if="ruleForm.watchType === '3'">
+          <el-form-item  class="trigger-condition-label" label="N时间内多钱包卖出" prop="sellInWindow" label-position="left" label-width="180px">
             <div class="trigger-condition display-flex align-items-center">
               <el-select v-model="ruleForm.sellInWindow" style="flex: 1;"  :teleported="false">
                 <el-option
@@ -120,7 +126,7 @@
 
             </div>
           </el-form-item>
-          <el-form-item class="trigger-condition-label" label="每个钱包交易额大于" prop="type" label-position="left" label-width="180px">
+          <el-form-item class="trigger-condition-label" label="每个钱包交易额大于" prop="walletAmountThreshold" label-position="left" label-width="180px">
             <el-input
               v-model="ruleForm.walletAmountThreshold"
               type="number"
@@ -129,16 +135,16 @@
             </el-input>
           </el-form-item>
         </template>
-        <el-form-item class="trigger-condition-label" label="过滤非主动交易&空投" prop="type" label-position="left" label-width="180px">
+        <el-form-item class="trigger-condition-label" label="过滤非主动交易&空投" prop="tradeType" label-position="left" label-width="180px">
           <el-select v-model="ruleForm.tradeType" :teleported="false">
-            <el-option label="是" value="1" />
-            <el-option label="否" value="0" />
+            <el-option label="是" value="2" />
+            <el-option label="否" value="1" />
           </el-select>
         </el-form-item>
-        <el-form-item class="trigger-condition-label" label="忽略平台币" prop="type" label-position="left" label-width="180px">
+        <el-form-item class="trigger-condition-label" label="忽略平台币" prop="tokenType" label-position="left" label-width="180px">
           <el-select v-model="ruleForm.tokenType" :teleported="false"> 
-            <el-option label="是" value="1" />
-            <el-option label="否" value="0" />
+            <el-option label="是" value="2" />
+            <el-option label="否" value="1" />
           </el-select>
         </el-form-item>
         <el-form-item class="trigger-condition-label" label="公链列表" prop="chainCode" label-position="left" label-width="180px">
@@ -157,7 +163,7 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item class="trigger-condition-label"  label="黑名单" prop="type" label-position="left" label-width="180px">
+        <el-form-item class="trigger-condition-label"  label="黑名单" prop="blockedList" label-position="left" label-width="180px">
           <el-input
             v-model="ruleForm.blockedList"
             :rows="5"
@@ -166,7 +172,7 @@
           >
           </el-input>
         </el-form-item>
-        <el-form-item class="trigger-condition-label" label="市值大于" prop="type" label-position="left" label-width="180px">
+        <el-form-item class="trigger-condition-label" label="市值大于" prop="marketcapThreshold" label-position="left" label-width="180px">
           <el-input
             v-model="ruleForm.marketcapThreshold"
             type="number"
@@ -175,7 +181,7 @@
           >
           </el-input>
         </el-form-item>
-        <el-form-item class="trigger-condition-label" label="市值小于" prop="type" label-position="left" label-width="180px">
+        <el-form-item class="trigger-condition-label" label="市值小于" prop="marketcapLimit" label-position="left" label-width="180px">
           <el-input
             v-model="ruleForm.marketcapLimit"
             type="number"
@@ -183,7 +189,7 @@
           >
           </el-input>
         </el-form-item>
-        <el-form-item class="trigger-condition-label" label="币种5分钟交易量大于" prop="type" label-position="left" label-width="180px">
+        <el-form-item class="trigger-condition-label" label="币种5分钟交易量大于" prop="token5minTradeAmount" label-position="left" label-width="180px">
           <el-input
             v-model="ruleForm.token5minTradeAmount"
             type="number"
@@ -191,7 +197,7 @@
           >
           </el-input>
         </el-form-item>
-        <el-form-item class="trigger-condition-label" label="币种1分钟交易量大于" prop="type" label-position="left" label-width="180px">
+        <el-form-item class="trigger-condition-label" label="币种1分钟交易量大于" prop="token1minTradeAmount" label-position="left" label-width="180px">
           <el-input
             v-model="ruleForm.token1minTradeAmount"
             type="number"
@@ -199,7 +205,7 @@
           >
           </el-input>
         </el-form-item>
-        <el-form-item class="trigger-condition-label" label="发射时间大于" prop="type" label-position="left" label-width="180px">
+        <el-form-item class="trigger-condition-label" label="发射时间大于" prop="launchTimeExceed" label-position="left" label-width="180px">
           <el-input
             v-model="ruleForm.launchTimeExceed"
             type="number"
@@ -207,7 +213,7 @@
           >
           </el-input>
         </el-form-item>
-        <el-form-item class="trigger-condition-label" label="发射时间小于" prop="type" label-position="left" label-width="180px">
+        <el-form-item class="trigger-condition-label" label="发射时间小于" prop="launchTimeBelow" label-position="left" label-width="180px">
           <el-input
             v-model="ruleForm.launchTimeBelow"
             type="number"
@@ -230,7 +236,7 @@
 
         <div class="display-flex align-items-center justify-content-fd btn">
           <!-- <span class="delete">上一步</span> -->
-          <span class="submit" @click="submitForm(ruleFormRef)" :class="{ 'disabled': submitting }" v-loading="submitting">
+          <span class="submit" @click="submitForm(ruleFormRef)" :class="{ 'disabled': submitting }">
             {{ submitting ? '提交中...' : '提交' }}
           </span>
         </div>
@@ -280,15 +286,15 @@ const formSize = ref<ComponentSize>('large')
 const ruleForm = ref<any>({
   name: '',
   type: 'group',
-  watchType: '0',
-  status:0,
+  watchType: '1',
+  status:1,
   groupIds: [],
   actionType:[1,2],
   blockedList:'',
   whiteList:'',
-  buyInWindow: 5,
+  buyInWindow: 0,
   windowType: 1,
-  sellInWindow: 5,
+  sellInWindow: 0,
   walletCountInWindow:'',
   totalAmountInWindow:'',
   walletAmountThreshold:0,
@@ -322,7 +328,7 @@ const rules = reactive<FormRules<any>>({
   actionType: [
     {
       validator: (rule: any, value: any, callback: any) => {
-        if (ruleForm.value.watchType == 0 &&  value.length === 0) {
+        if (ruleForm.value.watchType == '1' &&  value.length === 0) {
           callback(new Error('请选择操作类型'))
         }  else {
           callback()
@@ -345,6 +351,70 @@ const rules = reactive<FormRules<any>>({
 
         if (!value || value.length === 0) {
           callback(new Error('请选择通知频率'))
+        } else {
+          callback()
+        }
+      },
+      trigger: ['blur', 'change']
+    }
+  ],
+  watchType: [
+    {
+      validator: (rule: any, value: any, callback: any) => {
+        if (!isUpdate.value && (!value || value === '')) {
+          callback(new Error('请选择监控类型'))
+        } else {
+          callback()
+        }
+      },
+      trigger: ['blur', 'change']
+    }
+  ],
+  buyInWindow: [
+    {
+      validator: (rule: any, value: any, callback: any) => {
+        if (ruleForm.value.watchType === '2' && (!value || value <= 0)) {
+          callback(new Error('请输入有效的时间窗口'))
+        } else {
+          callback()
+        }
+      },
+      trigger: ['blur', 'change']
+    }
+  ],
+  sellInWindow: [
+    {
+      validator: (rule: any, value: any, callback: any) => {
+        if (ruleForm.value.watchType === '3' && (!value || value <= 0)) {
+          callback(new Error('请输入有效的时间窗口'))
+        } else {
+          callback()
+        }
+      },
+      trigger: ['blur', 'change']
+    }
+  ],
+  walletCountInWindow: [
+    {
+      validator: (rule: any, value: any, callback: any) => {
+        if ((ruleForm.value.watchType === '2' || ruleForm.value.watchType === '3') && 
+            ruleForm.value.windowType === 1 && 
+            (!value || value <= 0)) {
+          callback(new Error('请输入有效的钱包数量'))
+        } else {
+          callback()
+        }
+      },
+      trigger: ['blur', 'change']
+    }
+  ],
+  totalAmountInWindow: [
+    {
+      validator: (rule: any, value: any, callback: any) => {
+        if ((ruleForm.value.watchType === '2' || ruleForm.value.watchType === '3') && 
+            ruleForm.value.windowType === 2 && 
+            (!value || value <= 0)) {
+          callback(new Error('请输入有效的交易总额'))
         } else {
           callback()
         }
@@ -415,12 +485,22 @@ const handleClose = () => {
   emit('close', false)
 }
 
-const windowTypeChange = () => {
+const windowTypeChange = (value:string) => {
+  console.log('windowTypeChange',value)
+  if(ruleForm.value.watchType === '2'){
   ruleForm.value.windowType = 1
-  ruleForm.value.sellInWindow = 5
-  ruleForm.value.buyInWindow = 5
-  ruleForm.value.walletCountInWindow = ''
+    ruleForm.value.sellInWindow = 5
+    ruleForm.value.buyInWindow = 5
+    ruleForm.value.walletCountInWindow = ''
+  } else if(ruleForm.value.watchType === '3'){
+    ruleForm.value.windowType = 2
+    ruleForm.value.sellInWindow = 5
+    ruleForm.value.buyInWindow = 5
+    ruleForm.value.totalAmountInWindow = ''
+  }
   ruleForm.value.totalAmountInWindow = ''
+  ruleForm.value.sellInWindow = 0
+  ruleForm.value.buyInWindow = 0
 }
 
 
@@ -441,20 +521,20 @@ const submitForm = async (formEl: FormInstance | undefined) => {
       try {
         submitting.value = true
         /*
+{
   'name': '', // 策略名称
-  'watchType': '', // 监控类型：0=钱包监控，1=N时间内多钱包买入监控，2=N时间内多钱包卖出监控
-  'status': '', // 状态：0=正常监控，1=暂停
-  'groupIds': '', // 监控的钱包组 ID，JSON 格式，可多个
-  'actionType': '', // 钱包操作类型，JSON字符串格式，watch_type=0 时生效， 1买入，2卖出可多选
-  'blockedList': '', // 黑名单，JSON字符串格式，watch_type=0 时生效
-  'whiteList': '', // 白名单，JSON字符串格式，watch_type=0 时生效
-  'buyInWindow': '', // N时间内多钱包买入，分钟数，例如 5 表示 5 分钟，watch_type!=0 时生效
-  'sellInWindow': '', // N时间内多钱包卖出，分钟数，例如 5 表示 5 分钟，watch_type!=0 时生效
-  'walletCountInWindow': '', // N时间内多钱包买入/卖出钱包数量，watch_type!=0 时生效
-  'totalAmountInWindow': '', // N时间内多钱包成交额，数量和成交额任一非0唯一生效，watch_type!=0 时生效
+  'watchType': '', // 监控类型：1=钱包监控，2=N时间内多钱包买入监控，3=N时间内多钱包卖出监控
+  'status': '', // 状态：1=正常监控，2=暂停
+  'actionType': '', // 钱包操作类型，JSON字符串格式，watch_type=1 时生效，1买入，2卖出可多选
+  'blockedList': '', // 黑名单，JSON字符串格式，watch_type=1 时生效
+  'whiteList': '', // 白名单，JSON字符串格式，watch_type=1 时生效
+  'buyInWindow': '', // N时间内多钱包买入，分钟数，例如 5 表示 5 分钟，watch_type!=1 时生效
+  'sellInWindow': '', // N时间内多钱包卖出，分钟数，例如 5 表示 5 分钟，watch_type!=1 时生效
+  'walletCountInWindow': '', // N时间内多钱包买入/卖出钱包数量，watch_type!=1 时生效
+  'totalAmountInWindow': '', // N时间内多钱包成交额，数量和成交额任一非0唯一生效，watch_type!=1 时生效
   'walletAmountThreshold': '', // 每个钱包交易额大于，字符串格式
-  'tradeType': '', // 交易类型：0=不区分全部交易额，1=过滤非主动交易/空投的代币
-  'tokenType': '', // 代币类型：0=不区分代币，1=忽略平台币/公链主网币
+  'tradeType': '', // 交易类型：1=不区分全部交易额，2=过滤非主动交易/空投的代币
+  'tokenType': '', // 代币类型：1=不区分代币，2=忽略平台币/公链主网币
   'chainCode': '', // 监控的链列表，JSON字符串格式
   'notificationType': '', // 通知频率类型，传递1
   'marketcapThreshold': '', // 市值大于
@@ -463,6 +543,8 @@ const submitForm = async (formEl: FormInstance | undefined) => {
   'token1minTradeAmount': '', // 代币1分钟交易额
   'launchTimeExceed': '', // 开盘时间大于，单位：分钟
   'launchTimeBelow': '', // 开盘时间小于，单位：分钟
+   'groupIds': '', // 监控的钱包组 ID，JSON 格式，可多个
+}
        */
         const params = { ...ruleForm.value}
         if(params.windowType == 1){
@@ -474,8 +556,10 @@ const submitForm = async (formEl: FormInstance | undefined) => {
         // params.status = params.notificationType == '4' ? 1 : 0
         params.actionType = JSON.stringify(params.actionType)
         params.chainCode =  JSON.stringify(params.chainCode)
-        if(params.blockedList.trim()){
-          params.blockedList =JSON.stringify(params.blockedList.split('\n'))
+        if(params.blockedList && params.blockedList.trim()){
+          params.blockedList = JSON.stringify(params.blockedList.split('\n').filter((item: string) => item.trim()))
+        } else {
+          params.blockedList = JSON.stringify([])
         }
         params.launchTimeBelow =  params.launchTimeBelow ? parseInt(params.launchTimeBelow): 0
         params.launchTimeExceed =  params.launchTimeExceed ? parseInt(params.launchTimeExceed): 0
