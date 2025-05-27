@@ -224,7 +224,7 @@ export const socketOnMonitor = (uuid: string, token: string) => {
 
   socket.on('price', (message: string) => {
     const data = JSON.parse(message)
-    console.log(`price-monitor:`, data)
+    // console.log(`price-monitor:`, data)
     sendMessage('价格监控', data)
   })
 
@@ -239,7 +239,7 @@ export const socketOnMonitor = (uuid: string, token: string) => {
 
   socket.on('chg', (message: string) => {
     const data = JSON.parse(message)
-    console.log(`chg-monitor:`, data)
+    // console.log(`chg-monitor:`, data)
     sendMessage('涨跌幅监控', data)
   })
   // 大额买单
@@ -253,7 +253,7 @@ export const socketOnMonitor = (uuid: string, token: string) => {
 
   socket.on('buy', (message: string) => {
     const data = JSON.parse(message)
-    console.log(`buy-monitor:`, data)
+    // console.log(`buy-monitor:`, data)
     sendMessage('大单买入监控', data)
   })
 
@@ -268,7 +268,7 @@ export const socketOnMonitor = (uuid: string, token: string) => {
 
   socket.on('sell', (message: string) => {
     const data = JSON.parse(message)
-    console.log(`sell-monitor:`, data)
+    // console.log(`sell-monitor:`, data)
     sendMessage('大单卖出监控', data)
   })
 
@@ -282,7 +282,7 @@ export const socketOnMonitor = (uuid: string, token: string) => {
 
   socket.on('order', (message: string) => {
     const data = JSON.parse(message)
-    console.log(`order-monitor:`, data)
+    // console.log(`order-monitor:`, data)
     sendOrderMessage(data)
   })
 
@@ -295,9 +295,9 @@ export const socketOnMonitor = (uuid: string, token: string) => {
     })
   )
   socket.on('walletWatch', (message: string) => {
-    console.log('开启walletWatch')
+    // console.log('开启walletWatch')
     const data = JSON.parse(message)
-    console.log(`walletWatch-monitor:`, data)
+    // console.log(`walletWatch-monitor:`, data)
     sendWalletMessage(data)
   })
 }
@@ -380,7 +380,7 @@ export function socketLogout() {
 }
 
 socket.on('connect', () => {
-  console.log('🔥🔥🔥🔥🔥🔥 socket_ID：', socket.id)
+  // console.log('🔥🔥🔥🔥🔥🔥 socket_ID：', socket.id)
   const globalStore = useGlobalStore()
   const chainInfo = useChainInfoStore().chainInfo
   setTimeout(() => {
@@ -406,7 +406,7 @@ socket.on('connect', () => {
     globalStore.setSocketConnectType('socket_connect')
   }, 3000)
 
-  console.log('socket connect 🔥🔥🔥🔥🔥🔥')
+  // console.log('socket connect 🔥🔥🔥🔥🔥🔥')
 })
 
 socket.on('disconnect', () => {
@@ -415,12 +415,12 @@ socket.on('disconnect', () => {
   if (globalStore.socketKchartConnectType) {
     globalStore.SetSocketKchartConnectType('kChart_disconnect')
   }
-  console.log('socket disconnect 🔥🔥🔥🔥🔥🔥')
+  // console.log('socket disconnect 🔥🔥🔥🔥🔥🔥')
 })
 
 socket.on('connect_error', (err: any) => {
   const ts = String(new Date().getTime())
-  console.log('connect_error', ts)
+  // console.log('connect_error', ts)
   socket.io.opts.query.ts = ts
   socket.io.opts.query.sign = CryptoJS.SHA256(channel + ts + version + key).toString()
 })

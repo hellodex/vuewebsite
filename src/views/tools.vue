@@ -123,7 +123,7 @@ import 'swiper/css/navigation'
 const modules = [Navigation, Controller]
 const activeIndex = ref<number>(0)
 const onSlideChangeTransitionEnd = (swiper: any) => {
-  console.log(swiper.realIndex)
+  // console.log(swiper.realIndex)
   activeIndex.value = swiper.realIndex
 }
 

@@ -222,7 +222,7 @@ const dowanLoading = ref(false)
 const getData = async () => {
   loading.value = true
   const res = await APIgetMyCommissionSummary({})
-  console.log(res)
+  // console.log(res)
   const qrcodeUrl = await QRCode.toDataURL(urlRefer, {
     errorCorrectionLevel: 'H'
   })

@@ -212,7 +212,7 @@ const handelCaptcha = async (formEl: FormInstance | undefined) => {
     accountType: 1,
     type: 2
   })
-  console.log(res)
+  // console.log(res)
   if (res == 'success') {
     captchaCountDown()
     captchaStatus.value = 2
@@ -235,7 +235,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return
   await formEl.validate(async (valid, fields) => {
     if (valid) {
-      console.log('submit!')
+      // console.log('submit!')
       showLoadingToast({
         message: `密码设置中...`,
         forbidClick: true

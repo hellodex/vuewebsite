@@ -54,7 +54,7 @@ function countDecimalPlaces(num: number | string) {
 }
 
 // 示例
-console.log(countDecimalPlaces(123.456)) // 输出: 3
-console.log(countDecimalPlaces(123)) // 输出: 0
+// console.log(countDecimalPlaces(123.456)) // 输出: 3
+// console.log(countDecimalPlaces(123)) // 输出: 0
 
 export { shorten0 }

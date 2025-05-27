@@ -197,7 +197,7 @@ watch(
   (newVal, oldVal) => {
     globalStore.setTheme(newVal ? 'dark' : 'dark')
     switchDark()
-    console.log(newVal)
+    // console.log(newVal)
   }
 )
 

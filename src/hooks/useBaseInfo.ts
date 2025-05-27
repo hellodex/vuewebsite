@@ -52,7 +52,7 @@ export function useBaseInfo() {
   async function getSolGoPlus(baseAddress: string | undefined) {
     if (!baseAddress) return
     const res: any = await APIGetSolGoPlus(baseAddress)
-    console.log('APIGetSolGoPlus', res)
+    // console.log('APIGetSolGoPlus', res)
     if (res) {
       const data = res?.[baseAddress] || {}
       coinGoPlusInfo.value = {

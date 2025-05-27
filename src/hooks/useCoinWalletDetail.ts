@@ -9,13 +9,13 @@ export function useCoinWalletDetail() {
       chainCode: chainCode,
       holders: holders
     })
-    console.log(res)
+    // console.log(res)
   }
 
   //构建索引
   async function buildIndexers() {
     const res = await APIbuildIndexers({ type: false })
-    console.log(res)
+    // console.log(res)
   }
 
   buildIndexers()

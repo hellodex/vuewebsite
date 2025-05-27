@@ -96,10 +96,10 @@ axiosInstance.interceptors.response.use(
       response.data.code == 404 ||
       response.config.url?.indexOf('https://api.gopluslabs.io/') !== -1
     ) {
-      console.log({
-        type: 'error',
-        message: `${response.data.code} ${response.data.msg}  ${JSON.stringify(response.config.url)}`
-      })
+      // console.log({
+      //   type: 'error',
+      //   message: `${response.data.code} ${response.data.msg}  ${JSON.stringify(response.config.url)}`
+      // })
     } else if (response.config.url?.indexOf('/api/auth/tgToWebDologin') !== -1) {
       customMessage({
         type: 'error',

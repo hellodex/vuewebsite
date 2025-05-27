@@ -19,7 +19,7 @@ const handelRefresh = async () => {
     chainCode: customWalletInfo.value.walletInfo?.chainCode,
     walletId: customWalletInfo.value.walletInfo?.walletId,
   })
-  console.log(res)
+  // console.log(res)
   loading.value = false
 }
 </script>

@@ -291,7 +291,7 @@ const channels = [
 
 const checkedChannel = ref<any>([])
 const handleCheckedChannel = async (val: any) => {
-  console.log(val)
+  // console.log(val)
   await APIupdateUserSubscribeSetting({
     channels: val
   })

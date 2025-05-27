@@ -294,7 +294,7 @@ const htmlToImage = async () => {
     })
     imgUrl.value = canvas.toDataURL('image/jpeg')
   } catch (error) {
-    console.log(error)
+    // console.log(error)
   }
 }
 

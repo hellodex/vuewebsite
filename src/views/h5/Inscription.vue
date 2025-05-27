@@ -494,7 +494,7 @@ const setPolling = () => {
 }
 
 const handelRouter = (url: string) => {
-  console.log(url)
+  // console.log(url)
   window.open(url)
 }
 

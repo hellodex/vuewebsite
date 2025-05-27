@@ -562,7 +562,7 @@ const handleClose = (val: boolean) => {
 }
 
 const handelRouter = (url: string) => {
-  console.log(url)
+  // console.log(url)
   url && window.open(url)
 }
 

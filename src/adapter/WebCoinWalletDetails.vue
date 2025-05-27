@@ -273,7 +273,7 @@ const useSubscribeKChart = useSubscribeKChartInfo()
 
 const i18n = useI18n()
 const route = useRoute()
-console.log(route) // 页面携带的参数
+// console.log(route) // 页面携带的参数
 const switchLeftState = ref<boolean>(true)
 
 const useChainInfo = useChainInfoStore()
@@ -469,7 +469,7 @@ const getEarliest100Trader = async () => {
     tokenAddress: baseInfo.value?.tokenInfo?.baseAddress,
     chainCode: baseInfo.value.chainInfo?.chainCode
   })
-  console.log(res)
+  // console.log(res)
 
   earliest100TraderData.value = res || {}
 }
@@ -545,7 +545,7 @@ const setPolling = async () => {
   skeleton.value = true
   localStorage.getItem('accountInfo') && (await getData())
   skeleton.value = false
-  console.log(setIntervalTimer.value)
+  // console.log(setIntervalTimer.value)
   setIntervalTimer.value = setInterval(() => {
     rightSideBarInfo.value = useRightSideBar()
     // if (timeSec.value !== 0) {
@@ -570,9 +570,9 @@ watch(
 
 // 路由更新时的操作
 onBeforeRouteUpdate((to, from) => {
-  console.log('组件K : onBeforeRouteUpdate - to :', to)
-  console.log('组件K : onBeforeRouteUpdate - from :', from)
-  console.log(`即将跳转到 /k/${to.params.pairAddress},请稍等`)
+  // console.log('组件K : onBeforeRouteUpdate - to :', to)
+  // console.log('组件K : onBeforeRouteUpdate - from :', from)
+  // console.log(`即将跳转到 /k/${to.params.pairAddress},请稍等`)
   // 交易信息
   socket.emit(
     'kchart-off',
@@ -590,8 +590,8 @@ onBeforeRouteUpdate((to, from) => {
 })
 
 onBeforeRouteLeave((to, from) => {
-  console.log('🔥onBeforeRouteLeave - to :', to)
-  console.log('🔥onBeforeRouteLeave - from :', from)
+  // console.log('🔥onBeforeRouteLeave - to :', to)
+  // console.log('🔥onBeforeRouteLeave - from :', from)
   socket.emit(
     'kchart-off',
     JSON.stringify({
@@ -629,7 +629,7 @@ const resizeController = () => {
       tradingView.style.pointerEvents = 'none'
 
       localStorage.setItem('tradingViewHeight', moveLen)
-      console.log(moveLen)
+      // console.log(moveLen)
     }
     document.onmouseup = function (e) {
       document.onmousemove = null

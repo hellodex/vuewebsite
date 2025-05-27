@@ -27,7 +27,7 @@ const login = async () => {
     token: route.query.key
   })
   if (res) {
-    console.log('原始数据', JSON.parse(JSON.stringify(res)))
+    // console.log('原始数据', JSON.parse(JSON.stringify(res)))
     for (const key in res.wallets) {
       if (Object.prototype.hasOwnProperty.call(res.wallets, key)) {
         const element = res.wallets[key]
@@ -36,7 +36,7 @@ const login = async () => {
         })
       }
     }
-    console.log('加密后数据', res)
+    // console.log('加密后数据', res)
 
     localStorage.setItem('accountInfo', JSON.stringify(res))
     const userInfo: any = await APIuserInfo()
@@ -61,7 +61,7 @@ const login = async () => {
     return
   }
 
-  console.log(res)
+  // console.log(res)
 }
 
 onMounted(() => {

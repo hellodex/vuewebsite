@@ -67,7 +67,7 @@ export function usePondTabApp() {
   async function getSolGoPlus(baseAddress: string | undefined) {
     if (!baseAddress) return
     const res: any = await APIGetSolGoPlus(baseAddress)
-    console.log(res)
+    // console.log(res)
     const data = res?.[baseAddress] || {}
     coinGoPlusInfo.value = {
       ...data,

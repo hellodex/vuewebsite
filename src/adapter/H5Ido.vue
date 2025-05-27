@@ -243,7 +243,7 @@ const tokensByWalletAddr = () => {
         : USDT_CONFIG[chain_Stablecoins.value.chainCode].address.toLowerCase()
     return address === rpc
   })
-  console.log(obj)
+  // console.log(obj)
   deductionInfo.value = {
     balance: obj?.amount || 0,
     decimals: obj?.decimals || 18,
@@ -319,7 +319,7 @@ const decentralizationEvmTrade = async () => {
       message: `确认失败`
     })
   }
-  console.log(result)
+  // console.log(result)
 }
 
 const decentralizationSolanaTrade = async () => {
@@ -356,7 +356,7 @@ const decentralizationSolanaTrade = async () => {
       message: `确认失败`
     })
   }
-  console.log(result)
+  // console.log(result)
 }
 
 const getIdoInfo = async () => {

@@ -453,7 +453,7 @@ const handelMarketExchangeAmountInput = () => {
 
 const handelMarketPriceInput = () => {
   const num = parseFloat(marketPrice.value || '0') / parseFloat(buyInfo.value.price)
-  console.log(num)
+  // console.log(num)
   if (num >= parseFloat(balanceFormat(buyInfo.value))) {
     amount.value = balanceFormat(buyInfo.value)
     positionMarketVal.value = 100

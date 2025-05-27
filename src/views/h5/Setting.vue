@@ -87,7 +87,7 @@ const onSelect = (item: any) => {
   i18n.locale.value = item.code
   globalStore.setLanguage(item.code)
   reload()
-  console.log(item)
+  // console.log(item)
   show.value = false
 }
 
@@ -103,7 +103,7 @@ const handelLogout = async () => {
     forbidClick: true
   })
   const res = await APIlogout()
-  console.log(res)
+  // console.log(res)
   if (res) {
     showSuccessToast(`账号退出成功`)
     await socketOffMonitor(

@@ -202,7 +202,7 @@ export function timeago(time: any): string | undefined {
           : ` ${parseInt(sedC) > 1 ? 'seconds' : 'second'}  ago`)
       break
     default:
-      console.log('其他')
+      // console.log('其他')
   }
   return result
 }

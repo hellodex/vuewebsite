@@ -487,7 +487,7 @@ const listModel = computed(() => {
 
 const getTokensByWalletAddr = () => {
   const res: any = tokenList.value
-  console.log(res)
+  // console.log(res)
   listSkeletonLoading.value = false
   list.value = res
   overviewOfFunds.value = 0

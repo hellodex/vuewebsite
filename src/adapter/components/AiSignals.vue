@@ -674,9 +674,9 @@ onMounted(() => {
 
       .num {
         display: flex;
-        width: 56px;
+
         height: 28px;
-        padding: 2px 4px;
+        padding: 10px 10px;
         justify-content: center;
         align-items: center;
         border-radius: 6px;
