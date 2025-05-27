@@ -680,8 +680,8 @@ onMounted(() => {
         justify-content: center;
         align-items: center;
         border-radius: 6px;
-        background: rgba(239, 88, 88, 0.16);
-        color: var(--down-color);
+        background:rgba(9, 182, 120, 0.16);
+        color: var(--up-color);
         font-size: 18px;
         font-weight: 600;
       }
