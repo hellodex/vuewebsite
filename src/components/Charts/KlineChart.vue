@@ -268,7 +268,7 @@ const options = {
       return `<div style="padding: 10px;border-radius: 6px;line-height: 1.5;font-size: 12px;background:#181818;color:#f5f5f5;">
                 时间: ${item.time} <br/>
 					      价格:  ${numberFormat(item.C)}<br/>
-								市值:  ${numberFormat(item.volumeUsd)}
+								市值:  ${numberFormat(item.marketCap)}
                 </div>`
     }
   },

@@ -4,8 +4,8 @@
       <div class="coin-info">
         <div class="coin-type display-flex align-items-center justify-content-sp">
           <div class="display-flex align-items-center">
-            <svg-icon name="pin" class="ai-icon"></svg-icon>
-            <svg-icon name="ai" class="ai-icon"></svg-icon>
+<!--            <svg-icon name="pin" class="ai-icon"></svg-icon>-->
+<!--            <svg-icon name="ai" class="ai-icon"></svg-icon>-->
             <svg-icon name="share" class="ai-icon" @click="handelShare(item)"></svg-icon>
           </div>
           <div class="display-flex align-items-center">
@@ -58,7 +58,7 @@
                   <strong>${{ numberFormat(item.tvl) }}</strong>
                 </div>
                 <div class="price-txt display-flex align-items-center">
-                  <span>24h交易额</span>
+                  <span>当天交易额</span>
                   <strong>${{ numberFormat(item.volume1d) }}</strong>
                 </div>
               </div>
