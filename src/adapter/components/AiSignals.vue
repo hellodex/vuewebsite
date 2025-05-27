@@ -66,7 +66,7 @@
           </div>
           <div class="signal-box display-flex flex-direction-col justify-content-sp">
 
-            <div class="num">{{ item.times }}X</div>
+            <div class="num">{{ item.times }} 倍</div>
           </div>
         </div>
         <div class="kline-chart">
