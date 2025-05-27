@@ -36,7 +36,7 @@ let M = function (W: any, F: any) {
     q = [],
     fe = 12,
     ke = 10,
-    ue = `$${numberFormat(props.lineData.at(-1).C)}/$${numberFormat(props.lineData.at(-1).volumeUsd)}`,
+    ue = `$${numberFormat(props.lineData.at(-1).C)}/$${numberFormat(props.lineData.at(-1).marketCap)}`,
     Z = Eq(ue, fe) + ke
 
   return (

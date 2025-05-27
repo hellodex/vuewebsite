@@ -349,10 +349,10 @@ const initData = async () => {
       if (data.pairAddress == item.pairAddress) {
         item.kcharts.push({
           C: data.currentPrice,
-          volumeUsd: data.currentMarketCap,
           time: data.time,
           timestamp: data.timeStamp * 1000,
-          pushRecords: []
+          pushRecords: [],
+          marketCap:data.currentMarketCap
         })
 
         item.currentPrice = data.currentPrice
