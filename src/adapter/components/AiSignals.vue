@@ -108,14 +108,14 @@
           <span>${{ numberFormat(item.firstPrice) }}</span>
           <span>{{ numberFormat(item.firstMarketCap) }}</span>
           <span>{{ numberFormat(item.firstHolder) }}</span>
-          <span>{{ numberFormat(item.firstHolder) }}</span>
+          <span>{{ numberFormat(item.firstTopSmart) }}</span>
         </div>
         <div class="table-tr display-flex align-items-center">
           <span>当前</span>
           <span>${{ numberFormat(item.currentPrice) }}</span>
           <span>{{ numberFormat(item.currentMarketCap) }}</span>
           <span>{{ numberFormat(item.currentHolder) }}</span>
-          <span>{{ numberFormat(item.currentHolder) }}</span>
+          <span>{{ numberFormat(item.currentTopSmart) }}</span>
         </div>
       </div>
       <div class="buy-sell-box">
