@@ -14,7 +14,7 @@
       <div class="describe-txt display-flex align-items-center justify-content-sp">
         <div class="display-flex flex-direction-col">
           <strong>欢迎来到HelloDex</strong>
-          <span>开创和主导Web3变革，利润80%分给用户</span>
+          <span>平台盈利全部销毁平台币</span>
         </div>
       </div>
       <el-divider> 找回密码 </el-divider>
