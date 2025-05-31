@@ -5,7 +5,7 @@
         <svg-icon name="logo" class="logo"></svg-icon>
         <span>HelloDex</span>
       </div>
-      <p class="refer-tip">开创和主导Web3变革,平台利润80%分给用户</p>
+      <p class="refer-tip">平台自身盈利全部销毁平台币</p>
       <img src="@/assets/icons/account_login.svg" class="refer-logo" />
       <div class="web-refer-form web-refer-main" v-if="captchaStatus == 1">
         <h3>欢迎您加入HelloDex</h3>

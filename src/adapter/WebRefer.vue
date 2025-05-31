@@ -4,7 +4,7 @@
       <img src="../assets/img/refer-bac.svg" alt="" class="refer-bac" />
       <div class="txt display-flex flex-direction-col align-items-center">
         <p class="title">一起建设Web3未来</p>
-        <p class="refer-tip">开创和主导Web3变革,平台利润<span>80%</span>分给用户</p>
+        <p class="refer-tip">平台自身盈利全部销毁平台币</p>
       </div>
     </div>
     <div class="web-refer-right">
