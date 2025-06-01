@@ -39,10 +39,10 @@
         <transition name="fade">
           <template v-if="tabIndex == 1">
             <div class="display-flex flex-direction-col align-items-center">
-              <p class="tg-trade-title">快速交易，快速跟单</p>
-              <p class="tg-trade-title">快速自动交易🚀</p>
+<!--              <p class="tg-trade-title">快速交易，快速跟单</p>-->
+<!--              <p class="tg-trade-title">快速自动交易🚀</p>-->
 
-              <span class="tg-trade-subtitle">更快发现，秒级交易🚀 1 秒光速上链，点击即交易</span>
+<!--              <span class="tg-trade-subtitle">更快发现，秒级交易🚀 1 秒光速上链，点击即交易</span>-->
               <a
                 :href="`${tgUrl}?start=TS_${new Date().getTime()}_P_Web`"
                 target="_blank"
