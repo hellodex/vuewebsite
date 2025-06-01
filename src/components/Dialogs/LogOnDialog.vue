@@ -14,7 +14,7 @@
       <div class="describe-txt display-flex align-items-center justify-content-sp">
         <div class="display-flex flex-direction-col">
           <strong>欢迎来到HelloDex</strong>
-          <span>平台自身盈利全部销毁平台币</span>
+          <span style="font-size: 12px; margin-top: 6px;" >平台自身盈利全部销毁平台币</span>
         </div>
       </div>
       <div class="connect-wallet-tab display-flex align-items-center justify-content-sp">
@@ -38,18 +38,15 @@
       <div class="tab-content">
         <transition name="fade">
           <template v-if="tabIndex == 1">
-            <div class="display-flex flex-direction-col align-items-center">
-<!--              <p class="tg-trade-title">快速交易，快速跟单</p>-->
-<!--              <p class="tg-trade-title">快速自动交易🚀</p>-->
+            <div class="display-flex flex-direction-col align-items-center" style="margin-top: 60px;" >
 
-<!--              <span class="tg-trade-subtitle">更快发现，秒级交易🚀 1 秒光速上链，点击即交易</span>-->
               <a
                 :href="`${tgUrl}?start=TS_${new Date().getTime()}_P_Web`"
                 target="_blank"
                 class="form-btn"
               >
                 <svg-icon name="telegram-pump" class="telegram-pump"></svg-icon>
-                <span>连接 Telegram</span>
+                <span >连接 Telegram </span>
               </a>
             </div>
           </template>

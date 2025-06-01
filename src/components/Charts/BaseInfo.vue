@@ -142,10 +142,10 @@
               <div class="pond-buy display-flex align-items-center">
                 <span class="font-family-Medium">税：</span>
                 <span class="font-family-Heavy"
-                  >{{ parseFloat(baseInfo?.coinGoPlusInfo?.buy_tax || 0).toFixed(1) }}%</span
+                  >{{ (parseFloat(baseInfo?.coinGoPlusInfo?.buy_tax || 0) * 100).toFixed(1) }}%</span
                 >
                 <span class="font-family-Heavy"
-                  >{{ parseFloat(baseInfo?.coinGoPlusInfo?.sell_tax || 0).toFixed(1) }}%
+                  >{{ (parseFloat(baseInfo?.coinGoPlusInfo?.sell_tax || 0)* 100).toFixed(1) }}%
                 </span>
               </div>
             </div>

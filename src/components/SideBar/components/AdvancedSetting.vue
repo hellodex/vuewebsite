@@ -4,8 +4,9 @@
     <div class="setting-item display-flex flex-direction-col">
       <div class="display-flex align-items-center">
         <span>滑点</span>
-        <van-icon name="question-o" class="question-o-icon" />
+<!--        <van-icon name="question-o" class="question-o-icon" />-->
       </div>
+      <span style="font-size: 9.5px; color: #E14D4DBD; margin-top: 6px;">交易时自动增加交易税，设置滑点时请不要包含!</span>
       <div class="slippage-box display-flex align-items-center justify-content-sp">
         <span
           v-for="(item, index) in slippageRange"

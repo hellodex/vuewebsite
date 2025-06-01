@@ -88,14 +88,14 @@
           <div class="display-flex align-items-center">
             <span>买税</span>
             <strong class="up-color"
-              >{{ parseFloat(baseInfo?.coinGoPlusInfo?.buy_tax || 0).toFixed(1) }}%</strong
+              >{{ (parseFloat(baseInfo?.coinGoPlusInfo?.buy_tax || 0) * 100).toFixed(1) }}%</strong
             >
           </div>
           <span class="line"></span>
           <div class="display-flex align-items-center">
             <span>卖税</span>
             <strong class="down-color"
-              >{{ parseFloat(baseInfo?.coinGoPlusInfo?.sell_tax || 0).toFixed(1) }}%</strong
+              >{{ (parseFloat(baseInfo?.coinGoPlusInfo?.sell_tax || 0) * 100).toFixed(1) }}%</strong
             >
           </div>
         </div>
