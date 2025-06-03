@@ -345,22 +345,39 @@ const initData = async () => {
 
   socket.on('smartKchart', (message: string) => {
     const data = JSON.parse(message)
-    signalDataList.value.forEach((item: any, index: number) => {
-      if (data.pairAddress == item.pairAddress) {
-        item.kcharts.push({
-          C: data.currentPrice,
-          time: data.time,
-          timestamp: data.timeStamp * 1000,
-          pushRecords: [],
-          marketCap:data.currentMarketCap
-        })
-
-        item.currentPrice = data.currentPrice
-        item.currentMarketCap = data.currentMarketCap
-        item.currentHolder = data.currentHolder
-        item.currentTvl = data.currentTvl || 0
+    
+    // 使用 find 找到匹配项后立即停止遍历
+    const targetItem = signalDataList.value.find((item: any) => 
+      data.pairAddress === item.pairAddress
+    )
+    
+    if (!targetItem) return
+    
+    const currentTimestamp = data.timeStamp * 1000
+    const lastKchart = targetItem.kcharts[targetItem.kcharts.length - 1]
+    
+    // 创建新的 kChart 数据对象
+    const newKchartData = {
+      C: data.currentPrice,
+      time: data.time,
+      timestamp: currentTimestamp,
+      pushRecords: [],
+      marketCap: data.currentMarketCap
+    }
+    
+   // 检查是否在同一分钟内
+   const isSameMinute = Math.floor(currentTimestamp / 60000) === Math.floor(lastKchart.timestamp / 60000)
+      
+      if (isSameMinute) {
+        // 同一分钟内，push新数据
+        targetItem.kcharts.push(newKchartData)
       }
-    })
+
+    // 更新当前状态数据
+    targetItem.currentPrice = data.currentPrice
+    targetItem.currentMarketCap = data.currentMarketCap
+    targetItem.currentHolder = data.currentHolder
+    targetItem.currentTvl = data.currentTvl || 0
   })
 
   socket.on('smartPush', (message: string) => {
