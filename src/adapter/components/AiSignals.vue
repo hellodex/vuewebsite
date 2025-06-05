@@ -4,37 +4,49 @@
       <div class="coin-info">
         <div class="coin-type display-flex align-items-center justify-content-sp">
           <div class="display-flex align-items-center">
-<!--            <svg-icon name="pin" class="ai-icon"></svg-icon>-->
-<!--            <svg-icon name="ai" class="ai-icon"></svg-icon>-->
+            <!--            <svg-icon name="pin" class="ai-icon"></svg-icon>-->
+            <!--            <svg-icon name="ai" class="ai-icon"></svg-icon>-->
             <svg-icon name="share" class="ai-icon" @click="handelShare(item)"></svg-icon>
           </div>
           <div class="display-flex align-items-center">
             <div class="coin-type-item display-flex align-items-center">
               <span>Mint权限</span>
-              <el-icon class="check-mark" v-if="item.mintable == 2"><Check /></el-icon>
-              <el-icon class="close-mark" v-else><Close /></el-icon>
+              <el-icon class="check-mark" v-if="item.mintable == 2">
+                <Check />
+              </el-icon>
+              <el-icon class="close-mark" v-else>
+                <Close />
+              </el-icon>
             </div>
             <div class="coin-type-item display-flex align-items-center">
               <span>黑名单</span>
-              <el-icon class="check-mark" v-if="item.blacklist == 2"><Check /></el-icon>
-              <el-icon class="close-mark" v-else><Close /></el-icon>
+              <el-icon class="check-mark" v-if="item.blacklist == 2">
+                <Check />
+              </el-icon>
+              <el-icon class="close-mark" v-else>
+                <Close />
+              </el-icon>
             </div>
             <div class="coin-type-item display-flex align-items-center">
               <span>烧池子</span>
-              <el-icon class="check-mark" v-if="item.burn == 2"><Check /></el-icon>
-              <el-icon class="close-mark" v-else><Close /></el-icon>
+              <el-icon class="check-mark" v-if="item.burn == 2">
+                <Check />
+              </el-icon>
+              <el-icon class="close-mark" v-else>
+                <Close />
+              </el-icon>
             </div>
             <div class="coin-type-item display-flex align-items-center">
               <span>Top10</span>
               <strong
-                >{{ item.top10Percent ? parseFloat(item.top10Percent).toFixed(2) : 0 }}%</strong
+              >{{ item.top10Percent ? parseFloat(item.top10Percent).toFixed(2) : 0 }}%</strong
               >
             </div>
           </div>
         </div>
         <div class="coin-text display-flex align-items-center justify-content-sp">
           <div class="display-flex align-items-center" @click.stop="handelTableRow(item)">
-            <el-image :src="item.baseToken?.logo" alt="" class="logo"  >
+            <el-image :src="item.baseToken?.logo" alt="" class="logo">
               <template #error>
                 <svg-icon name="logo1" class="logo"></svg-icon>
               </template>
@@ -124,7 +136,7 @@
             v-for="item1 in buyList"
             :key="item1.value"
             @click="handelBuySell(item, item1.value, 'buy')"
-            >{{ item1.label }}</span
+          >{{ item1.label }}</span
           >
           <span @click="handelBuySell(item, amount, 'buy')">买入{{ numberFormat(amount) }}</span>
         </div>
@@ -133,7 +145,7 @@
             v-for="item1 in sellList"
             :key="item1.value"
             @click="handelBuySell(item, item1.value, 'sell')"
-            >{{ item1.label }}</span
+          >{{ item1.label }}</span
           >
         </div>
         <WalletConnect v-if="!isConnected" class="mask" />
@@ -151,8 +163,8 @@
       <div class="activity-content">
         <p>第{{ pushData.num }}次推送 ({{ formatDate(pushData.pushTimeStamp) }})</p>
         <p class="display-flex align-items-center">
-<!--          <svg-icon name="icon-clever" class="icon-clever"></svg-icon>-->
-<!--          <span>0分钟内，聪明钱买入次数新增 {{ smartFlowData?.list?.length || 0 }} 次</span>-->
+          <!--          <svg-icon name="icon-clever" class="icon-clever"></svg-icon>-->
+          <!--          <span>0分钟内，聪明钱买入次数新增 {{ smartFlowData?.list?.length || 0 }} 次</span>-->
         </p>
         <div class="num-items display-flex align-items-center justify-content-sp">
           <div class="display-flex align-items-center">
@@ -345,17 +357,17 @@ const initData = async () => {
 
   socket.on('smartKchart', (message: string) => {
     const data = JSON.parse(message)
-    
+
     // 使用 find 找到匹配项后立即停止遍历
-    const targetItem = signalDataList.value.find((item: any) => 
+    const targetItem = signalDataList.value.find((item: any) =>
       data.pairAddress === item.pairAddress
     )
-    
+
     if (!targetItem) return
-    
+
     const currentTimestamp = data.timeStamp * 1000
     const lastKchart = targetItem.kcharts[targetItem.kcharts.length - 1]
-    
+
     // 创建新的 kChart 数据对象
     const newKchartData = {
       C: data.currentPrice,
@@ -364,20 +376,22 @@ const initData = async () => {
       pushRecords: [],
       marketCap: data.currentMarketCap
     }
-    
-   // 检查是否在同一分钟内
-   const isSameMinute = Math.floor(currentTimestamp / 60000) === Math.floor(lastKchart.timestamp / 60000)
-      
-      if (isSameMinute) {
-        // 同一分钟内，push新数据
-        targetItem.kcharts.push(newKchartData)
-      }
 
-    // 更新当前状态数据
-    targetItem.currentPrice = data.currentPrice
-    targetItem.currentMarketCap = data.currentMarketCap
-    targetItem.currentHolder = data.currentHolder
-    targetItem.currentTvl = data.currentTvl || 0
+    // 检查是否在同一分钟内
+    const isSameMinute = Math.floor(currentTimestamp / 5000) === Math.floor(lastKchart.timestamp / 5000)
+
+    if (isSameMinute) {
+      // 更新当前状态数据
+      targetItem.currentPrice = data.currentPrice
+      targetItem.currentMarketCap = data.currentMarketCap
+      targetItem.currentHolder = data.currentHolder
+      targetItem.currentTvl = data.currentTvl || 0
+    } else {
+      // 不是一分钟内，push新数据
+      targetItem.kcharts.push(newKchartData)
+    }
+
+
   })
 
   socket.on('smartPush', (message: string) => {
@@ -568,16 +582,19 @@ onMounted(() => {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-gap: 20px;
+
   .ai-signals-item {
     min-width: 0;
     border-radius: 12px;
     background: rgba(23, 24, 27, 0.3);
     line-height: 1.2;
   }
+
   .coin-type {
     padding: 15px 15px;
     color: #f5f5f5;
     font-size: 14px;
+
     .ai-icon {
       width: 18px;
       height: 18px;
@@ -585,32 +602,39 @@ onMounted(() => {
       margin-right: 8px;
       cursor: pointer;
     }
+
     strong {
       color: var(--down-color);
       margin-left: 6px;
     }
+
     .check-mark {
       font-size: 14px;
       margin-left: 2px;
       color: var(--up-color);
     }
+
     .close-mark {
       font-size: 14px;
       margin-left: 2px;
       color: var(--down-color);
     }
+
     .coin-type-item {
       margin-left: 9px;
       font-size: 12px;
+
       span {
         white-space: nowrap;
       }
     }
   }
+
   .coin-text {
     padding: 8px 16px;
     border-top: 1px solid #1f2225;
     border-bottom: 1px solid #1f2225;
+
     .logo {
       width: 48px;
       cursor: pointer;
@@ -618,30 +642,36 @@ onMounted(() => {
       margin-right: 8px;
       border-radius: 50%;
     }
+
     .symbol-txt {
       color: #fff;
       font-size: 14px;
       margin-right: 4px;
     }
+
     .time-icon {
       width: 13px;
       height: 13px;
       color: #71777a;
       margin-right: 2px;
     }
+
     .time-label {
       color: #71777a;
       font-size: 11px;
     }
+
     .time-value {
       font-size: 11px;
       color: var(--up-color);
       margin-left: 4px;
     }
+
     .address-txt {
       color: #e8e8e8;
       font-size: 11px;
       margin: 6px 0;
+
       .copy {
         width: 10px;
         height: 10px;
@@ -649,24 +679,29 @@ onMounted(() => {
         margin-left: 3px;
       }
     }
+
     .price-txt {
       color: #71777a;
       font-size: 11px;
       white-space: nowrap;
+
       strong {
         color: #b4b4b4;
         margin-left: 4px;
       }
     }
+
     .signal-box {
       .signal-txt {
         padding: 8px 4px;
       }
+
       span {
         color: #f5f5f5;
         font-size: 13px;
         margin-right: 6px;
       }
+
       i {
         display: block;
         width: 2px;
@@ -678,12 +713,15 @@ onMounted(() => {
       i:nth-child(1) {
         height: 4px;
       }
+
       i:nth-child(2) {
         height: 6px;
       }
+
       i:nth-child(3) {
         height: 8px;
       }
+
       i:nth-child(4) {
         height: 11px;
         margin-right: 0;
@@ -697,24 +735,28 @@ onMounted(() => {
         justify-content: center;
         align-items: center;
         border-radius: 6px;
-        background:rgba(9, 182, 120, 0.16);
+        background: rgba(9, 182, 120, 0.16);
         color: var(--up-color);
         font-size: 18px;
         font-weight: 600;
       }
     }
   }
+
   .kline-chart {
     height: 200px;
     padding: 8px 8px;
   }
+
   .push-box {
     margin: 10px 0px;
     padding: 0 16px;
     font-size: 11px;
+
     .push-txt {
       display: flex;
       align-items: center;
+
       i {
         width: 4px;
         height: 4px;
@@ -722,24 +764,29 @@ onMounted(() => {
         background-color: var(--up-color);
         border-radius: 50%;
       }
+
       span {
         color: #71777a;
         padding: 4px;
         margin: 0 2px;
         white-space: nowrap;
       }
+
       strong {
         color: #b4b4b4;
       }
     }
   }
+
   .table-box {
     padding: 0 16px;
+
     .table-tr {
       background: #1b1b1b;
       border-bottom: 1px solid rgba(23, 24, 27, 0.3);
       padding: 12px;
       font-size: 12px;
+
       span {
         flex: 1;
         color: #737373;
@@ -749,16 +796,19 @@ onMounted(() => {
     .table-tr:nth-child(1) {
       border-radius: 6px 6px 0 0;
     }
+
     .table-tr:nth-child(3) {
       border-radius: 0 0 6px 6px;
     }
   }
+
   .buy-sell-box {
     padding: 0 16px;
     margin-top: 16px;
     font-size: 13px;
     font-family: 'PingFangSC-Medium';
     position: relative;
+
     :deep(.mask) {
       width: 100%;
       height: 100%;
@@ -767,11 +817,13 @@ onMounted(() => {
       left: 0;
       opacity: 0;
     }
+
     .buy-box {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       grid-gap: 10px;
       margin-bottom: 5px;
+
       span {
         min-width: 0;
         height: 30px;
@@ -783,10 +835,12 @@ onMounted(() => {
         line-height: 30px;
       }
     }
+
     .sell-box {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       grid-gap: 10px;
+
       span {
         min-width: 0;
         height: 30px;
@@ -799,30 +853,37 @@ onMounted(() => {
       }
     }
   }
+
   .activity-dialog {
     width: 730px;
     border-radius: 12px;
     background: #181818;
     padding: 18px;
+
     .activity-title {
       color: #eaecf5;
       font-size: 20px;
       line-height: 1;
     }
+
     .activity-content {
       padding-top: 24px;
+
       p {
         font-size: 12px;
         color: #eaecf5;
         margin-bottom: 12px;
       }
+
       .icon-clever {
         width: 16px;
         height: 16px;
       }
+
       .num-items {
         margin: 20px 0;
         font-size: 14px;
+
         span {
           color: #8b8e96;
           margin-right: 4px;
@@ -833,16 +894,19 @@ onMounted(() => {
         }
       }
     }
+
     .activity-logo {
       .logo {
         width: 28px;
         height: 28px;
         border-radius: 50%;
       }
+
       span {
         margin: 0 4px;
         color: #f5f5f5;
       }
+
       .copy {
         width: 12px;
         height: 12px;

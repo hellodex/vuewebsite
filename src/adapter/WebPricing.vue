@@ -605,12 +605,12 @@ input:checked + .slider:before {
 
 .footer-note {
   text-align: center;
-  font-size: 0.4rem;
+  font-size: 14px;
   color: #6c757d;
 }
 
 .footer-note a {
-  color: #4e79ff;
+  color: #ffffff;
   text-decoration: none;
 }
 
