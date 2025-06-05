@@ -3,7 +3,7 @@ import {
   APIgetflowGroup,
   APIgetTopNet,
   APIgetTopProfit,
-  APIlistPeriod
+  // APIlistPeriod
 } from '@/api/coinWalletDetails'
 import { useTokenInfoStore } from '@/stores/tokenInfo'
 import { useChainInfoStore } from '@/stores/chainInfo'
@@ -36,26 +36,26 @@ export function useListPeriod(period: any) {
   const chartIn = ref<any>([])
   const chartOut = ref<any>([])
 
-  async function getlistPeriod() {
-    const res = await APIlistPeriod({
-      period: period,
-      baseAddress: tokenInfo?.baseAddress,
-      limit: 10,
-      pairAddress: chainInfo?.pairAddress,
-      chainCode: chainInfo?.chainCode
-    })
-    datares.value = res
-    datares.value.reverse()
-    chartx.value.length = 0
-    chartIn.value.length = 0
-    chartOut.value.length = 0
-    for (let i = 0; i < datares.value.length; i++) {
-      chartx.value.push(formatDateHM(datares.value[i].period))
-      chartIn.value.push(datares.value[i].in)
-      chartOut.value.push(datares.value[i].out)
-    }
-  }
-  getlistPeriod()
+  // async function getlistPeriod() {
+  //   const res = await APIlistPeriod({
+  //     period: period,
+  //     baseAddress: tokenInfo?.baseAddress,
+  //     limit: 10,
+  //     pairAddress: chainInfo?.pairAddress,
+  //     chainCode: chainInfo?.chainCode
+  //   })
+  //   datares.value = res
+  //   datares.value.reverse()
+  //   chartx.value.length = 0
+  //   chartIn.value.length = 0
+  //   chartOut.value.length = 0
+  //   for (let i = 0; i < datares.value.length; i++) {
+  //     chartx.value.push(formatDateHM(datares.value[i].period))
+  //     chartIn.value.push(datares.value[i].in)
+  //     chartOut.value.push(datares.value[i].out)
+  //   }
+  // }
+  // getlistPeriod()
 
   return {
     chartx,

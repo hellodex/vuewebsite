@@ -315,11 +315,11 @@ const commonTab = [
   {
     code: 'fourth',
     name: i18n.t('kChart.Holders')
-  },
-  {
-    code: 'five',
-    name: '资金流入'
   }
+  // {
+  //   code: 'five',
+  //   name: '资金流入'
+  // }
 ]
 const coinWalletTabs = computed(() => {
   if (walletType.value == 'Email') {
