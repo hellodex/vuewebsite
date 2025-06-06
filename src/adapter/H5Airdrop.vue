@@ -3,7 +3,7 @@
     <!-- Header -->
     <div class="mobile-header">
       <h1 class="title">空投查询</h1>
-      <a href="https://hellodex.gitbook.io/hellodex" target="_blank" class="white-paper-link">
+      <a href="https://hellodex.gitbook.io/hellodex/lian-shang-jiao-yi-suo-he-bian-ge/1.3-ping-tai-bi-yu-shou-zhong" target="_blank" class="white-paper-link">
         详情查看白皮书
         <el-icon><ArrowRight /></el-icon>
       </a>

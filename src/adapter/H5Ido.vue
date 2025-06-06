@@ -50,7 +50,7 @@
           <strong>链上交易工具</strong>
         </div>
         <a
-          href="https://hellodex.gitbook.io/hellodex"
+          href="https://hellodex.gitbook.io/hellodex/lian-shang-jiao-yi-suo-he-bian-ge/1.3-ping-tai-bi-yu-shou-zhong"
           target="_blank"
           class="ido-white-paper display-flex align-items-center"
         >

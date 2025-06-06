@@ -3,11 +3,12 @@
     <div class="web-ido-content">
       <div class="ido-title display-flex align-items-center justify-content-sp">
         <div class="ido-text display-flex align-items-center">
-          <span>平台币IDO预售中</span>
-          <strong>链上交易平台</strong>
+          <span>平台币预售中</span>
+          <strong>盈利全部销毁平台币</strong>
         </div>
+
         <a
-          href="https://hellodex.gitbook.io/hellodex"
+          href="https://hellodex.gitbook.io/hellodex/lian-shang-jiao-yi-suo-he-bian-ge/1.3-ping-tai-bi-yu-shou-zhong"
           target="_blank"
           class="ido-white-paper display-flex align-items-center"
         >
@@ -73,7 +74,7 @@
                 <div class="display-flex flex-direction-col">
 <!--                  <span>持有平台币分80%收益</span>-->
                   <a
-                    href="https://hellodex.gitbook.io/hellodex/hellodex_cn/whitepaper"
+                    href="https://hellodex.gitbook.io/hellodex/lian-shang-jiao-yi-suo-he-bian-ge/1.3-ping-tai-bi-yu-shou-zhong"
                     target="_blank"
                     >更多详情请看白皮书</a
                   >
