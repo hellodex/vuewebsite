@@ -113,21 +113,21 @@
           <span>价格</span>
           <span>市值</span>
           <span>持币地址</span>
-          <span>前排聪明钱</span>
+<!--          <span>前排聪明钱</span>-->
         </div>
         <div class="table-tr display-flex align-items-center">
           <span>第一次推送</span>
           <span>${{ numberFormat(item.firstPrice) }}</span>
           <span>{{ numberFormat(item.firstMarketCap) }}</span>
           <span>{{ numberFormat(item.firstHolder) }}</span>
-          <span>{{ numberFormat(item.firstTopSmart) }}</span>
+<!--          <span>{{ numberFormat(item.firstTopSmart) }}</span>-->
         </div>
         <div class="table-tr display-flex align-items-center">
           <span>当前</span>
           <span>${{ numberFormat(item.currentPrice) }}</span>
           <span>{{ numberFormat(item.currentMarketCap) }}</span>
           <span>{{ numberFormat(item.currentHolder) }}</span>
-          <span>{{ numberFormat(item.currentTopSmart) }}</span>
+<!--          <span>{{ numberFormat(item.currentTopSmart) }}</span>-->
         </div>
       </div>
       <div class="buy-sell-box">
