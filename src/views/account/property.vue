@@ -595,10 +595,10 @@ const handelChangeTo = async () => {
         if (res) {
           transferEstimateGas.value = res
         }
-        console.log(res)
+        // console.log(res)
       }
     } else {
-      console.log('error submit!', fields)
+      // console.log('error submit!', fields)
     }
   })
 }
@@ -647,7 +647,7 @@ const handelSubmitForm = async (formEl: FormInstance | undefined) => {
         })
       }
     } else {
-      console.log('error submit!', fields)
+      // console.log('error submit!', fields)
     }
   })
 }

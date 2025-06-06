@@ -230,7 +230,7 @@ const handelCaptcha = async (formEl: FormInstance | undefined) => {
     accountType: 1,
     type: 3
   })
-  console.log(res)
+  // console.log(res)
   if (res == 'success') {
     captchaCountDown()
     captchaStatus.value = 2

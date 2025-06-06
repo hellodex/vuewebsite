@@ -3,6 +3,19 @@
     <div class="monitorType-dialog-content">
       <div
         class="display-flex align-items-center justify-content-sp monitorType-dialog-content-item"
+        @click="handelDialog('group')"
+      >
+        <div class="display-flex align-items-center title-txt">
+          <svg-icon name="price-monitor" class="price-monitor icon"></svg-icon>
+          <div>
+            <span>钱包分组行为监控</span>
+            <p class="description-txt">当观察的钱包分组内有同时买入或卖出某一个币时您会收到通知</p>
+          </div>
+        </div>
+        <svg-icon name="chevron-right" class="chevron-right"></svg-icon>
+      </div>
+      <div
+        class="display-flex align-items-center justify-content-sp monitorType-dialog-content-item"
         @click="handelDialog('price')"
       >
         <div class="display-flex align-items-center title-txt">
@@ -53,6 +66,7 @@
         </div>
         <svg-icon name="chevron-right" class="chevron-right"></svg-icon>
       </div>
+
     </div>
   </el-dialog>
 </template>

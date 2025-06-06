@@ -48,7 +48,7 @@ async function initData() {
     baseAddress: route.params.baseAddress,
     chainCode: route.params.chainCode
   })
-  console.log(token)
+  // console.log(token)
   useChainInfo.createChainInfo({
     chainCode: route.params.chainCode, // 币ID
     pairAddress: token?.pairAddress, // 币 pairAddress

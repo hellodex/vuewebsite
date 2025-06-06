@@ -1,10 +1,11 @@
 <template>
-  <div class="connect-wallet-btn" v-bind="$attrs" @click.stop="handelConnect">
+  <div ref="loginRef" class="connect-wallet-btn" v-bind="$attrs" @click.stop="handelConnect">
     <slot>连接</slot>
   </div>
 </template>
 <script lang="ts" setup>
 import { useGlobalStore } from '@/stores/global'
+import { ref } from 'vue';
 import { useI18n } from 'vue-i18n'
 
 const globalStore = useGlobalStore()
@@ -19,6 +20,10 @@ const handelConnect = () => {
     notReceivedCodeDialogVisible: false
   })
 }
+const loginRef = ref()
+defineExpose({
+  loginRef
+})
 </script>
 <style lang="scss">
 .connect-wallet-btn {

@@ -344,9 +344,9 @@ watch(
     () => web3Account.value.caipAddress
   ],
   () => {
-    console.log('account updated:', web3Account.value.address)
-    console.log('account updated:', web3Account.value.isConnected)
-    console.log('account updated:', web3Account.value.caipAddress)
+    // console.log('account updated:', web3Account.value.address)
+    // console.log('account updated:', web3Account.value.isConnected)
+    // console.log('account updated:', web3Account.value.caipAddress)
 
     web3AccountInfo.value.address = web3Account.value.address
     web3AccountInfo.value.isConnected = web3Account.value.isConnected
@@ -371,12 +371,12 @@ const signatureFun = async () => {
   if (web3AccountInfo.value.isConnected) {
     if (web3AccountInfo.value.walletType == 'Evm') {
       const signature = await evmSignature()
-      console.log('signature', signature)
+      // console.log('signature', signature)
       localStorage.setItem('signature', signature)
       isSignature.value = true
     } else if (web3AccountInfo.value.walletType == 'Solana') {
       const signature = await solanaSignature()
-      console.log('signature', signature)
+      // console.log('signature', signature)
       localStorage.setItem('signature', signature)
       isSignature.value = true
     }
@@ -407,7 +407,7 @@ const tokensByWalletAddr = () => {
         : USDT_CONFIG[chain_Stablecoins.value.chainCode].address.toLowerCase()
     return address === rpc
   })
-  console.log(obj)
+  // console.log(obj)
   deductionInfo.value = {
     balance: obj?.amount || 0,
     decimals: obj?.decimals || 18,
@@ -483,7 +483,7 @@ const decentralizationEvmTrade = async () => {
       message: `确认失败`
     })
   }
-  console.log(result)
+  // console.log(result)
 }
 
 const decentralizationSolanaTrade = async () => {
@@ -520,7 +520,7 @@ const decentralizationSolanaTrade = async () => {
       message: `确认失败`
     })
   }
-  console.log(result)
+  // console.log(result)
 }
 
 const getIdoInfo = async () => {

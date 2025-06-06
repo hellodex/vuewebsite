@@ -76,11 +76,11 @@ export const handleEvmTx = async (tx: any) => {
     web3.eth
       .sendTransaction(tx)
       .on('transactionHash', function (hash) {
-        console.log('Transaction hash:', hash)
+        // console.log('Transaction hash:', hash)
         retObj.tx = hash
       })
       .on('receipt', function (receipt) {
-        console.log('Transaction was mined in block:', receipt)
+        // console.log('Transaction was mined in block:', receipt)
         if (receipt.status.toString() == '1') {
           retObj.status = true
           resolve(retObj)
@@ -139,13 +139,13 @@ export const handleSolanaAllowance = async (
   const userAddress_publicKey = new PublicKey(userAddress)
   const tokenAddress_publicKey = new PublicKey(tokenAddress)
 
-  console.log(spenderAddress)
+  // console.log(spenderAddress)
   // const spenderAddress_publicKey = new PublicKey(spenderAddress)
   const userTokenAccount: any = ''
 
   try {
     const accountInfo: any = await connection.getParsedAccountInfo(userTokenAccount)
-    console.log(`accountInfo: ${JSON.stringify(accountInfo)}`)
+    // console.log(`accountInfo: ${JSON.stringify(accountInfo)}`)
     // 检查授权信息
     return accountInfo.value && accountInfo.value.data.parsed.info.state === 'initialized' ? 1 : 0
   } catch (error) {
@@ -165,12 +165,12 @@ export const handleEvmApprove = async (spenderAddress: any, tokenAddress: any, a
   try {
     // 请求用户授权
     const tx = await tokenContract.approve(spenderAddress, amount)
-    console.log('Transaction sent:', tx)
+    // console.log('Transaction sent:', tx)
 
     // 等待交易被矿工确认
     await tx.wait()
     await delay(5000) // 等待5秒钟
-    console.log('Transaction confirmed:', tx.hash)
+    // console.log('Transaction confirmed:', tx.hash)
 
     return true
   } catch (error) {
@@ -194,7 +194,7 @@ export const sendEvmTransaction = async (res: any) => {
   const { walletProvider }: any = useAppKitProvider('eip155')
   const provider = new BrowserProvider(walletProvider)
   const signer = await provider.getSigner()
-  console.log(res)
+  // console.log(res)
   const tx = {
     to: res.to,
     value: res.value,
@@ -204,12 +204,12 @@ export const sendEvmTransaction = async (res: any) => {
   }
   try {
     const txResponse = await signer.sendTransaction(tx)
-    console.log('交易发送中...', txResponse)
+    // console.log('交易发送中...', txResponse)
     await txResponse.wait()
-    console.log('交易成功:', txResponse)
+    // console.log('交易成功:', txResponse)
     return true
   } catch (error) {
-    console.log(JSON.stringify(error))
+    // console.log(JSON.stringify(error))
     console.error('交易失败:', error)
     return false
   }
@@ -245,7 +245,7 @@ export const sendSolanaTransaction = async (res: any, rpc: any) => {
     const signature = await walletProvider?.sendTransaction(tx, connection)
     // await connection.confirmTransaction(signature, 'confirmed')
     const result = await solanaTransactionReceipt(signature, rpc)
-    console.log('Transaction successful with signature:', signature)
+    // console.log('Transaction successful with signature:', signature)
     return result ? true : false
   } catch (error) {
     console.error('Failed to send transaction:', error)
@@ -288,8 +288,8 @@ export const handelSwitchNetwork = (walletType: any, sellInfo: any) => {
   }
   const networkData = useAppKitNetwork()
 
-  console.log(networkData.value)
-  console.log(networkData.value.caipNetwork)
+  // console.log(networkData.value)
+  // console.log(networkData.value.caipNetwork)
   networkData.value.switchNetwork(CHAIN_NETWORKS[mainNetworkCurrency(sellInfo.chainCode).chainId])
 }
 
@@ -327,7 +327,7 @@ export const evmTransactionReceipt = async (tx: any, rpc: any, retries = 15) => 
       }
 
       if (receipt?.status) {
-        console.log(receipt)
+        // console.log(receipt)
         return true
       } else {
         console.error(tx + ':' + JSON.stringify(receipt))
@@ -373,7 +373,7 @@ export const solanaTransactionReceipt = async (tx: any, rpc: any, retries = 15) 
       }
 
       if (value?.err === null && value?.confirmationStatus?.toLowerCase() !== 'processed') {
-        console.log(value)
+        // console.log(value)
         return true
       } else if (
         value === null ||
@@ -439,11 +439,11 @@ export const evmTransfer = async (
   try {
     // 转账
     const tx = await tokenContract.transfer(recipientAddress, formatUnits(transferAmount, decimals)) // 6 为 USDT 的小数位数
-    console.log('Transaction Sent:', tx.hash)
+    // console.log('Transaction Sent:', tx.hash)
 
     // 等待交易确认
     await tx.wait()
-    console.log('Transaction Confirmed!')
+    // console.log('Transaction Confirmed!')
     return true
   } catch (error) {
     console.error('Error during transfer:', error)
@@ -510,13 +510,13 @@ export const solanaTransfer = async (
     transaction.recentBlockhash = recentBlockHash.blockhash
     transaction.feePayer = signerAdd
 
-    console.log('transaction', transaction)
+    // console.log('transaction', transaction)
     // 签名并发送交易
     // const signature = await connection.simulateTransaction(transaction)
 
     const signature = await walletProvider?.sendTransaction(transaction, connection)
 
-    console.log(signature)
+    // console.log(signature)
     // await connection.confirmTransaction(signature, 'confirmed')
     const result = await solanaTransactionReceipt(signature, rpc)
     return result ? true : false
@@ -590,9 +590,9 @@ export const solanaSignature = async () => {
  */
 export const evmSignatureVerify = async (address: any, signature: any) => {
   const recoveredAddress = verifyMessage(signatureMessage, signature)
-  console.log('recoveredAddress', recoveredAddress)
+  // console.log('recoveredAddress', recoveredAddress)
   const isValid = address.toLowerCase() === recoveredAddress.toLowerCase()
-  console.log('isValid', isValid)
+  // console.log('isValid', isValid)
   return isValid
 }
 
@@ -609,7 +609,7 @@ export const solanaSignatureVerify = async (address: any, signature: any) => {
 
   const isValid = await verifySignature(publicKey, decodedSignature, message)
 
-  console.log('isValid', isValid)
+  // console.log('isValid', isValid)
   return isValid
 }
 

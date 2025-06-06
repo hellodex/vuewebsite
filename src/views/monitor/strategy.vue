@@ -73,18 +73,83 @@
         </div>
         <WalletConnect v-if="!accountInfo">
           <div class="display-flex align-items-center add-btn">
-            <el-icon size="14"><Plus /></el-icon>
+            <el-icon size="14">
+              <Plus />
+            </el-icon>
             <span>创建监控</span>
           </div>
         </WalletConnect>
         <div class="display-flex align-items-center add-btn" @click="handelAdd" v-else>
-          <el-icon size="14"><Plus /></el-icon>
+          <el-icon size="14">
+            <Plus />
+          </el-icon>
           <span>创建监控</span>
         </div>
       </div>
     </div>
     <div class="table-box">
-      <el-skeleton style="width: 100%" :loading="skeleton" animated>
+      <el-skeleton v-if="strategyIndex == 2" style="width: 100%" :loading="skeleton" animated>
+        <template #template>
+          <el-skeleton-item
+            variant="text"
+            style="height: 30px; margin: 4.4px 0"
+            v-for="item in 12"
+            :key="item"
+          />
+        </template>
+        <template #default>
+          <el-table :data="walletTableData" style="width: 100%" max-height="calc(100vh - 190px)">
+            <el-table-column label="监控名称">
+              <template #default="scope">
+                <span>{{ scope.row.name }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="钱包分组数">
+              <template #default="scope">
+                <span>{{ scope.row.groupCount }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="状态">
+              <template #default="scope">
+                <el-text v-if="scope.row.status === '1'" style="font-size: 12px" type="success">监控中</el-text>
+                <el-text v-else style="font-size: 12px" type="danger">已暂停</el-text>
+              </template>
+            </el-table-column>
+            <el-table-column label="类别">
+              <template #default="scope">
+                <el-text v-if="scope.row.watchType === '1'" style="font-size: 12px" type="success">钱包监控</el-text>
+                <el-text v-else-if="scope.row.watchType === '2'" style="font-size: 12px" type="warning">N时间内多钱包买入监控</el-text>
+                <el-text v-else style="font-size: 12px" type="danger">N时间内多钱包卖出监控</el-text>
+              </template>
+            </el-table-column>
+            <!-- <el-table-column label="通知频率">
+              <template #default="scope">
+                <span>{{
+                  noticeTypeList.find((item: any) => item.value == scope.row.noticeType)?.label
+                }}</span>
+              </template>
+            </el-table-column> -->
+
+            <el-table-column label="操作" width="240">
+              <template #default="scope">
+                <span
+                  class="monitor-btn"
+                  @click="handelStartOrPause(scope.row,2)"
+                  v-if="scope.row.status == 1"
+                >暂停监控</span
+                >
+                <span class="monitor-btn" @click="handelStartOrPause(scope.row,1)" v-else>启动监控</span>
+                <span class="monitor-btn" @click="handelEditWallet(scope.row)">编辑</span>
+                <span class="monitor-btn btn-del" @click.stop="handelDelWallet(scope.row)">删除</span>
+              </template>
+            </el-table-column>
+            <template #empty>
+              <empty-data></empty-data>
+            </template>
+          </el-table>
+        </template>
+      </el-skeleton>
+      <el-skeleton v-else style="width: 100%" :loading="skeleton" animated>
         <template #template>
           <el-skeleton-item
             variant="text"
@@ -119,7 +184,7 @@
             <el-table-column label="触发条件">
               <template #default="scope">
                 <span v-if="scope.row.type == 'price'"
-                  >${{ numberFormat(scope.row.targetPrice || 0) }}</span
+                >${{ numberFormat(scope.row.targetPrice || 0) }}</span
                 >
                 <span v-if="scope.row.type == 'chg'">{{ parseFloat(scope.row.data) * 100 }}%</span>
                 <span v-if="scope.row.type == 'buy'">${{ numberFormat(scope.row.data) }}</span>
@@ -129,15 +194,15 @@
             <el-table-column label="通知频率">
               <template #default="scope">
                 <span>{{
-                  noticeTypeList.find((item: any) => item.value == scope.row.noticeType)?.label
-                }}</span>
+                    noticeTypeList.find((item: any) => item.value == scope.row.noticeType)?.label
+                  }}</span>
               </template>
             </el-table-column>
             <el-table-column label="最近通知时间">
               <template #default="scope">
                 <span>{{
-                  scope.row.lastNoticeTime ? timeago(scope.row.lastNoticeTime) : '-'
-                }}</span>
+                    scope.row.lastNoticeTime ? timeago(scope.row.lastNoticeTime) : '-'
+                  }}</span>
               </template>
             </el-table-column>
             <el-table-column label="操作" width="240">
@@ -146,7 +211,7 @@
                   class="monitor-btn"
                   @click="handelPlay(scope.row)"
                   v-if="scope.row.noticeType == 0"
-                  >启动监控</span
+                >启动监控</span
                 >
                 <span class="monitor-btn" @click="handelPause(scope.row)" v-else>暂停监控</span>
                 <span class="monitor-btn" @click="handelEdit(scope.row)">编辑</span>
@@ -173,10 +238,17 @@
       @refresh="handelRefresh"
       v-if="monitorFormDialogVisible"
     />
+    <MonitorObserveGroupDialog
+      :info="currentMonitorObserve"
+      :monitorObserveGroupDialogVisible="monitorObserveGroupDialogVisible"
+      @close="handelMonitorObserveGroupClose"
+      @refresh="handelObserveGroupRefresh"
+      v-if="monitorObserveGroupDialogVisible"
+    />
   </div>
 </template>
 <script setup lang="ts">
-import { ref, onMounted, computed, watch } from 'vue'
+import { ref, onMounted, computed, watch, onUnmounted } from 'vue'
 import { ElMessageBox } from 'element-plus'
 import { useGlobalStore } from '@/stores/global'
 import {
@@ -184,15 +256,20 @@ import {
   APIupdateUserSubscribeSetting,
   APIdeleteUserTokenSubscribe,
   APIpauseUserTokenSubscribe,
-  APIresumeUserTokenSubscribe
+  APIresumeUserTokenSubscribe,
+  walletWatchStrategyList,
+  startWalletWatchStrategy,
+  deleteWalletWatchStrategy
 } from '@/api'
 import { timeago, numberFormat } from '@/utils'
 import { useI18n } from 'vue-i18n'
 import WalletConnect from '@/components/Wallet/WalletConnect.vue'
 import MonitorTypeDialog from '@/components/Dialogs/MonitorTypeDialog.vue'
 import MonitorFormDialog from '@/components/Dialogs/MonitorFormDialog.vue'
+import MonitorObserveGroupDialog from '@/components/Dialogs/MonitorObserveGroupDialog.vue'
 import { customMessage } from '@/utils/message'
 import { typeList, noticeTypeList } from '@/types'
+
 
 const i18n = useI18n()
 const globalStore = useGlobalStore()
@@ -214,12 +291,12 @@ const channels = [
 
 const checkedChannel = ref<any>([])
 const handleCheckedChannel = async (val: any) => {
-  console.log(val)
+  // console.log(val)
   await APIupdateUserSubscribeSetting({
     channels: val
   })
 
-  getTableData()
+  getTableData(false)
   customMessage({
     type: 'success',
     title: `渠道设置成功`
@@ -228,21 +305,31 @@ const handleCheckedChannel = async (val: any) => {
 
 const strategyList = [
   {
-    label: '监控列表',
+    label: '钱包监控',
+    value: 2,
+    icon: 'icon-coin-strategy'
+  },
+  {
+    label: '代币监控',
     value: 1,
     icon: 'icon-coin-strategy'
   }
+
 ]
 
-const strategyIndex = ref(1)
-
+const strategyIndex = ref(2)
 const handelTab = (item: any) => {
   strategyIndex.value = item.value
+  getTableData()
 }
 
 const monitorChainCode = ref<string>('DEX')
 const monitorTypeDialogVisible = ref<boolean>(false)
 const monitorFormDialogVisible = ref<boolean>(false)
+
+const monitorObserveGroupDialogVisible = ref<boolean>(false)
+const currentMonitorObserve = ref<any>({})
+
 const dialogType = ref<string>('add')
 
 const formInfo = ref<any>({
@@ -271,40 +358,81 @@ const handelMonitorFormClose = (val: boolean) => {
   monitorFormDialogVisible.value = val
 }
 
+const handelMonitorObserveGroupClose = (val: boolean) => {
+  monitorObserveGroupDialogVisible.value = val
+}
+
 const handelRefresh = () => {
   getTableData()
   monitorFormDialogVisible.value = false
+  monitorObserveGroupDialogVisible.value = false
+}
+
+const handelObserveGroupRefresh = () => {
+  getTableData()
+  monitorObserveGroupDialogVisible.value = false
+  currentMonitorObserve.value = {}
 }
 
 const handelDialog = (type: string) => {
   monitorTypeDialogVisible.value = false
-  monitorFormDialogVisible.value = true
-  formInfo.value = {
-    type: type,
-    coin: 'Single',
-    chainCode: 'SOLANA',
-    baseAddress: '',
-    symbol: '',
-    data: '',
-    noticeType: [1],
-    startPrice: '',
-    targetPrice: '',
-    status: 1,
-    logo: ''
+  if (type == 'group') {
+    currentMonitorObserve.value = {}
+    monitorObserveGroupDialogVisible.value = true
+  } else {
+    monitorFormDialogVisible.value = true
+    formInfo.value = {
+      type: type,
+      coin: 'Single',
+      chainCode: 'SOLANA',
+      baseAddress: '',
+      symbol: '',
+      data: '',
+      noticeType: [1],
+      startPrice: '',
+      targetPrice: '',
+      status: 1,
+      logo: ''
+    }
   }
 }
 
 const tableData = ref<any>([])
+const walletTableData = ref<any>([])
 const skeleton = ref(false)
 
-const getTableData = async () => {
-  const res: any = await APIlistUserTokenSubscribe({
+const getTableData = async (showSkeleton = true) => {
+  if (showSkeleton) {
+    skeleton.value = true
+  }
+
+  // 总是获取推送渠道配置
+  const channelRes: any = await APIlistUserTokenSubscribe({
     chainCode: monitorChainCode.value == 'DEX' ? '' : monitorChainCode.value
   })
-  tableData.value = res?.subscribeList || []
-  checkedChannel.value = res?.subscribeSetting || []
-}
+  checkedChannel.value = channelRes?.subscribeSetting || []
 
+  if (strategyIndex.value == 2) {
+    // 钱包监控：获取钱包监控数据
+    const walletRes: any = await walletWatchStrategyList({})
+    walletTableData.value = walletRes || []
+    // 清空代币监控数据
+    tableData.value = []
+  } else {
+    // 代币监控：使用之前获取的数据
+    tableData.value = channelRes?.subscribeList || []
+    // 清空钱包监控数据
+    walletTableData.value = []
+  }
+
+  if (showSkeleton) {
+    skeleton.value = false
+  }
+}
+const handelEditWallet = (row: any) => {
+  monitorObserveGroupDialogVisible.value = true
+  currentMonitorObserve.value = row
+}
 const handelEdit = (row: any) => {
   dialogType.value = 'edit'
   for (const key in formInfo.value) {
@@ -342,7 +470,30 @@ const handelDel = async (row: any) => {
         })
       }
     })
-    .catch(() => {})
+    .catch(() => {
+    })
+}
+
+const handelDelWallet = async (row: any) => {
+  ElMessageBox.confirm('确定要删除此条监控', i18n.t('Tips'), {
+    confirmButtonText: i18n.t('Confirm'),
+    cancelButtonText: i18n.t('Cancel'),
+    type: 'info'
+  })
+    .then(async () => {
+      const res = await deleteWalletWatchStrategy({
+        id: row.id
+      })
+      if (res) {
+        getTableData()
+        customMessage({
+          type: 'success',
+          title: `删除成功`
+        })
+      }
+    })
+    .catch(() => {
+    })
 }
 
 const handelPause = async (row: any) => {
@@ -359,6 +510,16 @@ const handelPause = async (row: any) => {
       title: `${typeList.find((item) => item.value == params.type)?.label}已暂停！`
     })
   }
+}
+const handelStartOrPause = async (row: any, status: number) => {
+  const res = await startWalletWatchStrategy({
+    id: row.id,
+    status: status
+  })
+  if (res) {
+    walletTableData.value = res || []
+  }
+
 }
 
 const handelPlay = async (row: any) => {
@@ -382,6 +543,7 @@ const handelChangeChainCode = () => {
   initData()
 }
 
+// 监听账户状态变化
 watch(accountInfo, (newValue) => {
   if (accountInfo.value) {
     getTableData()
@@ -390,11 +552,10 @@ watch(accountInfo, (newValue) => {
 
 const initData = async () => {
   if (accountInfo.value) {
-    skeleton.value = true
     await getTableData()
-    skeleton.value = false
   }
 }
+
 onMounted(() => {
   initData()
 })
@@ -407,21 +568,27 @@ onMounted(() => {
   background-color: rgba(23, 24, 27, 0.3);
   height: calc(100vh - 120px);
   overflow: hidden;
+
   .checkout-box {
     margin-left: 12px;
+
     :deep(.el-checkbox) {
       margin-right: 15px;
     }
+
     :deep(.el-checkbox__label) {
       font-size: 12px;
     }
+
     :deep(.el-checkbox__input.is-checked + .el-checkbox__label) {
       color: var(--font-color-default);
     }
+
     :deep(.el-checkbox__input.is-checked .el-checkbox__inner) {
       background-color: #2ebd85;
       border-color: #2ebd85;
     }
+
     :deep(.el-checkbox__input.is-checked .el-checkbox__inner:after) {
       border-color: var(--font-color-default);
     }
@@ -435,12 +602,14 @@ onMounted(() => {
     background: rgba(33, 33, 33, 0.3);
     border-radius: 4px;
     cursor: pointer;
+
     .icon {
       width: 14px;
       height: 14px;
       margin-right: 6px;
     }
   }
+
   .active {
     color: #f5f5f5;
     background-color: rgba(58, 60, 64, 0.4);
@@ -454,35 +623,42 @@ onMounted(() => {
     background-color: #f5f5f5;
     color: #5c6068;
     cursor: pointer;
+
     span {
       margin-left: 6px;
     }
   }
+
   .connect-wallet-btn {
     min-width: 0;
     padding: 0;
     background-color: transparent;
   }
+
   .table-box {
     margin-top: 12px;
     height: calc(100% - 40px);
+
     .copy {
       width: 14px;
       height: 14px;
       margin-left: 4px;
       cursor: pointer;
     }
+
     .logo {
       width: 32px;
       height: 32px;
       position: relative;
       margin-right: 10px;
     }
+
     .coin-icon {
       width: 32px;
       height: 32px;
       border-radius: 50%;
     }
+
     .chainCode {
       width: 14px;
       height: 14px;
@@ -505,21 +681,26 @@ onMounted(() => {
       color: #848e9c;
       transition: all 0.2s;
     }
+
     .monitor-btn:hover {
       color: #f5f5f5;
     }
+
     .btn-del {
       background: rgba(246, 70, 93, 0.1);
       color: var(--down-color);
     }
+
     .btn-del:hover {
       color: red;
     }
   }
+
   :deep(.el-popper) {
     .el-select-dropdown__item {
       color: var(--dex-color-4);
     }
+
     .el-select-dropdown__item.is-selected {
       color: var(--font-color-default);
     }
@@ -532,6 +713,7 @@ onMounted(() => {
   display: block;
   border-radius: 50%;
 }
+
 .span-txt {
   margin-left: 6px;
 }

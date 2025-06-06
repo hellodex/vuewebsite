@@ -42,9 +42,9 @@ export function useConnectWallet() {
       () => appkitAccount.value.caipAddress
     ],
     () => {
-      console.log('account updated:', appkitAccount.value.address)
-      console.log('account updated:', appkitAccount.value.isConnected)
-      console.log('account updated:', appkitAccount.value.caipAddress)
+      // console.log('account updated:', appkitAccount.value.address)
+      // console.log('account updated:', appkitAccount.value.isConnected)
+      // console.log('account updated:', appkitAccount.value.caipAddress)
       if (clickLocation.value !== 'clickIdo') {
         globalStore.setWalletInfo({
           address: appkitAccount.value.address,

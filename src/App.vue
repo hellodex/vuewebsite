@@ -158,7 +158,7 @@ const danmakuFun = () => {
     socket.off('smartWalletDanmaku')
     socket.on('smartWalletDanmaku', (message) => {
       const data = JSON.parse(message)
-      console.log(`socket-danmaku:`, data)
+      // console.log(`socket-danmaku:`, data)
       danmus.value.push(data)
     })
   } else {
@@ -262,10 +262,10 @@ loadPromise.then((val) => {
 
 const reload = () => {
   routerState.value = false
-  console.log(false)
+  // console.log(false)
   nextTick(() => {
     routerState.value = true
-    console.log(true)
+    // console.log(true)
   })
 }
 

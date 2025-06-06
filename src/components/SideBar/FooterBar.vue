@@ -19,6 +19,35 @@
           {{ i18n.t('tabbar.advertNoticeOperate') }}<el-icon><Right /></el-icon
         ></span>
       </div>
+      <div class="display-flex align-items-center activity-content">
+        <span style="margin-left: 20px"></span>
+        <img src="@/assets/img/select_airdrop.png" alt="" />
+        <span
+          @click="router.push('/airdrop')"
+          class="display-flex align-items-center"
+          style="
+            color: #569cee;
+            border-bottom: 1px solid #569cee;
+            margin-left: 8px;
+            cursor: pointer;
+            line-height: 1;">
+          {{ i18n.t('tabbar.airdrop') }} </span>
+      </div>
+
+      <div class="display-flex align-items-center activity-content">
+        <span style="margin-left: 20px"></span>
+        <img src="@/assets/img/vip/VIP.png" alt="" />
+        <span
+          @click="router.push('/pricing')"
+          class="display-flex align-items-center"
+          style="
+            color: #569cee;
+            border-bottom: 1px solid #569cee;
+            margin-left: 8px;
+            cursor: pointer;
+            line-height: 1;">
+          {{ i18n.t('tabbar.getVip') }} </span>
+      </div>
       <span></span>
     </div>
     <div class="other-link">
@@ -35,7 +64,7 @@
       </a>
     </div>
 
-<!--    <div class="txt">💘你冲币、我冲你、亏了送U不离不弃💘</div>-->
+    <!--    <div class="txt">💘你冲币、我冲你、亏了送U不离不弃💘</div>-->
   </footer>
 </template>
 <script lang="ts" setup>

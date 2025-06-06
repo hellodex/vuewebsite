@@ -56,11 +56,20 @@
               oninput="value=value.replace(/[^0-9.]/g,'')"
               style="width: 80px"
               size="small"
+              placeholder="请输入"
             >
               <template #prefix>
                 <img
-                  v-if="nounScreenId != 13 ? chainLogoObj[chainCode] : chainLogoObj['SOLANA']"
-                  :src="nounScreenId != 13 ? chainLogoObj[chainCode] : chainLogoObj['SOLANA']"
+                  v-if="
+                    ![13, 99].includes(nounScreenId)
+                      ? chainLogoObj[chainCode]
+                      : chainLogoObj['SOLANA']
+                  "
+                  :src="
+                    ![13, 99].includes(nounScreenId)
+                      ? chainLogoObj[chainCode]
+                      : chainLogoObj['SOLANA']
+                  "
                   alt=""
                   class="icon-svg"
                 />
@@ -74,7 +83,7 @@
             :visible="popperVisible"
             popper-class="table-network-popper"
             ref="popoverRef"
-            v-if="nounScreenId != 13"
+            v-if="![13, 99].includes(nounScreenId)"
           >
             <template #reference>
               <div
@@ -114,14 +123,15 @@
           </el-popover>
         </div>
       </div>
+      <AiSignals :amount="amount" v-if="nounScreenId == 99" />
+      <PumpList :amount="amount" v-else-if="nounScreenId == 13" />
       <HotList
         :tableLoading="tableLoading"
         :timeTabIndex="timeTabIndex"
         :chainIdDataList="chainIdDataList"
         :amount="amount"
-        v-if="nounScreenId !== 13"
+        v-else
       />
-      <PumpList :amount="amount" v-if="nounScreenId == 13" />
     </div>
   </section>
 </template>
@@ -139,16 +149,14 @@ import {
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { ClickOutside as vClickOutside } from 'element-plus'
-import PercentageChange from '@/components/Percentage/PercentageChange.vue'
+
 import DoubleCost from '@/components/DoubleCost.vue'
-import CoinsAreaChart from '@/adapter/components/CoinsAreaChart.vue'
-import DashboardChart from '@/adapter/components/DashboardChart.vue'
+import AiSignals from '@/adapter/components/AiSignals.vue'
 import HotList from '@/adapter/components/HotList.vue'
 import PumpList from '@/adapter/components/PumpList.vue'
 import { APIinitTokenInfo, APIfreshPriceList, ApiGetRankings } from '@/api'
 import { useGlobalStore } from '@/stores/global'
 import { numberFormat, dataAssembly, numFormat } from '@/utils'
-import { MAIN_COIN } from '@/types'
 
 const router = useRouter()
 const i18n = useI18n()
@@ -263,13 +271,33 @@ function lastComparedToCurrent(currentData: any[] = [], lastData: any[] = []): a
 }
 
 async function getInitTokenInfo() {
-  const tokenInfoByChainData: any = await APIinitTokenInfo()
-  btcFearAndGreed.value = tokenInfoByChainData?.btcFearAndGreed || {}
+  // const tokenInfoByChainData: any = await APIinitTokenInfo()
+  // btcFearAndGreed.value = tokenInfoByChainData?.btcFearAndGreed || {}
 
   nounScreenList.value =
     [
-      ...(tokenInfoByChainData?.rankingInfo?.filter((item: { id: number }) => item.id == 13) || []),
-      ...(tokenInfoByChainData?.rankingInfo?.filter((item: { id: number }) => item.id != 13) || [])
+      {
+        createTime: '2024-07-01 02:50:42',
+        id: 99,
+        location: 0,
+        logo: '',
+        name: 'AI 信号',
+        sort: 0,
+        type: '',
+        updateTime: '2024-08-19 07:59:23'
+      },
+      {
+        "id": 13,
+        "name": "Pump",
+        "sort": 1,
+        "location": 0,
+        "type": "",
+        "logo": "",
+        "createTime": "2024-08-19 08:31:45",
+        "updateTime": "2025-05-26 13:36:00"
+      },
+      // ...(tokenInfoByChainData?.rankingInfo?.filter((item: { id: number }) => item.id != 13) || [])
+      // ...(tokenInfoByChainData?.rankingInfo?.filter((item: { id: number }) => item.id == 13) || []),
     ].map((item: { name: any; id: string | number }) => {
       return {
         name: item.name,
@@ -277,55 +305,55 @@ async function getInitTokenInfo() {
         icon: nounScreenIcon[item.id]
       }
     }) || []
-  hotSearchByChainData.value = tokenInfoByChainData?.pumpFunRanking || []
-  mainstreamCoinsData.value = tokenInfoByChainData?.topRanking || []
-  await getRankings()
-  getFreshPriceList()
+  // hotSearchByChainData.value = tokenInfoByChainData?.pumpFunRanking || []
+  // mainstreamCoinsData.value = tokenInfoByChainData?.topRanking || []
+  // await getRankings()
+  // getFreshPriceList()
 }
 
 async function getRankings() {
-  const res: any = await ApiGetRankings({
-    chainCode: chainCode.value == 'DEX' ? null : chainCode.value,
-    type: nounScreenId.value
-  })
-  console.log(res)
-  chainIdChainData.value = res?.customRank || []
+  // const res: any = await ApiGetRankings({
+  //   chainCode: chainCode.value == 'DEX' ? null : chainCode.value,
+  //   type: nounScreenId.value
+  // })
+  // console.log(res)
+  // chainIdChainData.value = res?.customRank || []
 }
 
 async function getFreshPriceList() {
-  const mainstreamCoinsPairAddressList = mainstreamCoinsData.value.map(
-    (item: any) => item.pairAddress
-  )
-  const priceList: any = await APIfreshPriceList({
-    price: [...hotSearchByChainData.value.map((item: any) => `${item.searchId}`)],
-    priceAndInfo: [
-      ...chainIdChainData.value.map((item: any) => `${item.searchId}`),
-      ...mainstreamCoinsData.value.map((item: any) => `${item.searchId}`)
-    ],
-    period: timeTabIndex.value
-  })
-
-  const chainIdDataPriceList =
-    (priceList.priceAndInfo &&
-      priceList.priceAndInfo.filter(
-        (item: { pairAddress: any }) => !mainstreamCoinsPairAddressList.includes(item.pairAddress)
-      )) ||
-    []
-  const mainstreamCoinsPriceList =
-    (priceList?.priceAndInfo &&
-      priceList.priceAndInfo.filter((item: { pairAddress: any }) =>
-        mainstreamCoinsPairAddressList.includes(item.pairAddress)
-      )) ||
-    []
-
-  console.log('chainIdDataPriceList', chainIdDataPriceList)
-  console.log('mainstreamCoinsPriceList', mainstreamCoinsPriceList)
-
-  hotSearchList.value = dataAssembly(hotSearchByChainData.value, priceList.price)
-  chainIdDataList.value = dataAssembly(chainIdChainData.value, chainIdDataPriceList)
-  mainstreamCoinsList.value = dataAssembly(mainstreamCoinsData.value, mainstreamCoinsPriceList)
-  skeletonLoading.value = false
-  tableLoading.value = false
+  // const mainstreamCoinsPairAddressList = mainstreamCoinsData.value.map(
+  //   (item: any) => item.pairAddress
+  // )
+  // const priceList: any = await APIfreshPriceList({
+  //   price: [...hotSearchByChainData.value.map((item: any) => `${item.searchId}`)],
+  //   priceAndInfo: [
+  //     ...chainIdChainData.value.map((item: any) => `${item.searchId}`),
+  //     ...mainstreamCoinsData.value.map((item: any) => `${item.searchId}`)
+  //   ],
+  //   period: timeTabIndex.value
+  // })
+  //
+  // const chainIdDataPriceList =
+  //   (priceList.priceAndInfo &&
+  //     priceList.priceAndInfo.filter(
+  //       (item: { pairAddress: any }) => !mainstreamCoinsPairAddressList.includes(item.pairAddress)
+  //     )) ||
+  //   []
+  // const mainstreamCoinsPriceList =
+  //   (priceList?.priceAndInfo &&
+  //     priceList.priceAndInfo.filter((item: { pairAddress: any }) =>
+  //       mainstreamCoinsPairAddressList.includes(item.pairAddress)
+  //     )) ||
+  //   []
+  //
+  // // console.log('chainIdDataPriceList', chainIdDataPriceList)
+  // // console.log('mainstreamCoinsPriceList', mainstreamCoinsPriceList)
+  //
+  // hotSearchList.value = dataAssembly(hotSearchByChainData.value, priceList.price)
+  // chainIdDataList.value = dataAssembly(chainIdChainData.value, chainIdDataPriceList)
+  // mainstreamCoinsList.value = dataAssembly(mainstreamCoinsData.value, mainstreamCoinsPriceList)
+  // skeletonLoading.value = false
+  // tableLoading.value = false
 }
 
 async function getChainList() {
@@ -380,9 +408,9 @@ const getHomeData = () => {
 
 const setPolling = () => {
   clearInterval(timer.value)
-  timer.value = setInterval(() => {
-    getFreshPriceList()
-  }, 5000)
+  // timer.value = setInterval(() => {
+  //   getFreshPriceList()
+  // }, 5000)
 }
 watch(
   () => hotSearchList.value,

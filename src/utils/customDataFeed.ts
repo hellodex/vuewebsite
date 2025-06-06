@@ -37,14 +37,14 @@ export default class CustomDataFeed {
       })
     )
 
-    console.log('CustomDataFeed--onReady')
+    // console.log('CustomDataFeed--onReady')
   }
   // 搜索符号
   searchSymbols(userInput: any, exchange: any, symbolType: any, onResultReadyCallback: any) {
     // 根据用户输入搜索符号，获取匹配的股票列表
     // 将结果传递给TradingView
     // onResultReadyCallback(symbols);
-    console.log(userInput, exchange, symbolType, onResultReadyCallback)
+    // console.log(userInput, exchange, symbolType, onResultReadyCallback)
   }
   // 获取符号信息
   resolveSymbol(
@@ -55,13 +55,13 @@ export default class CustomDataFeed {
   ) {
     // 解析股票符号，获取相关信息
     // 例如交易所、股票类型、时间间隔等
-    console.log(symbolName, onSymbolResolvedCallback, onResolveErrorCallback, extension)
+    // console.log(symbolName, onSymbolResolvedCallback, onResolveErrorCallback, extension)
     const pricescale = 10 ** formatDecimals(sessionStorage.getItem('basePrice')).precision
 
-    console.log(
-      sessionStorage.getItem('basePrice'),
-      formatDecimals(sessionStorage.getItem('basePrice'))
-    )
+    // console.log(
+    //   sessionStorage.getItem('basePrice'),
+    //   formatDecimals(sessionStorage.getItem('basePrice'))
+    // )
     const symbolInfo = {
       name: symbolName,
       ticker: symbolName,
@@ -102,7 +102,7 @@ export default class CustomDataFeed {
     // 发送请求到后端，获取特定股票在特定时间范围内的历史数据
     // 将数据传递给TradingView
     // onHistoryCallback(data, { noData: false });
-    console.log(symbolInfo, resolution, periodParams, onErrorCallback)
+    // console.log(symbolInfo, resolution, periodParams, onErrorCallback)
 
     localStorage.setItem('kchart_tradingTime', resolution)
     const showMarket = eval(localStorage.getItem('showMarket') || 'false')
@@ -219,7 +219,7 @@ export default class CustomDataFeed {
 
     socket.on('kchart', (message: any) => {
       const data = JSON.parse(message)
-      console.log(`socket-message: ${data.tx} <========> ${formatDate(data.txTime * 1000)}`)
+      // console.log(`socket-message: ${data.tx} <========> ${formatDate(data.txTime * 1000)}`)
       useSubscribeKChart.createSubscribeKChartInfo({
         C: data.price,
         H: data.price,
@@ -256,7 +256,7 @@ export default class CustomDataFeed {
   // 取消订阅实时数据
   unsubscribeBars(subscriberUID: any) {
     // 取消对特定股票的实时数据订阅
-    console.log(subscriberUID)
+    // console.log(subscriberUID)
     // clearInterval(this._intervalId)
   }
 }

@@ -96,7 +96,7 @@ const skeleton = ref<boolean>(false)
 const getData = async () => {
   skeleton.value = true
   const res = await APIgetCommissionDetail({})
-  console.log(res)
+  // console.log(res)
   info.value = res || {}
   skeleton.value = false
 }

@@ -74,7 +74,7 @@ const withdrawInfo = ref<any>({})
 const getData = async () => {
   skeleton.value = true
   const res = await APIgetCommissionDetail({})
-  console.log(res)
+  // console.log(res)
   info.value = res || {}
   skeleton.value = false
 }

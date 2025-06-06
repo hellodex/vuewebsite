@@ -128,6 +128,15 @@ const router = createRouter({
             description: '可添加代币、钱包、推特帖子任何异动第一时间推送给用户'
           },
           component: () => import('@/views/monitor/strategy.vue')
+        },
+        {
+          path: 'ObserveGroup',
+          name: 'ObserveGroup',
+          meta: {
+            title: 'HelloDex-AI监控',
+            description: '可添加代币、钱包、推特帖子任何异动第一时间推送给用户'
+          },
+          component: () => import('@/views/monitor/observeGroup.vue')
         }
       ]
     },
@@ -170,6 +179,16 @@ const router = createRouter({
       path: '/Ido',
       name: 'IDO',
       component: () => import('@/views/ido.vue')
+    },
+    {
+      path: '/airdrop',
+      name: 'airdrop',
+      component: () => import('@/views/airdrop.vue')
+    },
+    {
+      path: '/pricing',
+      name: 'pricing',
+      component: () => import('@/views/pricing.vue')
     },
     {
       path: '/Download',
@@ -216,9 +235,9 @@ const router = createRouter({
       component: () => import('@/views/follow.vue')
     },
     {
-      path: '/AiSignals',
-      name: 'AiSignals',
-      component: () => import('@/views/AiSignals.vue')
+      path: '/Pricing',
+      name: 'Pricing',
+      component: () => import('@/views/pricing.vue')
     }
   ]
 })

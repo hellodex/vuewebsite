@@ -9,7 +9,9 @@ export default {
     rpcService: 'RPC服务',
     dataAPIService: '数据API服务',
     advertNoticeText: '🔥HelloDex平台币预售中！',
-    advertNoticeOperate: '立即参与'
+    advertNoticeOperate: '立即参与',
+    getVip: '会员订阅',
+    airdrop: '空投查询'
   },
   home: {
     swap: '交易',

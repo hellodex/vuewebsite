@@ -7,7 +7,9 @@ export default {
     rpcService: 'RPC Service',
     dataAPIService: 'Data API Service',
     advertNoticeText: '🔥HelloDex platform token presale is live!',
-    advertNoticeOperate: 'Join now.'
+    advertNoticeOperate: 'Join now.',
+    getVip: 'Join VIP',
+    airdrop: 'airdrop'
   },
   home: {
     swap: 'Swap',

@@ -17,7 +17,7 @@ export function useFavoriteData() {
   // 监听连接钱包的变化
   watch(isConnected, (newValue) => {
     if (newValue) {
-      console.log('favorite1')
+      // console.log('favorite1')
       getListFavorite()
     }
   })
@@ -25,7 +25,7 @@ export function useFavoriteData() {
   // 监听地址和链ID变化
   watch([address, chainId], () => {
     if (isConnected.value) {
-      console.log('favorite2')
+      // console.log('favorite2')
       getListFavorite()
     }
   })

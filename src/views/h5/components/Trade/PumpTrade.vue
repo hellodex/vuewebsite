@@ -135,7 +135,7 @@ const handleTrade = async (selectSellCoin: any, selectBuyCoin: any, type: any, a
         selectSellCoin.baseAddress,
         mainNetworkCurrency(selectSellCoin.chainCode).rpc
       )
-      console.log('allowance:' + allowance)
+      // console.log('allowance:' + allowance)
       if (allowance == 0) {
         notificationInfo({
           title: `${selectBuyCoin.baseSymbol}：买入授权中`,

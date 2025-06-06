@@ -40,7 +40,7 @@ export function useHoldingCoinsTab(num: any, name: string) {
     } else {
       const data =
         params.baseAddress && res.result ? res.result[params.baseAddress.toLocaleLowerCase()] : {}
-      console.log(data.lp_holders)
+      // console.log(data.lp_holders)
       let topHold = 0
       let topProPortion = 0
       data.holders?.forEach((item: any) => {

@@ -105,7 +105,7 @@ import { customMessage } from '@/utils/message'
 
 const router = useRouter()
 const route = useRoute()
-console.log(route)
+// console.log(route)
 
 const i18n = useI18n()
 const globalStore = useGlobalStore()
@@ -138,7 +138,7 @@ const handelLogon = async () => {
   })
     .then(async () => {
       const res = await APIlogout()
-      console.log(res)
+      // console.log(res)
       if (res) {
         customMessage({
           type: 'success',

@@ -128,13 +128,13 @@ export function APIgetPools(data: object) {
  * @param data
  * @returns
  */
-export function APIlistPeriod(data: object) {
-  return http({
-    url: WEB_URL + '/api/webv2/token/listPeriod',
-    method: 'POST',
-    data
-  })
-}
+// export function APIlistPeriod(data: object) {
+//   return http({
+//     url: WEB_URL + '/api/webv2/token/listPeriod',
+//     method: 'POST',
+//     data
+//   })
+// }
 
 /**
  * @description 转账信息

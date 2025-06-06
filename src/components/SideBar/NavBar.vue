@@ -179,7 +179,7 @@ const accountInfo = computed(() => globalStore.accountInfo)
 // 菜单
 const navList = computed(() => {
   return [
-    { name: '送U-冲狗基金', to: '/ChongDogVentures' },
+    // { name: '送U-冲狗基金', to: '/ChongDogVentures' },
     { name: 'AI监控', to: '/Monitor/Strategy' }
     // { name: '关注', to: '/Follow' }
     // { name: i18n.t('tabbar.smart'), to: '/Smartmoney' },
@@ -197,7 +197,7 @@ watch(
   (newVal, oldVal) => {
     globalStore.setTheme(newVal ? 'dark' : 'dark')
     switchDark()
-    console.log(newVal)
+    // console.log(newVal)
   }
 )
 
@@ -214,9 +214,9 @@ onMounted(async () => {
   theme.value = globalStore.theme === 'dark' ? true : false
 
   document.addEventListener('click', onClickOutSearch)
-  const res: any = await APIgetFeeVolume()
-  console.log(res)
-  feeVolume.value = res?.fee || 0
+  // const res: any = await APIgetFeeVolume()
+  // console.log(res)
+  // feeVolume.value = res?.fee || 0
 })
 
 onUnmounted(() => {
