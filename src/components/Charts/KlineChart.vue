@@ -102,9 +102,30 @@ const O = (params: any, F: any) => {
   }
 
   const klineMaxMin = xZ(props.lineData)
-  const G = F.coord([F.value(0), F.value(1)]),
-    q = F.value(1) > klineMaxMin.mid,
-    fe = [],
+  const G = F.coord([F.value(0), F.value(1)])
+  
+  // 计算价格标签的位置和宽度，判断是否重叠
+  let q = F.value(1) > klineMaxMin.mid // 默认逻辑
+  let isInPriceTagRange = false
+  
+  const lastPoint = props.lineData?.at(-1)
+  if (lastPoint) {
+    const lastPointCoord = F.coord([lastPoint.timestamp.toString(), lastPoint.C])
+    const priceText = `$${numberFormat(lastPoint.C)}/$${numberFormat(lastPoint.marketCap)}`
+    const priceTagWidth = Eq(priceText, 12) + 10  // 与函数M中的计算保持一致
+    const priceTagLeft = lastPointCoord[0] - priceTagWidth + 5
+    const priceTagRight = lastPointCoord[0] + 5
+    
+    // 判断当前函数O的位置是否在价格标签的宽度范围内
+    isInPriceTagRange = G[0] >= priceTagLeft && G[0] <= priceTagRight
+    
+    // 如果在价格标签范围内，强制显示在下方（q=true表示下方）
+    if (isInPriceTagRange) {
+      q = true
+    }
+  }
+  
+  const fe = [],
     Ff = 12,
     xe = {
       width: 17.5,
@@ -112,10 +133,12 @@ const O = (params: any, F: any) => {
     },
     Oe = 10,
     Ge = 5,
-    Ue = q ? G[1] + xe.height / 2 + Ff : G[1] - xe.height / 2 - Ff,
+    // 如果在价格标签范围内，增加额外的下方偏移避免重叠
+    extraOffset = isInPriceTagRange ? 25 : 0,
+    Ue = q ? G[1] + xe.height / 2 + Ff : G[1] - xe.height / 2 - Ff - extraOffset,
     Je = q
       ? G[1] + xe.width - ((N(Ce) * xe.width) / 2) * 1.08 + (Ff - 4)
-      : G[1] - xe.width - ((N(Ce) * xe.width) / 2) * 0.86 - (Ff - 4)
+      : G[1] - xe.width - ((N(Ce) * xe.width) / 2) * 0.86 - (Ff - 4) - extraOffset
 
   return (
     fe.push(
