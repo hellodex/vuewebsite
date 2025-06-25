@@ -378,7 +378,7 @@ const initData = async () => {
     }
 
     // 检查是否在同一分钟内
-    const isSameMinute = Math.floor(currentTimestamp / 5000) === Math.floor(lastKchart.timestamp / 5000)
+    const isSameMinute = Math.floor(currentTimestamp / 30000) === Math.floor(lastKchart.timestamp / 30000)
 
     if (isSameMinute) {
       // 更新当前状态数据
@@ -386,6 +386,12 @@ const initData = async () => {
       targetItem.currentMarketCap = data.currentMarketCap
       targetItem.currentHolder = data.currentHolder
       targetItem.currentTvl = data.currentTvl || 0
+      
+      // 更新kcharts数组最后一个点的数据
+      lastKchart.C = data.currentPrice
+      lastKchart.marketCap = data.currentMarketCap
+      lastKchart.time = data.time
+      lastKchart.timestamp = currentTimestamp
     } else {
       // 不是一分钟内，push新数据
       targetItem.kcharts.push(newKchartData)
