@@ -21,6 +21,8 @@
           <RouterLink :to="item.to" v-for="item in navList" :key="item.name">
             <span class="link">{{ item.name }}</span>
           </RouterLink>
+
+          <LoopSpaceEnter/>
         </div>
       </div>
       <div class="seach-block" ref="SearchBlockRef">
@@ -133,6 +135,7 @@ import ForgotPasswordDialog from '@/components/Dialogs/ForgotPasswordDialog.vue'
 import NotReceivedCodeDialog from '@/components/Dialogs/NotReceivedCodeDialog.vue'
 import WalletConnect from '@/components/Wallet/WalletConnect.vue'
 import WalletDisconnected from './components/WalletDisconnected.vue'
+import LoopSpaceEnter from '../LoopSpaceEnter.vue'
 
 import { isAllSpaces, debounce, numberFormat } from '@/utils'
 import { APISearchToken, APIgetFeeVolume } from '@/api'

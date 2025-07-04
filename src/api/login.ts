@@ -1,4 +1,5 @@
 import http from './http'
+import { md5 } from 'js-md5';
 
 // web端 api
 const WEB_URL = import.meta.env.VITE_API_URL
@@ -100,4 +101,41 @@ export function APItgToWebDologin(data: object) {
     method: 'POST',
     data
   })
+}
+
+export async function GetLoopAccessToken(userId: string, userName: string, avatar: string) {
+  const partnerId = Number(import.meta.env.VITE_LOOPSPACE_PARTNER_ID)
+  const apiHost = import.meta.env.VITE_API_BASE_URL
+  const sign = md5(`avatar=${avatar}&partner_id=${partnerId}&user_id=${userId}&user_name=${userName}&key=${import.meta.env.VITE_LOOPSPACE_PARTNER_SECRET_KEY}`);
+  const requestData = {
+    "avatar": avatar,
+    "partner_id": partnerId,
+    "user_id": userId,
+    "user_name": userName,
+    sign
+  }
+
+  try {
+    const response = await fetch(`${apiHost}/api/partner/access_token`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestData),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const res = (await response.json()) as { code: number, msg: string, data: { access_token: string } };
+    if (res.code === 0) {
+      return res.data.access_token;
+    } else {
+      throw new Error(`Error from API:  ${res.msg} ${JSON.stringify(requestData)}`);
+    }
+  } catch (error) {
+    console.error("Failed to fetch access token:", error);
+    throw error;
+  }
 }
