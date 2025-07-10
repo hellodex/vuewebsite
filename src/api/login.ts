@@ -103,6 +103,23 @@ export function APItgToWebDologin(data: object) {
   })
 }
 
+/**
+ * @description Loopspace 登录
+ * @param data
+ * @returns
+ */
+export function APIGetLoopAccessToken(data: object) {
+  const account: any = localStorage.getItem('accountInfo')
+  return http({
+    url: WEB_URL + '/api/auth/user/getLoopKey',
+    method: 'POST',
+    data,
+    headers: {
+      [`${JSON.parse(account)?.tokenInfo.tokenName}`]: `Bearer ${JSON.parse(account)?.tokenInfo.tokenValue}`
+    }
+  })
+}
+
 export async function GetLoopAccessToken(userId: string, userName: string, avatar: string) {
   const partnerId = Number(import.meta.env.VITE_LOOPSPACE_PARTNER_ID)
   const apiHost = import.meta.env.VITE_API_BASE_URL

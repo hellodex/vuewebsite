@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang='ts'>
-
+import { APIGetLoopAccessToken } from '@/api/login';
 import { useGlobalStore } from '@/stores/global';
 import { computed, ref, watch } from 'vue';
 import { GetLoopAccessToken } from "@/api/login";
@@ -25,6 +25,8 @@ const requestAcessTokenByAccountInfo = async () => {
     const avatar = accountInfo.avatar || defaultAvatar
     const nickname = accountInfo.nickname || ""
     if (uuid) {
+        const a = await APIGetLoopAccessToken({});
+        console.log("a", a)
         const res = await GetLoopAccessToken(uuid, nickname, avatar)
         accessKey.value = res
     }
