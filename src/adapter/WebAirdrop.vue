@@ -36,20 +36,20 @@
                 <div class="result-content">
                   <div class="wallet-info">
                     <el-icon><User /></el-icon>
-                    <span class="wallet-address">{{ walletAddress }}</span>发放时间待定
+                    <span class="wallet-address">{{ walletAddress }}</span>即将发放
                   </div>
 
                   <el-divider />
 
                   <div class="airdrop-results">
                     <!-- type=1 的空投结果 -->
-                    <div class="result-item" v-if="airdropResults.type1">
-                      <el-icon class="result-icon"><Present /></el-icon>
-                      <div class="result-details">
-                        <span class="result-title">抽奖奖励</span>
-                        <span class="result-amount">{{ airdropResults.type1 }} 份</span>
-                      </div>
-                    </div>
+<!--                    <div class="result-item" v-if="airdropResults.type1">-->
+<!--                      <el-icon class="result-icon"><Present /></el-icon>-->
+<!--                      <div class="result-details">-->
+<!--                        <span class="result-title">抽奖奖励</span>-->
+<!--                        <span class="result-amount">{{ airdropResults.type1 }} 份</span>-->
+<!--                      </div>-->
+<!--                    </div>-->
 
                     <!-- type=2 的代币结果 -->
                     <div class="result-item" v-if="airdropResults.type2">
