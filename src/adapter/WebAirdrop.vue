@@ -36,7 +36,7 @@
                 <div class="result-content">
                   <div class="wallet-info">
                     <el-icon><User /></el-icon>
-                    <span class="wallet-address">{{ walletAddress }}</span>即将发放
+                    <span class="wallet-address"></span> 即将发放
                   </div>
 
                   <el-divider />
@@ -56,7 +56,7 @@
                       <el-icon class="result-icon"><Coin /></el-icon>
                       <div class="result-details">
                         <span class="result-title">代币奖励</span>
-                        <span class="result-amount">{{ airdropResults.type2 }} 个</span>
+                        <span class="result-amount">{{ airdropResults.type2 }}</span>
                       </div>
                     </div>
 
@@ -173,7 +173,9 @@ import {
   evmSignature,
   solanaSignature,
   evmSignatureVerify,
-  solanaSignatureVerify
+  solanaSignatureVerify,
+  isEvmAddress,
+  isSolanaAddress
 } from '@/utils/transition'
 
 import { notificationInfo, notificationSuccessful, notificationFailed } from '@/utils/notification'
@@ -259,24 +261,34 @@ const airdropResults = ref({
 
 // 处理查询请求
 const handlePresale = async () => {
-    if (!amount.value.trim()) {
+    const inputAddress = amount.value.trim()
+    
+    if (!inputAddress) {
       ElMessage.warning('请输入钱包地址')
       return
     }
 
+
+
     try {
       loading.value = true
       showResult.value = false
+      walletAddress.value = inputAddress // 设置钱包地址用于显示
+      
       // 直接获取数组结果
       const resultData = await airdropQuery({
-        walletAddress: amount.value.trim()
+        walletAddress: inputAddress
       })
-      console.log(resultData)
 
       // 初始化结果
       airdropResults.value = {
         type1: null,
         type2: null
+      }
+
+      // 确保请求成功（resultData 不为 undefined 或 null）
+      if (resultData === undefined || resultData === null) {
+        return
       }
 
       // 检查resultData是否是数组
@@ -295,6 +307,7 @@ const handlePresale = async () => {
       })
       showResult.value = true
     } catch (error) {
+
       return
     } finally {
       loading.value = false
