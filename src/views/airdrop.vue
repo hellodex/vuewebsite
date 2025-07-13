@@ -5,7 +5,7 @@
 
 <script setup lang="ts">
 import WebIdo from '@/adapter/WebAirdrop.vue'
-import H5Ido from '@/adapter/H5Airdrop.vue'
+import H5Ido from '@/adapter/WebAirdrop.vue'
 import { useWindowWidth } from '@/hooks/useWindowWidth'
 
 const { windowWidth } = useWindowWidth()
