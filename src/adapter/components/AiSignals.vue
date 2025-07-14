@@ -77,8 +77,12 @@
             </div>
           </div>
           <div class="signal-box display-flex flex-direction-col justify-content-sp">
-
-            <div class="num">{{ item.times }} 倍</div>
+            <div class="num" :class="{
+              'times-up': timesChangeStatus[item.pairAddress] === 'up',
+              'times-down': timesChangeStatus[item.pairAddress] === 'down'
+            }">
+              {{ calculateTimes(item.currentPrice, item.firstPrice) }} 倍
+            </div>
           </div>
         </div>
         <div class="kline-chart">
@@ -297,6 +301,7 @@ defineProps({
 })
 
 const priceChangeStatus = ref<Record<string, 'up' | 'down' | null>>({})
+const timesChangeStatus = ref<Record<string, 'up' | 'down' | null>>({})
 
 const buyList = [
   {
@@ -338,6 +343,11 @@ const handelShare = (item: any) => {
 
 const handleClose = (val: boolean) => {
   aiSignalsShareVisible.value = val
+}
+
+const calculateTimes = (currentPrice: number, firstPrice: number) => {
+  if (!firstPrice || firstPrice === 0) return 0
+  return (currentPrice / firstPrice).toFixed(2)
 }
 
 const initData = async () => {
@@ -404,6 +414,28 @@ const initData = async () => {
       targetItem.priceChangeTimer = setTimeout(() => {
         priceChangeStatus.value[targetItem.pairAddress] = null
       }, 1000)
+    }
+    
+    // 比较倍数变化
+    if (targetItem.firstPrice && targetItem.currentPrice && newPrice) {
+      const oldTimes = targetItem.currentPrice / targetItem.firstPrice
+      const newTimes = newPrice / targetItem.firstPrice
+      
+      if (newTimes > oldTimes) {
+        timesChangeStatus.value[targetItem.pairAddress] = 'up'
+      } else if (newTimes < oldTimes) {
+        timesChangeStatus.value[targetItem.pairAddress] = 'down'
+      }
+      
+      // 清除之前的倍数定时器
+      if (targetItem.timesChangeTimer) {
+        clearTimeout(targetItem.timesChangeTimer)
+      }
+      
+      // 1.5秒后清除倍数状态
+      targetItem.timesChangeTimer = setTimeout(() => {
+        timesChangeStatus.value[targetItem.pairAddress] = null
+      }, 1500)
     }
     
     if (isSameMinute) {
@@ -761,7 +793,6 @@ onMounted(() => {
 
       .num {
         display: flex;
-
         height: 28px;
         padding: 10px 10px;
         justify-content: center;
@@ -771,6 +802,42 @@ onMounted(() => {
         color: var(--up-color);
         font-size: 18px;
         font-weight: 600;
+        position: relative;
+        transition: all 0.3s ease;
+        
+        &.times-up {
+          animation: timesUpAnimation 1.5s ease-out;
+          transform-origin: center;
+          
+          &::after {
+            content: '↑';
+            position: absolute;
+            right: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--up-color);
+            font-size: 14px;
+            font-weight: bold;
+            animation: arrowSlideIn 1.5s ease-out;
+          }
+        }
+        
+        &.times-down {
+          animation: timesDownAnimation 1.5s ease-out;
+          transform-origin: center;
+          
+          &::after {
+            content: '↓';
+            position: absolute;
+            right: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--down-color);
+            font-size: 14px;
+            font-weight: bold;
+            animation: arrowSlideIn 1.5s ease-out;
+          }
+        }
       }
     }
   }
@@ -1018,6 +1085,63 @@ onMounted(() => {
       100% {
         opacity: 1;
         transform: translateY(-50%) translateX(0) scale(1);
+      }
+    }
+    
+    @keyframes timesUpAnimation {
+      0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 rgba(46, 189, 133, 0);
+      }
+      20% {
+        transform: scale(1.1);
+        box-shadow: 0 0 20px rgba(46, 189, 133, 0.5);
+      }
+      40% {
+        transform: scale(1.05);
+        box-shadow: 0 0 10px rgba(46, 189, 133, 0.3);
+      }
+      100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 rgba(46, 189, 133, 0);
+      }
+    }
+    
+    @keyframes timesDownAnimation {
+      0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 rgba(246, 70, 93, 0);
+      }
+      20% {
+        transform: scale(1.1);
+        box-shadow: 0 0 20px rgba(246, 70, 93, 0.5);
+      }
+      40% {
+        transform: scale(1.05);
+        box-shadow: 0 0 10px rgba(246, 70, 93, 0.3);
+      }
+      100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 rgba(246, 70, 93, 0);
+      }
+    }
+    
+    @keyframes arrowSlideIn {
+      0% {
+        opacity: 0;
+        transform: translateY(-50%) translateX(10px);
+      }
+      30% {
+        opacity: 1;
+        transform: translateY(-50%) translateX(0);
+      }
+      70% {
+        opacity: 1;
+        transform: translateY(-50%) translateX(0);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(-50%) translateX(10px);
       }
     }
   }
