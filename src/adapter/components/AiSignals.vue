@@ -122,9 +122,12 @@
           <span>{{ numberFormat(item.firstHolder) }}</span>
 <!--          <span>{{ numberFormat(item.firstTopSmart) }}</span>-->
         </div>
-        <div class="table-tr display-flex align-items-center">
+        <div class="table-tr display-flex align-items-center" :class="{
+          'price-up': priceChangeStatus[item.pairAddress] === 'up',
+          'price-down': priceChangeStatus[item.pairAddress] === 'down'
+        }">
           <span>当前</span>
-          <span>${{ numberFormat(item.currentPrice) }}</span>
+          <span class="price-value">${{ numberFormat(item.currentPrice) }}</span>
           <span>{{ numberFormat(item.currentMarketCap) }}</span>
           <span>{{ numberFormat(item.currentHolder) }}</span>
 <!--          <span>{{ numberFormat(item.currentTopSmart) }}</span>-->
@@ -293,6 +296,8 @@ defineProps({
   }
 })
 
+const priceChangeStatus = ref<Record<string, 'up' | 'down' | null>>({})
+
 const buyList = [
   {
     label: '0.1',
@@ -379,7 +384,28 @@ const initData = async () => {
 
     // 检查是否在同一分钟内
     const isSameMinute = Math.floor(currentTimestamp / 30000) === Math.floor(lastKchart.timestamp / 30000)
+    
+    // 比较价格变化
+    const oldPrice = targetItem.currentPrice
+    const newPrice = data.currentPrice
+    if (oldPrice && newPrice) {
+      if (newPrice > oldPrice) {
+        priceChangeStatus.value[targetItem.pairAddress] = 'up'
+      } else if (newPrice < oldPrice) {
+        priceChangeStatus.value[targetItem.pairAddress] = 'down'
+      }
 
+      // 清除之前的定时器
+      if (targetItem.priceChangeTimer) {
+        clearTimeout(targetItem.priceChangeTimer)
+      }
+      
+      // 1秒后清除状态
+      targetItem.priceChangeTimer = setTimeout(() => {
+        priceChangeStatus.value[targetItem.pairAddress] = null
+      }, 1000)
+    }
+    
     if (isSameMinute) {
       // 更新当前状态数据
       targetItem.currentPrice = data.currentPrice
@@ -805,6 +831,194 @@ onMounted(() => {
 
     .table-tr:nth-child(3) {
       border-radius: 0 0 6px 6px;
+      position: relative;
+      overflow: hidden;
+      transition: background-color 0.2s ease-out;
+      background-color: #1b1b1b;
+    }
+    
+    .price-up {
+      animation: priceUpAnimation 1s ease-out;
+      position: relative;
+      
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, 
+          transparent 0%, 
+          rgba(46, 189, 133, 0.3) 50%, 
+          transparent 100%
+        );
+        animation: sweepRight 0.4s ease-out;
+      }
+      
+      span {
+        animation: priceUpText 0.5s ease-out;
+      }
+      
+      .price-value {
+        position: relative;
+        font-weight: 600;
+        padding-left: 16px;
+        
+        &::before {
+          content: '↑';
+          position: absolute;
+          left: 0;
+          top: 50%;
+          transform: translateY(-50%);
+          color: var(--up-color);
+          font-size: 14px;
+          font-weight: bold;
+          animation: arrowAppear 0.3s ease-out forwards;
+        }
+      }
+    }
+    
+    .price-down {
+      animation: priceDownAnimation 1s ease-out;
+      position: relative;
+      
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, 
+          transparent 0%, 
+          rgba(246, 70, 93, 0.3) 50%, 
+          transparent 100%
+        );
+        animation: sweepRight 0.4s ease-out;
+      }
+      
+      span {
+        animation: priceDownText 0.5s ease-out;
+      }
+      
+      .price-value {
+        position: relative;
+        font-weight: 600;
+        padding-left: 16px;
+        
+        &::before {
+          content: '↓';
+          position: absolute;
+          left: 0;
+          top: 50%;
+          transform: translateY(-50%);
+          color: var(--down-color);
+          font-size: 14px;
+          font-weight: bold;
+          animation: arrowAppear 0.3s ease-out forwards;
+        }
+      }
+    }
+    
+    @keyframes priceUpAnimation {
+      0% {
+        background-color: #1b1b1b;
+        transform: scale(1);
+      }
+      15% {
+        background-color: rgba(46, 189, 133, 0.3);
+        transform: scale(1.01);
+      }
+      40% {
+        background-color: rgba(46, 189, 133, 0.15);
+        transform: scale(1);
+      }
+      70% {
+        background-color: rgba(46, 189, 133, 0.05);
+        transform: scale(1);
+      }
+      100% {
+        background-color: #1b1b1b;
+        transform: scale(1);
+      }
+    }
+    
+    @keyframes priceDownAnimation {
+      0% {
+        background-color: #1b1b1b;
+        transform: scale(1);
+      }
+      15% {
+        background-color: rgba(246, 70, 93, 0.3);
+        transform: scale(1.01);
+      }
+      40% {
+        background-color: rgba(246, 70, 93, 0.15);
+        transform: scale(1);
+      }
+      70% {
+        background-color: rgba(246, 70, 93, 0.05);
+        transform: scale(1);
+      }
+      100% {
+        background-color: #1b1b1b;
+        transform: scale(1);
+      }
+    }
+    
+    @keyframes sweepRight {
+      0% {
+        left: -100%;
+      }
+      100% {
+        left: 100%;
+      }
+    }
+    
+    @keyframes priceUpText {
+      0% {
+        color: #737373;
+        transform: translateY(2px);
+      }
+      50% {
+        color: var(--up-color);
+        transform: translateY(0);
+      }
+      100% {
+        color: #737373;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes priceDownText {
+      0% {
+        color: #737373;
+        transform: translateY(-2px);
+      }
+      50% {
+        color: var(--down-color);
+        transform: translateY(0);
+      }
+      100% {
+        color: #737373;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes arrowAppear {
+      0% {
+        opacity: 0;
+        transform: translateY(-50%) translateX(-3px) scale(0.5);
+      }
+      60% {
+        opacity: 1;
+        transform: translateY(-50%) translateX(0) scale(1.1);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(-50%) translateX(0) scale(1);
+      }
     }
   }
 
