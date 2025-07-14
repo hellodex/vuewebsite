@@ -1,6 +1,12 @@
 <template>
   <div class="ai-signals">
-    <div class="ai-signals-item" v-for="(item, index) in signalDataList" :key="index">
+    <div class="ai-signals-item" 
+         v-for="(item, index) in signalDataList" 
+         :key="index"
+         :class="{
+           'item-shake-up': priceChangeStatus[item.pairAddress] === 'up' || timesChangeStatus[item.pairAddress] === 'up',
+           'item-shake-down': priceChangeStatus[item.pairAddress] === 'down' || timesChangeStatus[item.pairAddress] === 'down'
+         }">
       <div class="coin-info">
         <div class="coin-type display-flex align-items-center justify-content-sp">
           <div class="display-flex align-items-center">
@@ -652,6 +658,17 @@ onMounted(() => {
     border-radius: 12px;
     background: rgba(23, 24, 27, 0.3);
     line-height: 1.2;
+    transition: transform 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    
+    &.item-shake-up {
+      animation: itemShake 0.5s ease-out;
+    }
+    
+    &.item-shake-down {
+      animation: itemShake 0.5s ease-out;
+    }
   }
 
   .coin-type {
@@ -1142,6 +1159,39 @@ onMounted(() => {
       100% {
         opacity: 0;
         transform: translateY(-50%) translateX(10px);
+      }
+    }
+    
+    @keyframes itemShake {
+      0%, 100% {
+        transform: translateX(0);
+      }
+      10% {
+        transform: translateX(-3px);
+      }
+      20% {
+        transform: translateX(3px);
+      }
+      30% {
+        transform: translateX(-3px);
+      }
+      40% {
+        transform: translateX(3px);
+      }
+      50% {
+        transform: translateX(-2px);
+      }
+      60% {
+        transform: translateX(2px);
+      }
+      70% {
+        transform: translateX(-1px);
+      }
+      80% {
+        transform: translateX(1px);
+      }
+      90% {
+        transform: translateX(0);
       }
     }
   }
