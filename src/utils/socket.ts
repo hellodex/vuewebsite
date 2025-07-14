@@ -375,7 +375,8 @@ export function socketLogout() {
       const globalStore = useGlobalStore()
       customMessage({
         type: 'error',
-        title: '此账户已在新设备登录，如有问题请尽快联系客服'
+        title: '此账户已在新设备登录，如有问题请尽快联系客服',
+        duration: 3000
       })
       socketOffMonitor(globalStore.accountInfo.uuid, globalStore.accountInfo.tokenInfo.tokenValue)
 
@@ -389,7 +390,11 @@ export function socketLogout() {
         chainId: null,
         walletType: null
       })
-      location.reload()
+      
+      // Delay reload to allow message to be visible
+      setTimeout(() => {
+        location.reload()
+      }, 3000)
     }
   })
 }
