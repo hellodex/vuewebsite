@@ -371,11 +371,12 @@ export function socketLogout() {
   socket.off('logOut')
   socket.on('logOut', (message: string) => {
     const data = JSON.parse(message)
-    if (data) {
+    console.log(data)
+    if (data.uuid) {
       const globalStore = useGlobalStore()
       customMessage({
         type: 'error',
-        title: '此账户已在新设备登录，如有问题请尽快联系客服',
+        title: '此账户已在新电脑网页登录，如有问题请尽快联系客服',
         duration: 3000
       })
       socketOffMonitor(globalStore.accountInfo.uuid, globalStore.accountInfo.tokenInfo.tokenValue)
