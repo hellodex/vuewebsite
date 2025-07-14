@@ -825,35 +825,11 @@ onMounted(() => {
         &.times-up {
           animation: timesUpAnimation 1.5s ease-out;
           transform-origin: center;
-          
-          &::after {
-            content: '↑';
-            position: absolute;
-            right: -20px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--up-color);
-            font-size: 14px;
-            font-weight: bold;
-            animation: arrowSlideIn 1.5s ease-out;
-          }
         }
         
         &.times-down {
           animation: timesDownAnimation 1.5s ease-out;
           transform-origin: center;
-          
-          &::after {
-            content: '↓';
-            position: absolute;
-            right: -20px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--down-color);
-            font-size: 14px;
-            font-weight: bold;
-            animation: arrowSlideIn 1.5s ease-out;
-          }
         }
       }
     }
@@ -1140,25 +1116,6 @@ onMounted(() => {
       100% {
         transform: scale(1);
         box-shadow: 0 0 0 rgba(246, 70, 93, 0);
-      }
-    }
-    
-    @keyframes arrowSlideIn {
-      0% {
-        opacity: 0;
-        transform: translateY(-50%) translateX(10px);
-      }
-      30% {
-        opacity: 1;
-        transform: translateY(-50%) translateX(0);
-      }
-      70% {
-        opacity: 1;
-        transform: translateY(-50%) translateX(0);
-      }
-      100% {
-        opacity: 0;
-        transform: translateY(-50%) translateX(10px);
       }
     }
     
