@@ -212,7 +212,15 @@ export const socketOnMonitor = (uuid: string, token: string) => {
   socket.off('sell')
   socket.off('order')
   socket.off('walletWatch')
-
+  socket.off('logOut')
+  // 价格
+  socket.emit(
+    'logOut-on',
+    JSON.stringify({
+      uuid,
+      token
+    })
+  )
   // 价格
   socket.emit(
     'price-on',
@@ -304,6 +312,13 @@ export const socketOnMonitor = (uuid: string, token: string) => {
 
 export const socketOffMonitor = (uuid: string, token: string) => {
   socket.emit(
+    'logOut-off',
+    JSON.stringify({
+      uuid,
+      token
+    })
+  )
+  socket.emit(
     'price-off',
     JSON.stringify({
       uuid,
@@ -353,8 +368,8 @@ export const socketOffMonitor = (uuid: string, token: string) => {
 }
 
 export function socketLogout() {
-  socket.off('logout')
-  socket.on('logout', (message: string) => {
+  socket.off('logOut')
+  socket.on('logOut', (message: string) => {
     const data = JSON.parse(message)
     if (data) {
       const globalStore = useGlobalStore()
