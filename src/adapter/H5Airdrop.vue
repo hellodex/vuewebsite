@@ -38,20 +38,20 @@
         <div class="wallet-info">
           <el-icon><User /></el-icon>
           <span class="address">{{ walletAddress }}</span>
-          <span class="time">发放时间待定</span>
+          <span class="time">即将发放</span>
         </div>
 
         <el-divider />
 
         <div class="airdrop-results">
           <!-- Type 1 Result -->
-          <div class="result-item" v-if="airdropResults.type1">
-            <el-icon class="icon"><Present /></el-icon>
-            <div class="details">
-              <span class="title">抽奖奖励</span>
-              <span class="amount">{{ airdropResults.type1 }} 份</span>
-            </div>
-          </div>
+<!--          <div class="result-item" v-if="airdropResults.type1">-->
+<!--            <el-icon class="icon"><Present /></el-icon>-->
+<!--            <div class="details">-->
+<!--              <span class="title">抽奖奖励</span>-->
+<!--              <span class="amount">{{ airdropResults.type1 }} 份</span>-->
+<!--            </div>-->
+<!--          </div>-->
 
           <!-- Type 2 Result -->
           <div class="result-item" v-if="airdropResults.type2">

@@ -1,6 +1,12 @@
 <template>
   <div class="ai-signals">
-    <div class="ai-signals-item" v-for="(item, index) in signalDataList" :key="index">
+    <div class="ai-signals-item" 
+         v-for="(item, index) in signalDataList" 
+         :key="index"
+         :class="{
+           'item-shake-up': priceChangeStatus[item.pairAddress] === 'up' || timesChangeStatus[item.pairAddress] === 'up',
+           'item-shake-down': priceChangeStatus[item.pairAddress] === 'down' || timesChangeStatus[item.pairAddress] === 'down'
+         }">
       <div class="coin-info">
         <div class="coin-type display-flex align-items-center justify-content-sp">
           <div class="display-flex align-items-center">
@@ -77,8 +83,12 @@
             </div>
           </div>
           <div class="signal-box display-flex flex-direction-col justify-content-sp">
-
-            <div class="num">{{ item.times }} 倍</div>
+            <div class="num" :class="{
+              'times-up': timesChangeStatus[item.pairAddress] === 'up',
+              'times-down': timesChangeStatus[item.pairAddress] === 'down'
+            }">
+              {{ calculateTimes(item.currentPrice, item.firstPrice) }} 倍
+            </div>
           </div>
         </div>
         <div class="kline-chart">
@@ -122,9 +132,12 @@
           <span>{{ numberFormat(item.firstHolder) }}</span>
 <!--          <span>{{ numberFormat(item.firstTopSmart) }}</span>-->
         </div>
-        <div class="table-tr display-flex align-items-center">
+        <div class="table-tr display-flex align-items-center" :class="{
+          'price-up': priceChangeStatus[item.pairAddress] === 'up',
+          'price-down': priceChangeStatus[item.pairAddress] === 'down'
+        }">
           <span>当前</span>
-          <span>${{ numberFormat(item.currentPrice) }}</span>
+          <span class="price-value">${{ numberFormat(item.currentPrice) }}</span>
           <span>{{ numberFormat(item.currentMarketCap) }}</span>
           <span>{{ numberFormat(item.currentHolder) }}</span>
 <!--          <span>{{ numberFormat(item.currentTopSmart) }}</span>-->
@@ -293,6 +306,9 @@ defineProps({
   }
 })
 
+const priceChangeStatus = ref<Record<string, 'up' | 'down' | null>>({})
+const timesChangeStatus = ref<Record<string, 'up' | 'down' | null>>({})
+
 const buyList = [
   {
     label: '0.1',
@@ -333,6 +349,11 @@ const handelShare = (item: any) => {
 
 const handleClose = (val: boolean) => {
   aiSignalsShareVisible.value = val
+}
+
+const calculateTimes = (currentPrice: number, firstPrice: number) => {
+  if (!firstPrice || firstPrice === 0) return 0
+  return (currentPrice / firstPrice).toFixed(2)
 }
 
 const initData = async () => {
@@ -379,7 +400,50 @@ const initData = async () => {
 
     // 检查是否在同一分钟内
     const isSameMinute = Math.floor(currentTimestamp / 30000) === Math.floor(lastKchart.timestamp / 30000)
+    
+    // 比较价格变化
+    const oldPrice = targetItem.currentPrice
+    const newPrice = data.currentPrice
+    if (oldPrice && newPrice) {
+      if (newPrice > oldPrice) {
+        priceChangeStatus.value[targetItem.pairAddress] = 'up'
+      } else if (newPrice < oldPrice) {
+        priceChangeStatus.value[targetItem.pairAddress] = 'down'
+      }
 
+      // 清除之前的定时器
+      if (targetItem.priceChangeTimer) {
+        clearTimeout(targetItem.priceChangeTimer)
+      }
+      
+      // 1秒后清除状态
+      targetItem.priceChangeTimer = setTimeout(() => {
+        priceChangeStatus.value[targetItem.pairAddress] = null
+      }, 1000)
+    }
+    
+    // 比较倍数变化
+    if (targetItem.firstPrice && targetItem.currentPrice && newPrice) {
+      const oldTimes = targetItem.currentPrice / targetItem.firstPrice
+      const newTimes = newPrice / targetItem.firstPrice
+      
+      if (newTimes > oldTimes) {
+        timesChangeStatus.value[targetItem.pairAddress] = 'up'
+      } else if (newTimes < oldTimes) {
+        timesChangeStatus.value[targetItem.pairAddress] = 'down'
+      }
+      
+      // 清除之前的倍数定时器
+      if (targetItem.timesChangeTimer) {
+        clearTimeout(targetItem.timesChangeTimer)
+      }
+      
+      // 1.5秒后清除倍数状态
+      targetItem.timesChangeTimer = setTimeout(() => {
+        timesChangeStatus.value[targetItem.pairAddress] = null
+      }, 1500)
+    }
+    
     if (isSameMinute) {
       // 更新当前状态数据
       targetItem.currentPrice = data.currentPrice
@@ -594,6 +658,17 @@ onMounted(() => {
     border-radius: 12px;
     background: rgba(23, 24, 27, 0.3);
     line-height: 1.2;
+    transition: transform 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    
+    &.item-shake-up {
+      animation: itemShake 0.5s ease-out;
+    }
+    
+    &.item-shake-down {
+      animation: itemShake 0.5s ease-out;
+    }
   }
 
   .coin-type {
@@ -735,7 +810,6 @@ onMounted(() => {
 
       .num {
         display: flex;
-
         height: 28px;
         padding: 10px 10px;
         justify-content: center;
@@ -745,6 +819,18 @@ onMounted(() => {
         color: var(--up-color);
         font-size: 18px;
         font-weight: 600;
+        position: relative;
+        transition: all 0.3s ease;
+        
+        &.times-up {
+          animation: timesUpAnimation 1.5s ease-out;
+          transform-origin: center;
+        }
+        
+        &.times-down {
+          animation: timesDownAnimation 1.5s ease-out;
+          transform-origin: center;
+        }
       }
     }
   }
@@ -805,6 +891,265 @@ onMounted(() => {
 
     .table-tr:nth-child(3) {
       border-radius: 0 0 6px 6px;
+      position: relative;
+      overflow: hidden;
+      transition: background-color 0.2s ease-out;
+      background-color: #1b1b1b;
+    }
+    
+    .price-up {
+      animation: priceUpAnimation 1s ease-out;
+      position: relative;
+      
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, 
+          transparent 0%, 
+          rgba(46, 189, 133, 0.3) 50%, 
+          transparent 100%
+        );
+        animation: sweepRight 0.4s ease-out;
+      }
+      
+      span {
+        animation: priceUpText 0.5s ease-out;
+      }
+      
+      .price-value {
+        position: relative;
+        font-weight: 600;
+        padding-left: 16px;
+        
+        &::before {
+          content: '↑';
+          position: absolute;
+          left: 0;
+          top: 50%;
+          transform: translateY(-50%);
+          color: var(--up-color);
+          font-size: 14px;
+          font-weight: bold;
+          animation: arrowAppear 0.3s ease-out forwards;
+        }
+      }
+    }
+    
+    .price-down {
+      animation: priceDownAnimation 1s ease-out;
+      position: relative;
+      
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, 
+          transparent 0%, 
+          rgba(246, 70, 93, 0.3) 50%, 
+          transparent 100%
+        );
+        animation: sweepRight 0.4s ease-out;
+      }
+      
+      span {
+        animation: priceDownText 0.5s ease-out;
+      }
+      
+      .price-value {
+        position: relative;
+        font-weight: 600;
+        padding-left: 16px;
+        
+        &::before {
+          content: '↓';
+          position: absolute;
+          left: 0;
+          top: 50%;
+          transform: translateY(-50%);
+          color: var(--down-color);
+          font-size: 14px;
+          font-weight: bold;
+          animation: arrowAppear 0.3s ease-out forwards;
+        }
+      }
+    }
+    
+    @keyframes priceUpAnimation {
+      0% {
+        background-color: #1b1b1b;
+        transform: scale(1);
+      }
+      15% {
+        background-color: rgba(46, 189, 133, 0.3);
+        transform: scale(1.01);
+      }
+      40% {
+        background-color: rgba(46, 189, 133, 0.15);
+        transform: scale(1);
+      }
+      70% {
+        background-color: rgba(46, 189, 133, 0.05);
+        transform: scale(1);
+      }
+      100% {
+        background-color: #1b1b1b;
+        transform: scale(1);
+      }
+    }
+    
+    @keyframes priceDownAnimation {
+      0% {
+        background-color: #1b1b1b;
+        transform: scale(1);
+      }
+      15% {
+        background-color: rgba(246, 70, 93, 0.3);
+        transform: scale(1.01);
+      }
+      40% {
+        background-color: rgba(246, 70, 93, 0.15);
+        transform: scale(1);
+      }
+      70% {
+        background-color: rgba(246, 70, 93, 0.05);
+        transform: scale(1);
+      }
+      100% {
+        background-color: #1b1b1b;
+        transform: scale(1);
+      }
+    }
+    
+    @keyframes sweepRight {
+      0% {
+        left: -100%;
+      }
+      100% {
+        left: 100%;
+      }
+    }
+    
+    @keyframes priceUpText {
+      0% {
+        color: #737373;
+        transform: translateY(2px);
+      }
+      50% {
+        color: var(--up-color);
+        transform: translateY(0);
+      }
+      100% {
+        color: #737373;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes priceDownText {
+      0% {
+        color: #737373;
+        transform: translateY(-2px);
+      }
+      50% {
+        color: var(--down-color);
+        transform: translateY(0);
+      }
+      100% {
+        color: #737373;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes arrowAppear {
+      0% {
+        opacity: 0;
+        transform: translateY(-50%) translateX(-3px) scale(0.5);
+      }
+      60% {
+        opacity: 1;
+        transform: translateY(-50%) translateX(0) scale(1.1);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(-50%) translateX(0) scale(1);
+      }
+    }
+    
+    @keyframes timesUpAnimation {
+      0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 rgba(46, 189, 133, 0);
+      }
+      20% {
+        transform: scale(1.1);
+        box-shadow: 0 0 20px rgba(46, 189, 133, 0.5);
+      }
+      40% {
+        transform: scale(1.05);
+        box-shadow: 0 0 10px rgba(46, 189, 133, 0.3);
+      }
+      100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 rgba(46, 189, 133, 0);
+      }
+    }
+    
+    @keyframes timesDownAnimation {
+      0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 rgba(246, 70, 93, 0);
+      }
+      20% {
+        transform: scale(1.1);
+        box-shadow: 0 0 20px rgba(246, 70, 93, 0.5);
+      }
+      40% {
+        transform: scale(1.05);
+        box-shadow: 0 0 10px rgba(246, 70, 93, 0.3);
+      }
+      100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 rgba(246, 70, 93, 0);
+      }
+    }
+    
+    @keyframes itemShake {
+      0%, 100% {
+        transform: translateX(0);
+      }
+      10% {
+        transform: translateX(-3px);
+      }
+      20% {
+        transform: translateX(3px);
+      }
+      30% {
+        transform: translateX(-3px);
+      }
+      40% {
+        transform: translateX(3px);
+      }
+      50% {
+        transform: translateX(-2px);
+      }
+      60% {
+        transform: translateX(2px);
+      }
+      70% {
+        transform: translateX(-1px);
+      }
+      80% {
+        transform: translateX(1px);
+      }
+      90% {
+        transform: translateX(0);
+      }
     }
   }
 

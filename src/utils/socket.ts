@@ -212,7 +212,15 @@ export const socketOnMonitor = (uuid: string, token: string) => {
   socket.off('sell')
   socket.off('order')
   socket.off('walletWatch')
-
+  socket.off('logOut')
+  // 价格
+  socket.emit(
+    'logOut-on',
+    JSON.stringify({
+      uuid,
+      token
+    })
+  )
   // 价格
   socket.emit(
     'price-on',
@@ -304,6 +312,13 @@ export const socketOnMonitor = (uuid: string, token: string) => {
 
 export const socketOffMonitor = (uuid: string, token: string) => {
   socket.emit(
+    'logOut-off',
+    JSON.stringify({
+      uuid,
+      token
+    })
+  )
+  socket.emit(
     'price-off',
     JSON.stringify({
       uuid,
@@ -353,14 +368,16 @@ export const socketOffMonitor = (uuid: string, token: string) => {
 }
 
 export function socketLogout() {
-  socket.off('logout')
-  socket.on('logout', (message: string) => {
+  socket.off('logOut')
+  socket.on('logOut', (message: string) => {
     const data = JSON.parse(message)
-    if (data) {
+    console.log(data)
+    if (data.uuid) {
       const globalStore = useGlobalStore()
       customMessage({
         type: 'error',
-        title: '此账户已在新设备登录，如有问题请尽快联系客服'
+        title: '此账户已在新电脑网页登录，如有问题请尽快联系客服',
+        duration: 3000
       })
       socketOffMonitor(globalStore.accountInfo.uuid, globalStore.accountInfo.tokenInfo.tokenValue)
 
@@ -374,7 +391,11 @@ export function socketLogout() {
         chainId: null,
         walletType: null
       })
-      location.reload()
+      
+      // Delay reload to allow message to be visible
+      setTimeout(() => {
+        location.reload()
+      }, 3000)
     }
   })
 }
