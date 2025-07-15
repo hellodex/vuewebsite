@@ -35,7 +35,13 @@
             pairAddress: baseInfo?.chainInfo?.pairAddress
           }" />
           <span class="logo">
-            <el-image :src="baseInfo?.tokenInfo?.logo" alt="" class="baseInfo-img">
+            <el-image 
+              :src="baseInfo?.tokenInfo?.logo" 
+              alt="" 
+              class="baseInfo-img"
+              :lazy="false"
+              loading="eager"
+            >
               <template #error>
                 <svg-icon name="logo1" class="baseInfo-img"></svg-icon>
               </template>
@@ -535,6 +541,8 @@ const handelRouter = (url: string) => {
     height: 40px;
     margin-right: 8px;
     position: relative;
+    display: block;
+    flex-shrink: 0;
     .chainCode {
       width: 18px;
       height: 18px;
@@ -547,6 +555,8 @@ const handelRouter = (url: string) => {
     width: 40px;
     height: 40px;
     border-radius: 50%;
+    display: block;
+    object-fit: cover;
   }
   .coin-text {
     font-size: 16px;
