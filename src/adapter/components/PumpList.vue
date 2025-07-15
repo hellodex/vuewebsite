@@ -15,6 +15,324 @@
             ✨ 新外盘
             <span class="pause-txt" v-if="curNode == 3">⏸ 已暂停</span>
           </div>
+          
+          <!-- 筛选图标 -->
+          <el-popover
+            :visible="filterDialogVisible && currentFilterColumn === index"
+            placement="bottom-end"
+            :width="320"
+            trigger="manual"
+            popper-class="filter-popover"
+            :teleported="false"
+          >
+            <template #reference>
+              <div class="filter-icon-container" @click.stop="openFilterDialog(index)">
+                <svg-icon name="h5-settings-01" class="filter-icon"></svg-icon>
+              </div>
+            </template>
+            
+            <!-- 筛选内容 -->
+            <div class="filter-content" @click.stop>
+              <div class="filter-scrollable">
+                <!-- 指标 -->
+                <div class="filter-section">
+                  <div class="filter-label">指标</div>
+                  <div class="filter-checkbox-grid">
+                    <el-checkbox v-model="filterForm.hasSocialMedia" @change="applyFilters">
+                      至少有一个社交媒体
+                    </el-checkbox>
+                    <el-checkbox v-model="filterForm.topHolders" @change="applyFilters">
+                      前10持仓大户
+                    </el-checkbox>
+                    <el-checkbox v-model="filterForm.devNotSold" @change="applyFilters">
+                      Dev未清仓
+                    </el-checkbox>
+                    <el-checkbox v-model="filterForm.devSold" @change="applyFilters">
+                      Dev清仓
+                    </el-checkbox>
+                    <el-checkbox v-model="filterForm.devBurn" @change="applyFilters">
+                      Dev烧币
+                    </el-checkbox>
+                    <el-checkbox v-model="filterForm.mintClosed" @change="applyFilters">
+                      Mint关闭
+                    </el-checkbox>
+                    <el-checkbox v-model="filterForm.blacklist" @change="applyFilters">
+                      黑名单
+                    </el-checkbox>
+                    <el-checkbox v-model="filterForm.burnedPool" @change="applyFilters">
+                      烧池子
+                    </el-checkbox>
+                  </div>
+                </div>
+
+                <!-- 进度 -->
+                <div class="filter-section">
+                  <div class="filter-label">进度</div>
+                  <div class="range-inputs">
+                    <el-input
+                      v-model="filterForm.progressMin"
+                      placeholder=""
+                      size="small"
+                      @input="applyFilters"
+                    />
+                    <span class="range-separator">%</span>
+                    <span class="range-to">to</span>
+                    <el-input
+                      v-model="filterForm.progressMax"
+                      placeholder=""
+                      size="small"
+                      @input="applyFilters"
+                    />
+                    <span class="range-separator">%</span>
+                  </div>
+                </div>
+
+                <!-- 市值 -->
+                <div class="filter-section">
+                  <div class="filter-label">市值</div>
+                  <div class="range-inputs">
+                    <el-input
+                      v-model="filterForm.marketCapMin"
+                      placeholder=""
+                      size="small"
+                      @input="applyFilters"
+                    />
+                    <span class="range-separator">K</span>
+                    <span class="range-to">to</span>
+                    <el-input
+                      v-model="filterForm.marketCapMax"
+                      placeholder=""
+                      size="small"
+                      @input="applyFilters"
+                    />
+                    <span class="range-separator">K</span>
+                  </div>
+                </div>
+
+                <!-- 1h交易数 -->
+                <div class="filter-section">
+                  <div class="filter-label">1h交易数</div>
+                  <div class="range-inputs">
+                    <el-input
+                      v-model="filterForm.txCountMin"
+                      placeholder=""
+                      size="small"
+                      @input="applyFilters"
+                    />
+                    <span class="range-to">to</span>
+                    <el-input
+                      v-model="filterForm.txCountMax"
+                      placeholder=""
+                      size="small"
+                      @input="applyFilters"
+                    />
+                  </div>
+                </div>
+
+                <!-- 持有人数 -->
+                <div class="filter-section">
+                  <div class="filter-label">持有人数</div>
+                  <div class="range-inputs">
+                    <el-input
+                      v-model="filterForm.holdersMin"
+                      placeholder=""
+                      size="small"
+                      @input="applyFilters"
+                    />
+                    <span class="range-to">to</span>
+                    <el-input
+                      v-model="filterForm.holdersMax"
+                      placeholder=""
+                      size="small"
+                      @input="applyFilters"
+                    />
+                  </div>
+                </div>
+
+                <!-- 狙击人数 -->
+                <div class="filter-section">
+                  <div class="filter-label">狙击人数</div>
+                  <div class="range-inputs">
+                    <el-input
+                      v-model="filterForm.snipersMin"
+                      placeholder=""
+                      size="small"
+                      @input="applyFilters"
+                    />
+                    <span class="range-to">to</span>
+                    <el-input
+                      v-model="filterForm.snipersMax"
+                      placeholder=""
+                      size="small"
+                      @input="applyFilters"
+                    />
+                  </div>
+                </div>
+
+                <!-- 成交额 -->
+                <div class="filter-section">
+                  <div class="filter-label">成交额</div>
+                  <div class="range-inputs">
+                    <el-input
+                      v-model="filterForm.volumeMin"
+                      placeholder=""
+                      size="small"
+                      @input="applyFilters"
+                    />
+                    <span class="range-separator">K</span>
+                    <span class="range-to">to</span>
+                    <el-input
+                      v-model="filterForm.volumeMax"
+                      placeholder=""
+                      size="small"
+                      @input="applyFilters"
+                    />
+                    <span class="range-separator">K</span>
+                  </div>
+                </div>
+
+                <!-- 时间 -->
+                <div class="filter-section">
+                  <div class="filter-label">时间</div>
+                  <div class="range-inputs">
+                    <el-input
+                      v-model="filterForm.timeMin"
+                      placeholder=""
+                      size="small"
+                      @input="applyFilters"
+                    />
+                    <span class="range-separator">min</span>
+                    <span class="range-to">to</span>
+                    <el-input
+                      v-model="filterForm.timeMax"
+                      placeholder=""
+                      size="small"
+                      @input="applyFilters"
+                    />
+                    <span class="range-separator">min</span>
+                  </div>
+                </div>
+
+                <!-- 跌路 -->
+                <div class="filter-section">
+                  <div class="filter-label">跌路</div>
+                  <div class="range-inputs">
+                    <el-input
+                      v-model="filterForm.dropMin"
+                      placeholder=""
+                      size="small"
+                      @input="applyFilters"
+                    />
+                    <span class="range-separator">%</span>
+                    <span class="range-to">to</span>
+                    <el-input
+                      v-model="filterForm.dropMax"
+                      placeholder=""
+                      size="small"
+                      @input="applyFilters"
+                    />
+                    <span class="range-separator">%</span>
+                  </div>
+                </div>
+
+                <!-- 池子 -->
+                <div class="filter-section">
+                  <div class="filter-label">池子</div>
+                  <div class="range-inputs">
+                    <el-input
+                      v-model="filterForm.poolMin"
+                      placeholder=""
+                      size="small"
+                      @input="applyFilters"
+                    />
+                    <span class="range-separator">K</span>
+                    <span class="range-to">to</span>
+                    <el-input
+                      v-model="filterForm.poolMax"
+                      placeholder=""
+                      size="small"
+                      @input="applyFilters"
+                    />
+                    <span class="range-separator">K</span>
+                  </div>
+                </div>
+
+                <!-- 钓鱼钱包 -->
+                <div class="filter-section">
+                  <div class="filter-label">钓鱼钱包</div>
+                  <div class="range-inputs">
+                    <el-input
+                      v-model="filterForm.phishingMin"
+                      placeholder=""
+                      size="small"
+                      @input="applyFilters"
+                    />
+                    <span class="range-separator">%</span>
+                    <span class="range-to">to</span>
+                    <el-input
+                      v-model="filterForm.phishingMax"
+                      placeholder=""
+                      size="small"
+                      @input="applyFilters"
+                    />
+                    <span class="range-separator">%</span>
+                  </div>
+                </div>
+
+                <!-- 撸绒交易 -->
+                <div class="filter-section">
+                  <div class="filter-label">撸绒交易</div>
+                  <div class="range-inputs">
+                    <el-input
+                      v-model="filterForm.rugPullMin"
+                      placeholder=""
+                      size="small"
+                      @input="applyFilters"
+                    />
+                    <span class="range-separator">%</span>
+                    <span class="range-to">to</span>
+                    <el-input
+                      v-model="filterForm.rugPullMax"
+                      placeholder=""
+                      size="small"
+                      @input="applyFilters"
+                    />
+                    <span class="range-separator">%</span>
+                  </div>
+                </div>
+
+                <!-- 总馈赠 -->
+                <div class="filter-section">
+                  <div class="filter-label">总馈赠</div>
+                  <div class="range-inputs">
+                    <el-input
+                      v-model="filterForm.totalRewardMin"
+                      placeholder=""
+                      size="small"
+                      @input="applyFilters"
+                    />
+                    <span class="range-separator">SOL</span>
+                    <span class="range-to">to</span>
+                    <el-input
+                      v-model="filterForm.totalRewardMax"
+                      placeholder=""
+                      size="small"
+                      @input="applyFilters"
+                    />
+                    <span class="range-separator">SOL</span>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- 操作按钮 -->
+              <div class="filter-actions">
+                <el-button size="small" @click="resetFilters">
+                  重置
+                </el-button>
+                <el-button type="primary" size="small" @click="closeFilterDialog">应用</el-button>
+              </div>
+            </div>
+          </el-popover>
         </div>
         <el-scrollbar height="calc(100vh - 213px)">
           <div
@@ -56,8 +374,8 @@
               <template #default>
                 <div
                   class="pump-list-item display-flex align-items-center justify-content-sp"
-                  v-for="(item, idx) in value"
-                  :key="idx"
+                  v-for="item in getFilteredList(key, index)"
+                  :key="item.pairAddress"
                   @click="handelTableRow(item)"
                 >
                   <div class="display-flex align-items-fs">
@@ -99,7 +417,7 @@
                       <div class="time-icon-url display-flex align-items-center">
                         <p class="display-flex align-items-center">
                           <svg-icon name="clock-timer" class="clock-timer"></svg-icon>
-                          <span class="clock-timer-txt">{{ timeago(item.createTime * 1000) }}</span>
+                          <TimeAgo :timestamp="item.createTime * 1000" />
                         </p>
                         <span class="line"></span>
                         <p class="display-flex align-items-center">
@@ -156,14 +474,6 @@
                   <div class="operate display-flex flex-direction-col align-items-fd">
                     <span class="price-txt"><i>$</i>{{ numberFormat(item.price || 0) }}</span>
                     <div class="display-flex align-items-center justify-content-fd">
-<!--                      <WalletConnect v-if="!isConnected">-->
-<!--                        <div class="trade-operate-btn">-->
-<!--                          <span class="txt">挂单交易</span>-->
-<!--                        </div>-->
-<!--                      </WalletConnect>-->
-<!--                      <div class="trade-operate-btn" @click.stop="handelTrade(item)" v-else>-->
-<!--                        <span class="txt">挂单交易</span>-->
-<!--                      </div>-->
                       <WalletConnect v-if="!isConnected">
                         <div class="buy-operate-btn">
                           <span class="txt"
@@ -184,6 +494,8 @@
         </el-scrollbar>
       </div>
     </div>
+
+    
     <TradeDraw
       :coinInfo="coinInfo"
       :pairInfo="pairInfo"
@@ -199,12 +511,13 @@ import { ref, onMounted, onUnmounted, computed, reactive, onDeactivated } from '
 import { ApiGetPumpRanking } from '@/api'
 import { useI18n } from 'vue-i18n'
 import { useGlobalStore } from '@/stores/global'
-import { numberFormat, timeago, handleCoinPairInfo, shortifyAddress, numToFixedTwo } from '@/utils'
+import { numberFormat, handleCoinPairInfo, shortifyAddress, numToFixedTwo } from '@/utils'
 
 import TradeDraw from '@/components/Dialogs/TradeDraw.vue'
 import WalletConnect from '@/components/Wallet/WalletConnect.vue'
 import QuickBuyTrade from './QuickBuyTrade.vue'
 import Favorite from '@/components/Favorite.vue'
+import TimeAgo from './TimeAgo.vue'
 import { socket } from '@/utils/socket'
 
 defineProps({
@@ -227,31 +540,314 @@ const pumpObj = reactive<Record<string, any>>({
   list3: []
 })
 
-const dataTimer1 = ref<any>(null)
-const dataTimer2 = ref<any>(null)
-const dataTimer3 = ref<any>(null)
+// 筛选相关状态
+const filterDialogVisible = ref<boolean>(false)
+const currentFilterColumn = ref<number>(0)
+
+// 创建默认筛选表单结构
+const createDefaultFilterForm = () => ({
+  // 复选框筛选
+  hasSocialMedia: false,
+  topHolders: false,
+  devNotSold: false,
+  devSold: false,
+  devBurn: false,
+  mintClosed: false,
+  blacklist: false,
+  burnedPool: false,
+  
+  // 数值范围筛选
+  progressMin: '',
+  progressMax: '',
+  marketCapMin: '',
+  marketCapMax: '',
+  txCountMin: '',
+  txCountMax: '',
+  holdersMin: '',
+  holdersMax: '',
+  snipersMin: '',
+  snipersMax: '',
+  volumeMin: '',
+  volumeMax: '',
+  timeMin: '',
+  timeMax: '',
+  dropMin: '',
+  dropMax: '',
+  poolMin: '',
+  poolMax: '',
+  phishingMin: '',
+  phishingMax: '',
+  rugPullMin: '',
+  rugPullMax: '',
+  totalRewardMin: '',
+  totalRewardMax: ''
+})
+
+// 每个列表独立的筛选表单
+const filterForms = reactive({
+  0: createDefaultFilterForm(), // 新创建
+  1: createDefaultFilterForm(), // 即将打满
+  2: createDefaultFilterForm()  // 新外盘
+})
+
+// 获取当前列的筛选表单（计算属性）
+const filterForm = computed(() => {
+  return filterForms[currentFilterColumn.value as keyof typeof filterForms]
+})
+
+// 筛选后的数据
+const filteredData = reactive<Record<string, any>>({
+  list1: [],
+  list2: [],
+  list3: []
+})
+
 const curNode = ref<number>(0)
 const tradeDrawVisible = ref<boolean>(false)
 const coinInfo = ref<any>(null)
 const pairInfo = ref<any>(null)
 
+// 获取筛选后的列表
+const getFilteredList = (key: string, index: number) => {
+  const currentForm = filterForms[index as keyof typeof filterForms]
+  
+  // 如果没有筛选条件被设置，返回原始数据
+  const hasFilters = Object.keys(currentForm).some(filterKey => {
+    const typedKey = filterKey as keyof typeof currentForm
+    if (typeof currentForm[typedKey] === 'boolean') {
+      return currentForm[typedKey] === true
+    } else {
+      return currentForm[typedKey] !== ''
+    }
+  })
+  
+  if (!hasFilters) {
+    return pumpObj[key] || []
+  }
+  
+  return filteredData[key] || []
+}
+
+// 应用筛选逻辑
+const applyFilters = () => {
+  Object.keys(pumpObj).forEach((key, index) => {
+    let filtered = [...pumpObj[key]]
+    const currentForm = filterForms[index as keyof typeof filterForms]
+
+    // 复选框筛选
+    if (currentForm.hasSocialMedia) {
+      filtered = filtered.filter(item => 
+        item.twitter || item.website || item.telegram
+      )
+    }
+    
+    if (currentForm.topHolders) {
+      filtered = filtered.filter(item => item.topHolders === true)
+    }
+    
+    if (currentForm.devNotSold) {
+      filtered = filtered.filter(item => item.devSold === false)
+    }
+    
+    if (currentForm.devSold) {
+      filtered = filtered.filter(item => item.devSold === true)
+    }
+    
+    if (currentForm.mintClosed) {
+      filtered = filtered.filter(item => item.mintClosed === true)
+    }
+    
+    if (currentForm.blacklist) {
+      filtered = filtered.filter(item => item.isBlacklisted === true)
+    }
+    
+    if (currentForm.burnedPool) {
+      filtered = filtered.filter(item => item.poolBurned === true)
+    }
+    
+    if (currentForm.devBurn) {
+      filtered = filtered.filter(item => item.devBurn === true)
+    }
+
+    // 数值范围筛选
+    if (currentForm.progressMin) {
+      const min = parseFloat(currentForm.progressMin)
+      filtered = filtered.filter(item => 
+        parseFloat(item.percent || '0') >= min
+      )
+    }
+    
+    if (currentForm.progressMax) {
+      const max = parseFloat(currentForm.progressMax)
+      filtered = filtered.filter(item => 
+        parseFloat(item.percent || '0') <= max
+      )
+    }
+    
+    if (currentForm.marketCapMin) {
+      const min = parseFloat(currentForm.marketCapMin) * 1000
+      filtered = filtered.filter(item => 
+        parseFloat(item.marketCap || '0') >= min
+      )
+    }
+    
+    if (currentForm.marketCapMax) {
+      const max = parseFloat(currentForm.marketCapMax) * 1000
+      filtered = filtered.filter(item => 
+        parseFloat(item.marketCap || '0') <= max
+      )
+    }
+    
+    if (currentForm.txCountMin) {
+      const min = parseFloat(currentForm.txCountMin)
+      filtered = filtered.filter(item => 
+        parseFloat(item.totalCount || '0') >= min
+      )
+    }
+    
+    if (currentForm.txCountMax) {
+      const max = parseFloat(currentForm.txCountMax)
+      filtered = filtered.filter(item => 
+        parseFloat(item.totalCount || '0') <= max
+      )
+    }
+    
+    if (currentForm.volumeMin) {
+      const min = parseFloat(currentForm.volumeMin) * 1000
+      filtered = filtered.filter(item => 
+        parseFloat(item.totalVolume || '0') >= min
+      )
+    }
+    
+    if (currentForm.volumeMax) {
+      const max = parseFloat(currentForm.volumeMax) * 1000
+      filtered = filtered.filter(item => 
+        parseFloat(item.totalVolume || '0') <= max
+      )
+    }
+
+    filteredData[key] = filtered
+  })
+}
+
+// 重置筛选
+const resetFilters = () => {
+  const currentForm = filterForms[currentFilterColumn.value as keyof typeof filterForms]
+  Object.keys(currentForm).forEach(key => {
+    const typedKey = key as keyof typeof currentForm
+    if (typeof currentForm[typedKey] === 'boolean') {
+      (currentForm[typedKey] as boolean) = false
+    } else {
+      (currentForm[typedKey] as string) = ''
+    }
+  })
+  applyFilters()
+}
+
+// 打开筛选弹窗
+const openFilterDialog = (columnIndex: number) => {
+  console.log('点击筛选图标，列索引:', columnIndex, '当前状态:', filterDialogVisible.value)
+  
+  // 如果点击的是同一个列且弹窗已打开，则关闭弹窗
+  if (filterDialogVisible.value && currentFilterColumn.value === columnIndex) {
+    filterDialogVisible.value = false
+  } else {
+    // 否则打开对应列的弹窗
+    currentFilterColumn.value = columnIndex
+    filterDialogVisible.value = true
+  }
+}
+
+// 关闭筛选弹窗
+const closeFilterDialog = () => {
+  filterDialogVisible.value = false
+}
+
+// 处理 Popover 显示状态变化
+const handlePopoverVisibleChange = (visible: boolean) => {
+  if (!visible) {
+    filterDialogVisible.value = false
+  }
+}
+
+// 添加点击外部关闭功能
+const handleClickOutside = (event: Event) => {
+  // 检查点击的目标是否在筛选弹窗内部
+  const target = event.target as HTMLElement
+  if (target && !target.closest('.filter-popover') && !target.closest('.filter-icon-container')) {
+    filterDialogVisible.value = false
+  }
+}
+
+// 获取列标题
+const getColumnTitle = (index: number) => {
+  const titles = ['新创建', '即将打满', '新外盘']
+  return titles[index] || ''
+}
+
 const pumpRankingFun = () => {
   socket.off('pumpRanking')
   socket.on('pumpRanking', (message: string) => {
     const data = JSON.parse(message)
+    const newRanking = data.ranking || []
+    
+    // 使用智能更新，保持现有项的引用
     switch (data.type) {
       case 1:
-        pumpObj.list1 = data.ranking
+        updateListWithKey(pumpObj.list1, newRanking)
         break
       case 2:
-        pumpObj.list2 = data.ranking
+        updateListWithKey(pumpObj.list2, newRanking)
         break
       case 3:
-        pumpObj.list3 = data.ranking
+        updateListWithKey(pumpObj.list3, newRanking)
         break
       default:
         break
     }
+    applyFilters()
+  })
+}
+
+// 智能更新列表，保持组件实例
+const updateListWithKey = (oldList: any[], newList: any[]) => {
+  // 创建映射便于查找
+  const newMap = new Map(newList.map(item => [item.pairAddress, item]))
+  
+  // 更新现有项
+  oldList.forEach((oldItem, index) => {
+    const newItem = newMap.get(oldItem.pairAddress)
+    if (newItem) {
+      // 保存原有的 logo
+      const oldLogo = oldItem.logo
+      // 保持对象引用，只更新属性
+      Object.assign(oldItem, newItem)
+      // 恢复原有的 logo，避免闪烁
+      oldItem.logo = oldLogo
+      newMap.delete(oldItem.pairAddress)
+    } else {
+      // 标记为待删除
+      oldItem._toDelete = true
+    }
+  })
+  
+  // 添加新项
+  newMap.forEach(newItem => {
+    oldList.push(newItem)
+  })
+  
+  // 删除不存在的项
+  for (let i = oldList.length - 1; i >= 0; i--) {
+    if (oldList[i]._toDelete) {
+      oldList.splice(i, 1)
+    }
+  }
+  
+  // 按照新列表的顺序排序
+  oldList.sort((a, b) => {
+    const aIndex = newList.findIndex(item => item.pairAddress === a.pairAddress)
+    const bIndex = newList.findIndex(item => item.pairAddress === b.pairAddress)
+    return aIndex - bIndex
   })
 }
 
@@ -273,23 +869,9 @@ const getPumpRanking = async (type: number) => {
     default:
       break
   }
+  applyFilters()
 }
 
-const setPolling1 = () => {
-  dataTimer1.value = setInterval(() => {
-    pumpObj.list1 = [...pumpObj.list1]
-  }, 1000)
-}
-const setPolling2 = () => {
-  dataTimer2.value = setInterval(() => {
-    pumpObj.list2 = [...pumpObj.list2]
-  }, 1000)
-}
-const setPolling3 = () => {
-  dataTimer3.value = setInterval(() => {
-    pumpObj.list3 = [...pumpObj.list3]
-  }, 1000)
-}
 
 const handelTrade = (row: any) => {
   coinInfo.value = handleCoinPairInfo({
@@ -339,43 +921,31 @@ const handleMouseLeave = (index: number) => {
 }
 
 const initData = async () => {
-  getPumpRanking(1)
-  getPumpRanking(2)
-  getPumpRanking(3)
+  await Promise.all([
+    getPumpRanking(1),
+    getPumpRanking(2),
+    getPumpRanking(3)
+  ])
+  // 确保初始化时应用筛选
+  applyFilters()
 }
 
-const startTimer = () => {
-  setPolling1()
-  setPolling2()
-  setPolling3()
-}
 
-const stopTimer = () => {
-  clearInterval(dataTimer1.value)
-  clearInterval(dataTimer2.value)
-  clearInterval(dataTimer3.value)
-  dataTimer1.value = null
-  dataTimer2.value = null
-  dataTimer3.value = null
-}
-
-onDeactivated(() => {
-  // 在从 DOM 上移除、进入缓存
-  // 以及组件卸载时调用
-  stopTimer()
-  console.log('stopTimer')
-})
 
 onMounted(async () => {
   skeletonLoading.value = true
   await initData()
   skeletonLoading.value = false
   pumpRankingFun()
-  startTimer()
+  
+  // 添加全局点击事件监听
+  document.addEventListener('click', handleClickOutside)
 })
 
 onUnmounted(() => {
-  stopTimer()
+  socket.off('pumpRanking')
+  // 移除全局点击事件监听
+  document.removeEventListener('click', handleClickOutside)
 })
 </script>
 
@@ -427,6 +997,8 @@ onUnmounted(() => {
       color: #f5f5f5;
       font-family: 'PingFangSC-Medium';
       font-size: 16px;
+      position: relative;
+      
       .pause-txt {
         padding: 1px 5px;
         margin-left: 8px;
@@ -435,6 +1007,28 @@ onUnmounted(() => {
         color: #ffec42;
         background-color: #595000;
         font-family: 'PingFangSC-Medium';
+      }
+      
+      .filter-icon-container {
+        cursor: pointer;
+        padding: 4px;
+        border-radius: 4px;
+        transition: all 0.2s;
+        
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .filter-icon {
+          width: 16px;
+          height: 16px;
+          color: #9aa0aa;
+          transition: color 0.2s;
+          
+          &:hover {
+            color: #f5f5f5;
+          }
+        }
       }
     }
     .pump-list-item {
@@ -669,6 +1263,243 @@ onUnmounted(() => {
     }
   }
 }
+// 筛选弹窗样式
+:deep(.filter-popover) {
+  background-color: #000000 !important;
+  border: none !important;
+  border-radius: 8px !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8) !important;
+  padding: 0 !important;
+  
+  .el-popper__arrow::before {
+    background: #000000 !important;
+    border: none !important;
+  }
+}
+
+.filter-content {
+  background-color: #000000;
+  border-radius: 8px;
+  
+  .filter-scrollable {
+    max-height: 500px;
+    overflow-y: auto;
+    padding: 20px;
+    
+    /* 自定义滚动条 */
+    &::-webkit-scrollbar {
+      width: 4px;
+    }
+    
+    &::-webkit-scrollbar-track {
+      background: #111111;
+      border-radius: 2px;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: #333333;
+      border-radius: 2px;
+      
+      &:hover {
+        background: #444444;
+      }
+    }
+  }
+  
+  .filter-section {
+    margin-bottom: 16px;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+  
+  .filter-label {
+    color: #ffffff;
+    font-size: 14px;
+    margin-bottom: 6px;
+    font-weight: normal;
+    line-height: 1.3;
+  }
+  
+  .filter-checkbox-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    margin-bottom: 6px;
+    
+    :deep(.el-checkbox) {
+      margin: 0;
+      display: flex;
+      align-items: center;
+      padding: 3px 0;
+      
+      .el-checkbox__label {
+        color: #b5b5b5;
+        font-size: 12px;
+        line-height: 1.3;
+        padding-left: 5px;
+        font-weight: normal;
+      }
+      
+      .el-checkbox__input {
+        .el-checkbox__inner {
+          width: 14px;
+          height: 14px;
+          background-color: transparent;
+          border: 1px solid #555555;
+          border-radius: 3px;
+          transition: all 0.2s ease;
+          
+          &::after {
+            width: 3px;
+            height: 6px;
+            left: 4px;
+            top: 1px;
+            border-width: 1px;
+          }
+        }
+        
+        &.is-checked .el-checkbox__inner {
+          background-color: #ffffff;
+          border-color: #ffffff;
+          
+          &::after {
+            border-color: #000000;
+            border-width: 1px;
+          }
+        }
+        
+        &:hover .el-checkbox__inner {
+          border-color: #777777;
+        }
+      }
+    }
+  }
+  
+  .range-inputs {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 4px;
+    
+    :deep(.el-input) {
+      flex: 1;
+      
+      .el-input__wrapper {
+        background-color: #2a2a2a;
+        border: 1px solid #3a3a3a;
+        border-radius: 5px;
+        box-shadow: none;
+        height: 28px;
+        
+        &.is-focus {
+          border-color: #ffffff;
+          background-color: #2f2f2f;
+        }
+        
+        .el-input__inner {
+          color: #ffffff;
+          font-size: 12px;
+          height: 26px;
+          line-height: 26px;
+          text-align: left;
+          padding: 0 6px;
+          
+          &::placeholder {
+            color: #666666;
+          }
+        }
+      }
+    }
+    
+    .range-separator {
+      color: #b5b5b5;
+      font-size: 12px;
+      font-weight: normal;
+      padding: 0 1px;
+    }
+    
+    .range-to {
+      color: #b5b5b5;
+      font-size: 12px;
+      white-space: nowrap;
+      font-weight: normal;
+      padding: 0 1px;
+    }
+  }
+}
+
+.filter-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  padding: 12px 20px;
+  background-color: #000000;
+  margin: 8px 0 0 0;
+  border-radius: 0 0 8px 8px;
+  
+  :deep(.el-button) {
+    height: 28px;
+    border-radius: 14px;
+    font-size: 12px;
+    font-weight: normal;
+    padding: 0 16px;
+    min-width: 50px;
+    
+    &.el-button--default {
+      background-color: #2a2a2a;
+      border: 1px solid #3a3a3a;
+      color: #ffffff;
+      
+      &:hover {
+        background-color: #404040;
+        border-color: #555555;
+        color: #ffffff;
+      }
+      
+      &:active {
+        background-color: #1a1a1a;
+        border-color: #2a2a2a;
+        color: #ffffff;
+      }
+      
+      &:focus {
+        background-color: #2a2a2a;
+        border-color: #3a3a3a;
+        color: #ffffff;
+        box-shadow: none;
+        outline: none;
+      }
+    }
+    
+    &.el-button--primary {
+      background-color: #ffffff;
+      border: 1px solid #ffffff;
+      color: #000000;
+      
+      &:hover {
+        background-color: #f0f0f0;
+        border-color: #f0f0f0;
+        color: #000000;
+      }
+      
+      &:active {
+        background-color: #e0e0e0;
+        border-color: #e0e0e0;
+        color: #000000;
+      }
+      
+      &:focus {
+        background-color: #f5f5f5;
+        border-color: #f5f5f5;
+        color: #000000;
+        box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+      }
+    }
+  }
+}
+
 :deep(.el-drawer__title) {
   color: var(--font-color-default);
 }
