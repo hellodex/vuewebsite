@@ -322,6 +322,8 @@ const handelShare = async (row: any) => {
 </script>
 
 <style lang="scss" scoped>
+@import '@/styles/table-common.scss';
+
 .my-hold {
   :deep(.el-table__row) {
     cursor: pointer;
@@ -395,5 +397,8 @@ const handelShare = async (row: any) => {
     margin-left: 4px;
     cursor: pointer;
   }
+  
+  // 应用公共表格样式
+  @include table-hover-style;
 }
 </style>

@@ -166,6 +166,8 @@ const handelCancel = (row: any) => {
 </script>
 
 <style lang="scss" scoped>
+@import '@/styles/table-common.scss';
+
 .currentCommission {
   .copy {
     width: 12px;
@@ -214,5 +216,8 @@ const handelCancel = (row: any) => {
   .type-color {
     color: #ffc422;
   }
+  
+  // 应用公共表格样式
+  @include table-hover-style;
 }
 </style>
