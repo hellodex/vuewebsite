@@ -1,4 +1,5 @@
 import http from './http'
+import { md5 } from 'js-md5';
 
 // web端 api
 const WEB_URL = import.meta.env.VITE_API_URL
@@ -99,5 +100,22 @@ export function APItgToWebDologin(data: object) {
     url: WEB_URL + '/api/auth/tgToWebDologin',
     method: 'POST',
     data
+  })
+}
+
+/**
+ * @description Loopspace 登录
+ * @param data
+ * @returns
+ */
+export function APIGetLoopAccessToken(data: object) {
+  const account: any = localStorage.getItem('accountInfo')
+  return http({
+    url: WEB_URL + '/api/auth/user/getLoopKey',
+    method: 'POST',
+    data,
+    headers: {
+      [`${JSON.parse(account)?.tokenInfo.tokenName}`]: `Bearer ${JSON.parse(account)?.tokenInfo.tokenValue}`
+    }
   })
 }

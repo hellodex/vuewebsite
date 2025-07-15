@@ -10,7 +10,13 @@ import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 export default defineConfig({
   server: {
     host: '0.0.0.0',
-    port: 8001 // 将3000修改为你想要的端口号
+    port: 8001, // 将3000修改为你想要的端口号
+    proxy: {
+      "/api/partner/access_token": {
+        target: "https://api.loopspace.xyz",
+        changeOrigin: true,
+      },
+    },
   },
   define: {
     global: {}
