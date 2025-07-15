@@ -85,7 +85,7 @@
                       <div class="display-flex align-items-center table-item-first">
                         <Favorite
                           :coinInfo="{
-                            pairAddress: item.pairAddress,
+                            baseTokenAddress: item.baseToken.address,
                             chainCode: item.chainCode
                           }"
                         />
@@ -99,8 +99,7 @@
                         </div>
                         <div>
                           <p class="display-flex align-items-center symbol">
-                            <span>{{ item.baseSymbol || '-' }}</span>
-                            <span>/{{ item.quoteSymbol || '-' }}</span>
+                            <span>{{ item.baseToken.symbol || '-' }}</span>
                           </p>
                           <!-- <span class="number">{{
                         numberFormat(item.tradingSummary['tradingSummary1d'].TotalCount)
@@ -311,7 +310,7 @@
                   <div class="display-flex align-items-center table-item-first">
                     <Favorite
                       :coinInfo="{
-                        pairAddress: item.pairAddress,
+                        baseTokenAddress: item.baseToken.address,
                         chainCode: item.baseToken.chainCode
                       }"
                     />

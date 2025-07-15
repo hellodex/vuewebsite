@@ -91,7 +91,7 @@
                           </p>
                           <Favorite
                             :coinInfo="{
-                              pairAddress: item.pairAddress,
+                              baseTokenAddress: item.baseToken.address,
                               chainCode: item.baseToken.chainCode
                             }"
                           />

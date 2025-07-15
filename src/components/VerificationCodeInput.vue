@@ -10,6 +10,7 @@
       :id="`captcha-input${index}`"
       @input="handleInput(index)"
       @keydown.delete="handelDelete(index)"
+      @paste="handlePaste($event, index)"
       :style="{
         width: '46px',
         animation: captchaStatus == 1 ? '' : getBoxStyle(index)
@@ -72,12 +73,35 @@ const handleInput = (index: number) => {
 }
 
 const handelDelete = (index: number) => {
-  if (index > 0) {
-    // 自动跳到下一个输入框
+  // 如果当前输入框为空，且不是第一个输入框，则跳到上一个
+  if (!captchaVal[index].value && index > 0) {
+    captchaVal[index - 1].value = ''
     setTimeout(() => {
       document.getElementById(`captcha-input${index - 1}`)?.focus()
     }, 50)
   }
+  emitData()
+}
+
+const handlePaste = (event: ClipboardEvent, index: number) => {
+  event.preventDefault()
+  const pasteData = event.clipboardData?.getData('text') || ''
+  // 只保留字母和数字
+  const cleanData = pasteData.replace(/[^A-Za-z0-9]/g, '')
+  
+  // 将粘贴的内容分配到各个输入框
+  let currentIndex = index
+  for (let i = 0; i < cleanData.length && currentIndex < captchaVal.length; i++) {
+    captchaVal[currentIndex].value = cleanData[i]
+    currentIndex++
+  }
+  
+  // 聚焦到最后一个有值的输入框的下一个，或最后一个输入框
+  const nextIndex = Math.min(currentIndex, captchaVal.length - 1)
+  setTimeout(() => {
+    document.getElementById(`captcha-input${nextIndex}`)?.focus()
+  }, 50)
+  
   emitData()
 }
 

@@ -8,7 +8,7 @@
         name="star"
         class="star-icon"
         @click.stop="handelDeleteFavorite"
-        v-if="favoriteData.find((item: any) => item.pairAddress == props.coinInfo?.pairAddress)"
+        v-if="favoriteData.find((item: any) => item.baseToken?.address === (props.coinInfo?.baseTokenAddress || props.coinInfo?.pairAddress) && item.chainCode === props.coinInfo?.chainCode)"
       ></svg-icon>
       <svg-icon name="star-o" class="star-o-icon" @click.stop="handelAddFavorite" v-else></svg-icon>
     </template>
@@ -22,6 +22,7 @@ import { useGlobalStore } from '@/stores/global'
 import { useChainConfigsStore } from '@/stores/chainConfigs'
 
 import { APIlistFavorite, APIaddFavorite, APIdeleteFavorite } from '@/api/coinWalletDetails'
+import { customMessage } from '@/utils/message'
 
 const props = defineProps({
   coinInfo: {
@@ -36,6 +37,7 @@ const globalStore = useGlobalStore()
 
 const isConnected = computed(() => globalStore.walletInfo.isConnected)
 const favoriteData = computed(() => globalStore.favoriteData)
+const accountInfo = computed(() => globalStore.accountInfo)
 
 const chainId = computed(() => globalStore.walletInfo.chainId)
 const customWalletInfo = computed(() => globalStore.customWalletInfo)
@@ -46,34 +48,40 @@ const chainConfigs = useChainConfigsStore().chainConfigs
 
 const handelAddFavorite = async () => {
   const res = await APIaddFavorite({
-    chainCode: props.coinInfo.chainCode,
-    pairAddress: props.coinInfo.pairAddress,
-    walletAddress:
-      walletType.value == 'Email' ? customWalletInfo.value.walletInfo?.wallet : address.value
+    baseTokenAddress: props.coinInfo.baseTokenAddress || props.coinInfo.pairAddress || props.coinInfo.baseToken?.address,
+    chainCode: props.coinInfo.chainCode
   })
-  res && getListFavorite()
+  if (res) {
+    customMessage({
+      type: 'success',
+      title: '收藏成功'
+    })
+    getListFavorite()
+  }
 }
 
 const handelDeleteFavorite = async () => {
   const res = await APIdeleteFavorite({
-    chainCode: props.coinInfo.chainCode,
-    pairAddress: props.coinInfo.pairAddress,
-    walletAddress:
-      walletType.value == 'Email' ? customWalletInfo.value.walletInfo?.wallet : address.value
+    baseTokenAddress: props.coinInfo.baseTokenAddress || props.coinInfo.pairAddress || props.coinInfo.baseToken?.address,
+    chainCode: props.coinInfo.chainCode
   })
 
-  res && getListFavorite()
+  if (res) {
+    customMessage({
+      type: 'success',
+      title: '已删除收藏'
+    })
+    getListFavorite()
+  }
 }
 
 const getListFavorite = async () => {
-  const res = await APIlistFavorite({
-    chainCode:
-      walletType.value == 'Email'
-        ? customWalletInfo.value.chainCode
-        : chainConfigs?.find((item: any) => item.chainId == chainId.value)?.chainCode,
-    walletAddress:
-      walletType.value == 'Email' ? customWalletInfo.value.walletInfo?.wallet : address.value
-  })
+  // 检查是否已登录（钱包连接或账户登录）
+  if (!isConnected.value && !accountInfo.value) {
+    return
+  }
+  
+  const res = await APIlistFavorite({})
   globalStore.setFavoriteData(res || [])
 }
 </script>

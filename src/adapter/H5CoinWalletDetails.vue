@@ -52,8 +52,9 @@
           </div>
           <Favorite
             :coinInfo="{
-              pairAddress: route.params.pairAddress,
-              chainCode: baseInfo?.chainInfo?.chainCode
+              baseTokenAddress: baseInfo?.tokenInfo?.baseAddress || route.params.pairAddress,
+              chainCode: baseInfo?.chainInfo?.chainCode,
+              pairAddress: route.params.pairAddress
             }"
           />
           <svg-icon name="h5-search-md" class="search-md" @click="handelShowPopup"></svg-icon>

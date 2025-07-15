@@ -29,7 +29,11 @@
     <template #default>
       <div class="display-flex align-items-center justify-content-sp base-info">
         <div class="display-flex align-items-center">
-          <Favorite :coinInfo="baseInfo?.chainInfo" />
+          <Favorite :coinInfo="{
+            baseTokenAddress: baseInfo?.tokenInfo?.baseAddress,
+            chainCode: baseInfo?.chainInfo?.chainCode,
+            pairAddress: baseInfo?.chainInfo?.pairAddress
+          }" />
           <span class="logo">
             <el-image :src="baseInfo?.tokenInfo?.logo" alt="" class="baseInfo-img">
               <template #error>

@@ -376,10 +376,14 @@ export function APIauthRecoverTradeCost(data: object) {
  * @returns
  */
 export function APIlistFavorite(data: object) {
+  const account: any = localStorage.getItem('accountInfo')
   return http({
-    url: WEB_URL + '/api/webv2/token/listFavorite',
+    url: WEB_URL + '/api/auth/user/listFavorite',
     method: 'POST',
-    data
+    data,
+    headers: {
+      [`${JSON.parse(account)?.tokenInfo.tokenName}`]: `Bearer ${JSON.parse(account)?.tokenInfo.tokenValue}`
+    }
   })
 }
 
@@ -389,10 +393,14 @@ export function APIlistFavorite(data: object) {
  * @returns
  */
 export function APIaddFavorite(data: object) {
+  const account: any = localStorage.getItem('accountInfo')
   return http({
-    url: WEB_URL + '/api/webv2/token/addFavorite',
+    url: WEB_URL + '/api/auth/user/addFavorite',
     method: 'POST',
-    data
+    data,
+    headers: {
+      [`${JSON.parse(account)?.tokenInfo.tokenName}`]: `Bearer ${JSON.parse(account)?.tokenInfo.tokenValue}`
+    }
   })
 }
 
@@ -402,9 +410,13 @@ export function APIaddFavorite(data: object) {
  * @returns
  */
 export function APIdeleteFavorite(data: object) {
+  const account: any = localStorage.getItem('accountInfo')
   return http({
-    url: WEB_URL + '/api/webv2/token/deleteFavorite',
+    url: WEB_URL + '/api/auth/user/deleteFavorite',
     method: 'POST',
-    data
+    data,
+    headers: {
+      [`${JSON.parse(account)?.tokenInfo.tokenName}`]: `Bearer ${JSON.parse(account)?.tokenInfo.tokenValue}`
+    }
   })
 }
