@@ -254,6 +254,7 @@
 
 <script lang="ts" setup>
 import { ref, onMounted, computed, watch } from 'vue'
+import { useRouter } from 'vue-router'
 import {
   shortifyAddress,
   numberFormat,
@@ -274,6 +275,7 @@ import WalletConnect from '@/components/Wallet/WalletConnect.vue'
 import { socket } from '@/utils/socket'
 
 const globalStore = useGlobalStore()
+const router = useRouter()
 
 const tokenList = computed(() => globalStore.tokenList)
 const customWalletInfo = computed(() => globalStore.customWalletInfo)
@@ -297,7 +299,7 @@ const handelTableRow = (row: any) => {
   handelJump(row)
 }
 const handelJump = (item: any) => {
-  window.open(`/k/${item.pairAddress}?chainCode=${item.baseToken.chainCode}`)
+  router.push(`/k/${item.pairAddress}?chainCode=${item.baseToken.chainCode}`)
 }
 defineProps({
   amount: {

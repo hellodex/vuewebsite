@@ -510,6 +510,7 @@
 import { ref, onMounted, onUnmounted, computed, reactive, onDeactivated } from 'vue'
 import { ApiGetPumpRanking } from '@/api'
 import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
 import { useGlobalStore } from '@/stores/global'
 import { numberFormat, handleCoinPairInfo, shortifyAddress, numToFixedTwo } from '@/utils'
 
@@ -528,6 +529,7 @@ defineProps({
 })
 
 const i18n = useI18n()
+const router = useRouter()
 const globalStore = useGlobalStore()
 
 const isConnected = computed(() => globalStore.walletInfo.isConnected)
@@ -902,7 +904,7 @@ const handelTableRow = (row: any) => {
   handelJump(row)
 }
 const handelJump = (item: any) => {
-  window.open(`/k/${item.pairAddress}?chainCode=${item.baseToken.chainCode}`)
+  router.push(`/k/${item.pairAddress}?chainCode=${item.baseToken.chainCode}`)
 }
 
 const handelRouter = (url: string) => {

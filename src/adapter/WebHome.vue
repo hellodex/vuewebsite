@@ -281,7 +281,7 @@ async function getInitTokenInfo() {
         id: 99,
         location: 0,
         logo: '',
-        name: 'AI 信号',
+        name: 'AI选币',
         sort: 0,
         type: '',
         updateTime: '2024-08-19 07:59:23'

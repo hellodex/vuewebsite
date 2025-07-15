@@ -216,11 +216,7 @@ const handelTableRow = (row: any) => {
     localStorage.setItem('searchHistory', JSON.stringify([token]))
   }
 
-  if (window.location.href.indexOf('/k/') !== -1) {
-    router.push(`/k/${token.pairAddress}?chainCode=${token.chainCode}`)
-  } else {
-    window.open(`/k/${row.pairAddress}?chainCode=${row.chainCode}`)
-  }
+  router.push(`/k/${row.pairAddress}?chainCode=${row.chainCode}`)
   handelClose()
 }
 const handelDelHistory = () => {
@@ -229,12 +225,7 @@ const handelDelHistory = () => {
 }
 
 function handleHistory(token: any) {
-  if (window.location.href.indexOf('/k/') !== -1) {
-    router.push(`/k/${token.pairAddress}?chainCode=${token.chainCode}`)
-  } else {
-    window.open(`/k/${token.pairAddress}?chainCode=${token.chainCode}`)
-  }
-
+  router.push(`/k/${token.pairAddress}?chainCode=${token.chainCode}`)
   handelClose()
 }
 

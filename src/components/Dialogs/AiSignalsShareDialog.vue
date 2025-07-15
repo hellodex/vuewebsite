@@ -10,7 +10,7 @@
     <div class="aisignals-content">
       <div class="aisignals-title">分享</div>
       <div class="share-img-dom" ref="shareImg">
-        <div class="aisignals-tips">用AI信号买聪明钱</div>
+        <div class="aisignals-tips">用AI选币买聪明钱</div>
         <div class="aisignals-coin-info display-flex align-items-center justify-content-sp">
           <div class="display-flex align-items-center">
             <el-image :src="aiSignalsShareData.baseToken?.logo" alt="" class="logo">
@@ -82,7 +82,7 @@
           <div class="invite-content">
             <p class="text">邀请码：</p>
             <div class="invite-share-txt display-flex flex-direction-col">
-              <span>AI信号让Memecoin交易变简单，用邀请码注册享受10%手续费优惠。</span>
+              <span>AI选币让Memecoin交易变简单，用邀请码注册享受10%手续费优惠。</span>
               <div class="url-content display-flex align-items-center">
                 <div class="display-flex align-items-center">
                   <img src="@/assets/icons/globe-language.svg" alt="" class="icon-web" />
