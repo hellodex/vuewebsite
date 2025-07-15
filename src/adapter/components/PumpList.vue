@@ -326,7 +326,7 @@
               
               <!-- 操作按钮 -->
               <div class="filter-actions">
-                <el-button size="small" @click="resetFilters">
+                <el-button size="small" @click="resetFilters" class="reset-button">
                   重置
                 </el-button>
                 <el-button type="primary" size="small" @click="closeFilterDialog">应用</el-button>
@@ -1011,23 +1011,27 @@ onUnmounted(() => {
       
       .filter-icon-container {
         cursor: pointer;
-        padding: 4px;
-        border-radius: 4px;
+        padding: 6px;
+        border-radius: 6px;
         transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: rgba(255, 255, 255, 0.03);
         
         &:hover {
-          background-color: rgba(255, 255, 255, 0.1);
+          background-color: rgba(255, 255, 255, 0.08);
+          
+          .filter-icon {
+            color: var(--up-color);
+          }
         }
         
         .filter-icon {
-          width: 16px;
-          height: 16px;
-          color: #9aa0aa;
+          width: 14px;
+          height: 14px;
+          color: #6b6e73;
           transition: color 0.2s;
-          
-          &:hover {
-            color: #f5f5f5;
-          }
         }
       }
     }
@@ -1265,49 +1269,51 @@ onUnmounted(() => {
 }
 // 筛选弹窗样式
 :deep(.filter-popover) {
-  background-color: #000000 !important;
-  border: none !important;
-  border-radius: 8px !important;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8) !important;
+  background-color: #1a1b1e !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6) !important;
   padding: 0 !important;
   
   .el-popper__arrow::before {
-    background: #000000 !important;
-    border: none !important;
+    background: #1a1b1e !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
   }
 }
 
 .filter-content {
-  background-color: #000000;
-  border-radius: 8px;
+  background-color: #1a1b1e;
+  border-radius: 12px;
+  color: #f5f5f5;
+  overflow: hidden;
   
   .filter-scrollable {
-    max-height: 500px;
+    max-height: 400px;
     overflow-y: auto;
-    padding: 20px;
+    padding: 16px 16px 0 16px;
     
     /* 自定义滚动条 */
     &::-webkit-scrollbar {
-      width: 4px;
+      width: 6px;
     }
     
     &::-webkit-scrollbar-track {
-      background: #111111;
-      border-radius: 2px;
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 3px;
     }
     
     &::-webkit-scrollbar-thumb {
-      background: #333333;
-      border-radius: 2px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 3px;
       
       &:hover {
-        background: #444444;
+        background: rgba(255, 255, 255, 0.15);
       }
     }
   }
   
   .filter-section {
-    margin-bottom: 16px;
+    margin-bottom: 20px;
     
     &:last-child {
       margin-bottom: 0;
@@ -1315,18 +1321,18 @@ onUnmounted(() => {
   }
   
   .filter-label {
-    color: #ffffff;
-    font-size: 14px;
-    margin-bottom: 6px;
-    font-weight: normal;
-    line-height: 1.3;
+    color: #9aa0aa;
+    font-size: 12px;
+    margin-bottom: 10px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
   }
   
   .filter-checkbox-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 6px;
-    margin-bottom: 6px;
+    gap: 8px;
+    margin-bottom: 8px;
     
     :deep(.el-checkbox) {
       margin: 0;
@@ -1335,43 +1341,43 @@ onUnmounted(() => {
       padding: 3px 0;
       
       .el-checkbox__label {
-        color: #b5b5b5;
+        color: #e0e0e0;
         font-size: 12px;
-        line-height: 1.3;
-        padding-left: 5px;
+        line-height: 1.4;
+        padding-left: 6px;
         font-weight: normal;
       }
       
       .el-checkbox__input {
         .el-checkbox__inner {
-          width: 14px;
-          height: 14px;
-          background-color: transparent;
-          border: 1px solid #555555;
-          border-radius: 3px;
+          width: 16px;
+          height: 16px;
+          background-color: rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba(255, 255, 255, 0.15);
+          border-radius: 4px;
           transition: all 0.2s ease;
           
           &::after {
-            width: 3px;
-            height: 6px;
-            left: 4px;
-            top: 1px;
+            width: 4px;
+            height: 7px;
+            left: 5px;
+            top: 2px;
             border-width: 1px;
           }
         }
         
         &.is-checked .el-checkbox__inner {
-          background-color: #ffffff;
-          border-color: #ffffff;
+          background-color: var(--up-color);
+          border-color: var(--up-color);
           
           &::after {
             border-color: #000000;
-            border-width: 1px;
+            border-width: 2px;
           }
         }
         
         &:hover .el-checkbox__inner {
-          border-color: #777777;
+          border-color: rgba(255, 255, 255, 0.3);
         }
       }
     }
@@ -1387,114 +1393,201 @@ onUnmounted(() => {
       flex: 1;
       
       .el-input__wrapper {
-        background-color: #2a2a2a;
-        border: 1px solid #3a3a3a;
-        border-radius: 5px;
+        background-color: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 6px;
         box-shadow: none;
-        height: 28px;
+        height: 32px;
+        transition: all 0.2s;
+        
+        &:hover {
+          border-color: rgba(255, 255, 255, 0.15);
+          background-color: rgba(255, 255, 255, 0.05);
+        }
         
         &.is-focus {
-          border-color: #ffffff;
-          background-color: #2f2f2f;
+          border-color: var(--up-color);
+          background-color: rgba(32, 178, 108, 0.05);
         }
         
         .el-input__inner {
-          color: #ffffff;
-          font-size: 12px;
-          height: 26px;
-          line-height: 26px;
-          text-align: left;
-          padding: 0 6px;
+          color: #f5f5f5;
+          font-size: 13px;
+          height: 30px;
+          line-height: 30px;
+          text-align: center;
+          padding: 0 8px;
           
           &::placeholder {
-            color: #666666;
+            color: #6b6e73;
           }
         }
       }
     }
     
     .range-separator {
-      color: #b5b5b5;
-      font-size: 12px;
+      color: #6b6e73;
+      font-size: 11px;
       font-weight: normal;
-      padding: 0 1px;
+      padding: 0 2px;
     }
     
     .range-to {
-      color: #b5b5b5;
-      font-size: 12px;
+      color: #6b6e73;
+      font-size: 11px;
       white-space: nowrap;
-      font-weight: normal;
-      padding: 0 1px;
+      font-weight: 500;
+      padding: 0 2px;
     }
   }
 }
 
 .filter-actions {
   display: flex;
-  gap: 8px;
-  justify-content: center;
-  padding: 12px 20px;
-  background-color: #000000;
-  margin: 8px 0 0 0;
-  border-radius: 0 0 8px 8px;
+  gap: 10px;
+  justify-content: flex-end;
+  padding: 16px;
+  background-color: rgba(255, 255, 255, 0.02);
+  margin: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  
+  // 覆盖Element Plus的CSS变量
+  --el-button-hover-text-color: #ff6b6b;
+  --el-button-hover-bg-color: rgba(255, 75, 75, 0.1);
+  --el-button-hover-border-color: rgba(255, 75, 75, 0.3);
+  --el-button-active-text-color: #ff6b6b;
+  --el-button-active-bg-color: rgba(255, 75, 75, 0.15);
+  --el-button-active-border-color: rgba(255, 75, 75, 0.4);
   
   :deep(.el-button) {
-    height: 28px;
-    border-radius: 14px;
-    font-size: 12px;
-    font-weight: normal;
-    padding: 0 16px;
-    min-width: 50px;
+    height: 32px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 0 20px;
+    min-width: 80px;
+    transition: all 0.2s;
     
     &.el-button--default {
-      background-color: #2a2a2a;
-      border: 1px solid #3a3a3a;
-      color: #ffffff;
+      background-color: rgba(255, 255, 255, 0.03) !important;
+      border: 1px solid rgba(255, 255, 255, 0.1) !important;
+      color: #c0c0c0 !important;
       
-      &:hover {
-        background-color: #404040;
-        border-color: #555555;
-        color: #ffffff;
+      &:hover,
+      &:hover:not(.is-disabled):not(.is-loading),
+      &:hover:not(:disabled) {
+        background-color: rgba(255, 75, 75, 0.1) !important;
+        border-color: rgba(255, 75, 75, 0.3) !important;
+        color: #ff6b6b !important;
+        transform: translateY(-1px);
+        box-shadow: none !important;
+        outline: none !important;
       }
       
-      &:active {
-        background-color: #1a1a1a;
-        border-color: #2a2a2a;
-        color: #ffffff;
+      &:active,
+      &:active:not(.is-disabled):not(.is-loading) {
+        background-color: rgba(255, 75, 75, 0.15) !important;
+        border-color: rgba(255, 75, 75, 0.4) !important;
+        color: #ff6b6b !important;
+        transform: translateY(0);
+        box-shadow: none !important;
+        outline: none !important;
       }
       
-      &:focus {
-        background-color: #2a2a2a;
-        border-color: #3a3a3a;
-        color: #ffffff;
-        box-shadow: none;
-        outline: none;
+      &:focus,
+      &:focus:not(:hover) {
+        background-color: rgba(255, 255, 255, 0.03) !important;
+        border-color: rgba(255, 255, 255, 0.1) !important;
+        color: #c0c0c0 !important;
+        box-shadow: none !important;
+        outline: none !important;
+      }
+      
+      &:focus:hover {
+        background-color: rgba(255, 75, 75, 0.1) !important;
+        border-color: rgba(255, 75, 75, 0.3) !important;
+        color: #ff6b6b !important;
+        box-shadow: none !important;
+        outline: none !important;
       }
     }
     
     &.el-button--primary {
-      background-color: #ffffff;
-      border: 1px solid #ffffff;
+      background-color: var(--up-color);
+      border: 1px solid var(--up-color);
       color: #000000;
+      font-weight: 600;
       
       &:hover {
-        background-color: #f0f0f0;
-        border-color: #f0f0f0;
+        background-color: #1fa065;
+        border-color: #1fa065;
         color: #000000;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(32, 178, 108, 0.25);
       }
       
       &:active {
-        background-color: #e0e0e0;
-        border-color: #e0e0e0;
+        background-color: #1a8f5a;
+        border-color: #1a8f5a;
         color: #000000;
+        transform: translateY(0);
       }
       
       &:focus {
-        background-color: #f5f5f5;
-        border-color: #f5f5f5;
+        background-color: var(--up-color);
+        border-color: var(--up-color);
         color: #000000;
-        box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 0 0 3px rgba(32, 178, 108, 0.2);
+      }
+    }
+    
+    // 重置按钮特定样式
+    &.reset-button {
+      // 移除 Element Plus 的默认 CSS 变量
+      --el-button-hover-text-color: none !important;
+      --el-button-hover-bg-color: none !important;
+      --el-button-hover-border-color: none !important;
+      
+      background-color: rgba(255, 255, 255, 0.03) !important;
+      border: 1px solid rgba(255, 255, 255, 0.1) !important;
+      color: #c0c0c0 !important;
+      
+      &:hover,
+      &:hover:not(.is-disabled):not(.is-loading),
+      &:hover:not(:disabled) {
+        background-color: rgba(255, 255, 255, 0.08) !important;
+        border-color: rgba(255, 255, 255, 0.2) !important;
+        color: #f5f5f5 !important;
+        transform: translateY(-1px);
+        box-shadow: none !important;
+        outline: none !important;
+      }
+      
+      &:active,
+      &:active:not(.is-disabled):not(.is-loading) {
+        background-color: rgba(255, 255, 255, 0.12) !important;
+        border-color: rgba(255, 255, 255, 0.3) !important;
+        color: #f5f5f5 !important;
+        transform: translateY(0);
+        box-shadow: none !important;
+        outline: none !important;
+      }
+      
+      &:focus,
+      &:focus:not(:hover) {
+        background-color: rgba(255, 255, 255, 0.03) !important;
+        border-color: rgba(255, 255, 255, 0.1) !important;
+        color: #c0c0c0 !important;
+        box-shadow: none !important;
+        outline: none !important;
+      }
+      
+      &:focus:hover {
+        background-color: rgba(255, 255, 255, 0.08) !important;
+        border-color: rgba(255, 255, 255, 0.2) !important;
+        color: #f5f5f5 !important;
+        box-shadow: none !important;
+        outline: none !important;
       }
     }
   }
