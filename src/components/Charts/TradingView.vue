@@ -15,8 +15,21 @@ const globalStore = useGlobalStore()
 const chainInfo = useChainInfoStore().chainInfo
 const useTokenInfo = useTokenInfoStore()
 const tokenInfo = useTokenInfo.tokenInfo // 解构变量 通过 storeToRefs 变成响应式
-const precision = formatDecimals(sessionStorage.getItem('basePrice')).precision
-console.log('小数位', precision)
+
+// 改为动态获取 precision，而不是在组件初始化时固定
+function getPrecision() {
+  const basePrice = sessionStorage.getItem('basePrice')
+
+  
+  if (!basePrice || basePrice === 'null' || basePrice === 'undefined') {
+
+    return 10 // 默认使用较高精度
+  }
+  
+  const precisionConfig = formatDecimals(basePrice)
+   return precisionConfig.precision
+}
+
 const showMarket = ref(eval(localStorage.getItem('showMarket')) || false)
 
 function initOnReady() {
@@ -58,15 +71,21 @@ function initOnReady() {
     enabled_features: [],
     custom_formatters: {
       priceFormatterFactory: (symbolInfo, minTick) => {
+
         if (symbolInfo === null) {
           return null
         }
         if (symbolInfo.format === 'volume') {
           return {
             format: (price, signPositive) => {
-              return MAIN_COIN[tokenInfo?.baseSymbol]
-                ? numFormat(new BigNumber(price).toFixed(precision))
-                : numberFormat(new BigNumber(price).toFixed(precision))
+              const currentPrecision = getPrecision()
+
+              const formatted = MAIN_COIN[tokenInfo?.baseSymbol]
+                ? numFormat(new BigNumber(price).toFixed(currentPrecision))
+                : numberFormat(new BigNumber(price).toFixed(currentPrecision))
+              
+
+              return formatted
             }
           }
         }
