@@ -7,16 +7,23 @@
       <svg-icon
         name="star"
         class="star-icon"
+        :class="{ 'star-animation': isAnimating }"
         @click.stop="handelDeleteFavorite"
         v-if="favoriteData.find((item: any) => item.baseToken?.address === (props.coinInfo?.baseTokenAddress || props.coinInfo?.pairAddress) && item.chainCode === props.coinInfo?.chainCode)"
       ></svg-icon>
-      <svg-icon name="star-o" class="star-o-icon" @click.stop="handelAddFavorite" v-else></svg-icon>
+      <svg-icon 
+        name="star-o" 
+        class="star-o-icon" 
+        :class="{ 'star-animation': isAnimating }"
+        @click.stop="handelAddFavorite" 
+        v-else
+      ></svg-icon>
     </template>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import WalletConnect from '@/components/Wallet/WalletConnect.vue'
 import { useGlobalStore } from '@/stores/global'
 import { useChainConfigsStore } from '@/stores/chainConfigs'
@@ -46,7 +53,10 @@ const walletType = computed(() => globalStore.walletInfo.walletType)
 
 const chainConfigs = useChainConfigsStore().chainConfigs
 
+const isAnimating = ref(false)
+
 const handelAddFavorite = async () => {
+  isAnimating.value = true
   const res = await APIaddFavorite({
     baseTokenAddress: props.coinInfo.baseTokenAddress || props.coinInfo.pairAddress || props.coinInfo.baseToken?.address,
     chainCode: props.coinInfo.chainCode
@@ -58,9 +68,13 @@ const handelAddFavorite = async () => {
     })
     getListFavorite()
   }
+  setTimeout(() => {
+    isAnimating.value = false
+  }, 300)
 }
 
 const handelDeleteFavorite = async () => {
+  isAnimating.value = true
   const res = await APIdeleteFavorite({
     baseTokenAddress: props.coinInfo.baseTokenAddress || props.coinInfo.pairAddress || props.coinInfo.baseToken?.address,
     chainCode: props.coinInfo.chainCode
@@ -73,6 +87,9 @@ const handelDeleteFavorite = async () => {
     })
     getListFavorite()
   }
+  setTimeout(() => {
+    isAnimating.value = false
+  }, 300)
 }
 
 const getListFavorite = async () => {
@@ -102,12 +119,42 @@ const getListFavorite = async () => {
   color: var(--dex-color-4);
   cursor: pointer;
   display: block;
+  transition: color 0.2s ease;
+  
+  &:hover {
+    color: #e89f13;
+  }
 }
+
 .star-icon {
   width: 18px;
   height: 18px;
   margin-right: 8px;
   color: #e89f13;
   display: block;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    filter: brightness(1.2);
+  }
 }
+
+// 点击动画 - 简洁的缩放效果
+.star-animation {
+  animation: starPulse 0.4s ease-out;
+}
+
+@keyframes starPulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
 </style>

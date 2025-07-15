@@ -90,7 +90,7 @@
                           }"
                         />
                         <div class="logo">
-                          <el-image :src="item.logo" alt="" class="img">
+                          <el-image :src="item.baseToken.logo" alt="" class="img">
                             <template #error>
                               <svg-icon name="logo1" class="img"></svg-icon>
                             </template>
