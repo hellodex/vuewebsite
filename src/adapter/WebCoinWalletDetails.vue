@@ -4,7 +4,7 @@
       <!-- 币信息 -->
       <section
         class="coinWalletDetails-section"
-        :style="{ width: `calc(100vw - 296px - ${switchLeftState ? '296px' : '0px'})` }"
+        :style="{ width: `calc(100vw - 296px - ${switchLeftState ? '284px' : '0px'})` }"
       >
         <BaseInfo
           :baseInfo="baseInfo"
