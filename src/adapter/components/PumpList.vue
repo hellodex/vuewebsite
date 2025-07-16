@@ -611,7 +611,25 @@ const searchKeywords = reactive(['', '', ''])
 // 音频相关状态
 const audioFiles = ['Alipay.mp3', 'Bell.mp3', 'Cheer.mp3', 'Coins.mp3', 'Handgun.mp3', 'Kaching.mp3', 'Nice.mp3', 'Pop.mp3', 'Shotgun.mp3', 'Sonumi.mp3', 'Wechat.mp3', 'Yes.mp3']
 const audioDialogVisible = reactive([false, false, false])
-const selectedAudio = reactive(['关闭', '关闭', '关闭'])
+
+// 从 localStorage 读取保存的音频选择
+const loadSavedAudioSettings = () => {
+  const saved = localStorage.getItem('pumpListAudioSettings')
+  if (saved) {
+    try {
+      const settings = JSON.parse(saved)
+      // 确保是一个包含3个元素的数组
+      if (Array.isArray(settings) && settings.length === 3) {
+        return settings
+      }
+    } catch (e) {
+      console.error('加载音频设置失败:', e)
+    }
+  }
+  return ['关闭', '关闭', '关闭']
+}
+
+const selectedAudio = reactive(loadSavedAudioSettings())
 const audioInstances = reactive<Record<number, HTMLAudioElement>>({})
 
 // 导入所有音频文件
@@ -937,18 +955,23 @@ const selectAudio = (index: number, audioFile: string) => {
   selectedAudio[index] = audioFile
   audioDialogVisible[index] = false
   
+  // 保存到 localStorage
+  localStorage.setItem('pumpListAudioSettings', JSON.stringify(selectedAudio))
+  
   // 如果选择了音频文件，预加载音频
   if (audioFile !== '关闭') {
     // 从预导入的模块中获取音频URL
     const audioPath = `/src/assets/audio/${audioFile}`
-    const audioUrl = audioModules[audioPath] || ''
+    const audioUrl = audioModules[audioPath]
     
     if (audioUrl) {
       const audio = new Audio(audioUrl)
       audio.preload = 'auto'
       audioInstances[index] = audio
+      console.log(`音频预加载成功 - 列表${index}: ${audioFile}`)
     } else {
       console.error('音频文件未找到:', audioPath)
+      console.log('可用的音频文件:', Object.keys(audioModules))
     }
   } else {
     // 如果选择关闭，删除音频实例
@@ -961,12 +984,20 @@ const selectAudio = (index: number, audioFile: string) => {
 // 播放音频
 const playAudio = (index: number) => {
   if (selectedAudio[index] !== '关闭' && audioInstances[index]) {
-    // 克隆音频实例以支持重叠播放
-    const audio = audioInstances[index].cloneNode(true) as HTMLAudioElement
-    audio.play().catch(err => {
-      console.error('播放音频失败:', err)
-    })
+
+      // 克隆音频实例以支持重叠播放
+      const audio = audioInstances[index].cloneNode(true) as HTMLAudioElement
+      // 设置音量
+      audio.volume = 0.7
+      audio.play().catch(err => {
+        console.error('播放音频失败:', err)
+        // 如果是自动播放策略问题，提示用户
+        if (err.name === 'NotAllowedError') {
+          console.warn('浏览器自动播放策略限制，需要用户互动后才能播放音频')
+        }
+      })
   }
+
 }
 
 const pumpRankingFun = () => {
@@ -1002,10 +1033,16 @@ const pumpRankingFun = () => {
       // 如果是第一次加载（列表为空），不播放声音
       if (currentList.length === 0) {
         // 初始加载，不播放
+        console.log(`${['新创建', '即将打满', '新外盘'][audioIndex]}列表初始加载，不播放音频`)
       } else {
         // 检查是否有新的代币（通过pairAddress判断）
         const currentPairs = new Set(currentList.filter((item: any) => item && item.pairAddress).map((item: any) => item.pairAddress))
-        hasNewItems = newRanking.some((item: any) => item && item.pairAddress && !currentPairs.has(item.pairAddress))
+        const newItems = newRanking.filter((item: any) => item && item.pairAddress && !currentPairs.has(item.pairAddress))
+        hasNewItems = newItems.length > 0
+        
+        if (hasNewItems) {
+          console.log(`${['新创建', '即将打满', '新外盘'][audioIndex]}列表检测到${newItems.length}个新代币`)
+        }
       }
     }
     
@@ -1143,6 +1180,25 @@ const handleMouseLeave = (index: number) => {
   pumpRankingFun()
 }
 
+// 初始化音频设置
+const initAudioSettings = () => {
+  selectedAudio.forEach((audioFile, index) => {
+    if (audioFile !== '关闭') {
+      const audioPath = `/src/assets/audio/${audioFile}`
+      const audioUrl = audioModules[audioPath]
+      
+      if (audioUrl) {
+        const audio = new Audio(audioUrl)
+        audio.preload = 'auto'
+        audioInstances[index] = audio
+        console.log(`初始化音频预加载 - 列表${index}: ${audioFile}`)
+      } else {
+        console.error(`初始化时音频文件未找到 - 列表${index}: ${audioFile}`)
+      }
+    }
+  })
+}
+
 const initData = async () => {
   await Promise.all([
     getPumpRanking(1),
@@ -1157,6 +1213,10 @@ const initData = async () => {
 
 onMounted(async () => {
   skeletonLoading.value = true
+  
+  // 初始化音频设置
+  initAudioSettings()
+  
   await initData()
   skeletonLoading.value = false
   pumpRankingFun()
@@ -1169,6 +1229,14 @@ onUnmounted(() => {
   socket.off('pumpRanking')
   // 移除全局点击事件监听
   document.removeEventListener('click', handleClickOutside)
+  
+  // 清理音频实例
+  Object.values(audioInstances).forEach(audio => {
+    if (audio) {
+      audio.pause()
+      audio.src = ''
+    }
+  })
 })
 </script>
 
