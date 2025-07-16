@@ -281,14 +281,14 @@ async function getInitTokenInfo() {
         id: 99,
         location: 0,
         logo: '',
-        name: 'AI选币',
+        name: 'AI 选币',
         sort: 0,
         type: '',
         updateTime: '2024-08-19 07:59:23'
       },
       {
         "id": 13,
-        "name": "Pump",
+        "name": "赚钱战场",
         "sort": 1,
         "location": 0,
         "type": "",
