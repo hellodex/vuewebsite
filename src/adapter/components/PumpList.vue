@@ -975,15 +975,36 @@ const pumpRankingFun = () => {
     const data = JSON.parse(message)
     const newRanking = data.ranking || []
     
-    // 检查是否有新数据（仅对新创建列表）
+    // 检查是否有新数据
     let hasNewItems = false
-    if (data.type === 1 && newRanking.length > 0) {
+    let listKey = ''
+    let audioIndex = -1
+    
+    // 根据type确定是哪个列表
+    switch (data.type) {
+      case 1:
+        listKey = 'list1'
+        audioIndex = 0
+        break
+      case 2:
+        listKey = 'list2'
+        audioIndex = 1
+        break
+      case 3:
+        listKey = 'list3'
+        audioIndex = 2
+        break
+    }
+    
+    // 检查新数据
+    if (listKey && newRanking.length > 0) {
+      const currentList = pumpObj[listKey] || []
       // 如果是第一次加载（列表为空），不播放声音
-      if (pumpObj.list1.length === 0) {
+      if (currentList.length === 0) {
         // 初始加载，不播放
       } else {
         // 检查是否有新的代币（通过pairAddress判断）
-        const currentPairs = new Set(pumpObj.list1.filter((item: any) => item && item.pairAddress).map((item: any) => item.pairAddress))
+        const currentPairs = new Set(currentList.filter((item: any) => item && item.pairAddress).map((item: any) => item.pairAddress))
         hasNewItems = newRanking.some((item: any) => item && item.pairAddress && !currentPairs.has(item.pairAddress))
       }
     }
@@ -992,10 +1013,6 @@ const pumpRankingFun = () => {
     switch (data.type) {
       case 1:
         updateListWithKey(pumpObj.list1, newRanking)
-        // 新创建列表有新数据时播放音频
-        if (hasNewItems) {
-          playAudio(0)
-        }
         break
       case 2:
         updateListWithKey(pumpObj.list2, newRanking)
@@ -1005,6 +1022,11 @@ const pumpRankingFun = () => {
         break
       default:
         break
+    }
+    
+    // 有新数据时播放对应列表的音频
+    if (hasNewItems && audioIndex >= 0) {
+      playAudio(audioIndex)
     }
     applyFilters()
   })
