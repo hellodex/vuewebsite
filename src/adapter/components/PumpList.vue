@@ -17,6 +17,22 @@
           </div>
           
           <div class="filter-controls display-flex align-items-center">
+            <!-- 买入数量输入框 -->
+            <div class="buy-amount-box display-flex align-items-center">
+              <el-input
+                v-model="buyAmounts[index]"
+                oninput="value=value.replace(/[^0-9.]/g,'')"
+                size="small"
+                placeholder="数量"
+                class="amount-input"
+              >
+                <template #prefix>
+                  <img v-if="chainLogoObj?.['SOLANA']" :src="chainLogoObj['SOLANA']" alt="" class="chain-icon" />
+                  <img v-else src="@/assets/icons/coinDEX.svg" alt="" class="chain-icon" />
+                </template>
+              </el-input>
+            </div>
+            
             <!-- 搜索输入框 -->
             <el-input 
               v-model="searchKeywords[index]"
@@ -540,13 +556,13 @@
                       <WalletConnect v-if="!isConnected">
                         <div class="buy-operate-btn">
                           <span class="txt"
-                            >买入 {{ amount && amount !== '0' ? numberFormat(amount) : '' }}</span
+                            >买入 {{ buyAmounts[index] && buyAmounts[index] !== '0' ? buyAmounts[index] : '' }}</span
                           >
                         </div>
                       </WalletConnect>
-                      <QuickBuyTrade :info="item" :amount="amount" v-else
+                      <QuickBuyTrade :info="item" :amount="buyAmounts[index]" v-else
                         >买入
-                        {{ amount && amount !== '0' ? numberFormat(amount) : '' }}</QuickBuyTrade
+                        {{ buyAmounts[index] && buyAmounts[index] !== '0' ? buyAmounts[index] : '' }}</QuickBuyTrade
                       >
                     </div>
                   </div>
@@ -570,7 +586,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, computed, reactive, onDeactivated } from 'vue'
+import { ref, onMounted, onUnmounted, computed, reactive, onDeactivated, watch } from 'vue'
 import { ApiGetPumpRanking } from '@/api'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
@@ -584,7 +600,7 @@ import Favorite from '@/components/Favorite.vue'
 import TimeAgo from './TimeAgo.vue'
 import { socket } from '@/utils/socket'
 
-defineProps({
+const props = defineProps({
   amount: {
     required: true,
     type: String
@@ -596,6 +612,7 @@ const router = useRouter()
 const globalStore = useGlobalStore()
 
 const isConnected = computed(() => globalStore.walletInfo.isConnected)
+const { chainLogoObj } = globalStore
 
 const skeletonLoading = ref<boolean>(false)
 
@@ -607,6 +624,9 @@ const pumpObj = reactive<Record<string, any>>({
 
 // 搜索关键词，每个列表独立
 const searchKeywords = reactive(['', '', ''])
+
+// 买入数量，每个列表独立（使用props.amount作为初始值）
+const buyAmounts = reactive([props.amount || '0.01', props.amount || '0.01', props.amount || '0.01'])
 
 // 音频相关状态
 const audioFiles = ['Alipay.mp3', 'Bell.mp3', 'Cheer.mp3', 'Coins.mp3', 'Handgun.mp3', 'Kaching.mp3', 'Nice.mp3', 'Pop.mp3', 'Shotgun.mp3', 'Sonumi.mp3', 'Wechat.mp3', 'Yes.mp3']
@@ -1180,6 +1200,15 @@ const handleMouseLeave = (index: number) => {
   pumpRankingFun()
 }
 
+// 监听父组件的amount变化
+watch(() => props.amount, (newAmount) => {
+  // 可选：当父组件的amount变化时，更新所有列表的买入数量
+  // 如果不需要这个功能，可以注释掉下面的代码
+  // buyAmounts[0] = newAmount || '0.01'
+  // buyAmounts[1] = newAmount || '0.01'
+  // buyAmounts[2] = newAmount || '0.01'
+})
+
 // 初始化音频设置
 const initAudioSettings = () => {
   selectedAudio.forEach((audioFile, index) => {
@@ -1303,6 +1332,88 @@ onUnmounted(() => {
       .filter-controls {
         gap: 8px;
         
+        .buy-amount-box {
+          .amount-input {
+            width: 70px;
+            
+            :deep(.el-input__wrapper) {
+              background-color: rgba(255, 255, 255, 0.05);
+              border: 1px solid rgba(255, 255, 255, 0.05);
+              border-radius: 5px;
+              box-shadow: none !important;
+              outline: none !important;
+              height: 24px;
+              transition: all 0.2s;
+              padding: 0 8px;
+              
+              &:hover {
+                border-color: rgba(255, 255, 255, 0.8);
+                background-color: rgba(255, 255, 255, 0.05);
+                box-shadow: none !important;
+                outline: none !important;
+              }
+              
+              &.is-focus {
+                border-color: rgba(255, 255, 255, 0.8);
+                background-color: rgba(255, 255, 255, 0.05);
+                box-shadow: none !important;
+                outline: none !important;
+              }
+              
+              &:focus,
+              &:focus-visible {
+                box-shadow: none !important;
+                outline: none !important;
+              }
+              
+              .el-input__prefix {
+                width: 14px;
+                margin-right: 4px;
+                left: 6px;
+              }
+              
+              .el-input__prefix-inner {
+                display: flex;
+                align-items: center;
+                width: 14px;
+              }
+              
+              .chain-icon {
+                width: 14px;
+                height: 14px;
+                display: block;
+              }
+              
+              .el-input__inner {
+                color: #f5f5f5;
+                font-size: 12px;
+                height: 22px;
+                line-height: 22px;
+                text-align: left;
+                box-shadow: none !important;
+                outline: none !important;
+                padding-right: 8px;
+                
+                &:focus,
+                &:focus-visible {
+                  box-shadow: none !important;
+                  outline: none !important;
+                }
+                
+                &::placeholder {
+                  color: #6b6e73;
+                  font-size: 12px;
+                  text-align: left;
+                }
+              }
+              
+              .el-input__clear {
+                display: none !important;
+              }
+            }
+          }
+        }
+        
         .audio-icon-container {
           cursor: pointer;
           padding: 6px;
@@ -1311,7 +1422,7 @@ onUnmounted(() => {
           display: flex;
           align-items: center;
           justify-content: center;
-          background-color: rgba(255, 255, 255, 0.03);
+          background-color: rgba(255, 255, 255, 0.05);
           
           &:hover {
             background-color: rgba(255, 255, 255, 0.08);
@@ -1347,8 +1458,8 @@ onUnmounted(() => {
           width: 90px;
           
           :deep(.el-input__wrapper) {
-            background-color: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.05);
             border-radius: 5px;
             box-shadow: none !important;
             outline: none !important;
@@ -1358,14 +1469,14 @@ onUnmounted(() => {
             
             &:hover {
               border-color: rgba(255, 255, 255, 0.8);
-              background-color: rgba(255, 255, 255, 0.02);
+              background-color: rgba(255, 255, 255, 0.05);
               box-shadow: none !important;
               outline: none !important;
             }
             
             &.is-focus {
               border-color: rgba(255, 255, 255, 0.8);
-              background-color: rgba(255, 255, 255, 0.02);
+              background-color: rgba(255, 255, 255, 0.05);
               box-shadow: none !important;
               outline: none !important;
             }
@@ -1378,7 +1489,7 @@ onUnmounted(() => {
             
             .el-input__prefix {
               margin-right: 0;
-              left: 8px;
+              left: 6px;
             }
             
             .el-input__prefix-inner {
@@ -1428,7 +1539,7 @@ onUnmounted(() => {
         display: flex;
         align-items: center;
         justify-content: center;
-        background-color: rgba(255, 255, 255, 0.03);
+        background-color: rgba(255, 255, 255, 0.05);
         position: relative;
         
         &:hover {
