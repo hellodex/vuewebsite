@@ -99,17 +99,20 @@ function initOnReady() {
     overrides: {
       volumePaneSize: 'small', // tiny 、small、medium、large "paneProperties.topMargin": "10",
       'paneProperties.background': '#111111',
-      'paneProperties.vertGridProperties.color': '#262529',
-      'paneProperties.horzGridProperties.color': '#262529',
-      'scalesProperties.lineColor': '#262529',
+      'paneProperties.vertGridProperties.color': 'rgba(35,35,35,0.60)',
+      'paneProperties.vertGridProperties.style': 1, // 0=不显示，1=实线，2=虚线
+      'paneProperties.horzGridProperties.color': 'rgba(35,35,35,0.60)',
+      'paneProperties.horzGridProperties.style': 1, // 0=不显示，1=实线，2=虚线
+      'scalesProperties.lineColor': '#1b1b1b',
       'scalesProperties.textColor': '#fff',
-      'paneProperties.separatorColor': '#242839',
+      'paneProperties.separatorColor': '#222222',
       'mainSeriesProperties.candleStyle.upColor': '#2EBD85', //买入颜色
       'mainSeriesProperties.candleStyle.borderUpColor': '#2EBD85', //买入边框颜色
       'mainSeriesProperties.candleStyle.wickUpColor': '#2EBD85', //买入线条颜色
       'mainSeriesProperties.candleStyle.downColor': '#F6465D', //卖出颜色
       'mainSeriesProperties.candleStyle.borderDownColor': '#F6465D', //卖出边框颜色
-      'mainSeriesProperties.candleStyle.wickDownColor': '#F6465D' //卖出线条颜色
+      'mainSeriesProperties.candleStyle.wickDownColor': '#F6465D', //卖出线条颜色
+
     },
     favorites: {
       intervals: ['1', '5', '15', '30', '1h', '4h', '1D', '1W']
