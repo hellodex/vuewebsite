@@ -759,8 +759,7 @@ defineExpose({
     }
     span:hover,
     .active {
-      color: rgba(245, 39, 39, 1);
-      border: 1px solid rgba(245, 39, 39, 1);
+      border: 1px solid var(--down-color);
     }
     .btn-disabled {
       cursor: not-allowed;
