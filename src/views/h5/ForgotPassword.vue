@@ -246,7 +246,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
         password: ruleForm.password,
         captcha: ruleForm.captcha
       })
-      console.log(res)
+      // console.log(res)
       if (res) {
         showSuccessToast('密码设置成功')
         loading.value = false
@@ -255,7 +255,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
       }
       loading.value = false
     } else {
-      console.log('error submit!', fields)
+      // console.log('error submit!', fields)
     }
   })
 }

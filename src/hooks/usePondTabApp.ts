@@ -53,7 +53,7 @@ export function usePondTabApp() {
     if (!baseAddress) return
     const res = await GoPlus.tokenSecurity(CHAIN_ID[chainCode], baseAddress, 30)
     if (res.code != ErrorCode.SUCCESS) {
-      console.error(res.message)
+      // console.error(res.message)
       setTimeout(() => {
         getGoPlus(baseAddress, chainCode)
       }, 2000)

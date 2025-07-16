@@ -623,7 +623,7 @@ const loadSavedAudioSettings = () => {
         return settings
       }
     } catch (e) {
-      console.error('加载音频设置失败:', e)
+      // console.error('加载音频设置失败:', e)
     }
   }
   return ['关闭', '关闭', '关闭']
@@ -855,7 +855,7 @@ const resetFilters = () => {
 
 // 打开筛选弹窗
 const openFilterDialog = (columnIndex: number) => {
-  console.log('点击筛选图标，列索引:', columnIndex, '当前状态:', filterDialogVisible.value)
+  // console.log('点击筛选图标，列索引:', columnIndex, '当前状态:', filterDialogVisible.value)
   
   // 如果点击的是同一个列且弹窗已打开，则关闭弹窗
   if (filterDialogVisible.value && currentFilterColumn.value === columnIndex) {
@@ -968,10 +968,10 @@ const selectAudio = (index: number, audioFile: string) => {
       const audio = new Audio(audioUrl)
       audio.preload = 'auto'
       audioInstances[index] = audio
-      console.log(`音频预加载成功 - 列表${index}: ${audioFile}`)
+      // console.log(`音频预加载成功 - 列表${index}: ${audioFile}`)
     } else {
-      console.error('音频文件未找到:', audioPath)
-      console.log('可用的音频文件:', Object.keys(audioModules))
+      // console.error('音频文件未找到:', audioPath)
+      // console.log('可用的音频文件:', Object.keys(audioModules))
     }
   } else {
     // 如果选择关闭，删除音频实例
@@ -990,10 +990,10 @@ const playAudio = (index: number) => {
       // 设置音量
       audio.volume = 0.7
       audio.play().catch(err => {
-        console.error('播放音频失败:', err)
+        // console.error('播放音频失败:', err)
         // 如果是自动播放策略问题，提示用户
         if (err.name === 'NotAllowedError') {
-          console.warn('浏览器自动播放策略限制，需要用户互动后才能播放音频')
+          // console.warn('浏览器自动播放策略限制，需要用户互动后才能播放音频')
         }
       })
   }
@@ -1033,7 +1033,7 @@ const pumpRankingFun = () => {
       // 如果是第一次加载（列表为空），不播放声音
       if (currentList.length === 0) {
         // 初始加载，不播放
-        console.log(`${['新创建', '即将打满', '新外盘'][audioIndex]}列表初始加载，不播放音频`)
+        // console.log(`${['新创建', '即将打满', '新外盘'][audioIndex]}列表初始加载，不播放音频`)
       } else {
         // 检查是否有新的代币（通过pairAddress判断）
         const currentPairs = new Set(currentList.filter((item: any) => item && item.pairAddress).map((item: any) => item.pairAddress))
@@ -1041,7 +1041,7 @@ const pumpRankingFun = () => {
         hasNewItems = newItems.length > 0
         
         if (hasNewItems) {
-          console.log(`${['新创建', '即将打满', '新外盘'][audioIndex]}列表检测到${newItems.length}个新代币`)
+          // console.log(`${['新创建', '即将打满', '新外盘'][audioIndex]}列表检测到${newItems.length}个新代币`)
         }
       }
     }
@@ -1166,7 +1166,7 @@ const handelJump = (item: any) => {
 }
 
 const handelRouter = (url: string) => {
-  console.log(url)
+  // console.log(url)
   window.open(url)
 }
 
@@ -1191,9 +1191,9 @@ const initAudioSettings = () => {
         const audio = new Audio(audioUrl)
         audio.preload = 'auto'
         audioInstances[index] = audio
-        console.log(`初始化音频预加载 - 列表${index}: ${audioFile}`)
+        // console.log(`初始化音频预加载 - 列表${index}: ${audioFile}`)
       } else {
-        console.error(`初始化时音频文件未找到 - 列表${index}: ${audioFile}`)
+        // console.error(`初始化时音频文件未找到 - 列表${index}: ${audioFile}`)
       }
     }
   })
