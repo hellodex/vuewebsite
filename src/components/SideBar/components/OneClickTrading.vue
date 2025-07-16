@@ -51,9 +51,13 @@
       </div>
     </div>
     <div class="btn tip-btn" v-if="gasTip">{{ buyInfo.baseSymbol }}余额不足以支付Gas费用</div>
-    <div class="btn disabled-btn" v-if="buySellType">
+    <div class="btn disabled-btn" :class="{ 'insufficient-btn': insufficientBalance || isZeroAmount }" v-if="buySellType">
       {{
-        tradeType == 'buy'
+        isZeroAmount
+          ? '请选择交易数量'
+          : insufficientBalance
+          ? '余额不足，请充值'
+          : tradeType == 'buy'
           ? `买入 ${buyIndex || coinAmount ? numberFormat(buyIndex || coinAmount) + ' ' + buyInfo.baseSymbol : ''}`
           : `卖出 ${
               numberFormat(
@@ -302,6 +306,24 @@ const getGas = async () => {
 
   return type
 }
+
+// 判断是否余额不足
+const insufficientBalance = computed(() => {
+  if (tradeType.value == 'buy' && (buyIndex.value > 0 || parseFloat(coinAmount.value || 0) > 0)) {
+    const num = 10 ** Number(buyInfo.value.baseTokenDecimals)
+    const spendAmount = new BigNumber(buyIndex.value || coinAmount.value)
+      .times(num)
+      .integerValue(BigNumber.ROUND_DOWN)
+      .toString(10)
+    return parseFloat(spendAmount) > parseFloat(buyInfo.value.balance)
+  }
+  return false
+})
+
+// 判断是否输入为0
+const isZeroAmount = computed(() => {
+  return tradeType.value == 'buy' && buyIndex.value == 0 && parseFloat(coinAmount.value || 0) == 0
+})
 
 const buySellType = computed(() => {
   const coinInfo = tradeType.value == 'buy' ? buyInfo.value : sellInfo.value
@@ -599,7 +621,7 @@ defineExpose({
   .trading-operate {
     margin-bottom: 7px;
     p {
-      color: #5c6068;
+      color: #cacad5;
       font-size: 12px;
       font-weight: normal;
       margin-bottom: 8px;
@@ -634,9 +656,12 @@ defineExpose({
       box-shadow: 0 0 0 1px #26282c !important;
       font-size: 12px;
       padding: 0 11px;
-      .el-input__suffix,
-      .el-input__inner {
+      .el-input__suffix {
         color: #5c6068 !important;
+        font-family: 'PingFangSC-Medium';
+      }
+      .el-input__inner {
+        color: #cacad5 !important;
         font-family: 'PingFangSC-Medium';
       }
     }
@@ -726,7 +751,7 @@ defineExpose({
     font-size: 12px;
     cursor: pointer;
     margin: 14px 0;
-    font-family: 'PingFangSC-Heavy';
+    font-family: 'PingFangSC-Medium';
   }
   .tip-btn {
     background: rgba(245, 39, 39, 0.3);
@@ -736,6 +761,9 @@ defineExpose({
   .disabled-btn {
     background: #393c43;
     color: #5c6068;
+  }
+  .insufficient-btn {
+    color: #cacad5 !important;
   }
   .buy-submit-btn {
     transition: all 0.3s;
