@@ -1,5 +1,15 @@
 <template>
-  <el-dialog v-model="dialogVisible" :before-close="handleClose" title="创建监控" width="600">
+  <el-dialog 
+    v-model="dialogVisible" 
+    :before-close="handleClose" 
+    title="创建监控" 
+    width="600"
+    :modal="true"
+    :modal-class="'custom-modal-transparent'"
+    :lock-scroll="false"
+    :append-to-body="true"
+    :close-on-click-modal="true"
+    :close-on-press-escape="true">
     <div class="monitorForm-dialog-content">
       <el-form
         ref="ruleFormRef"
@@ -444,5 +454,36 @@ const handleClose = () => {
   .span-txt {
     margin-left: 6px;
   }
+}
+</style>
+
+<style lang="scss">
+/* 设置透明但可点击的遮罩层 */
+.el-overlay {
+  background-color: rgba(0, 0, 0, 0.05) !important; /* 几乎透明的遮罩层，但保留可点击性 */
+}
+
+.custom-modal-transparent {
+  background-color: transparent !important;
+}
+
+:deep(.el-dialog) {
+  background-color: #1a1a1a !important; /* 确保弹窗背景是深色的 */
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8) !important; /* 更强的阴影效果 */
+  border: 1px solid #333; /* 添加边框增强对比 */
+}
+
+:deep(.el-dialog__header) {
+  border-bottom: 1px solid #333;
+  padding-bottom: 16px;
+}
+
+:deep(.el-dialog__title) {
+  color: #fff !important;
+  font-size: 18px;
+}
+
+:deep(.el-dialog__body) {
+  padding-top: 20px;
 }
 </style>
