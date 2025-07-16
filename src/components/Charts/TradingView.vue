@@ -119,15 +119,15 @@ function initOnReady() {
   widget.headerReady().then(function () {
     const btn = widget.createButton()
     btn.innerHTML = showMarket.value
-      ? '<span style="font-size: 12px;cursor: pointer;">Price / <span style="color:#2ebd85">MCap</span></span>'
-      : '<span style="font-size: 12px;cursor: pointer;"><span style="color:#2ebd85">Price</span> / MCap</span>'
+      ? '<span style="font-size: 12px;cursor: pointer;">价格 / <span style="color:#2ebd85">市值</span></span>'
+      : '<span style="font-size: 12px;cursor: pointer;"><span style="color:#2ebd85">价格</span> / 市值</span>'
 
     btn.onclick = () => {
       showMarket.value = !showMarket.value
       localStorage.setItem('showMarket', showMarket.value)
       btn.innerHTML = showMarket.value
-        ? '<span style="font-size: 12px;cursor: pointer;">Price / <span style="color:#2ebd85">MCap</span></span>'
-        : '<span style="font-size: 12px;cursor: pointer;"><span style="color:#2ebd85">Price</span> / MCap</span>'
+        ? '<span style="font-size: 12px;cursor: pointer;">价格 / <span style="color:#2ebd85">市值</span></span>'
+        : '<span style="font-size: 12px;cursor: pointer;"><span style="color:#2ebd85">价格</span> / 市值</span>'
       initOnReady()
     }
   })
