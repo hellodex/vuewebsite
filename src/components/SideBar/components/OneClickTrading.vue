@@ -69,9 +69,9 @@
         isZeroAmount
           ? '请选择交易数量'
           : insufficientBalance
-          ? '余额不足，请充值'
+          ? `${buyInfo.baseSymbol} 余额不足，请充值`
           : sellInsufficientBalance
-          ? '余额不足，请充值'
+          ? `${sellInfo.baseSymbol} 余额不足，请充值`
           : tradeType == 'buy'
           ? `买入 ${buyIndex || coinAmount ? numberFormat(buyIndex || coinAmount) + ' ' + buyInfo.baseSymbol : ''}`
           : `卖出 ${
