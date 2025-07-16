@@ -59,11 +59,13 @@
       </div>
     </div>
     <div class="btn tip-btn" v-if="gasTip">{{ buyInfo.baseSymbol }}余额不足以支付Gas费用</div>
-    <div class="btn disabled-btn" :class="{ 'insufficient-btn': insufficientBalance || isZeroAmount }" v-if="buySellType">
+    <div class="btn disabled-btn" :class="{ 'insufficient-btn': insufficientBalance || isZeroAmount || sellInsufficientBalance }" v-if="buySellType">
       {{
         isZeroAmount
           ? '请选择交易数量'
           : insufficientBalance
+          ? '余额不足，请充值'
+          : sellInsufficientBalance
           ? '余额不足，请充值'
           : tradeType == 'buy'
           ? `买入 ${buyIndex || coinAmount ? numberFormat(buyIndex || coinAmount) + ' ' + buyInfo.baseSymbol : ''}`
@@ -332,6 +334,11 @@ const insufficientBalance = computed(() => {
 // 判断是否输入为0
 const isZeroAmount = computed(() => {
   return tradeType.value == 'buy' && buyIndex.value == 0 && parseFloat(coinAmount.value || 0) == 0
+})
+
+// 判断卖出时余额是否为0
+const sellInsufficientBalance = computed(() => {
+  return tradeType.value == 'sell' && sellInfo.value.balance == 0
 })
 
 const buySellType = computed(() => {
