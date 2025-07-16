@@ -1251,13 +1251,40 @@ const handleLogoHover = (event: MouseEvent, item: any) => {
     
     const target = event.currentTarget as HTMLElement
     const rect = target.getBoundingClientRect()
+    const previewSize = 260
+    const margin = 10
     
-    // 计算预览框位置（在logo右侧）
-    hoveredLogoPosition.value = {
-      x: rect.right + 10,
-      y: rect.top + (rect.height / 2) - 130 // 居中对齐（260/2=130）
+    // 获取视窗尺寸
+    const viewportWidth = window.innerWidth
+    const viewportHeight = window.innerHeight
+    
+    // 计算默认位置（在logo右侧）
+    let x = rect.right + margin
+    let y = rect.top + (rect.height / 2) - (previewSize / 2)
+    
+    // 检查是否超出右边界
+    if (x + previewSize > viewportWidth - margin) {
+      // 如果右侧空间不足，放在logo左侧
+      x = rect.left - previewSize - margin
     }
     
+    // 检查是否超出底部
+    if (y + previewSize > viewportHeight - margin) {
+      // 调整位置，保证不超出底部
+      y = viewportHeight - previewSize - margin
+    }
+    
+    // 检查是否超出顶部
+    if (y < margin) {
+      y = margin
+    }
+    
+    // 检查是否超出左边界
+    if (x < margin) {
+      x = margin
+    }
+    
+    hoveredLogoPosition.value = { x, y }
     hoveredLogoUrl.value = item.logo
     hoveredItem.value = item
     logoPreviewVisible.value = true
