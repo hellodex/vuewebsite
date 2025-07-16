@@ -31,6 +31,52 @@
               </template>
             </el-input>
             
+            <!-- 声音图标 -->
+            <el-popover
+              :visible="audioDialogVisible[index]"
+              placement="bottom"
+              :width="200"
+              trigger="manual"
+              popper-class="audio-popover"
+              :teleported="false"
+            >
+              <template #reference>
+                <div 
+                  class="audio-icon-container" 
+                  :class="{ 'has-audio': selectedAudio[index] !== '关闭' }"
+                  :style="selectedAudio[index] !== '关闭' ? 'color: #ffffff !important' : ''"
+                  @click.stop="openAudioDialog(index)"
+                >
+                  <svg-icon 
+                    :name="selectedAudio[index] === '关闭' ? 'icon-mute-notification' : 'icon-bell'" 
+                    class="audio-icon"
+                  ></svg-icon>
+                </div>
+              </template>
+              
+              <!-- 音频选择列表 -->
+              <div class="audio-list" @click.stop>
+                <div 
+                  class="audio-item"
+                  :class="{ active: selectedAudio[index] === '关闭' }"
+                  @click="selectAudio(index, '关闭')"
+                >
+                  <span>关闭</span>
+                  <svg-icon name="check" class="check-icon" v-if="selectedAudio[index] === '关闭'"></svg-icon>
+                </div>
+                <div 
+                  class="audio-item"
+                  v-for="audioFile in audioFiles"
+                  :key="audioFile"
+                  :class="{ active: selectedAudio[index] === audioFile }"
+                  @click="selectAudio(index, audioFile)"
+                >
+                  <span>{{ audioFile.replace('.mp3', '') }}</span>
+                  <svg-icon name="check" class="check-icon" v-if="selectedAudio[index] === audioFile"></svg-icon>
+                </div>
+              </div>
+            </el-popover>
+            
             <!-- 筛选图标 -->
             <el-popover
               :visible="filterDialogVisible && currentFilterColumn === index"
@@ -562,6 +608,15 @@ const pumpObj = reactive<Record<string, any>>({
 // 搜索关键词，每个列表独立
 const searchKeywords = reactive(['', '', ''])
 
+// 音频相关状态
+const audioFiles = ['Alipay.mp3', 'Bell.mp3', 'Cheer.mp3', 'Coins.mp3', 'Handgun.mp3', 'Kaching.mp3', 'Nice.mp3', 'Pop.mp3', 'Shotgun.mp3', 'Sonumi.mp3', 'Wechat.mp3', 'Yes.mp3']
+const audioDialogVisible = reactive([false, false, false])
+const selectedAudio = reactive(['关闭', '关闭', '关闭'])
+const audioInstances = reactive<Record<number, HTMLAudioElement>>({})
+
+// 导入所有音频文件
+const audioModules = import.meta.glob('/src/assets/audio/*.mp3', { eager: true, as: 'url' })
+
 // 筛选相关状态
 const filterDialogVisible = ref<boolean>(false)
 const currentFilterColumn = ref<number>(0)
@@ -813,6 +868,13 @@ const handleClickOutside = (event: Event) => {
   if (target && !target.closest('.filter-popover') && !target.closest('.filter-icon-container')) {
     filterDialogVisible.value = false
   }
+  
+  // 检查点击的目标是否在音频弹窗内部
+  if (target && !target.closest('.audio-popover') && !target.closest('.audio-icon-container')) {
+    audioDialogVisible.forEach((_, i) => {
+      audioDialogVisible[i] = false
+    })
+  }
 }
 
 // 获取列标题
@@ -858,16 +920,82 @@ const handleSearch = (index: number) => {
   // 搜索会实时触发，getFilteredList 会自动处理搜索逻辑
 }
 
+// 打开音频选择弹窗
+const openAudioDialog = (index: number) => {
+  // 关闭其他弹窗
+  audioDialogVisible.forEach((_, i) => {
+    audioDialogVisible[i] = false
+  })
+  filterDialogVisible.value = false
+  
+  // 打开当前弹窗
+  audioDialogVisible[index] = !audioDialogVisible[index]
+}
+
+// 选择音频
+const selectAudio = (index: number, audioFile: string) => {
+  selectedAudio[index] = audioFile
+  audioDialogVisible[index] = false
+  
+  // 如果选择了音频文件，预加载音频
+  if (audioFile !== '关闭') {
+    // 从预导入的模块中获取音频URL
+    const audioPath = `/src/assets/audio/${audioFile}`
+    const audioUrl = audioModules[audioPath] || ''
+    
+    if (audioUrl) {
+      const audio = new Audio(audioUrl)
+      audio.preload = 'auto'
+      audioInstances[index] = audio
+    } else {
+      console.error('音频文件未找到:', audioPath)
+    }
+  } else {
+    // 如果选择关闭，删除音频实例
+    if (audioInstances[index]) {
+      delete audioInstances[index]
+    }
+  }
+}
+
+// 播放音频
+const playAudio = (index: number) => {
+  if (selectedAudio[index] !== '关闭' && audioInstances[index]) {
+    // 克隆音频实例以支持重叠播放
+    const audio = audioInstances[index].cloneNode(true) as HTMLAudioElement
+    audio.play().catch(err => {
+      console.error('播放音频失败:', err)
+    })
+  }
+}
+
 const pumpRankingFun = () => {
   socket.off('pumpRanking')
   socket.on('pumpRanking', (message: string) => {
     const data = JSON.parse(message)
     const newRanking = data.ranking || []
     
+    // 检查是否有新数据（仅对新创建列表）
+    let hasNewItems = false
+    if (data.type === 1 && newRanking.length > 0) {
+      // 如果是第一次加载（列表为空），不播放声音
+      if (pumpObj.list1.length === 0) {
+        // 初始加载，不播放
+      } else {
+        // 检查是否有新的代币（通过pairAddress判断）
+        const currentPairs = new Set(pumpObj.list1.filter((item: any) => item && item.pairAddress).map((item: any) => item.pairAddress))
+        hasNewItems = newRanking.some((item: any) => item && item.pairAddress && !currentPairs.has(item.pairAddress))
+      }
+    }
+    
     // 使用智能更新，保持现有项的引用
     switch (data.type) {
       case 1:
         updateListWithKey(pumpObj.list1, newRanking)
+        // 新创建列表有新数据时播放音频
+        if (hasNewItems) {
+          playAudio(0)
+        }
         break
       case 2:
         updateListWithKey(pumpObj.list2, newRanking)
@@ -1084,6 +1212,46 @@ onUnmounted(() => {
       
       .filter-controls {
         gap: 8px;
+        
+        .audio-icon-container {
+          cursor: pointer;
+          padding: 6px;
+          border-radius: 6px;
+          transition: all 0.2s;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background-color: rgba(255, 255, 255, 0.03);
+          
+          &:hover {
+            background-color: rgba(255, 255, 255, 0.08);
+            
+            &:not(.has-audio) .audio-icon {
+              color: var(--up-color);
+            }
+          }
+          
+          .audio-icon {
+            width: 14px;
+            height: 14px;
+            color: #6b6e73;
+            transition: color 0.2s;
+          }
+          
+          &.has-audio {
+            :deep(.audio-icon) {
+              color: #ffffff !important;
+              
+              svg {
+                color: #ffffff !important;
+                
+                path {
+                  fill: #ffffff !important;
+                }
+              }
+            }
+          }
+        }
         
         .search-input {
           width: 90px;
@@ -1345,7 +1513,7 @@ onUnmounted(() => {
       font-size: 14px;
       font-family: 'PingFangSC-Medium';
       .count-title {
-        font-size: #81868c;
+        color: #81868c;
         font-size: 12px;
       }
       .line {
@@ -1767,5 +1935,61 @@ onUnmounted(() => {
 
 :deep(.el-drawer__title) {
   color: var(--font-color-default);
+}
+
+// 音频弹窗样式
+:deep(.audio-popover) {
+  background-color: #1a1b1e !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6) !important;
+  padding: 8px !important;
+  
+  .el-popper__arrow::before {
+    background: #1a1b1e !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  }
+}
+
+.audio-list {
+  .audio-item {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: #c0c0c0;
+    font-size: 13px;
+    margin-bottom: 4px;
+    position: relative;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+    
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.05);
+      color: #f5f5f5;
+    }
+    
+    &.active {
+      background-color: rgba(32, 178, 108, 0.1);
+      color: var(--up-color);
+    }
+    
+    span {
+      flex: 1;
+      margin-right: 8px;
+    }
+    
+    .check-icon {
+      width: 14px;
+      height: 14px;
+      color: #ffffff;
+      position: absolute;
+      right: 12px;
+    }
+  }
 }
 </style>
