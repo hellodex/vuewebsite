@@ -56,7 +56,7 @@
                   "
                   >转出</span
                 >
-                <span class="wallet-to-out" @click="handelSendU">免费送 U</span>
+<!--                <span class="wallet-to-out" @click="handelSendU">免费送 U</span>-->
                 <span
                   class="wallet-to-out"
                   @click="handelRefundSol"
