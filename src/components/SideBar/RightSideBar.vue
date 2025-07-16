@@ -368,9 +368,8 @@
           <p>
             仅接收
             {{
-              transfeInInfo.symbol
-                ? transfeInInfo.symbol + ' 代币'
-                : transfeInInfo.chain + ' 网络资产'
+
+              transfeInInfo.chain + ' 链资产'
             }}
           </p>
           <div class="qrcode">
