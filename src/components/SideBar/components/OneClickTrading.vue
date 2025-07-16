@@ -639,7 +639,7 @@ defineExpose({
       border-radius: 4px;
       border: 1px solid #26282c;
       font-size: 12px;
-      color: #5c6068;
+      color: #cacad5;
       cursor: pointer;
       transition: all 0.2s;
       font-family: 'PingFangSC-Medium';
@@ -685,7 +685,7 @@ defineExpose({
       border-radius: 4px;
       border: 1px solid #26282c;
       font-size: 12px;
-      color: #5c6068;
+      color: #cacad5;
       font-size: 12px;
       font-family: 'PingFangSC-Medium';
       cursor: pointer;
