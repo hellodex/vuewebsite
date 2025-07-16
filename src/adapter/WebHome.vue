@@ -49,33 +49,35 @@
             </div> -->
           <div class="quick-buy-box display-flex align-items-center">
             <DoubleCost style="margin-right: 20px" />
-            <svg-icon :name="isConnected ? 'icon-buy-cur' : 'icon-buy'" class="icon-svg"></svg-icon>
-            <span style="margin: 0 8px 0 4px">买入数量</span>
-            <el-input
-              v-model="amount"
-              oninput="value=value.replace(/[^0-9.]/g,'')"
-              style="width: 80px"
-              size="small"
-              placeholder="请输入"
-            >
-              <template #prefix>
-                <img
-                  v-if="
-                    ![13, 99].includes(nounScreenId)
-                      ? chainLogoObj[chainCode]
-                      : chainLogoObj['SOLANA']
-                  "
-                  :src="
-                    ![13, 99].includes(nounScreenId)
-                      ? chainLogoObj[chainCode]
-                      : chainLogoObj['SOLANA']
-                  "
-                  alt=""
-                  class="icon-svg"
-                />
-                <img src="@/assets/icons/coinDEX.svg" alt="" class="icon-svg" v-else />
-              </template>
-            </el-input>
+            <template v-if="nounScreenId !== 13">
+              <svg-icon :name="isConnected ? 'icon-buy-cur' : 'icon-buy'" class="icon-svg"></svg-icon>
+              <span style="margin: 0 8px 0 4px">买入数量</span>
+              <el-input
+                v-model="amount"
+                oninput="value=value.replace(/[^0-9.]/g,'')"
+                style="width: 80px"
+                size="small"
+                placeholder="请输入"
+              >
+                <template #prefix>
+                  <img
+                    v-if="
+                      ![13, 99].includes(nounScreenId)
+                        ? chainLogoObj[chainCode]
+                        : chainLogoObj['SOLANA']
+                    "
+                    :src="
+                      ![13, 99].includes(nounScreenId)
+                        ? chainLogoObj[chainCode]
+                        : chainLogoObj['SOLANA']
+                    "
+                    alt=""
+                    class="icon-svg"
+                  />
+                  <img src="@/assets/icons/coinDEX.svg" alt="" class="icon-svg" v-else />
+                </template>
+              </el-input>
+            </template>
           </div>
           <el-popover
             placement="bottom"

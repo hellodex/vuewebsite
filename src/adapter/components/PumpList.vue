@@ -430,11 +430,11 @@
                   <div class="display-flex align-items-center">
                     <el-skeleton-item
                       variant="circle"
-                      style="width: 56px; height: 56px; margin-right: 8px"
+                      style="width: 78px; height: 78px; margin-right: 12px"
                     />
                     <div
                       class="display-flex flex-direction-col justify-content-sp"
-                      style="height: 56px"
+                      style="height: 78px"
                     >
                       <el-skeleton-item variant="text" style="width: 80px; height: 16px" />
                       <el-skeleton-item variant="text" style="width: 60%; height: 12px" />
@@ -464,12 +464,17 @@
                         background: `conic-gradient(#20B26C 0% ${numToFixedTwo(parseFloat(item.percent || '0'))}%, rgba(32, 178, 108, 0.30) ${((item.percent || 0) * 100).toFixed(2)}% 100%)`
                       }"
                     >
-                      <div class="logo">
-                        <el-image :src="item.logo" alt="" class="coin-icon">
+                      <div class="logo" 
+                        @mouseenter="handleLogoHover($event, item)"
+                        @mouseleave="handleLogoLeave">
+                        <el-image :src="item.logo" alt="" class="coin-icon" fit="cover">
                           <template #error>
                             <svg-icon name="logo1" class="coin-icon"></svg-icon>
                           </template>
                         </el-image>
+                        <div class="logo-hover-overlay">
+                          <svg-icon name="h5-search-md" class="search-overlay-icon"></svg-icon>
+                        </div>
                       </div>
                     </div>
                     <div class="display-flex flex-direction-col">
@@ -582,6 +587,34 @@
       @close="handleDrawClose"
       v-if="tradeDrawVisible"
     />
+    
+    <!-- Logo预览悬浮层 -->
+    <Teleport to="body">
+      <div 
+        v-if="logoPreviewVisible"
+        class="logo-preview-tooltip"
+        :style="{
+          left: hoveredLogoPosition.x + 'px',
+          top: hoveredLogoPosition.y + 'px'
+        }"
+        @mouseenter="handlePreviewEnter"
+        @mouseleave="handlePreviewLeave"
+      >
+        <div class="logo-preview-content" @click="handlePreviewClick">
+          <el-image
+            :src="hoveredLogoUrl"
+            fit="cover"
+            class="preview-image"
+          >
+            <template #error>
+              <div class="image-error">
+                <svg-icon name="logo1" class="error-icon"></svg-icon>
+              </div>
+            </template>
+          </el-image>
+        </div>
+      </div>
+    </Teleport>
   </div>
 </template>
 
@@ -721,6 +754,13 @@ const curNode = ref<number>(0)
 const tradeDrawVisible = ref<boolean>(false)
 const coinInfo = ref<any>(null)
 const pairInfo = ref<any>(null)
+
+// 预览相关状态
+const hoveredLogoUrl = ref<string>('')
+const hoveredLogoPosition = ref<{ x: number; y: number }>({ x: 0, y: 0 })
+const logoPreviewVisible = ref<boolean>(false)
+const hoveredItem = ref<any>(null)
+let hidePreviewTimer: ReturnType<typeof setTimeout> | null = null
 
 // 获取筛选后的列表
 const getFilteredList = (key: string, index: number) => {
@@ -1200,6 +1240,61 @@ const handleMouseLeave = (index: number) => {
   pumpRankingFun()
 }
 
+// 处理logo悬停，显示预览
+const handleLogoHover = (event: MouseEvent, item: any) => {
+  if (item && item.logo) {
+    // 清除隐藏定时器
+    if (hidePreviewTimer) {
+      clearTimeout(hidePreviewTimer)
+      hidePreviewTimer = null
+    }
+    
+    const target = event.currentTarget as HTMLElement
+    const rect = target.getBoundingClientRect()
+    
+    // 计算预览框位置（在logo右侧）
+    hoveredLogoPosition.value = {
+      x: rect.right + 10,
+      y: rect.top + (rect.height / 2) - 130 // 居中对齐（260/2=130）
+    }
+    
+    hoveredLogoUrl.value = item.logo
+    hoveredItem.value = item
+    logoPreviewVisible.value = true
+  }
+}
+
+// 处理鼠标离开logo
+const handleLogoLeave = () => {
+  // 延迟隐藏，给用户时间移动到预览框
+  hidePreviewTimer = setTimeout(() => {
+    logoPreviewVisible.value = false
+    hoveredItem.value = null
+  }, 200) as ReturnType<typeof setTimeout>
+}
+
+// 处理鼠标进入预览框
+const handlePreviewEnter = () => {
+  // 清除隐藏定时器
+  if (hidePreviewTimer) {
+    clearTimeout(hidePreviewTimer)
+    hidePreviewTimer = null
+  }
+}
+
+// 处理鼠标离开预览框
+const handlePreviewLeave = () => {
+  logoPreviewVisible.value = false
+  hoveredItem.value = null
+}
+
+// 处理预览框点击，跳转到k线页
+const handlePreviewClick = () => {
+  if (hoveredItem.value) {
+    handelJump(hoveredItem.value)
+  }
+}
+
 // 监听父组件的amount变化
 watch(() => props.amount, (newAmount) => {
   // 可选：当父组件的amount变化时，更新所有列表的买入数量
@@ -1258,6 +1353,11 @@ onUnmounted(() => {
   socket.off('pumpRanking')
   // 移除全局点击事件监听
   document.removeEventListener('click', handleClickOutside)
+  
+  // 清理定时器
+  if (hidePreviewTimer) {
+    clearTimeout(hidePreviewTimer)
+  }
   
   // 清理音频实例
   Object.values(audioInstances).forEach(audio => {
@@ -1585,8 +1685,8 @@ onUnmounted(() => {
       line-height: 1;
     }
     .progress-circle {
-      width: 56px;
-      height: 56px;
+      width: 78px;
+      height: 78px;
       border-radius: 50%;
       background: conic-gradient(#20b26c 0% 0%, rgba(32, 178, 108, 0.3) 0% 100%);
       position: relative;
@@ -1612,12 +1712,55 @@ onUnmounted(() => {
       width: 89%;
       height: 89%;
       border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      
+      &:hover {
+        .logo-hover-overlay {
+          opacity: 1;
+        }
+        
+        .coin-icon {
+          filter: brightness(0.8);
+          box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+        }
+      }
+      
+      .logo-hover-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.3);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none;
+        
+        .search-overlay-icon {
+          width: 18px;
+          height: 18px;
+          color: #ffffff;
+        }
+      }
     }
     .coin-icon {
       width: 100%;
       height: 100%;
       border-radius: 50%;
       display: block;
+      transition: all 0.3s ease;
+      overflow: hidden;
+      
+      :deep(img) {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
     }
     .chainCode {
       width: 16px;
@@ -2191,6 +2334,75 @@ onUnmounted(() => {
       position: absolute;
       right: 12px;
     }
+  }
+}
+
+// Logo预览悬浮层样式
+.logo-preview-tooltip {
+  position: fixed;
+  z-index: 2000;
+  pointer-events: auto;
+  animation: fadeIn 0.2s ease-out;
+  
+  .logo-preview-content {
+    width: 260px;
+    height: 260px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #1a1b1e;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      border-color: rgba(255, 255, 255, 0.2);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.9);
+      transform: scale(1.02);
+    }
+    
+    .preview-image {
+      width: 100%;
+      height: 100%;
+      display: block;
+      border-radius: 12px;
+      overflow: hidden;
+      
+      :deep(img) {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+    
+    .image-error {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(255, 255, 255, 0.05);
+      
+      .error-icon {
+        width: 80px;
+        height: 80px;
+        color: #6b6e73;
+      }
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
   }
 }
 </style>
