@@ -16,20 +16,36 @@
             <span class="pause-txt" v-if="curNode == 3">⏸ 已暂停</span>
           </div>
           
-          <!-- 筛选图标 -->
-          <el-popover
-            :visible="filterDialogVisible && currentFilterColumn === index"
-            placement="bottom-end"
-            :width="320"
-            trigger="manual"
-            popper-class="filter-popover"
-            :teleported="false"
-          >
-            <template #reference>
-              <div class="filter-icon-container" @click.stop="openFilterDialog(index)">
-                <svg-icon name="h5-settings-01" class="filter-icon"></svg-icon>
-              </div>
-            </template>
+          <div class="filter-controls display-flex align-items-center">
+            <!-- 搜索输入框 -->
+            <el-input 
+              v-model="searchKeywords[index]"
+              placeholder="搜索"
+              size="small"
+              clearable
+              class="search-input"
+              @input="handleSearch(index)"
+            >
+              <template #prefix>
+                <svg-icon name="h5-search-md" class="search-icon"></svg-icon>
+              </template>
+            </el-input>
+            
+            <!-- 筛选图标 -->
+            <el-popover
+              :visible="filterDialogVisible && currentFilterColumn === index"
+              placement="bottom-end"
+              :width="320"
+              trigger="manual"
+              popper-class="filter-popover"
+              :teleported="false"
+            >
+              <template #reference>
+                <div class="filter-icon-container" @click.stop="openFilterDialog(index)">
+                  <svg-icon name="filter-funnel" class="filter-icon"></svg-icon>
+                  <span v-if="getActiveFilterCount(index) > 0" class="filter-count">{{ getActiveFilterCount(index) }}</span>
+                </div>
+              </template>
             
             <!-- 筛选内容 -->
             <div class="filter-content" @click.stop>
@@ -333,6 +349,7 @@
               </div>
             </div>
           </el-popover>
+          </div>
         </div>
         <el-scrollbar height="calc(100vh - 213px)">
           <div
@@ -542,6 +559,9 @@ const pumpObj = reactive<Record<string, any>>({
   list3: []
 })
 
+// 搜索关键词，每个列表独立
+const searchKeywords = reactive(['', '', ''])
+
 // 筛选相关状态
 const filterDialogVisible = ref<boolean>(false)
 const currentFilterColumn = ref<number>(0)
@@ -612,8 +632,9 @@ const pairInfo = ref<any>(null)
 // 获取筛选后的列表
 const getFilteredList = (key: string, index: number) => {
   const currentForm = filterForms[index as keyof typeof filterForms]
+  const searchKeyword = searchKeywords[index]
   
-  // 如果没有筛选条件被设置，返回原始数据
+  // 如果没有筛选条件和搜索关键词，返回原始数据
   const hasFilters = Object.keys(currentForm).some(filterKey => {
     const typedKey = filterKey as keyof typeof currentForm
     if (typeof currentForm[typedKey] === 'boolean') {
@@ -623,11 +644,24 @@ const getFilteredList = (key: string, index: number) => {
     }
   })
   
-  if (!hasFilters) {
+  // 如果既没有筛选条件也没有搜索关键词，返回原始数据
+  if (!hasFilters && !searchKeyword) {
     return pumpObj[key] || []
   }
   
-  return filteredData[key] || []
+  // 获取要处理的数据（如果有筛选条件，使用筛选后的数据，否则使用原始数据）
+  let dataToFilter = hasFilters ? (filteredData[key] || []) : (pumpObj[key] || [])
+  
+  // 如果有搜索关键词，进行搜索过滤
+  if (searchKeyword) {
+    const keyword = searchKeyword.toLowerCase()
+    dataToFilter = dataToFilter.filter((item: any) => {
+      const symbol = item.baseToken?.symbol || ''
+      return symbol.toLowerCase().includes(keyword)
+    })
+  }
+  
+  return dataToFilter
 }
 
 // 应用筛选逻辑
@@ -785,6 +819,43 @@ const handleClickOutside = (event: Event) => {
 const getColumnTitle = (index: number) => {
   const titles = ['新创建', '即将打满', '新外盘']
   return titles[index] || ''
+}
+
+// 计算已激活的筛选项数量
+const getActiveFilterCount = (index: number) => {
+  const currentForm = filterForms[index as keyof typeof filterForms]
+  let count = 0
+  
+  // 计算复选框筛选项
+  if (currentForm.hasSocialMedia) count++
+  if (currentForm.topHolders) count++
+  if (currentForm.devNotSold) count++
+  if (currentForm.devSold) count++
+  if (currentForm.devBurn) count++
+  if (currentForm.mintClosed) count++
+  if (currentForm.blacklist) count++
+  if (currentForm.burnedPool) count++
+  
+  // 计算数值范围筛选项
+  if (currentForm.progressMin || currentForm.progressMax) count++
+  if (currentForm.marketCapMin || currentForm.marketCapMax) count++
+  if (currentForm.txCountMin || currentForm.txCountMax) count++
+  if (currentForm.holdersMin || currentForm.holdersMax) count++
+  if (currentForm.snipersMin || currentForm.snipersMax) count++
+  if (currentForm.volumeMin || currentForm.volumeMax) count++
+  if (currentForm.timeMin || currentForm.timeMax) count++
+  if (currentForm.dropMin || currentForm.dropMax) count++
+  if (currentForm.poolMin || currentForm.poolMax) count++
+  if (currentForm.phishingMin || currentForm.phishingMax) count++
+  if (currentForm.rugPullMin || currentForm.rugPullMax) count++
+  if (currentForm.totalRewardMin || currentForm.totalRewardMax) count++
+  
+  return count
+}
+
+// 处理搜索
+const handleSearch = (index: number) => {
+  // 搜索会实时触发，getFilteredList 会自动处理搜索逻辑
 }
 
 const pumpRankingFun = () => {
@@ -1011,6 +1082,86 @@ onUnmounted(() => {
         font-family: 'PingFangSC-Medium';
       }
       
+      .filter-controls {
+        gap: 8px;
+        
+        .search-input {
+          width: 90px;
+          
+          :deep(.el-input__wrapper) {
+            background-color: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            box-shadow: none !important;
+            outline: none !important;
+            height: 24px;
+            transition: border-color 0.2s;
+            padding: 0 8px;
+            
+            &:hover {
+              border-color: rgba(255, 255, 255, 0.8);
+              background-color: rgba(255, 255, 255, 0.02);
+              box-shadow: none !important;
+              outline: none !important;
+            }
+            
+            &.is-focus {
+              border-color: rgba(255, 255, 255, 0.8);
+              background-color: rgba(255, 255, 255, 0.02);
+              box-shadow: none !important;
+              outline: none !important;
+            }
+            
+            &:focus,
+            &:focus-visible {
+              box-shadow: none !important;
+              outline: none !important;
+            }
+            
+            .el-input__prefix {
+              margin-right: 0;
+              left: 8px;
+            }
+            
+            .el-input__prefix-inner {
+              display: flex;
+              align-items: center;
+              
+              .search-icon {
+                width: 12px;
+                height: 12px;
+                color: #6b6e73;
+              }
+            }
+            
+            .el-input__inner {
+              color: #f5f5f5;
+              font-size: 11px;
+              height: 22px;
+              line-height: 22px;
+              text-align: left;
+              box-shadow: none !important;
+              outline: none !important;
+              
+              &:focus,
+              &:focus-visible {
+                box-shadow: none !important;
+                outline: none !important;
+              }
+              
+              &::placeholder {
+                color: #6b6e73;
+                font-size: 11px;
+              }
+            }
+            
+            .el-input__clear {
+              display: none !important;
+            }
+          }
+        }
+      }
+      
       .filter-icon-container {
         cursor: pointer;
         padding: 6px;
@@ -1020,6 +1171,7 @@ onUnmounted(() => {
         align-items: center;
         justify-content: center;
         background-color: rgba(255, 255, 255, 0.03);
+        position: relative;
         
         &:hover {
           background-color: rgba(255, 255, 255, 0.08);
@@ -1032,8 +1184,26 @@ onUnmounted(() => {
         .filter-icon {
           width: 14px;
           height: 14px;
-          color: #6b6e73;
+          color: #ffffff;
           transition: color 0.2s;
+        }
+        
+        .filter-count {
+          position: absolute;
+          top: -2px;
+          right: -2px;
+          background-color: var(--up-color);
+          color: #000000;
+          font-size: 9px;
+          font-weight: 600;
+          min-width: 14px;
+          height: 14px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 0 3px;
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
         }
       }
     }
