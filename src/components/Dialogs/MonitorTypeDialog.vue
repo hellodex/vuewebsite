@@ -12,6 +12,7 @@
     :close-on-press-escape="true">
     <div class="monitorType-dialog-content">
       <div
+        v-if="showGroupMonitor"
         class="display-flex align-items-center justify-content-sp monitorType-dialog-content-item"
         @click="handelDialog('group')"
       >
@@ -88,6 +89,10 @@ const emit = defineEmits(['close', 'monitorType'])
 
 const props: any = defineProps({
   monitorTypeDialogVisible: {
+    type: [Boolean],
+    default: false
+  },
+  showGroupMonitor: {
     type: [Boolean],
     default: false
   }

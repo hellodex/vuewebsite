@@ -168,7 +168,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, reactive } from 'vue'
+import { ref, computed, reactive, watch } from 'vue'
 import type { ComponentSize, FormInstance, FormRules } from 'element-plus'
 import { typeList, noticeTypeList } from '@/types'
 import { numberFormat } from '@/utils'
@@ -236,6 +236,15 @@ const validateChgData = (rule: any, value: any, callback: any) => {
 const ruleFormRef = ref<FormInstance>()
 const formSize = ref<ComponentSize>('large')
 const ruleForm = ref<any>(props.info)
+
+// 监听 props.info 的变化，更新表单数据
+watch(
+  () => props.info,
+  (newInfo) => {
+    ruleForm.value = { ...newInfo }
+  },
+  { deep: true }
+)
 
 const rules = reactive<FormRules<any>>({
   type: [

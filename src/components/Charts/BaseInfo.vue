@@ -269,6 +269,7 @@
 
   <MonitorTypeDialog
     :monitorTypeDialogVisible="monitorTypeDialogVisible"
+    :showGroupMonitor="false"
     @monitorType="handelDialog"
     @close="handelMonitorTypeClose"
   />
@@ -279,7 +280,6 @@
     :monitorFormDialogVisible="monitorFormDialogVisible"
     @close="handelMonitorFormClose"
     @refresh="handelRefresh"
-    v-if="monitorFormDialogVisible"
   />
 
   <el-drawer
@@ -441,32 +441,57 @@ const handelAddMonitor = () => {
 }
 
 const handelDialog = async (type: string) => {
-  const res: any = await APIgetUserSubscribe({
-    baseAddress: props.baseInfo?.tokenInfo?.baseAddress,
-    chainCode: props.baseInfo?.chainInfo?.chainCode,
-    type: type
-  })
-  if (res) {
-    if (JSON.stringify(res.subscribe) == '{}') {
-      formInfo.value = {
-        type: type,
-        coin: 'Single',
-        chainCode: res.info.chainCode,
-        baseAddress: res.info.baseToken.address,
-        symbol: res.info.baseToken.symbol,
-        data: '',
-        noticeType: [1],
-        startPrice: res.info.price,
-        targetPrice: '',
-        status: 1,
-        logo: res.info.logo
-      }
-    } else {
-      handelMap(res.subscribe)
-    }
-  }
+  // 立即关闭第一个弹窗并显示第二个弹窗
   monitorTypeDialogVisible.value = false
+  
+  // 先重置并设置一个默认的 formInfo，避免显示空白和旧数据
+  formInfo.value = {
+    type: type,
+    coin: 'Single',
+    chainCode: props.baseInfo?.chainInfo?.chainCode || 'SOLANA',
+    baseAddress: props.baseInfo?.tokenInfo?.baseAddress || '',
+    symbol: props.baseInfo?.tokenInfo?.baseSymbol || '',
+    data: '',
+    noticeType: [1],
+    startPrice: '',
+    targetPrice: '',
+    status: 1,
+    logo: props.baseInfo?.tokenInfo?.logo || ''
+  }
+  
+  // 立即显示第二个弹窗
   monitorFormDialogVisible.value = true
+  
+  // 然后异步加载数据
+  try {
+    const res: any = await APIgetUserSubscribe({
+      baseAddress: props.baseInfo?.tokenInfo?.baseAddress,
+      chainCode: props.baseInfo?.chainInfo?.chainCode,
+      type: type
+    })
+    
+    if (res) {
+      if (JSON.stringify(res.subscribe) == '{}') {
+        formInfo.value = {
+          type: type,
+          coin: 'Single',
+          chainCode: res.info.chainCode,
+          baseAddress: res.info.baseToken.address,
+          symbol: res.info.baseToken.symbol,
+          data: '',
+          noticeType: [1],
+          startPrice: res.info.price,
+          targetPrice: '',
+          status: 1,
+          logo: res.info.logo
+        }
+      } else {
+        handelMap(res.subscribe)
+      }
+    }
+  } catch (error) {
+    console.error('获取用户订阅信息失败:', error)
+  }
 }
 
 const handelMap = (map: any) => {
@@ -488,6 +513,22 @@ const handelMonitorTypeClose = (val: boolean) => {
 
 const handelMonitorFormClose = (val: boolean) => {
   monitorFormDialogVisible.value = val
+  // 关闭弹窗时重置表单数据
+  if (!val) {
+    formInfo.value = {
+      type: 'price',
+      coin: 'Single',
+      chainCode: 'SOLANA',
+      baseAddress: '',
+      symbol: '',
+      data: '',
+      noticeType: [1],
+      startPrice: '',
+      targetPrice: '',
+      status: 1,
+      logo: ''
+    }
+  }
 }
 
 const handelRefresh = () => {
