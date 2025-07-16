@@ -59,7 +59,12 @@
       </div>
     </div>
     <div class="btn tip-btn" v-if="gasTip">{{ buyInfo.baseSymbol }}余额不足以支付Gas费用</div>
-    <div class="btn disabled-btn" :class="{ 'insufficient-btn': insufficientBalance || isZeroAmount || sellInsufficientBalance }" v-if="buySellType">
+    <div 
+      class="btn disabled-btn" 
+      :class="{ 'insufficient-btn': insufficientBalance || isZeroAmount || sellInsufficientBalance }" 
+      v-if="buySellType"
+      @click="handleInsufficientClick"
+    >
       {{
         isZeroAmount
           ? '请选择交易数量'
@@ -613,6 +618,16 @@ const networkDetection = () => {
   return true
 }
 
+// 定义 emit
+const emit = defineEmits(['showRecharge'])
+
+// 处理余额不足时的点击
+const handleInsufficientClick = () => {
+  if (insufficientBalance.value || sellInsufficientBalance.value) {
+    emit('showRecharge')
+  }
+}
+
 onMounted(() => {
   updateTradingInfo()
 })
@@ -815,6 +830,7 @@ defineExpose({
   }
   .insufficient-btn {
     color: #cacad5 !important;
+    cursor: pointer !important;
   }
   .buy-submit-btn {
     transition: all 0.3s;

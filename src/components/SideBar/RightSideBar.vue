@@ -229,6 +229,7 @@
                 })
               "
               :pairInfo="{ ...props.pairInfo, price }"
+              @showRecharge="handelTransfeIn"
             />
             <template v-if="tradingAreaTabIndex == 2">
               <div class="tab-main display-flex align-items-center">
