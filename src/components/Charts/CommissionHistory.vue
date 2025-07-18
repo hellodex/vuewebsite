@@ -142,6 +142,8 @@ const { chainLogoObj } = globalStore
 </script>
 
 <style lang="scss" scoped>
+@import '@/styles/table-common.scss';
+
 .CommissionHistory {
   .copy {
     width: 12px;
@@ -173,5 +175,8 @@ const { chainLogoObj } = globalStore
     //   color: #f5f5f5;
     // }
   }
+  
+  // 应用公共表格样式
+  @include table-hover-style;
 }
 </style>

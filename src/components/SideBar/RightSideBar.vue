@@ -229,6 +229,7 @@
                 })
               "
               :pairInfo="{ ...props.pairInfo, price }"
+              @showRecharge="handelTransfeIn"
             />
             <template v-if="tradingAreaTabIndex == 2">
               <div class="tab-main display-flex align-items-center">
@@ -368,9 +369,8 @@
           <p>
             仅接收
             {{
-              transfeInInfo.symbol
-                ? transfeInInfo.symbol + ' 代币'
-                : transfeInInfo.chain + ' 网络资产'
+
+              transfeInInfo.chain + ' 链资产'
             }}
           </p>
           <div class="qrcode">

@@ -29,9 +29,19 @@
     <template #default>
       <div class="display-flex align-items-center justify-content-sp base-info">
         <div class="display-flex align-items-center">
-          <Favorite :coinInfo="baseInfo?.chainInfo" />
+          <Favorite :coinInfo="{
+            baseTokenAddress: baseInfo?.tokenInfo?.baseAddress,
+            chainCode: baseInfo?.chainInfo?.chainCode,
+            pairAddress: baseInfo?.chainInfo?.pairAddress
+          }" />
           <span class="logo">
-            <el-image :src="baseInfo?.tokenInfo?.logo" alt="" class="baseInfo-img">
+            <el-image 
+              :src="baseInfo?.tokenInfo?.logo" 
+              alt="" 
+              class="baseInfo-img"
+              :lazy="false"
+              loading="eager"
+            >
               <template #error>
                 <svg-icon name="logo1" class="baseInfo-img"></svg-icon>
               </template>
@@ -259,6 +269,7 @@
 
   <MonitorTypeDialog
     :monitorTypeDialogVisible="monitorTypeDialogVisible"
+    :showGroupMonitor="false"
     @monitorType="handelDialog"
     @close="handelMonitorTypeClose"
   />
@@ -269,7 +280,6 @@
     :monitorFormDialogVisible="monitorFormDialogVisible"
     @close="handelMonitorFormClose"
     @refresh="handelRefresh"
-    v-if="monitorFormDialogVisible"
   />
 
   <el-drawer
@@ -431,32 +441,57 @@ const handelAddMonitor = () => {
 }
 
 const handelDialog = async (type: string) => {
-  const res: any = await APIgetUserSubscribe({
-    baseAddress: props.baseInfo?.tokenInfo?.baseAddress,
-    chainCode: props.baseInfo?.chainInfo?.chainCode,
-    type: type
-  })
-  if (res) {
-    if (JSON.stringify(res.subscribe) == '{}') {
-      formInfo.value = {
-        type: type,
-        coin: 'Single',
-        chainCode: res.info.chainCode,
-        baseAddress: res.info.baseToken.address,
-        symbol: res.info.baseToken.symbol,
-        data: '',
-        noticeType: [1],
-        startPrice: res.info.price,
-        targetPrice: '',
-        status: 1,
-        logo: res.info.logo
-      }
-    } else {
-      handelMap(res.subscribe)
-    }
-  }
+  // 立即关闭第一个弹窗并显示第二个弹窗
   monitorTypeDialogVisible.value = false
+  
+  // 先重置并设置一个默认的 formInfo，避免显示空白和旧数据
+  formInfo.value = {
+    type: type,
+    coin: 'Single',
+    chainCode: props.baseInfo?.chainInfo?.chainCode || 'SOLANA',
+    baseAddress: props.baseInfo?.tokenInfo?.baseAddress || '',
+    symbol: props.baseInfo?.tokenInfo?.baseSymbol || '',
+    data: '',
+    noticeType: [1],
+    startPrice: '',
+    targetPrice: '',
+    status: 1,
+    logo: props.baseInfo?.tokenInfo?.logo || ''
+  }
+  
+  // 立即显示第二个弹窗
   monitorFormDialogVisible.value = true
+  
+  // 然后异步加载数据
+  try {
+    const res: any = await APIgetUserSubscribe({
+      baseAddress: props.baseInfo?.tokenInfo?.baseAddress,
+      chainCode: props.baseInfo?.chainInfo?.chainCode,
+      type: type
+    })
+    
+    if (res) {
+      if (JSON.stringify(res.subscribe) == '{}') {
+        formInfo.value = {
+          type: type,
+          coin: 'Single',
+          chainCode: res.info.chainCode,
+          baseAddress: res.info.baseToken.address,
+          symbol: res.info.baseToken.symbol,
+          data: '',
+          noticeType: [1],
+          startPrice: res.info.price,
+          targetPrice: '',
+          status: 1,
+          logo: res.info.logo
+        }
+      } else {
+        handelMap(res.subscribe)
+      }
+    }
+  } catch (error) {
+    console.error('获取用户订阅信息失败:', error)
+  }
 }
 
 const handelMap = (map: any) => {
@@ -478,6 +513,22 @@ const handelMonitorTypeClose = (val: boolean) => {
 
 const handelMonitorFormClose = (val: boolean) => {
   monitorFormDialogVisible.value = val
+  // 关闭弹窗时重置表单数据
+  if (!val) {
+    formInfo.value = {
+      type: 'price',
+      coin: 'Single',
+      chainCode: 'SOLANA',
+      baseAddress: '',
+      symbol: '',
+      data: '',
+      noticeType: [1],
+      startPrice: '',
+      targetPrice: '',
+      status: 1,
+      logo: ''
+    }
+  }
 }
 
 const handelRefresh = () => {
@@ -531,6 +582,8 @@ const handelRouter = (url: string) => {
     height: 40px;
     margin-right: 8px;
     position: relative;
+    display: block;
+    flex-shrink: 0;
     .chainCode {
       width: 18px;
       height: 18px;
@@ -543,6 +596,8 @@ const handelRouter = (url: string) => {
     width: 40px;
     height: 40px;
     border-radius: 50%;
+    display: block;
+    object-fit: cover;
   }
   .coin-text {
     font-size: 16px;

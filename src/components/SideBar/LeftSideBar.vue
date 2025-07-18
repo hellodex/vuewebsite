@@ -85,12 +85,12 @@
                       <div class="display-flex align-items-center table-item-first">
                         <Favorite
                           :coinInfo="{
-                            pairAddress: item.pairAddress,
+                            baseTokenAddress: item.baseToken.address,
                             chainCode: item.chainCode
                           }"
                         />
                         <div class="logo">
-                          <el-image :src="item.logo" alt="" class="img">
+                          <el-image :src="item.baseToken.logo" alt="" class="img">
                             <template #error>
                               <svg-icon name="logo1" class="img"></svg-icon>
                             </template>
@@ -99,8 +99,7 @@
                         </div>
                         <div>
                           <p class="display-flex align-items-center symbol">
-                            <span>{{ item.baseSymbol || '-' }}</span>
-                            <span>/{{ item.quoteSymbol || '-' }}</span>
+                            <span>{{ item.baseToken.symbol || '-' }}</span>
                           </p>
                           <!-- <span class="number">{{
                         numberFormat(item.tradingSummary['tradingSummary1d'].TotalCount)
@@ -311,7 +310,7 @@
                   <div class="display-flex align-items-center table-item-first">
                     <Favorite
                       :coinInfo="{
-                        pairAddress: item.pairAddress,
+                        baseTokenAddress: item.baseToken.address,
                         chainCode: item.baseToken.chainCode
                       }"
                     />
@@ -499,13 +498,51 @@ const pumpRankingFun = () => {
   socket.on('pumpRanking', (message: string) => {
     const data = JSON.parse(message)
     if (pumpTabIndex.value !== data.type) return
-    if (data.type == 1) {
-      pumpList.value = data.ranking
-    } else if (data.type == 2) {
-      pumpList.value = data.ranking
-    } else if (data.type == 3) {
-      pumpList.value = data.ranking
+    
+    // 使用智能更新，避免 logo 闪烁
+    updateListWithKey(pumpList.value, data.ranking || [])
+  })
+}
+
+// 智能更新列表，保持组件实例和 logo 不闪烁
+const updateListWithKey = (oldList: any[], newList: any[]) => {
+  // 创建映射便于查找
+  const newMap = new Map(newList.map(item => [item.pairAddress, item]))
+  
+  // 更新现有项
+  oldList.forEach((oldItem, index) => {
+    const newItem = newMap.get(oldItem.pairAddress)
+    if (newItem) {
+      // 保存原有的 logo
+      const oldLogo = oldItem.logo
+      // 保持对象引用，只更新属性
+      Object.assign(oldItem, newItem)
+      // 恢复原有的 logo，避免闪烁
+      oldItem.logo = oldLogo
+      newMap.delete(oldItem.pairAddress)
+    } else {
+      // 标记为待删除
+      oldItem._toDelete = true
     }
+  })
+  
+  // 添加新项
+  newMap.forEach(newItem => {
+    oldList.push(newItem)
+  })
+  
+  // 删除不存在的项
+  for (let i = oldList.length - 1; i >= 0; i--) {
+    if (oldList[i]._toDelete) {
+      oldList.splice(i, 1)
+    }
+  }
+  
+  // 按照新列表的顺序排序
+  oldList.sort((a, b) => {
+    const aIndex = newList.findIndex(item => item.pairAddress === a.pairAddress)
+    const bIndex = newList.findIndex(item => item.pairAddress === b.pairAddress)
+    return aIndex - bIndex
   })
 }
 

@@ -4,7 +4,7 @@
       <!-- 币信息 -->
       <section
         class="coinWalletDetails-section"
-        :style="{ width: `calc(100vw - 296px - ${switchLeftState ? '296px' : '0px'})` }"
+        :style="{ width: `calc(100vw - 296px - ${switchLeftState ? '284px' : '0px'})` }"
       >
         <BaseInfo
           :baseInfo="baseInfo"
@@ -183,7 +183,7 @@
           effect="light"
           placement="right"
         >
-          <div class="switch-ele-left switch-ele" @click="switchLeftState = !switchLeftState">
+          <div class="switch-ele-left switch-ele" @click="handleSwitchLeftState">
             <el-icon v-if="switchLeftState" color="#101114"><ArrowLeft /></el-icon>
             <el-icon v-else color="#101114"><ArrowRight /></el-icon>
           </div>
@@ -274,7 +274,9 @@ const useSubscribeKChart = useSubscribeKChartInfo()
 const i18n = useI18n()
 const route = useRoute()
 // console.log(route) // 页面携带的参数
-const switchLeftState = ref<boolean>(true)
+const switchLeftState = ref<boolean>(
+  localStorage.getItem('switchLeftState') === null ? true : localStorage.getItem('switchLeftState') === 'true'
+)
 
 const useChainInfo = useChainInfoStore()
 //获取token数据
@@ -720,6 +722,11 @@ const handelSwitchDanmaku = (val: string) => {
 
 const handelSwitchCurrencyDashboard = (val: string) => {
   globalStore.setCurrencyDashboardSwitch(val)
+}
+
+const handleSwitchLeftState = () => {
+  switchLeftState.value = !switchLeftState.value
+  localStorage.setItem('switchLeftState', switchLeftState.value.toString())
 }
 
 onUnmounted(() => {

@@ -167,6 +167,8 @@ const handelHistoricalTransactionTab = (item: any) => {
 </script>
 
 <style lang="scss" scoped>
+@import '@/styles/table-common.scss';
+
 .transactionHistory {
   .copy {
     width: 12px;
@@ -218,5 +220,8 @@ const handelHistoricalTransactionTab = (item: any) => {
     //   color: #f5f5f5;
     // }
   }
+  
+  // 应用公共表格样式
+  @include table-hover-style;
 }
 </style>

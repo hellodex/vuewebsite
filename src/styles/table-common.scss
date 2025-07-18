@@ -1,0 +1,23 @@
+// 公共表格样式
+@mixin table-hover-style {
+  :deep(.el-table) {
+    background-color: transparent;
+    
+    // 表格行悬停效果
+    .el-table__body tr:hover > td {
+      background-color: rgba(255, 255, 255, 0.03) !important;
+    }
+    
+    // 表格行样式
+    .el-table__body tr {
+      td {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      }
+    }
+    
+    // 当前行高亮
+    .el-table__body tr.current-row > td {
+      background-color: rgba(255, 255, 255, 0.05) !important;
+    }
+  }
+}

@@ -1,7 +1,18 @@
 <template>
-  <el-dialog v-model="dialogVisible" :before-close="handleClose" title="创建监控" width="510">
+  <el-dialog 
+    v-model="dialogVisible" 
+    :before-close="handleClose" 
+    title="创建监控" 
+    width="510"
+    :modal="true"
+    :modal-class="'custom-modal-transparent'"
+    :lock-scroll="false"
+    :append-to-body="true"
+    :close-on-click-modal="true"
+    :close-on-press-escape="true">
     <div class="monitorType-dialog-content">
       <div
+        v-if="showGroupMonitor"
         class="display-flex align-items-center justify-content-sp monitorType-dialog-content-item"
         @click="handelDialog('group')"
       >
@@ -80,6 +91,10 @@ const props: any = defineProps({
   monitorTypeDialogVisible: {
     type: [Boolean],
     default: false
+  },
+  showGroupMonitor: {
+    type: [Boolean],
+    default: false
   }
 })
 
@@ -114,57 +129,94 @@ const handleClose = () => {
     cursor: pointer;
     margin-bottom: 12px;
     .title-txt {
-      color: #cfd3dc;
+      color: #ffffff; /* 改为纯白色 */
+      span {
+        color: #ffffff; /* 标题文字纯白色 */
+        font-weight: 500;
+      }
     }
     .icon {
       width: 25px;
       height: 25px;
       margin-right: 8px;
+      transition: transform 0.3s ease; /* 添加过渡效果 */
     }
     .price-monitor {
-      color: #bf8c00;
+      color: #ffc107; /* 更亮的黄色 */
+      opacity: 1;
     }
     .chg-monitor,
     .sell-monitor {
       color: var(--down-color);
+      opacity: 1;
     }
     .buy-monitor {
       color: var(--up-color);
+      opacity: 1;
     }
 
     .description-txt {
       font-size: 12px;
       margin-top: 4px;
-      color: var(--dex-color-4);
+      color: #b0b0b0; /* 使用更亮的灰色 */
     }
     .chevron-right {
       width: 24px;
       height: 24px;
       color: #666;
+      transition: all 0.3s ease; /* 添加过渡效果 */
     }
   }
-  /* 水波纹效果 */
-  .monitorType-dialog-content-item::after {
-    content: '';
-    position: absolute;
-    background: rgba(37, 37, 37, 0.6);
-    border-radius: 50%;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    opacity: 0;
-    transform: translate(-50%, -50%); /* 居中 */
-    transition:
-      width 1s,
-      height 1s; /* 平滑过渡 */
-    pointer-events: none; /* 防止影响点击 */
+  
+  /* 鼠标滑动时的效果 */
+  .monitorType-dialog-content-item:hover {
+    background: rgba(37, 37, 37, 0.4); /* 背景稍微加深 */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* 添加阴影 */
+    
+    .chevron-right {
+      color: #999; /* 箭头颜色变亮 */
+    }
+    
+    .title-txt {
+      span {
+        color: #ffffff; /* 确保标题保持白色 */
+      }
+    }
+    
+    .icon {
+      transform: scale(1.1); /* 图标轻微放大 */
+    }
   }
+}
+</style>
 
-  .monitorType-dialog-content-item:hover::after {
-    opacity: 1;
-    width: 500px; /* 宽度增加到原来的两倍 */
-    height: 500px; /* 高度增加到原来的两倍 */
-  }
+<style lang="scss">
+/* 设置透明但可点击的遮罩层 */
+.el-overlay {
+  background-color: rgba(0, 0, 0, 0.05) !important; /* 几乎透明的遮罩层，但保留可点击性 */
+}
+
+.custom-modal-transparent {
+  background-color: transparent !important;
+}
+
+:deep(.el-dialog) {
+  background-color: #1a1a1a !important; /* 确保弹窗背景是深色的 */
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8) !important; /* 更强的阴影效果 */
+  border: 1px solid #333; /* 添加边框增强对比 */
+}
+
+:deep(.el-dialog__header) {
+  border-bottom: 1px solid #333;
+  padding-bottom: 16px;
+}
+
+:deep(.el-dialog__title) {
+  color: #fff !important;
+  font-size: 18px;
+}
+
+:deep(.el-dialog__body) {
+  padding-top: 20px;
 }
 </style>

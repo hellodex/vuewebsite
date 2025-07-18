@@ -437,7 +437,7 @@ const fetchWalletGroups = async () => {
     }
     fetchWalletList()
   } catch (error) {
-    console.error('获取分组列表错误:', error)
+    // console.error('获取分组列表错误:', error)
     ElMessage.error('获取分组列表失败，请重试')
   }
 }

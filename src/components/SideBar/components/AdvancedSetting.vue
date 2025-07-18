@@ -6,7 +6,7 @@
         <span>滑点</span>
 <!--        <van-icon name="question-o" class="question-o-icon" />-->
       </div>
-      <span style="font-size: 9.5px; color: #E14D4DBD; margin-top: 6px;">交易时自动增加交易税，设置滑点时请不要包含!</span>
+      <span v-if="showTradingTaxTip" style="font-size: 9.5px; color: #E14D4DBD; margin-top: 6px;">交易时自动增加交易税，设置滑点时请不要包含!</span>
       <div class="slippage-box display-flex align-items-center justify-content-sp">
         <span
           v-for="(item, index) in slippageRange"
@@ -36,8 +36,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
+import { ref, reactive, computed } from 'vue'
 import DoubleCost from '@/components/DoubleCost.vue'
+import { useGlobalStore } from '@/stores/global'
+
+const globalStore = useGlobalStore()
+const walletType = computed(() => globalStore.walletInfo.walletType)
+const customWalletInfo = computed(() => globalStore.customWalletInfo)
+const chainId = computed(() => globalStore.walletInfo.chainId)
+
 
 const emit = defineEmits(['slippage'])
 
@@ -56,6 +63,15 @@ const props = defineProps({
 
 const sellInfo = ref({
   ...props.coinInfo.sellCoin
+})
+
+// 判断是否显示交易税提示（非Solana链显示）
+const showTradingTaxTip = computed(() => {
+  if (walletType.value === 'Email') {
+    return customWalletInfo.value.chainCode !== 'SOLANA'
+  } else {
+          return false
+  }
 })
 
 const timer = ref<any>(null) // 定时器

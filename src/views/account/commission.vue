@@ -113,7 +113,7 @@ const handelWithdrawal = (row: any) => {
         walletAddress: customWalletInfo.value.walletInfo?.wallet,
         amount: info.value.withdrawableCommissionAmount
       })
-      console.log(res)
+      // console.log(res)
       if (res) {
         customMessage({
           type: 'success',

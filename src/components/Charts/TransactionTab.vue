@@ -172,6 +172,8 @@ onUnmounted(() => {
 })
 </script>
 <style lang="scss" scoped>
+@import '@/styles/table-common.scss';
+
 .transaction-tab-content {
   .transaction-tab-icon,
   .img {
@@ -192,5 +194,8 @@ onUnmounted(() => {
   .table-head-txt {
     white-space: nowrap;
   }
+  
+  // 应用公共表格样式
+  @include table-hover-style;
 }
 </style>

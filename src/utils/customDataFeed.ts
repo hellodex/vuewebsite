@@ -220,6 +220,7 @@ export default class CustomDataFeed {
     socket.on('kchart', (message: any) => {
       const data = JSON.parse(message)
       // console.log(`socket-message: ${data.tx} <========> ${formatDate(data.txTime * 1000)}`)
+
       useSubscribeKChart.createSubscribeKChartInfo({
         C: data.price,
         H: data.price,

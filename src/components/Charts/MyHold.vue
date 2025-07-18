@@ -15,7 +15,13 @@
             <template #default="scope">
               <div class="display-flex align-items-center coin-box" style="flex-wrap: wrap">
                 <span class="logo">
-                  <el-image :src="scope.row.logo" alt="" class="coin-icon">
+                  <el-image 
+                    :src="scope.row.logo" 
+                    alt="" 
+                    class="coin-icon"
+                    :lazy="false"
+                    loading="eager"
+                  >
                     <template #error>
                       <svg-icon name="logo1" class="coin-icon"></svg-icon>
                     </template>
@@ -316,6 +322,8 @@ const handelShare = async (row: any) => {
 </script>
 
 <style lang="scss" scoped>
+@import '@/styles/table-common.scss';
+
 .my-hold {
   :deep(.el-table__row) {
     cursor: pointer;
@@ -361,11 +369,15 @@ const handelShare = async (row: any) => {
       height: 24px;
       position: relative;
       margin-right: 4px;
+      display: block;
+      flex-shrink: 0;
     }
     .coin-icon {
       width: 24px;
       height: 24px;
       border-radius: 50%;
+      display: block;
+      object-fit: cover;
     }
     .chainCode {
       width: 12px;
@@ -385,5 +397,8 @@ const handelShare = async (row: any) => {
     margin-left: 4px;
     cursor: pointer;
   }
+  
+  // 应用公共表格样式
+  @include table-hover-style;
 }
 </style>

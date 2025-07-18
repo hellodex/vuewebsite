@@ -13,6 +13,7 @@ export function useFavoriteData() {
   const chainId = computed(() => globalStore.walletInfo.chainId)
   const customWalletInfo = computed(() => globalStore.customWalletInfo)
   const walletType = computed(() => globalStore.walletInfo.walletType)
+  const accountInfo = computed(() => globalStore.accountInfo)
 
   // 监听连接钱包的变化
   watch(isConnected, (newValue) => {
@@ -34,20 +35,24 @@ export function useFavoriteData() {
   watch(
     () => customWalletInfo.value,
     (newVal, oldVal) => {
-      getListFavorite()
+      if (accountInfo.value) {
+        getListFavorite()
+      }
     }
   )
   const getListFavorite = async () => {
-    const res = await APIlistFavorite({
-      chainCode:
-        walletType.value == 'Email'
-          ? customWalletInfo.value.chainCode
-          : chainConfigs.value?.find((item: any) => item.chainId == chainId.value)?.chainCode,
-      walletAddress:
-        walletType.value == 'Email' ? customWalletInfo.value.walletInfo?.wallet : address.value
-    })
+    // 检查是否已登录（钱包连接或账户登录）
+    if (!isConnected.value && !accountInfo.value) {
+      globalStore.setFavoriteData([])
+      return
+    }
+    
+    const res = await APIlistFavorite({})
     globalStore.setFavoriteData(res || [])
   }
 
-  getListFavorite()
+  // 初始化时检查登录状态
+  if (isConnected.value || accountInfo.value) {
+    getListFavorite()
+  }
 }

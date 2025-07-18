@@ -15,8 +15,21 @@ const globalStore = useGlobalStore()
 const chainInfo = useChainInfoStore().chainInfo
 const useTokenInfo = useTokenInfoStore()
 const tokenInfo = useTokenInfo.tokenInfo // 解构变量 通过 storeToRefs 变成响应式
-const precision = formatDecimals(sessionStorage.getItem('basePrice')).precision
-console.log('小数位', precision)
+
+// 改为动态获取 precision，而不是在组件初始化时固定
+function getPrecision() {
+  const basePrice = sessionStorage.getItem('basePrice')
+
+  
+  if (!basePrice || basePrice === 'null' || basePrice === 'undefined') {
+
+    return 10 // 默认使用较高精度
+  }
+  
+  const precisionConfig = formatDecimals(basePrice)
+   return precisionConfig.precision
+}
+
 const showMarket = ref(eval(localStorage.getItem('showMarket')) || false)
 
 function initOnReady() {
@@ -58,15 +71,21 @@ function initOnReady() {
     enabled_features: [],
     custom_formatters: {
       priceFormatterFactory: (symbolInfo, minTick) => {
+
         if (symbolInfo === null) {
           return null
         }
         if (symbolInfo.format === 'volume') {
           return {
             format: (price, signPositive) => {
-              return MAIN_COIN[tokenInfo?.baseSymbol]
-                ? numFormat(new BigNumber(price).toFixed(precision))
-                : numberFormat(new BigNumber(price).toFixed(precision))
+              const currentPrecision = getPrecision()
+
+              const formatted = MAIN_COIN[tokenInfo?.baseSymbol]
+                ? numFormat(new BigNumber(price).toFixed(currentPrecision))
+                : numberFormat(new BigNumber(price).toFixed(currentPrecision))
+              
+
+              return formatted
             }
           }
         }
@@ -80,17 +99,20 @@ function initOnReady() {
     overrides: {
       volumePaneSize: 'small', // tiny 、small、medium、large "paneProperties.topMargin": "10",
       'paneProperties.background': '#111111',
-      'paneProperties.vertGridProperties.color': '#262529',
-      'paneProperties.horzGridProperties.color': '#262529',
-      'scalesProperties.lineColor': '#262529',
+      'paneProperties.vertGridProperties.color': 'rgba(35,35,35,0.60)',
+      'paneProperties.vertGridProperties.style': 1, // 0=不显示，1=实线，2=虚线
+      'paneProperties.horzGridProperties.color': 'rgba(35,35,35,0.60)',
+      'paneProperties.horzGridProperties.style': 1, // 0=不显示，1=实线，2=虚线
+      'scalesProperties.lineColor': '#1b1b1b',
       'scalesProperties.textColor': '#fff',
-      'paneProperties.separatorColor': '#242839',
+      'paneProperties.separatorColor': '#222222',
       'mainSeriesProperties.candleStyle.upColor': '#2EBD85', //买入颜色
       'mainSeriesProperties.candleStyle.borderUpColor': '#2EBD85', //买入边框颜色
       'mainSeriesProperties.candleStyle.wickUpColor': '#2EBD85', //买入线条颜色
       'mainSeriesProperties.candleStyle.downColor': '#F6465D', //卖出颜色
       'mainSeriesProperties.candleStyle.borderDownColor': '#F6465D', //卖出边框颜色
-      'mainSeriesProperties.candleStyle.wickDownColor': '#F6465D' //卖出线条颜色
+      'mainSeriesProperties.candleStyle.wickDownColor': '#F6465D', //卖出线条颜色
+
     },
     favorites: {
       intervals: ['1', '5', '15', '30', '1h', '4h', '1D', '1W']
@@ -100,15 +122,15 @@ function initOnReady() {
   widget.headerReady().then(function () {
     const btn = widget.createButton()
     btn.innerHTML = showMarket.value
-      ? '<span style="font-size: 12px;cursor: pointer;">Price / <span style="color:#2ebd85">MCap</span></span>'
-      : '<span style="font-size: 12px;cursor: pointer;"><span style="color:#2ebd85">Price</span> / MCap</span>'
+      ? '<span style="font-size: 12px;cursor: pointer;">价格 / <span style="color:#2ebd85">市值</span></span>'
+      : '<span style="font-size: 12px;cursor: pointer;"><span style="color:#2ebd85">价格</span> / 市值</span>'
 
     btn.onclick = () => {
       showMarket.value = !showMarket.value
       localStorage.setItem('showMarket', showMarket.value)
       btn.innerHTML = showMarket.value
-        ? '<span style="font-size: 12px;cursor: pointer;">Price / <span style="color:#2ebd85">MCap</span></span>'
-        : '<span style="font-size: 12px;cursor: pointer;"><span style="color:#2ebd85">Price</span> / MCap</span>'
+        ? '<span style="font-size: 12px;cursor: pointer;">价格 / <span style="color:#2ebd85">市值</span></span>'
+        : '<span style="font-size: 12px;cursor: pointer;"><span style="color:#2ebd85">价格</span> / 市值</span>'
       initOnReady()
     }
   })

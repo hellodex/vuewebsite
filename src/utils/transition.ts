@@ -90,7 +90,7 @@ export const handleEvmTx = async (tx: any) => {
         }
       })
       .on('error', function (error) {
-        console.error(`Transaction error: ${JSON.stringify(error)}`)
+        // console.error(`Transaction error: ${JSON.stringify(error)}`)
         retObj.msg = error.message
         reject(retObj)
       })
@@ -149,7 +149,7 @@ export const handleSolanaAllowance = async (
     // 检查授权信息
     return accountInfo.value && accountInfo.value.data.parsed.info.state === 'initialized' ? 1 : 0
   } catch (error) {
-    console.error('Failed to fetch token account:', error)
+    // console.error('Failed to fetch token account:', error)
     return 0
   }
 }
@@ -180,7 +180,7 @@ export const handleEvmApprove = async (spenderAddress: any, tokenAddress: any, a
         title: '钱包设置的公链RPC错误'
       })
     }
-    console.error('Error approving tokens:', error)
+    // console.error('Error approving tokens:', error)
     return false
   }
 }
@@ -210,7 +210,7 @@ export const sendEvmTransaction = async (res: any) => {
     return true
   } catch (error) {
     // console.log(JSON.stringify(error))
-    console.error('交易失败:', error)
+    // console.error('交易失败:', error)
     return false
   }
 }
@@ -248,7 +248,7 @@ export const sendSolanaTransaction = async (res: any, rpc: any) => {
     // console.log('Transaction successful with signature:', signature)
     return result ? true : false
   } catch (error) {
-    console.error('Failed to send transaction:', error)
+    // console.error('Failed to send transaction:', error)
     return false
   }
 }

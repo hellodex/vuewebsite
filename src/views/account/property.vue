@@ -56,7 +56,7 @@
                   "
                   >转出</span
                 >
-                <span class="wallet-to-out" @click="handelSendU">免费送 U</span>
+<!--                <span class="wallet-to-out" @click="handelSendU">免费送 U</span>-->
                 <span
                   class="wallet-to-out"
                   @click="handelRefundSol"
@@ -67,24 +67,24 @@
             </div>
           </div>
         </div>
-        <div class="display-flex flex-direction-col align-items-fd">
-          <div class="rule-txt display-flex align-items-center" @click="ruleVisible = true">
-            <span>冲狗基金规则</span>
-            <svg-icon name="chevron-right" class="chevron-right"></svg-icon>
-          </div>
-          <div
-            class="display-flex align-items-center"
-            v-if="JSON.stringify(accountInfo.memeVault) !== '{}'"
-          >
-            <div class="activity-txt" v-if="accountInfo.memeVault?.vaultType">
-              <strong>{{ accountInfo.memeVault.vaultType }}</strong>
-            </div>
-            <div class="activity-txt" v-if="accountInfo.memeVault?.expireTime">
-              <span>截止：</span>
-              <strong>{{ accountInfo.memeVault.expireTime }}</strong>
-            </div>
-          </div>
-        </div>
+<!--        <div class="display-flex flex-direction-col align-items-fd">-->
+<!--          <div class="rule-txt display-flex align-items-center" @click="ruleVisible = true">-->
+<!--            <span>冲狗基金规则</span>-->
+<!--            <svg-icon name="chevron-right" class="chevron-right"></svg-icon>-->
+<!--          </div>-->
+<!--          <div-->
+<!--            class="display-flex align-items-center"-->
+<!--            v-if="JSON.stringify(accountInfo.memeVault) !== '{}'"-->
+<!--          >-->
+<!--            <div class="activity-txt" v-if="accountInfo.memeVault?.vaultType">-->
+<!--              <strong>{{ accountInfo.memeVault.vaultType }}</strong>-->
+<!--            </div>-->
+<!--            <div class="activity-txt" v-if="accountInfo.memeVault?.expireTime">-->
+<!--              <span>截止：</span>-->
+<!--              <strong>{{ accountInfo.memeVault.expireTime }}</strong>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
       </div>
       <div class="card-box">
         <div class="display-flex align-items-center" style="margin-bottom: 16px">
@@ -551,7 +551,7 @@ const handelTransfeIn = async (row: any, info: any) => {
     })
     transfeInVisible.value = true
   } catch (err) {
-    console.error(err)
+    // console.error(err)
   }
 }
 

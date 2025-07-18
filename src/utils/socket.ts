@@ -371,7 +371,7 @@ export function socketLogout() {
   socket.off('logOut')
   socket.on('logOut', (message: string) => {
     const data = JSON.parse(message)
-    console.log(data)
+    // console.log(data)
     if (data.uuid) {
       const globalStore = useGlobalStore()
       customMessage({
@@ -415,7 +415,7 @@ socket.on('connect', () => {
       )
       globalStore.SetSocketKchartConnectType('kChart_connect')
     }
-    console.warn('🔥🔥🔥🔥🔥🔥 socket_connect：', 'connection successful!')
+    // console.warn('🔥🔥🔥🔥🔥🔥 socket_connect：', 'connection successful!')
     socket.emit('pumpRanking-off', '{}')
     socket.emit('pumpRanking-on', '{}')
     socketLogout()

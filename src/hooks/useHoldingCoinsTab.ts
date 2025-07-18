@@ -33,7 +33,7 @@ export function useHoldingCoinsTab(num: any, name: string) {
   async function getGoPlus() {
     const res = await GoPlus.tokenSecurity(CHAIN_ID[params.chainCode], params.baseAddress, 30)
     if (res.code != ErrorCode.SUCCESS) {
-      console.error(res.message)
+      // console.error(res.message)
       setTimeout(() => {
         getGoPlus()
       }, 2000)

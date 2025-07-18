@@ -8,28 +8,36 @@
           >${{ numberFormat(buyInfo.totalAmount) }}</i
         >
       </p>
-      <div class="input-box">
-        <el-input
-          v-model="coinAmount"
-          :class="inputFocusType ? 'input-focus' : ''"
-          oninput="value=value.replace(/[^0-9.]/g,'')"
-          style="width: 100%"
-          placeholder="请输入"
-          @focus="handeCoinFocus"
-          @blur="handelCoinBlur"
-          @input="handelCoinAmount"
-        >
-          <template #suffix>{{ buyInfo.baseSymbol }}</template>
-        </el-input>
-      </div>
-      <div class="display-flex align-items-center justify-content-sp">
-        <span
-          v-for="(item, index) in buyPosition"
-          :key="index"
-          :class="buyIndex === item.value ? 'active' : ''"
-          @click="handelBuy(item)"
-          >{{ item.label }}</span
-        >
+      <div class="trading-input-group">
+        <div class="input-box">
+          <el-input
+            v-model="coinAmount"
+            :class="inputFocusType ? 'input-focus' : ''"
+            oninput="value=value.replace(/[^0-9.]/g,'')"
+            style="width: 100%"
+            placeholder="请输入"
+            @focus="handeCoinFocus"
+            @blur="handelCoinBlur"
+            @input="handelCoinAmount"
+          >
+            <template #suffix>{{ buyInfo.baseSymbol }}</template>
+          </el-input>
+        </div>
+        <div class="display-flex align-items-center justify-content-sp">
+          <el-tooltip
+            v-for="(item, index) in buyPosition"
+            :key="index"
+            :content="`${item.value} ${buyInfo.baseSymbol}`"
+            placement="bottom"
+            :popper-class="'custom-tooltip'"
+          >
+            <span
+              :class="buyIndex === item.value ? 'active' : ''"
+              @click="handelBuy(item)"
+              >{{ item.label }}</span
+            >
+          </el-tooltip>
+        </div>
       </div>
     </div>
     <div class="trading-sell trading-operate">
@@ -51,9 +59,20 @@
       </div>
     </div>
     <div class="btn tip-btn" v-if="gasTip">{{ buyInfo.baseSymbol }}余额不足以支付Gas费用</div>
-    <div class="btn disabled-btn" v-if="buySellType">
+    <div 
+      class="btn disabled-btn" 
+      :class="{ 'insufficient-btn': insufficientBalance || isZeroAmount || sellInsufficientBalance }" 
+      v-if="buySellType"
+      @click="handleInsufficientClick"
+    >
       {{
-        tradeType == 'buy'
+        isZeroAmount
+          ? '请选择交易数量'
+          : insufficientBalance
+          ? `${buyInfo.baseSymbol} 余额不足，请充值`
+          : sellInsufficientBalance
+          ? `${sellInfo.baseSymbol} 余额不足，请充值`
+          : tradeType == 'buy'
           ? `买入 ${buyIndex || coinAmount ? numberFormat(buyIndex || coinAmount) + ' ' + buyInfo.baseSymbol : ''}`
           : `卖出 ${
               numberFormat(
@@ -238,6 +257,7 @@ const updateTradingInfo = () => {
 
 const handelBuy = async (item: any) => {
   buyIndex.value = item.value
+  coinAmount.value = item.value.toString()
   sellIndex.value = 0
   tradeType.value = 'buy'
   inputFocusType.value = false
@@ -302,6 +322,29 @@ const getGas = async () => {
 
   return type
 }
+
+// 判断是否余额不足
+const insufficientBalance = computed(() => {
+  if (tradeType.value == 'buy' && (buyIndex.value > 0 || parseFloat(coinAmount.value || 0) > 0)) {
+    const num = 10 ** Number(buyInfo.value.baseTokenDecimals)
+    const spendAmount = new BigNumber(buyIndex.value || coinAmount.value)
+      .times(num)
+      .integerValue(BigNumber.ROUND_DOWN)
+      .toString(10)
+    return parseFloat(spendAmount) > parseFloat(buyInfo.value.balance)
+  }
+  return false
+})
+
+// 判断是否输入为0
+const isZeroAmount = computed(() => {
+  return tradeType.value == 'buy' && buyIndex.value == 0 && parseFloat(coinAmount.value || 0) == 0
+})
+
+// 判断卖出时余额是否为0
+const sellInsufficientBalance = computed(() => {
+  return tradeType.value == 'sell' && sellInfo.value.balance == 0
+})
 
 const buySellType = computed(() => {
   const coinInfo = tradeType.value == 'buy' ? buyInfo.value : sellInfo.value
@@ -575,6 +618,16 @@ const networkDetection = () => {
   return true
 }
 
+// 定义 emit
+const emit = defineEmits(['showRecharge'])
+
+// 处理余额不足时的点击
+const handleInsufficientClick = () => {
+  if (insufficientBalance.value || sellInsufficientBalance.value) {
+    emit('showRecharge')
+  }
+}
+
 onMounted(() => {
   updateTradingInfo()
 })
@@ -599,54 +652,91 @@ defineExpose({
   .trading-operate {
     margin-bottom: 7px;
     p {
-      color: #5c6068;
+      color: #cacad5;
       font-size: 12px;
       font-weight: normal;
       margin-bottom: 8px;
       font-family: 'PingFangSC-Medium';
     }
   }
+  .trading-input-group {
+    background: #1F2024FF;
+    border-radius: 5px;
+    padding: 2px;
+    position: relative;
+    .input-box {
+      position: relative;
+      padding-bottom: 2px;
+      margin: 0 -2px;
+
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background-color: #151515;
+      }
+    }
+  }
   .trading-buy {
+    .display-flex {
+
+    }
     span {
       display: flex;
       align-items: center;
       justify-content: center;
       width: 60px;
-      height: 25px;
+      height: 22px;
       background: transparent;
       border-radius: 4px;
-      border: 1px solid #26282c;
+      border: none;
       font-size: 12px;
-      color: #5c6068;
+      color: #cacad5;
       cursor: pointer;
       transition: all 0.2s;
       font-family: 'PingFangSC-Medium';
+      position: relative;
+      &:not(:last-child)::after {
+        content: '';
+        position: absolute;
+        right: -1px;
+        top: 0;
+        height: 100%;
+        width: 1px;
+        background-color: #151515;
+      }
     }
-    span:hover,
     .active {
-      color: rgba(23, 178, 106, 1);
-      border: 1px solid rgba(23, 178, 106, 1);
+      // 保持原始颜色，不改变
     }
   }
   .input-box {
-    margin-bottom: 8px;
+    margin-bottom: 0;
     :deep(.el-input__wrapper) {
-      box-shadow: 0 0 0 1px #26282c !important;
+      box-shadow: none !important;
+      background-color: transparent !important;
       font-size: 12px;
       padding: 0 11px;
-      .el-input__suffix,
+      height: 28px;
+      .el-input__suffix {
+        color: #cacad5 !important;
+        font-family: 'PingFangSC-Medium';
+      }
       .el-input__inner {
-        color: #5c6068 !important;
+        color: #cacad5 !important;
         font-family: 'PingFangSC-Medium';
       }
     }
     :deep(.el-input__wrapper:hover),
     :deep(.el-input__wrapper:focus) {
-      box-shadow: 0 0 0 1px rgba(23, 178, 106, 1) !important;
+      box-shadow: none !important;
     }
     .input-focus {
       :deep(.el-input__wrapper) {
-        box-shadow: 0 0 0 1px rgba(23, 178, 106, 1) !important;
+        box-shadow: none !important;
       }
     }
   }
@@ -658,9 +748,10 @@ defineExpose({
       width: 60px;
       height: 25px;
       border-radius: 4px;
-      border: 1px solid #26282c;
+      background: #1F2024FF;
+      border: none;
       font-size: 12px;
-      color: #5c6068;
+      color: #cacad5;
       font-size: 12px;
       font-family: 'PingFangSC-Medium';
       cursor: pointer;
@@ -668,8 +759,7 @@ defineExpose({
     }
     span:hover,
     .active {
-      color: rgba(245, 39, 39, 1);
-      border: 1px solid rgba(245, 39, 39, 1);
+      border: 1px solid var(--down-color);
     }
     .btn-disabled {
       cursor: not-allowed;
@@ -726,7 +816,7 @@ defineExpose({
     font-size: 12px;
     cursor: pointer;
     margin: 14px 0;
-    font-family: 'PingFangSC-Heavy';
+    font-family: 'PingFangSC-Medium';
   }
   .tip-btn {
     background: rgba(245, 39, 39, 0.3);
@@ -736,6 +826,10 @@ defineExpose({
   .disabled-btn {
     background: #393c43;
     color: #5c6068;
+  }
+  .insufficient-btn {
+    color: #cacad5 !important;
+    cursor: pointer !important;
   }
   .buy-submit-btn {
     transition: all 0.3s;
@@ -759,5 +853,21 @@ defineExpose({
     outline: none;
     box-shadow: 0 0 0 6px rgba(246, 70, 93, 0.1);
   }
+  
+}
+</style>
+
+<style>
+/* 全局样式用于tooltip */
+.custom-tooltip {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  border: none !important;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.15) !important;
+}
+.custom-tooltip .el-tooltip__popper[x-placement^="bottom"] .el-popper__arrow::before,
+.custom-tooltip .el-popper__arrow::before {
+  background-color: #000000 !important;
+  border: none !important;
 }
 </style>

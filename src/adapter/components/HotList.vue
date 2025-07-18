@@ -45,7 +45,7 @@
                     ></svg-icon>
                     <Favorite
                       :coinInfo="{
-                        pairAddress: scope.row.pairAddress,
+                        baseTokenAddress: scope.row.baseToken.address,
                         chainCode: scope.row.chainCode
                       }"
                     />

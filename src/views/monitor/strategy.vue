@@ -227,6 +227,7 @@
     </div>
     <MonitorTypeDialog
       :monitorTypeDialogVisible="monitorTypeDialogVisible"
+      :showGroupMonitor="true"
       @monitorType="handelDialog"
       @close="handelMonitorTypeClose"
     />

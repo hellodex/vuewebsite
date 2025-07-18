@@ -286,7 +286,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return
   await formEl.validate(async (valid, fields) => {
     if (valid) {
-      console.log('submit!')
+      // console.log('submit!')
       showLoadingToast({
         message: `账户注册登录中...`,
         forbidClick: true
@@ -300,7 +300,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
         type: '1'
       })
       if (res) {
-        console.log('原始数据', JSON.parse(JSON.stringify(res)))
+        // console.log('原始数据', JSON.parse(JSON.stringify(res)))
         for (const key in res.wallets) {
           if (Object.prototype.hasOwnProperty.call(res.wallets, key)) {
             const element = res.wallets[key]
@@ -309,7 +309,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
             })
           }
         }
-        console.log('加密后数据', res)
+        // console.log('加密后数据', res)
 
         localStorage.setItem('accountInfo', JSON.stringify(res))
         const userInfo: any = await APIuserInfo()
@@ -330,9 +330,9 @@ const submitForm = async (formEl: FormInstance | undefined) => {
         return
       }
       loading.value = false
-      console.log(res)
+      // console.log(res)
     } else {
-      console.log('error submit!', fields)
+      // console.log('error submit!', fields)
     }
   })
 }
