@@ -70,6 +70,7 @@
       </div>
     </template>
   </vue-danmaku>
+  <LoopFloatingWindow />
 </template>
 <script setup>
 import { ref, onMounted, provide, nextTick, computed, watch } from 'vue'
@@ -101,6 +102,7 @@ import { mainnet, bsc, arbitrum, xLayer, base, optimism } from '@reown/appkit/ne
 
 import { SolflareWalletAdapter, PhantomWalletAdapter } from '@solana/wallet-adapter-wallets'
 import { customMessage } from '@/utils/message'
+import LoopFloatingWindow from './LoopFloatingWindow.vue'
 
 const { windowWidth } = useWindowWidth()
 
