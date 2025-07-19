@@ -167,20 +167,23 @@
               <div class="display-flex align-items-center justify-content-sp coin-hold">
                 <div class="display-flex flex-direction-col">
                   <span>{{ props.baseInfo.tokenInfo?.baseSymbol }} 余额</span>
+                  <strong>{{ numberFormat(props.currentTokenHoldInfo?.amount) }}</strong>
                   <strong style="margin: 6px 0"
                     >${{ numberFormat(props.currentTokenHoldInfo?.volume) }}</strong
                   >
-                  <strong>{{ numberFormat(props.currentTokenHoldInfo?.amount) }}</strong>
+
                 </div>
                 <div class="display-flex flex-direction-col align-items-center">
                   <span>总买入</span>
+                  <strong>{{ numberFormat(props.currentTokenHoldInfo?.totalBuyAmount) }}</strong>
                   <strong style="margin: 6px 0"
                     >${{ numberFormat(props.currentTokenHoldInfo?.totalBuyVolume) }}</strong
                   >
-                  <strong>{{ numberFormat(props.currentTokenHoldInfo?.totalBuyAmount) }}</strong>
+
                 </div>
                 <div class="display-flex flex-direction-col align-items-fd">
                   <span>未实现利润</span>
+                  <PercentageNotbg :value="props.currentTokenHoldInfo?.totalEarnRate || 0" />
                   <strong
                     style="margin: 6px 0"
                     :class="
@@ -190,7 +193,7 @@
                     "
                     >${{ numberFormat(props.currentTokenHoldInfo?.totalEarn) }}</strong
                   >
-                  <PercentageNotbg :value="props.currentTokenHoldInfo?.totalEarnRate || 0" />
+
                 </div>
               </div>
             </template>
