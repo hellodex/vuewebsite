@@ -6,7 +6,9 @@
         <span class="address-txt">{{ customWalletInfo.walletInfo?.groupName }}</span>
         <svg-icon name="copy" class="copy" v-copy="customWalletInfo.walletInfo?.wallet"></svg-icon>
         <img :src="customWalletInfo.logo" alt="" class="chain-icon" v-if="customWalletInfo.logo" />
-        <span class="price-txt">${{ numberFormat(total || 0) }}</span>
+<!--        <span class="price-txt">${{ numberFormat(total || 0) }}</span>-->
+        <span class="price-txt">{{ tokenList[0] ? `${numberFormat(decimalsFormat(tokenList[0].amount, tokenList[0].decimals) || 0)} ${tokenList[0].symbol || ''}` : '' }}</span>
+
         <svg-icon name="chevron-down" class="chevron-down"></svg-icon>
       </div>
     </template>
@@ -102,6 +104,7 @@ import { useI18n } from 'vue-i18n'
 import { shortifyAddress, numberFormat } from '@/utils'
 import { socketOffMonitor } from '@/utils/socket'
 import { customMessage } from '@/utils/message'
+import { decimalsFormat } from '@/utils/transition'
 
 const router = useRouter()
 const route = useRoute()
