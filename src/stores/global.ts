@@ -18,7 +18,7 @@ export const useGlobalStore = defineStore('global', () => {
   // 弹幕
   const danmaku = ref<number>(
     localStorage.getItem('danmaku') == undefined || localStorage.getItem('danmaku') == null
-      ? 1
+      ? 0
       : Number(localStorage.getItem('danmaku'))
   )
 

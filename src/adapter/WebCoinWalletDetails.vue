@@ -293,7 +293,7 @@ const dashboardSwitch = ref(Number(localStorage.getItem('currencyDashboardSwitch
 
 const danmaku = ref(
   localStorage.getItem('danmaku') == undefined || localStorage.getItem('danmaku') == null
-    ? 1
+    ? 0
     : Number(localStorage.getItem('danmaku'))
 )
 
