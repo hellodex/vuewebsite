@@ -163,10 +163,10 @@ function initOnReady() {
       // 创建持仓价格线
       if (chart.createPositionLine) {
         positionPriceLine = chart.createPositionLine()
-          .setText(`持仓价格: ${numberFormat(initialPrice)}`)
-          .setTooltip('当前持仓价格')
+          .setText('持仓价格')
+          .setTooltip()
           .setQuantity('')
-          .setPrice(initialPrice)
+          .setPrice(numberFormat(initialPrice))
           .setExtendLeft(true)
           .setLineStyle(1) // 虚线
           .setLineLength(0) // 全宽
