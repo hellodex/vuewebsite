@@ -2,9 +2,10 @@
   <div id="tv_chart_container"></div>
 </template>
 <script setup>
-import { onMounted, onUnmounted, ref } from 'vue'
+import { onMounted, onUnmounted, ref, watch } from 'vue'
 import { useTokenInfoStore } from '@/stores/tokenInfo'
 import { useChainInfoStore } from '@/stores/chainInfo'
+import { usePositionsStore } from '@/stores/positions'
 import CustomDataFeed from '@/utils/customDataFeed'
 import BigNumber from 'bignumber.js'
 import { useGlobalStore } from '@/stores/global'
@@ -30,7 +31,28 @@ function getPrecision() {
    return precisionConfig.precision
 }
 
+const positionsStore = usePositionsStore()
+
 const showMarket = ref(eval(localStorage.getItem('showMarket')) || false)
+const positionPrice = ref(0) // 持仓价格
+let positionPriceLine = null // 持仓价格线实例
+
+// 监听持仓数据变化，更新持仓价格线
+watch(
+  () => {
+    const position = positionsStore.getPositionByAddress(tokenInfo?.baseAddress)
+    return position?.averagePrice
+  },
+  (averagePrice) => {
+    if (averagePrice) {
+      const avgPrice = parseFloat(averagePrice)
+      if (!isNaN(avgPrice) && avgPrice > 0) {
+        updatePositionPrice(avgPrice)
+      }
+    }
+  },
+  { immediate: true }
+)
 
 function initOnReady() {
   var widget = (window.tvWidget = new TradingView.widget({
@@ -68,7 +90,7 @@ function initOnReady() {
       'volume_force_overlay',
       'widget_logo'
     ],
-    enabled_features: [],
+    enabled_features: ['study_templates'],
     custom_formatters: {
       priceFormatterFactory: (symbolInfo, minTick) => {
 
@@ -119,6 +141,43 @@ function initOnReady() {
     }
   }))
 
+  // 图表准备好后添加持仓价格线
+  widget.onChartReady(() => {
+    const chart = widget.activeChart()
+    
+    // 延迟执行，确保图表完全加载
+    setTimeout(() => {
+      // 获取当前可见的价格范围
+      let initialPrice = 0
+      try {
+        const priceScale = chart.getPanes()[0].getRightPriceScales()[0]
+        const visibleRange = priceScale.getVisiblePriceRange()
+        if (visibleRange && visibleRange.from !== null && visibleRange.to !== null) {
+          initialPrice = (visibleRange.from + visibleRange.to) / 2
+        }
+      } catch (e) {
+        // 使用默认值
+      }
+      
+      positionPrice.value = initialPrice
+      // 创建持仓价格线
+      if (chart.createPositionLine) {
+        positionPriceLine = chart.createPositionLine()
+          .setText(`持仓价格: ${numberFormat(initialPrice)}`)
+          .setTooltip('当前持仓价格')
+          .setQuantity('')
+          .setPrice(initialPrice)
+          .setExtendLeft(true)
+          .setLineStyle(1) // 虚线
+          .setLineLength(0) // 全宽
+          .setLineColor('#FFD700')
+          .setBodyTextColor('#FFD700')
+          .setBodyBackgroundColor('rgba(255, 215, 0, 0.2)')
+          .setBodyBorderColor('#FFD700')
+      }
+    }, 0) // 延迟1秒执行
+  })
+
   widget.headerReady().then(function () {
     const btn = widget.createButton()
     btn.innerHTML = showMarket.value
@@ -136,11 +195,46 @@ function initOnReady() {
   })
 } // end of TradingView.onready
 
+// 更新持仓价格的函数
+function updatePositionPrice(newPrice) {
+  positionPrice.value = newPrice
+  if (positionPriceLine) {
+    try {
+      // 如果是位置线
+      if (positionPriceLine.setPrice) {
+        positionPriceLine.setPrice(newPrice)
+        positionPriceLine.setText(`持仓价格: ${numberFormat(newPrice)}`)
+      }
+      // 如果是多点形状（趋势线）
+      else if (positionPriceLine.setPoints) {
+        const currentTime = Date.now() / 1000
+        const futureTime = currentTime + 86400 * 365
+        positionPriceLine.setPoints([
+          { time: currentTime - 86400 * 30, price: newPrice },
+          { time: futureTime, price: newPrice }
+        ])
+      }
+    } catch (error) {
+      console.error('更新持仓价格失败:', error)
+    }
+  }
+}
+
+// 暴露方法给父组件使用
+defineExpose({
+  updatePositionPrice
+})
+
 onMounted(() => {
   initOnReady()
 })
 
-onUnmounted(() => {})
+onUnmounted(() => {
+  // 清理资源
+  if (positionPriceLine) {
+    positionPriceLine.remove()
+  }
+})
 </script>
 
 <style>

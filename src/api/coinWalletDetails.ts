@@ -344,7 +344,7 @@ export function listHistoryOrders(data: object) {
 export function initLimitedOrderPage(data: object) {
   const account: any = localStorage.getItem('accountInfo')
   return http({
-    url: WEB_URL + '/api/auth/order/initLimitedOrderPage',
+    url: WEB_URL + '/api/auth/order/initLimitedOrderPageV2',
     method: 'POST',
     data,
     headers: {

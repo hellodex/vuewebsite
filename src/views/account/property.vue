@@ -367,6 +367,7 @@ import {
 } from '@/api'
 import { useI18n } from 'vue-i18n'
 import { useChainConfigsStore } from '@/stores/chainConfigs'
+import { usePositionsStore } from '@/stores/positions'
 import { initLimitedOrderPage } from '@/api/coinWalletDetails'
 
 import TransactionHistory from '@/components/Charts/TransactionHistory.vue'
@@ -682,6 +683,8 @@ const handelEntrustTab = (item: any) => {
   entrustTabIdex.value = item.value
 }
 
+const positionsStore = usePositionsStore()
+
 const getData = async () => {
   const res = await initLimitedOrderPage({
     walletId: parseFloat(customWalletInfo.value.walletInfo?.walletId),
@@ -689,8 +692,12 @@ const getData = async () => {
     hidePosition: hidePosition.value
   })
 
-  if (res) {
-    initLimitedOrders.value = res
+  if (res?.data) {
+    initLimitedOrders.value = res.data
+    // 同时更新全局 store 中的持仓数据
+    if (res.data.positions) {
+      positionsStore.positions = res.data.positions
+    }
   }
   skeleton.value = false
 }
