@@ -90,13 +90,29 @@
               >
             </template>
           </el-table-column>
-          <el-table-column label="订单号">
+<!--          <el-table-column label="订单号">-->
+<!--            <template #default="scope">-->
+<!--              <div class="display-flex align-items-center">-->
+<!--                <span class="text-color">{{-->
+<!--                  scope.row.orderNo.substring(scope.row.orderNo.length - 6)-->
+<!--                }}</span>-->
+<!--                <svg-icon name="copy" class="copy" v-copy="scope.row.orderNo"></svg-icon>-->
+<!--              </div>-->
+<!--            </template>-->
+<!--          </el-table-column>-->
+          <el-table-column label="交易TX" align="center">
             <template #default="scope">
-              <div class="display-flex align-items-center">
-                <span class="text-color">{{
-                  scope.row.orderNo.substring(scope.row.orderNo.length - 6)
-                }}</span>
-                <svg-icon name="copy" class="copy" v-copy="scope.row.orderNo"></svg-icon>
+              <div class="display-flex align-items-center justify-content-center">
+                <span class="text-color" style="text-decoration: underline" v-if="scope.row.tx">{{
+                    shortifyAddress(scope.row.tx)
+                  }}</span>
+                <span v-else>-</span>
+                <svg-icon
+                  name="copy"
+                  class="copy"
+                  v-copy="scope.row.tx"
+                  v-if="scope.row.tx"
+                ></svg-icon>
               </div>
             </template>
           </el-table-column>
