@@ -560,7 +560,7 @@ const setPolling = async () => {
 
     timeSec.value = new Date().getTime()
     localStorage.getItem('accountInfo') && getData()
-  }, 5000)
+  }, 3000)
 }
 
 watch(

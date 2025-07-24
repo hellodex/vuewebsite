@@ -2,10 +2,11 @@
   <div id="tv_chart_container"></div>
 </template>
 <script setup>
-import { onMounted, onUnmounted, ref, watch } from 'vue'
+import { onMounted, onUnmounted, ref, watch, computed } from 'vue'
 import { useTokenInfoStore } from '@/stores/tokenInfo'
 import { useChainInfoStore } from '@/stores/chainInfo'
 import { usePositionsStore } from '@/stores/positions'
+import { useSubscribeKChartInfo } from '@/stores/subscribeKChartInfo'
 import CustomDataFeed from '@/utils/customDataFeed'
 import BigNumber from 'bignumber.js'
 import { useGlobalStore } from '@/stores/global'
@@ -32,22 +33,46 @@ function getPrecision() {
 }
 
 const positionsStore = usePositionsStore()
+const subscribeKChart = useSubscribeKChartInfo()
 
 const showMarket = ref(eval(localStorage.getItem('showMarket')) || false)
 const positionPrice = ref(0) // 持仓价格
 let positionPriceLine = null // 持仓价格线实例
 
+// 从两个数据源获取持仓数据
+const positionFromStore = computed(() => 
+  positionsStore.getPositionByAddress(tokenInfo?.baseAddress)
+)
+
+const positionFromSubscribe = computed(() => 
+  subscribeKChart.subscribePositions.find(
+    item => item.tokenAddress?.toLowerCase() === tokenInfo?.baseAddress?.toLowerCase()
+  )
+)
+
+// 优先使用 subscribePositions（K线页面的数据源），如果没有则使用 positionsStore
+const currentPosition = computed(() => 
+  positionFromSubscribe.value || positionFromStore.value
+)
+
 // 监听持仓数据变化，更新持仓价格线
 watch(
-  () => {
-    const position = positionsStore.getPositionByAddress(tokenInfo?.baseAddress)
-    return position?.averagePrice
-  },
+  () => currentPosition.value?.averagePrice,
   (averagePrice) => {
     if (averagePrice) {
       const avgPrice = parseFloat(averagePrice)
       if (!isNaN(avgPrice) && avgPrice > 0) {
         updatePositionPrice(avgPrice)
+      }
+    } else {
+      // 没有持仓数据时，删除价格线
+      if (positionPriceLine) {
+        try {
+          positionPriceLine.remove()
+          positionPriceLine = null
+        } catch (error) {
+          console.error('删除价格线失败:', error)
+        }
       }
     }
   },
@@ -147,35 +172,46 @@ function initOnReady() {
     
     // 延迟执行，确保图表完全加载
     setTimeout(() => {
-      // 获取当前可见的价格范围
+      // 获取当前持仓的平均买入价格
       let initialPrice = 0
-      try {
-        const priceScale = chart.getPanes()[0].getRightPriceScales()[0]
-        const visibleRange = priceScale.getVisiblePriceRange()
-        if (visibleRange && visibleRange.from !== null && visibleRange.to !== null) {
-          initialPrice = (visibleRange.from + visibleRange.to) / 2
+      const position = currentPosition.value
+      
+      if (position && position.averagePrice) {
+        // 使用真实的持仓价格
+        initialPrice = parseFloat(position.averagePrice)
+      } else {
+        // 如果没有持仓数据，使用图表可见价格范围的中间值
+        try {
+          const priceScale = chart.getPanes()[0].getRightPriceScales()[0]
+          const visibleRange = priceScale.getVisiblePriceRange()
+          if (visibleRange && visibleRange.from !== null && visibleRange.to !== null) {
+            initialPrice = (visibleRange.from + visibleRange.to) / 2
+          }
+        } catch (e) {
+          // 使用默认值
         }
-      } catch (e) {
-        // 使用默认值
       }
       
-      positionPrice.value = initialPrice
-      // 创建持仓价格线
-      if (chart.createPositionLine) {
-        positionPriceLine = chart.createPositionLine()
-          .setText('持仓价格')
-          .setTooltip()
-          .setQuantity('')
-          .setPrice(numberFormat(initialPrice))
-          .setExtendLeft(true)
-          .setLineStyle(1) // 虚线
-          .setLineLength(0) // 全宽
-          .setLineColor('#FFD700')
-          .setBodyTextColor('#FFD700')
-          .setBodyBackgroundColor('rgba(255, 215, 0, 0.2)')
-          .setBodyBorderColor('#FFD700')
+      // 只有在有持仓数据时才创建价格线
+      if (position && position.averagePrice && initialPrice > 0) {
+        positionPrice.value = initialPrice
+        // 创建持仓价格线
+        if (chart.createPositionLine) {
+          positionPriceLine = chart.createPositionLine()
+            .setText('持仓价格')
+            .setTooltip()
+            .setQuantity('')
+            .setPrice(initialPrice)
+            .setExtendLeft(true)
+            .setLineStyle(1) // 虚线
+            .setLineLength(0) // 全宽
+            .setLineColor('#FFD700')
+            .setBodyTextColor('#FFD700')
+            .setBodyBackgroundColor('rgba(255, 215, 0, 0.2)')
+            .setBodyBorderColor('#FFD700')
+        }
       }
-    }, 0) // 延迟1秒执行
+    }, 100) // 延迟100毫秒执行，确保数据已加载
   })
 
   widget.headerReady().then(function () {
@@ -198,12 +234,32 @@ function initOnReady() {
 // 更新持仓价格的函数
 function updatePositionPrice(newPrice) {
   positionPrice.value = newPrice
-  if (positionPriceLine) {
+  
+  // 如果没有价格线但有持仓数据，需要创建价格线
+  if (!positionPriceLine && newPrice > 0 && window.tvWidget) {
+    const widget = window.tvWidget
+    const chart = widget.activeChart && widget.activeChart()
+    if (chart && chart.createPositionLine) {
+      positionPriceLine = chart.createPositionLine()
+        .setText('持仓价格')
+        .setTooltip()
+        .setQuantity('')
+        .setPrice(newPrice)
+        .setExtendLeft(true)
+        .setLineStyle(1) // 虚线
+        .setLineLength(0) // 全宽
+        .setLineColor('#FFD700')
+        .setBodyTextColor('#FFD700')
+        .setBodyBackgroundColor('rgba(255, 215, 0, 0.2)')
+        .setBodyBorderColor('#FFD700')
+    }
+  } else if (positionPriceLine) {
+    // 如果已经有价格线，直接更新
     try {
       // 如果是位置线
       if (positionPriceLine.setPrice) {
         positionPriceLine.setPrice(newPrice)
-        positionPriceLine.setText(`持仓价格: ${numberFormat(newPrice)}`)
+        positionPriceLine.setText('持仓价格')
       }
       // 如果是多点形状（趋势线）
       else if (positionPriceLine.setPoints) {

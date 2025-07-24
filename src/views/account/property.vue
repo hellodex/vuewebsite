@@ -705,7 +705,7 @@ const getData = async () => {
 const restart = () => {
   timer.value = setInterval(async () => {
     getData()
-  }, 5000)
+  }, 3000)
 }
 
 const handelTableRow = (row: any) => {
