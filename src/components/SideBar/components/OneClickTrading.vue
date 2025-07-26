@@ -58,50 +58,33 @@
         >
       </div>
     </div>
-    <div class="btn tip-btn" v-if="gasTip">{{ buyInfo.baseSymbol }}余额不足以支付Gas费用</div>
-    <div 
-      class="btn disabled-btn" 
-      :class="{ 'insufficient-btn': insufficientBalance || isZeroAmount || sellInsufficientBalance }" 
-      v-if="buySellType"
-      @click="handleInsufficientClick"
-    >
-      {{
-        isZeroAmount
-          ? '选择数量'
-          : insufficientBalance
-          ? `${buyInfo.baseSymbol} 余额不足，请充值`
-          : sellInsufficientBalance
-          ? `${sellInfo.baseSymbol} 余额不足，请充值`
-          : tradeType == 'buy'
-          ? `买入 ${buyIndex || coinAmount ? numberFormat(buyIndex || coinAmount) + ' ' + buyInfo.baseSymbol : ''}`
-          : `卖出 ${
-              numberFormat(
-                sellIndex === 1 ? balanceFormat(sellInfo) : balanceFormat(sellInfo) * sellIndex
-              ) +
-              ' ' +
-              sellInfo.baseSymbol
-            }`
-      }}
-    </div>
-    <div
-      :class="tradeType == 'buy' ? 'btn buy-submit-btn' : 'btn sell-submit-btn'"
-      v-else
-      @click="loading ? null : handelBuySell()"
-    >
-      <el-icon class="is-loading" v-if="loading">
-        <Loading />
-      </el-icon>
-      {{
-        tradeType == 'buy'
-          ? `买入 ${buyIndex || coinAmount ? numberFormat(buyIndex || coinAmount) + ' ' + buyInfo.baseSymbol : ''}`
-          : `卖出 ${
-              numberFormat(
-                sellIndex === 1 ? balanceFormat(sellInfo) : balanceFormat(sellInfo) * sellIndex
-              ) +
-              ' ' +
-              sellInfo.baseSymbol
-            }`
-      }}
+    <div class="btn tip-btn" v-if="buyGasTip || sellGasTip">{{ buyInfo.baseSymbol }}余额不足以支付Gas费用</div>
+    
+    <!-- 按钮容器 -->
+    <div class="btn-container">
+      <!-- 买入按钮 -->
+      <div 
+        class="btn" 
+        :class="getBuyButtonClass()"
+        @click="handleBuyClick"
+      >
+        <el-icon class="is-loading" v-if="loading && loadingType == 'buy'">
+          <Loading />
+        </el-icon>
+        {{ getBuyButtonText() }}
+      </div>
+      
+      <!-- 卖出按钮 -->
+      <div 
+        class="btn" 
+        :class="getSellButtonClass()"
+        @click="handleSellClick"
+      >
+        <el-icon class="is-loading" v-if="loading && loadingType == 'sell'">
+          <Loading />
+        </el-icon>
+        {{ getSellButtonText() }}
+      </div>
     </div>
     <AdvancedSetting
       ref="advancedSetting"
@@ -166,7 +149,10 @@ const sellIndex = ref<number>(0)
 const tradeType = ref<string>('buy')
 const gasTip = ref<any>(false)
 const loading = ref<boolean>(false)
+const loadingType = ref<string>('') // 'buy' 或 'sell'，表示哪个按钮在加载
 const inputFocusType = ref<boolean>(false)
+const buyGasTip = ref<boolean>(false) // 买入的 gas 提示
+const sellGasTip = ref<boolean>(false) // 卖出的 gas 提示
 
 const handelSlippage = (val: any) => {
   slippage.value = val
@@ -258,34 +244,33 @@ const updateTradingInfo = () => {
 const handelBuy = async (item: any) => {
   buyIndex.value = item.value
   coinAmount.value = item.value.toString()
-  sellIndex.value = 0
+  // 不再重置 sellIndex
   tradeType.value = 'buy'
   inputFocusType.value = false
-  gasTip.value = await getGas()
+  buyGasTip.value = await getGas('buy')
 }
 
 const handelSell = async (item: any) => {
   sellIndex.value = item.value
-  buyIndex.value = 0
+  // 不再重置 buyIndex
   tradeType.value = 'sell'
   inputFocusType.value = false
-  gasTip.value = await getGas()
+  sellGasTip.value = await getGas('sell')
 }
 
 const handelCoinAmount = async () => {
+  // 输入金额时只重置固定按钮的选择，不影响卖出选择
   buyIndex.value = 0
-  sellIndex.value = 0
   tradeType.value = 'buy'
   inputFocusType.value = true
-  gasTip.value = await getGas()
+  buyGasTip.value = await getGas('buy')
 }
 
 const handeCoinFocus = async () => {
   inputFocusType.value = true
   buyIndex.value = 0
-  sellIndex.value = 0
   tradeType.value = 'buy'
-  gasTip.value = await getGas()
+  buyGasTip.value = await getGas('buy')
 }
 
 const handelCoinBlur = () => {
@@ -294,10 +279,10 @@ const handelCoinBlur = () => {
   }
 }
 
-const getGas = async () => {
-  let type = false
+const getGas = async (type: string = 'buy') => {
+  let gasTipResult = false
   let spendAmount: any = 0
-  if (tradeType.value == 'buy') {
+  if (type == 'buy') {
     const num = 10 ** Number(buyInfo.value.baseTokenDecimals)
     spendAmount = new BigNumber(buyIndex.value || coinAmount.value)
       .times(num)
@@ -313,19 +298,19 @@ const getGas = async () => {
     amount: spendAmount,
     walletAddress:
       walletType.value == 'Email' ? customWalletInfo.value.walletInfo?.wallet : address.value,
-    toAddress: tradeType.value == 'buy' ? buyInfo.value.baseAddress : sellInfo.value.baseAddress,
+    toAddress: type == 'buy' ? buyInfo.value.baseAddress : sellInfo.value.baseAddress,
     chainCode: sellInfo.value.chainCode,
     contractAddress: sellInfo.value.baseAddress
   })
 
-  type = res ? false : true
+  gasTipResult = res ? false : true
 
-  return type
+  return gasTipResult
 }
 
 // 判断是否余额不足
 const insufficientBalance = computed(() => {
-  if (tradeType.value == 'buy' && (buyIndex.value > 0 || parseFloat(coinAmount.value || 0) > 0)) {
+  if (buyIndex.value > 0 || parseFloat(coinAmount.value || 0) > 0) {
     const num = 10 ** Number(buyInfo.value.baseTokenDecimals)
     const spendAmount = new BigNumber(buyIndex.value || coinAmount.value)
       .times(num)
@@ -338,12 +323,78 @@ const insufficientBalance = computed(() => {
 
 // 判断是否输入为0
 const isZeroAmount = computed(() => {
-  return tradeType.value == 'buy' && buyIndex.value == 0 && parseFloat(coinAmount.value || 0) == 0
+  return buyIndex.value == 0 && parseFloat(coinAmount.value || 0) == 0
 })
 
 // 判断卖出时余额是否为0
 const sellInsufficientBalance = computed(() => {
-  return tradeType.value == 'sell' && sellInfo.value.balance == 0
+  return sellInfo.value.balance == 0
+})
+
+// 判断买入按钮是否可用
+const buyButtonDisabled = computed(() => {
+  const coinInfo = buyInfo.value
+  if (walletType.value == 'Email') {
+    if (coinInfo.chainCode !== customWalletInfo.value.chainCode) {
+      return true
+    }
+  } else {
+    if (
+      coinInfo.chainCode !=
+      chainConfigs?.find((item: any) => item.chainId == chainId.value)?.chainCode
+    ) {
+      return true
+    }
+  }
+
+  if (coinInfo.balance == 0) {
+    return true
+  }
+
+  if (buyGasTip.value) {
+    return true
+  }
+
+  if (buyIndex.value == 0 && parseFloat(coinAmount.value || 0) == 0) return true
+  const num = 10 ** Number(buyInfo.value.baseTokenDecimals)
+  const spendAmount = new BigNumber(buyIndex.value || coinAmount.value)
+    .times(num)
+    .integerValue(BigNumber.ROUND_DOWN)
+    .toString(10)
+  if (parseFloat(spendAmount) > parseFloat(coinInfo.balance)) return true
+
+  return false
+})
+
+// 判断卖出按钮是否可用
+const sellButtonDisabled = computed(() => {
+  const coinInfo = sellInfo.value
+  if (walletType.value == 'Email') {
+    if (coinInfo.chainCode !== customWalletInfo.value.chainCode) {
+      return true
+    }
+  } else {
+    if (
+      coinInfo.chainCode !=
+      chainConfigs?.find((item: any) => item.chainId == chainId.value)?.chainCode
+    ) {
+      return true
+    }
+  }
+
+  if (coinInfo.balance == 0) {
+    return true
+  }
+
+  if (sellGasTip.value) {
+    return true
+  }
+
+  if (sellIndex.value == 0) {
+    return true
+  }
+
+  return false
 })
 
 const buySellType = computed(() => {
@@ -386,22 +437,25 @@ const buySellType = computed(() => {
   return false
 })
 
-const handelBuySell = async () => {
+const handelBuySell = async (type: string) => {
   loading.value = true
-  if (tradeType.value == 'sell') {
+  loadingType.value = type
+  
+  if (type == 'sell') {
     if (walletType.value == 'Email') {
-      await handelCustomTradeSwap(sellInfo.value, buyInfo.value, tradeType.value)
+      await handelCustomTradeSwap(sellInfo.value, buyInfo.value, type)
     } else {
-      await handleTrade(sellInfo.value, buyInfo.value, tradeType.value)
+      await handleTrade(sellInfo.value, buyInfo.value, type)
     }
   } else {
     if (walletType.value == 'Email') {
-      await handelCustomTradeSwap(buyInfo.value, sellInfo.value, tradeType.value)
+      await handelCustomTradeSwap(buyInfo.value, sellInfo.value, type)
     } else {
-      await handleTrade(buyInfo.value, sellInfo.value, tradeType.value)
+      await handleTrade(buyInfo.value, sellInfo.value, type)
     }
   }
   loading.value = false
+  loadingType.value = ''
 }
 
 const handleTrade = async (selectSellCoin: any, selectBuyCoin: any, type: any) => {
@@ -625,6 +679,99 @@ const emit = defineEmits(['showRecharge'])
 const handleInsufficientClick = () => {
   if (insufficientBalance.value || sellInsufficientBalance.value) {
     emit('showRecharge')
+  }
+}
+
+// 获取买入按钮样式
+const getBuyButtonClass = () => {
+  if (buyButtonDisabled.value) {
+    return insufficientBalance.value || isZeroAmount.value ? 'disabled-btn insufficient-btn' : 'disabled-btn'
+  }
+  
+  // 如果有买入选择，显示激活状态
+  if (buyIndex.value > 0 || parseFloat(coinAmount.value || 0) > 0) {
+    return 'buy-submit-btn'
+  }
+  
+  // 默认显示未激活的买入按钮
+  return 'buy-btn-inactive'
+}
+
+// 获取卖出按钮样式
+const getSellButtonClass = () => {
+  if (sellButtonDisabled.value) {
+    return sellInsufficientBalance.value ? 'disabled-btn insufficient-btn' : 'disabled-btn'
+  }
+  
+  // 如果有卖出选择，显示激活状态
+  if (sellIndex.value > 0) {
+    return 'sell-submit-btn'
+  }
+  
+  // 默认显示未激活的卖出按钮
+  return 'sell-btn-inactive'
+}
+
+// 获取买入按钮文字
+const getBuyButtonText = () => {
+  if (buyIndex.value === 0 && parseFloat(coinAmount.value || 0) === 0) return '买入'
+  
+  if (isZeroAmount.value) return '选择数量'
+  if (insufficientBalance.value) return `${buyInfo.value.baseSymbol} 余额不足，请充值`
+  
+  return `买入 ${buyIndex.value || coinAmount.value ? numberFormat(buyIndex.value || coinAmount.value) + ' ' + buyInfo.value.baseSymbol : ''}`
+}
+
+// 获取卖出按钮文字
+const getSellButtonText = () => {
+  if (sellIndex.value === 0) return '卖出'
+  
+  if (sellInsufficientBalance.value) return `${sellInfo.value.baseSymbol} 余额不足，请充值`
+  
+  return `卖出 ${
+    numberFormat(
+      sellIndex.value === 1 ? balanceFormat(sellInfo.value) : balanceFormat(sellInfo.value) * sellIndex.value
+    ) +
+    ' ' +
+    sellInfo.value.baseSymbol
+  }`
+}
+
+// 处理买入按钮点击
+const handleBuyClick = () => {
+  // 如果没有选择买入数量，不执行操作
+  if (buyIndex.value === 0 && parseFloat(coinAmount.value || 0) === 0) {
+    return
+  }
+  
+  if (buyButtonDisabled.value) {
+    if (insufficientBalance.value || isZeroAmount.value) {
+      handleInsufficientClick()
+    }
+    return
+  }
+  
+  if (!loading.value) {
+    handelBuySell('buy')
+  }
+}
+
+// 处理卖出按钮点击
+const handleSellClick = () => {
+  // 如果没有选择卖出比例，不执行操作
+  if (sellIndex.value === 0) {
+    return
+  }
+  
+  if (sellButtonDisabled.value) {
+    if (sellInsufficientBalance.value) {
+      handleInsufficientClick()
+    }
+    return
+  }
+  
+  if (!loading.value) {
+    handelBuySell('sell')
   }
 }
 
@@ -854,6 +1001,30 @@ defineExpose({
     box-shadow: 0 0 0 6px rgba(246, 70, 93, 0.1);
   }
   
+  // 未激活的买入按钮样式
+  .buy-btn-inactive {
+    background: rgba(46, 189, 133, 0.3);
+    color: rgba(46, 189, 133, 0.8);
+    cursor: not-allowed;
+  }
+  
+  // 未激活的卖出按钮样式
+  .sell-btn-inactive {
+    background: rgba(246, 70, 93, 0.3);
+    color: rgba(246, 70, 93, 0.8);
+    cursor: not-allowed;
+  }
+  
+  .btn-container {
+    display: flex;
+    gap: 8px;
+    margin: 14px 0;
+    
+    .btn {
+      flex: 1;
+      margin: 0;
+    }
+  }
 }
 </style>
 
