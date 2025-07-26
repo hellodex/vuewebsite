@@ -67,7 +67,7 @@
     >
       {{
         isZeroAmount
-          ? '请选择交易数量'
+          ? '选择数量'
           : insufficientBalance
           ? `${buyInfo.baseSymbol} 余额不足，请充值`
           : sellInsufficientBalance
