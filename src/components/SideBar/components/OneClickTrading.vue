@@ -67,11 +67,14 @@
         class="btn" 
         :class="getBuyButtonClass()"
         @click="handleBuyClick"
+        ref="buyButton"
       >
         <el-icon class="is-loading" v-if="loading && loadingType == 'buy'">
           <Loading />
         </el-icon>
-        {{ getBuyButtonText() }}
+        <span class="btn-text" :style="{ fontSize: buyButtonFontSize }">
+          {{ getBuyButtonText() }}
+        </span>
       </div>
       
       <!-- 卖出按钮 -->
@@ -79,11 +82,14 @@
         class="btn" 
         :class="getSellButtonClass()"
         @click="handleSellClick"
+        ref="sellButton"
       >
         <el-icon class="is-loading" v-if="loading && loadingType == 'sell'">
           <Loading />
         </el-icon>
-        {{ getSellButtonText() }}
+        <span class="btn-text" :style="{ fontSize: sellButtonFontSize }">
+          {{ getSellButtonText() }}
+        </span>
       </div>
     </div>
     <AdvancedSetting
@@ -100,7 +106,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, computed, watch, onMounted, nextTick } from 'vue'
 import { mainNetworkCurrency, numberFormat } from '@/utils'
 import { infinityAmount } from '@/types'
 import BigNumber from 'bignumber.js'
@@ -153,6 +159,18 @@ const loadingType = ref<string>('') // 'buy' 或 'sell'，表示哪个按钮在�
 const inputFocusType = ref<boolean>(false)
 const buyGasTip = ref<boolean>(false) // 买入的 gas 提示
 const sellGasTip = ref<boolean>(false) // 卖出的 gas 提示
+
+// 按钮引用
+const buyButton = ref<HTMLElement | null>(null)
+const sellButton = ref<HTMLElement | null>(null)
+
+// 按钮字体大小
+const buyButtonFontSize = ref('12px')
+const sellButtonFontSize = ref('12px')
+
+// 缓存按钮文字内容，用于判断是否需要重新计算
+const cachedBuyButtonText = ref('')
+const cachedSellButtonText = ref('')
 
 const handelSlippage = (val: any) => {
   slippage.value = val
@@ -248,6 +266,8 @@ const handelBuy = async (item: any) => {
   tradeType.value = 'buy'
   inputFocusType.value = false
   buyGasTip.value = await getGas('buy')
+  // 通过防抖调用，避免冲突
+  debouncedAdjustFontSize()
 }
 
 const handelSell = async (item: any) => {
@@ -256,6 +276,8 @@ const handelSell = async (item: any) => {
   tradeType.value = 'sell'
   inputFocusType.value = false
   sellGasTip.value = await getGas('sell')
+  // 通过防抖调用，避免冲突
+  debouncedAdjustFontSize()
 }
 
 const handelCoinAmount = async () => {
@@ -264,6 +286,8 @@ const handelCoinAmount = async () => {
   tradeType.value = 'buy'
   inputFocusType.value = true
   buyGasTip.value = await getGas('buy')
+  // 通过防抖调用，避免冲突
+  debouncedAdjustFontSize()
 }
 
 const handeCoinFocus = async () => {
@@ -271,6 +295,8 @@ const handeCoinFocus = async () => {
   buyIndex.value = 0
   tradeType.value = 'buy'
   buyGasTip.value = await getGas('buy')
+  // 通过防抖调用，避免冲突
+  debouncedAdjustFontSize()
 }
 
 const handelCoinBlur = () => {
@@ -775,8 +801,148 @@ const handleSellClick = () => {
   }
 }
 
+// 自动调整按钮文字大小
+const adjustButtonFontSize = async () => {
+  await nextTick()
+  
+  // 调整买入按钮
+  const buyText = getBuyButtonText()
+  if (buyButton.value && buyText !== cachedBuyButtonText.value) {
+    const button = buyButton.value
+    const textElement = button.querySelector('.btn-text') as HTMLElement
+    if (textElement) {
+      // 保存当前文字
+      cachedBuyButtonText.value = buyText
+      
+      // 先用标准尺寸测量
+      let fontSize = 12
+      let padding = 8
+      textElement.style.fontSize = `${fontSize}px`
+      button.style.padding = `0 ${padding}px`
+      
+      // 强制浏览器重新计算
+      await new Promise(resolve => setTimeout(resolve, 0))
+      
+      // 获取按钮容器的实际可用宽度
+      const containerWidth = button.parentElement?.clientWidth || 0
+      const gap = 8
+      const buttonWidth = (containerWidth - gap) / 2
+      const availableWidth = buttonWidth - padding * 2 - 10
+      
+      // 检查是否需要缩放
+      if (textElement.scrollWidth > availableWidth) {
+        const scale = availableWidth / textElement.scrollWidth
+        fontSize = Math.max(8, Math.floor(12 * scale * 10) / 10)
+        padding = Math.max(4, 8 * (fontSize / 12))
+      }
+      
+      // 应用最终样式
+      textElement.style.fontSize = `${fontSize}px`
+      button.style.padding = `0 ${padding}px`
+      buyButtonFontSize.value = `${fontSize}px`
+    }
+  }
+  
+  // 调整卖出按钮
+  const sellText = getSellButtonText()
+  if (sellButton.value && sellText !== cachedSellButtonText.value) {
+    const button = sellButton.value
+    const textElement = button.querySelector('.btn-text') as HTMLElement
+    if (textElement) {
+      // 保存当前文字
+      cachedSellButtonText.value = sellText
+      
+      // 先用标准尺寸测量
+      let fontSize = 12
+      let padding = 8
+      textElement.style.fontSize = `${fontSize}px`
+      button.style.padding = `0 ${padding}px`
+      
+      // 强制浏览器重新计算
+      await new Promise(resolve => setTimeout(resolve, 0))
+      
+      // 获取按钮容器的实际可用宽度
+      const containerWidth = button.parentElement?.clientWidth || 0
+      const gap = 8
+      const buttonWidth = (containerWidth - gap) / 2
+      const availableWidth = buttonWidth - padding * 2 - 10
+      
+      // 检查是否需要缩放
+      if (textElement.scrollWidth > availableWidth) {
+        const scale = availableWidth / textElement.scrollWidth
+        fontSize = Math.max(8, Math.floor(12 * scale * 10) / 10)
+        padding = Math.max(4, 8 * (fontSize / 12))
+      }
+      
+      // 应用最终样式
+      textElement.style.fontSize = `${fontSize}px`
+      button.style.padding = `0 ${padding}px`
+      sellButtonFontSize.value = `${fontSize}px`
+    }
+  }
+}
+
+// 使用防抖来避免频繁调用
+let adjustTimer: any = null
+const debouncedAdjustFontSize = () => {
+  if (adjustTimer) {
+    clearTimeout(adjustTimer)
+  }
+  adjustTimer = setTimeout(() => {
+    adjustButtonFontSize()
+  }, 50)
+}
+
+// 监听买入按钮文字相关的所有变化
+watch(
+  () => getBuyButtonText(),
+  (newText, oldText) => {
+    // 只有文字真正改变时才调整
+    if (newText !== oldText) {
+      debouncedAdjustFontSize()
+    }
+  },
+  { immediate: false }
+)
+
+// 监听卖出按钮文字相关的所有变化
+watch(
+  () => getSellButtonText(),
+  (newText, oldText) => {
+    // 只有文字真正改变时才调整
+    if (newText !== oldText) {
+      debouncedAdjustFontSize()
+    }
+  },
+  { immediate: false }
+)
+
+// 监听余额变化可能影响按钮状态
+watch(
+  () => [buyInfo.value.balance, sellInfo.value.balance, buyInfo.value.baseSymbol, sellInfo.value.baseSymbol],
+  () => {
+    // 延迟调用，等待其他状态更新完成
+    setTimeout(() => {
+      debouncedAdjustFontSize()
+    }, 100)
+  },
+  { deep: true }
+)
+
+// 监听窗口大小变化
+window.addEventListener('resize', () => {
+  // 清除缓存，强制重新计算
+  cachedBuyButtonText.value = ''
+  cachedSellButtonText.value = ''
+  adjustButtonFontSize()
+})
+
 onMounted(() => {
   updateTradingInfo()
+  // 初始化时延迟调用，确保DOM完全渲染
+  setTimeout(() => {
+    adjustButtonFontSize()
+  }, 100)
 })
 
 defineExpose({
@@ -964,6 +1130,8 @@ defineExpose({
     cursor: pointer;
     margin: 14px 0;
     font-family: 'PingFangSC-Medium';
+    padding: 0 8px;
+    transition: padding 0.2s ease;
   }
   .tip-btn {
     background: rgba(245, 39, 39, 0.3);
@@ -972,7 +1140,7 @@ defineExpose({
 
   .disabled-btn {
     background: #393c43;
-    color: #5c6068;
+    color: #cacad5;
   }
   .insufficient-btn {
     color: #cacad5 !important;
@@ -1023,6 +1191,19 @@ defineExpose({
     .btn {
       flex: 1;
       margin: 0;
+      overflow: hidden;
+      position: relative;
+      
+      .btn-text {
+        display: inline-block;
+        white-space: nowrap;
+        line-height: 1.2;
+        transition: font-size 0.2s ease;
+      }
+      
+      .is-loading {
+        margin-right: 4px;
+      }
     }
   }
 }
