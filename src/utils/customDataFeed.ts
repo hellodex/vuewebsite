@@ -222,10 +222,11 @@ export default class CustomDataFeed {
 
     socket.on('kchart', (message: any) => {
       const data = JSON.parse(message)
-      // console.log(`socket-message: ${data.tx} <========> ${formatDate(data.txTime * 1000)}`)
+      // console.log(`socket-message: ${JSON.stringify(data)} <========> ${JSON.stringify(tokenInfo)}`)
 
-      // 验证 pairAddress 是否匹配
-      if (data.pairAddress.toLowerCase() == chainInfo.pairAddress.toLowerCase()) {
+
+      // 验证 baseAddress 是否匹配
+      if (data.token0.toLowerCase() == tokenInfo!.baseAddress.toLowerCase()) {
         // 不处理不匹配的数据
         useSubscribeKChart.createSubscribeKChartInfo({
           C: data.price,

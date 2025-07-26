@@ -8,7 +8,7 @@ const getMarketTren = () => {
 const percentage = () => {
   return props.value[0] === '-'
     ? parseFloat(props.value).toFixed(2)
-    : '+' + parseFloat(props.value).toFixed(2)
+    :  parseFloat(props.value).toFixed(2)
 }
 </script>
 
