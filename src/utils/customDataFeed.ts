@@ -25,6 +25,7 @@ export default class CustomDataFeed {
   _startTime = 0
   timestamp = 0
   _intervalId: any
+
   // 初始化方法
   onReady(callback: any) {
     setTimeout(() =>
@@ -39,6 +40,7 @@ export default class CustomDataFeed {
 
     // console.log('CustomDataFeed--onReady')
   }
+
   // 搜索符号
   searchSymbols(userInput: any, exchange: any, symbolType: any, onResultReadyCallback: any) {
     // 根据用户输入搜索符号，获取匹配的股票列表
@@ -46,6 +48,7 @@ export default class CustomDataFeed {
     // onResultReadyCallback(symbols);
     // console.log(userInput, exchange, symbolType, onResultReadyCallback)
   }
+
   // 获取符号信息
   resolveSymbol(
     symbolName: any,
@@ -221,37 +224,43 @@ export default class CustomDataFeed {
       const data = JSON.parse(message)
       // console.log(`socket-message: ${data.tx} <========> ${formatDate(data.txTime * 1000)}`)
 
-      useSubscribeKChart.createSubscribeKChartInfo({
-        C: data.price,
-        H: data.price,
-        L: data.price,
-        O: data.price,
-        chg: (
-          ((parseFloat(data.price) - parseFloat(res.start1d)) / parseFloat(res.start1d)) *
-          100
-        ).toString(),
-        timestamp: data.txTime,
-        pumpFunProgress: pumpFunPercent(data.baseAmount)
-      })
-      useSubscribeKChart.createSubscribeSwapInfo(data)
-      const bar = {
-        time: data.txTime * 1000,
-        close: showMarket
-          ? parseFloat(data.price) * parseFloat(res.totalSupply)
-          : parseFloat(data.price),
-        open: showMarket
-          ? parseFloat(data.price) * parseFloat(res.totalSupply)
-          : parseFloat(data.price),
-        high: showMarket
-          ? parseFloat(data.price) * parseFloat(res.totalSupply)
-          : parseFloat(data.price),
-        low: showMarket
-          ? parseFloat(data.price) * parseFloat(res.totalSupply)
-          : parseFloat(data.price),
-        volume: parseFloat(data.orderAmount)
+      // 验证 pairAddress 是否匹配
+      if (data.pairAddress.toLowerCase() == chainInfo.pairAddress.toLowerCase()) {
+        // 不处理不匹配的数据
+        useSubscribeKChart.createSubscribeKChartInfo({
+          C: data.price,
+          H: data.price,
+          L: data.price,
+          O: data.price,
+          chg: (
+            ((parseFloat(data.price) - parseFloat(res.start1d)) / parseFloat(res.start1d)) *
+            100
+          ).toString(),
+          timestamp: data.txTime,
+          pumpFunProgress: pumpFunPercent(data.baseAmount)
+        })
+        useSubscribeKChart.createSubscribeSwapInfo(data)
+        const bar = {
+          time: data.txTime * 1000,
+          close: showMarket
+            ? parseFloat(data.price) * parseFloat(res.totalSupply)
+            : parseFloat(data.price),
+          open: showMarket
+            ? parseFloat(data.price) * parseFloat(res.totalSupply)
+            : parseFloat(data.price),
+          high: showMarket
+            ? parseFloat(data.price) * parseFloat(res.totalSupply)
+            : parseFloat(data.price),
+          low: showMarket
+            ? parseFloat(data.price) * parseFloat(res.totalSupply)
+            : parseFloat(data.price),
+          volume: parseFloat(data.orderAmount)
+        }
+        onRealtimeCallback(bar)
       }
-      onRealtimeCallback(bar)
     })
+
+
   }
 
   // 取消订阅实时数据
